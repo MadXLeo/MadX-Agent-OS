@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Turn a stock Fedora Cloud install into the Herald OS Linux development VM. Runs as root, idempotent.
+# Turn a stock Fedora Cloud install into the MadX Agent OS Linux development VM. Runs as root, idempotent.
 # Invoked by cloud-init on first boot (see linux/vm/make-seed.sh); safe to re-run by hand inside
 # the development VM:
 #
@@ -44,13 +44,13 @@ seed_attached() {
 if [[ $DEV_VM -eq 0 ]] && ! { systemd-detect-virt --quiet --vm >/dev/null 2>&1 && seed_attached; }; then
   # Builtins only, so the explanation is printed even when PATH has no cat.
   while IFS= read -r line; do printf '%s\n' "$line"; done >&2 <<EOF
-provision.sh turns a fresh Fedora Cloud VM into the Herald OS development VM, and this machine
+provision.sh turns a fresh Fedora Cloud VM into the MadX Agent OS development VM, and this machine
 does not look like one: it is not a virtual machine with the cloud-init seed (the disc labelled
 cidata or CIDATA) attached. On this machine it would:
 
   - set SELinux to permissive, now and after every reboot
   - install greetd and log ${HERMES_USER:-hermes} in automatically on VT 1, with no password prompt
-  - make Herald's firewall zone the default (SSH allowed) and restart firewalld
+  - make MadX's firewall zone the default (SSH allowed) and restart firewalld
   - enable sshd and seatd, and make graphical.target the default
   - rebuild every initramfs and change the kernel arguments of every installed kernel
   - install development packages, Flathub and the default apps, and set up Hermes Agent in the
@@ -78,7 +78,7 @@ mkdir -p "$STATE_DIR"
 exec > >(tee -a "$LOG") 2>&1
 # cloud-init prints its own final message either way, so a failure has to say so here.
 trap 'echo "==> Provisioning FAILED at line $LINENO. Full log: $LOG"' ERR
-echo "==> Herald OS Linux provisioner $(date -Is) (payload $PAYLOAD)"
+echo "==> MadX Agent OS Linux provisioner $(date -Is) (payload $PAYLOAD)"
 
 step() { echo; echo "--- $*"; }
 
@@ -98,7 +98,7 @@ for f in build.sh sync.sh restart-shell.sh shot.sh; do
 done
 
 # ---------------------------------------------------------------------------------------------
-step "Herald OS shell"
+step "MadX Agent OS shell"
 REPO="$HERMES_UID_HOME/Herald-OS"
 if mountpoint -q /mnt/herald-os 2>/dev/null; then
   echo "shared folder mounted at /mnt/herald-os; syncing and building"
@@ -113,4 +113,4 @@ fi
 bash "$PAYLOAD/image/firstboot.sh" apps
 
 date -Is >"$STATE_DIR/provisioned"
-echo "==> Provisioning complete. greetd will start Herald OS on the next boot (or: systemctl start greetd)."
+echo "==> Provisioning complete. greetd will start MadX Agent OS on the next boot (or: systemctl start greetd)."

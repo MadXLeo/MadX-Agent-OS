@@ -1,8 +1,8 @@
-// Herald OS boot splash. Deep-blue field, the Herald mark fading in, a progress bar on a faint track
+// MadX Agent OS boot splash. Graphite field, the supplied wordmark fading in, a progress bar on a faint track
 // for the boot sequence, and plain password prompts for encrypted disks.
 
-Window.SetBackgroundTopColor(0.016, 0.067, 0.247);
-Window.SetBackgroundBottomColor(0.008, 0.035, 0.150);
+Window.SetBackgroundTopColor(0.047, 0.055, 0.067);
+Window.SetBackgroundBottomColor(0.020, 0.024, 0.031);
 
 logo.image = Image("logo.png");
 logo.sprite = Sprite(logo.image);

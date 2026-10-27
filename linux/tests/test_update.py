@@ -1,4 +1,4 @@
-"""herald-os-update on the Herald OS image: bootc, or rpm-ostree once packages are layered, and Flatpaks that fail one by one."""
+"""herald-os-update on the MadX Agent OS image: bootc, or rpm-ostree once packages are layered, and Flatpaks that fail one by one."""
 
 import json
 import os
@@ -172,7 +172,7 @@ esac""",
 
 @pytest.fixture
 def machine(tmp_path):
-    """The Herald OS image with every command herald-os-update runs stood in for."""
+    """The MadX Agent OS image with every command herald-os-update runs stood in for."""
     stubs, home, repo = tmp_path / "stubs", tmp_path / "home", tmp_path / "checkout"
     # ~/Herald-OS is the checkout when HERALD_OS_REPO does not count (as root without the testing
     # flag); without it the updater would fall back to this repository's own migrations.
@@ -591,7 +591,7 @@ def test_from_the_menu_without_root_system_flatpaks_are_skipped_not_a_problem(ma
     assert summary(done.stdout)["flatpaks"] == "ok"
     assert summary(done.stdout)["system"] == "ok (ostree)"
     assert problems(home) == "none"
-    assert "notify Herald OS updated its own parts" in (home / "herald-os.log").read_text()
+    assert "notify MadX Agent OS updated its own parts" in (home / "herald-os.log").read_text()
 
 
 def test_from_the_menu_without_root_the_image_is_skipped_not_failed(machine):
@@ -611,7 +611,7 @@ def test_from_the_menu_without_root_the_image_is_skipped_not_failed(machine):
     assert steps["flatpaks"] == "ok"
     assert problems(home) == "none"
     assert "failed:" not in done.stderr
-    assert "notify Herald OS updated its own parts The system needs root: run sudo herald-os update in a terminal." in (home / "herald-os.log").read_text()
+    assert "notify MadX Agent OS updated its own parts The system needs root: run sudo herald-os update in a terminal." in (home / "herald-os.log").read_text()
 
 
 def test_from_the_menu_without_root_layered_packages_say_which_tool_needs_it(machine):

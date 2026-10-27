@@ -13,7 +13,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const appDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const APP = 'Herald OS.app'
+const APP = `${JSON.parse(fs.readFileSync(path.join(appDir, 'package.json'), 'utf8')).build.productName}.app`
 
 export const VERIFY_ARGS = ['--verify', '--deep', '--strict', '--verbose=2']
 export const DISPLAY_ARGS = ['--display', '--verbose=4']

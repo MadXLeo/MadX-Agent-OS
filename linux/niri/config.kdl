@@ -300,7 +300,7 @@ window-rule {
 // them after the binary: electron in a checkout, herald-os packaged.
 window-rule {
     match app-id="^electron$"
-    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title=r#"^(Open a (document|spreadsheet|presentation)|Open in Herald Canvas|Save as|Save project|Export|Export as PDF|Print|Print to File)$"#
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title=r#"^(Open a (document|spreadsheet|presentation)|Open in (MadX Canvas|Herald Canvas)|Save as|Save project|Export|Export as PDF|Print|Print to File)$"#
     open-floating true
     open-focused true
 }
@@ -328,9 +328,9 @@ binds {
     Mod+Space hotkey-overlay-title="Ask Hermes about this window" repeat=false { spawn "herald-os" "ask"; }
     Mod+Shift+Space hotkey-overlay-title="Hermes command bar" repeat=false { spawn "herald-os" "command"; }
     Mod+A hotkey-overlay-title="Applications" repeat=false { spawn "herald-os" "applications"; }
-    Mod+Alt+Space hotkey-overlay-title="Herald OS menu" repeat=false { spawn "herald-os" "menu"; }
+    Mod+Alt+Space hotkey-overlay-title="MadX Agent OS menu" repeat=false { spawn "herald-os" "menu"; }
     // Nested niri (a VM without GPU acceleration) uses Alt as Mod, where Mod+Alt+Space is just Mod+Space.
-    Mod+M hotkey-overlay-title="Herald OS menu" repeat=false { spawn "herald-os" "menu"; }
+    Mod+M hotkey-overlay-title="MadX Agent OS menu" repeat=false { spawn "herald-os" "menu"; }
     Mod+V hotkey-overlay-title="Talk to Hermes" repeat=false { spawn "herald-os" "voice"; }
     Mod+Shift+A hotkey-overlay-title="Go to the waiting approval or question" repeat=false { spawn "herald-os" "os" "requests.focus"; }
     Mod+K hotkey-overlay-title="Show these hotkeys" { show-hotkey-overlay; }
@@ -387,7 +387,7 @@ binds {
 
     Mod+Ctrl+L hotkey-overlay-title="Lock" { spawn "herald-os" "lock"; }
     Mod+Escape hotkey-overlay-title="Power menu" { spawn "herald-os" "power"; }
-    Mod+Shift+Escape hotkey-overlay-title="Quit Herald OS session" { quit; }
+    Mod+Shift+Escape hotkey-overlay-title="Quit MadX Agent OS session" { quit; }
 
     Print hotkey-overlay-title="Screenshot (select)" { spawn "herald-os" "capture" "screenshot" "region"; }
     Mod+Print hotkey-overlay-title="Screenshot window" { spawn "herald-os" "capture" "screenshot" "window"; }

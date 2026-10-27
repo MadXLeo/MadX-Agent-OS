@@ -1,0 +1,14 @@
+{
+  "sourceSha256": "4e85c43e3f147c256d314f5f2ab065fc04f77361089d04cde2d686be5ecc81cc",
+  "viewport": "100 -10 740 740",
+  "clip": "M 110 90 H 810 V 155 H 790 V 510 L 810 640 H 110 Z",
+  "files": {
+    "linux/plymouth/herald-os/logo.png": "f4421bb7dc3756ea0324278561feeab8dc35c013c9c73252e9c895b73e8abeaa",
+    "apps/desktop/build/icon.png": "dffeab8ff5549524a78b2fe39ecd0783cb2dc59219e4c37a912ead164bc12d9d",
+    "apps/desktop/public/brand/herald-icon.png": "eff5b441676a1085befdb76fdb08ad09dead5883d3a195a38697eb45e715f0bc",
+    "apps/desktop/public/brand/madx-icon.png": "eff5b441676a1085befdb76fdb08ad09dead5883d3a195a38697eb45e715f0bc",
+    "apps/desktop/src/assets/brand/herald-mark.png": "eff5b441676a1085befdb76fdb08ad09dead5883d3a195a38697eb45e715f0bc",
+    "apps/desktop/build/icon.icns": "8e67f036440d673040943212aae7e81d7588990a53b38516a14306d84406a51a",
+    "apps/desktop/build/icon.ico": "8ddc72a8794e901a2c2cc189ecc5643c0327146b575df588505e453b751dd6cc"
+  }
+}

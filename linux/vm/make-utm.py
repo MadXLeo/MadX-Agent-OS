@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Wrap Herald OS's aarch64 VM disk in a UTM bundle (`Herald OS.utm`) that opens with a double-click.
+"""Wrap MadX Agent OS's aarch64 VM disk in a UTM bundle (`MadX Agent OS.utm`) that opens with a double-click.
 
 UTM's QEMU backend (ConfigurationVersion 4) on Apple's hypervisor: virtio-gpu with OpenGL, so niri
 renders on the Mac's GPU; a display that follows the window's size; sound; clipboard sharing; NAT
@@ -41,7 +41,7 @@ def config(name: str, version: str) -> dict:
             "UUID": vm,
             "Icon": "linux",
             "IconCustom": False,
-            "Notes": f"Herald OS Linux {version}. The first start sets itself up, Hermes Agent included.",
+            "Notes": f"MadX Agent OS Linux {version}. The first start sets itself up, Hermes Agent included.",
         },
         "System": {
             "Architecture": "aarch64",
@@ -100,7 +100,7 @@ def config(name: str, version: str) -> dict:
     }
 
 
-def make(disk: Path, out: Path, name: str = "Herald OS", version: str = "dev", move: bool = False) -> Path:
+def make(disk: Path, out: Path, name: str = "MadX Agent OS", version: str = "dev", move: bool = False) -> Path:
     if not disk.is_file():
         raise SystemExit(f"make-utm: no disk at {disk}")
     bundle = out / f"{name}.utm"
@@ -115,10 +115,10 @@ def make(disk: Path, out: Path, name: str = "Herald OS", version: str = "dev", m
 
 
 def main(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(description="Wrap Herald OS's aarch64 VM disk in a UTM bundle.")
+    parser = argparse.ArgumentParser(description="Wrap MadX Agent OS's aarch64 VM disk in a UTM bundle.")
     parser.add_argument("disk", type=Path, help="the aarch64 qcow2")
     parser.add_argument("out", type=Path, help="the folder the bundle goes in")
-    parser.add_argument("--name", default="Herald OS")
+    parser.add_argument("--name", default="MadX Agent OS")
     parser.add_argument("--version", default="dev")
     parser.add_argument("--move", action="store_true", help="move the disk into the bundle instead of copying it")
     args = parser.parse_args(argv)

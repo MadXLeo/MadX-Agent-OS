@@ -110,8 +110,8 @@ def test_the_disks_job_packages_with_the_script_and_uploads_what_it_made():
     pack = next(step for step in steps if step.get("name") == "Name, compress and split it")["run"]
     assert pack.rstrip().endswith("df -h .")
     upload = next(step for step in steps if step.get("uses", "").startswith("actions/upload-artifact"))
-    assert upload["with"]["path"] == "dist/herald-os-*"
-    assert upload["with"]["name"] == "herald-os-${{ matrix.type }}-${{ matrix.arch }}"
+    assert upload["with"]["path"] == "dist/madx-agent-os-*"
+    assert upload["with"]["name"] == "madx-agent-os-${{ matrix.type }}-${{ matrix.arch }}"
 
 
 # package-disk.sh.
@@ -122,14 +122,14 @@ def test_an_x86_64_disk_becomes_a_qcow2_and_a_hyper_v_vhdx(tmp_path):
     result = package(tmp_path, builder_output(tmp_path, "qcow2"), "amd64")
     assert result.returncode == 0, result.stderr
     assert files(tmp_path) == [
-        "herald-os-9.9.9-x86_64.qcow2.zst", "herald-os-9.9.9-x86_64.qcow2.zst.sha256",
-        "herald-os-9.9.9-x86_64.vhdx.zip", "herald-os-9.9.9-x86_64.vhdx.zip.sha256",
+        "madx-agent-os-9.9.9-x86_64.qcow2.zst", "madx-agent-os-9.9.9-x86_64.qcow2.zst.sha256",
+        "madx-agent-os-9.9.9-x86_64.vhdx.zip", "madx-agent-os-9.9.9-x86_64.vhdx.zip.sha256",
     ]
     dist = tmp_path / "dist"
-    assert checksum_matches(dist, "herald-os-9.9.9-x86_64.qcow2.zst")
-    assert checksum_matches(dist, "herald-os-9.9.9-x86_64.vhdx.zip")
-    with zipfile.ZipFile(dist / "herald-os-9.9.9-x86_64.vhdx.zip") as z:
-        assert z.namelist() == ["herald-os-9.9.9-x86_64.vhdx"]
+    assert checksum_matches(dist, "madx-agent-os-9.9.9-x86_64.qcow2.zst")
+    assert checksum_matches(dist, "madx-agent-os-9.9.9-x86_64.vhdx.zip")
+    with zipfile.ZipFile(dist / "madx-agent-os-9.9.9-x86_64.vhdx.zip") as z:
+        assert z.namelist() == ["madx-agent-os-9.9.9-x86_64.vhdx"]
     log = (tmp_path / "tools.log").read_text()
     assert re.search(r"^convert -O vhdx -o subformat=dynamic \S+/disk\.qcow2 \S+\.vhdx$", log, re.M)
     assert re.search(r"^-T0 -19 -q \S+/disk\.qcow2 -o \S+x86_64\.qcow2\.zst$", log, re.M)
@@ -141,19 +141,19 @@ def test_an_aarch64_disk_becomes_a_qcow2_and_a_utm_bundle(tmp_path):
     result = package(tmp_path, builder_output(tmp_path, "qcow2", disk), "arm64")
     assert result.returncode == 0, result.stderr
     assert files(tmp_path) == [
-        "herald-os-9.9.9-aarch64.qcow2.zst", "herald-os-9.9.9-aarch64.qcow2.zst.sha256",
-        "herald-os-9.9.9-aarch64.utm.zip", "herald-os-9.9.9-aarch64.utm.zip.sha256",
+        "madx-agent-os-9.9.9-aarch64.qcow2.zst", "madx-agent-os-9.9.9-aarch64.qcow2.zst.sha256",
+        "madx-agent-os-9.9.9-aarch64.utm.zip", "madx-agent-os-9.9.9-aarch64.utm.zip.sha256",
     ]
     dist = tmp_path / "dist"
-    assert checksum_matches(dist, "herald-os-9.9.9-aarch64.utm.zip")
-    with zipfile.ZipFile(dist / "herald-os-9.9.9-aarch64.utm.zip") as z:
+    assert checksum_matches(dist, "madx-agent-os-9.9.9-aarch64.utm.zip")
+    with zipfile.ZipFile(dist / "madx-agent-os-9.9.9-aarch64.utm.zip") as z:
         assert sorted(n for n in z.namelist() if not n.endswith("/")) == [
-            "Herald OS.utm/Data/herald-os.qcow2", "Herald OS.utm/config.plist",
+            "MadX Agent OS.utm/Data/herald-os.qcow2", "MadX Agent OS.utm/config.plist",
         ]
-        assert z.read("Herald OS.utm/Data/herald-os.qcow2") == disk
+        assert z.read("MadX Agent OS.utm/Data/herald-os.qcow2") == disk
         assert all(i.compress_type == zipfile.ZIP_STORED for i in z.infolist())
-        config = plistlib.loads(z.read("Herald OS.utm/config.plist"))
-    assert config["Information"]["Notes"].startswith("Herald OS Linux 9.9.9.")
+        config = plistlib.loads(z.read("MadX Agent OS.utm/config.plist"))
+    assert config["Information"]["Notes"].startswith("MadX Agent OS Linux 9.9.9.")
     assert re.search(r"^convert -c -O qcow2 \S+/disk\.qcow2 \S+/herald-os\.qcow2$", (tmp_path / "tools.log").read_text(), re.M)
     assert "vhdx" not in (tmp_path / "tools.log").read_text()
 
@@ -162,7 +162,7 @@ def test_an_aarch64_disk_becomes_a_qcow2_and_a_utm_bundle(tmp_path):
 def test_the_installer_iso_is_named_and_gets_no_vm_files(tmp_path):
     result = package(tmp_path, builder_output(tmp_path, "iso"), "amd64")
     assert result.returncode == 0, result.stderr
-    assert files(tmp_path) == ["herald-os-9.9.9-x86_64.iso", "herald-os-9.9.9-x86_64.iso.sha256"]
+    assert files(tmp_path) == ["madx-agent-os-9.9.9-x86_64.iso", "madx-agent-os-9.9.9-x86_64.iso.sha256"]
     assert not (tmp_path / "tools.log").exists()
 
 
@@ -174,17 +174,17 @@ def test_big_files_are_split_the_way_their_tools_join_them(tmp_path):
                      {"SPLIT_AT": "4096", "PART_SIZE": "4096"})
     assert result.returncode == 0, result.stderr
     dist, names = tmp_path / "dist", files(tmp_path)
-    qcow2_parts = [n for n in names if re.fullmatch(r"herald-os-9\.9\.9-x86_64\.qcow2\.zst\.part\d", n)]
-    zip_parts = [n for n in names if re.fullmatch(r"herald-os-9\.9\.9-x86_64\.vhdx\.zip\.\d{3}", n)]
-    assert qcow2_parts == ["herald-os-9.9.9-x86_64.qcow2.zst.part0", "herald-os-9.9.9-x86_64.qcow2.zst.part1", "herald-os-9.9.9-x86_64.qcow2.zst.part2"]
-    assert zip_parts == ["herald-os-9.9.9-x86_64.vhdx.zip.001", "herald-os-9.9.9-x86_64.vhdx.zip.002", "herald-os-9.9.9-x86_64.vhdx.zip.003"]
-    assert "herald-os-9.9.9-x86_64.qcow2.zst" not in names and "herald-os-9.9.9-x86_64.vhdx.zip" not in names
-    assert checksum_matches(dist, "herald-os-9.9.9-x86_64.qcow2.zst", qcow2_parts)
-    assert checksum_matches(dist, "herald-os-9.9.9-x86_64.vhdx.zip", zip_parts)
+    qcow2_parts = [n for n in names if re.fullmatch(r"madx-agent-os-9\.9\.9-x86_64\.qcow2\.zst\.part\d", n)]
+    zip_parts = [n for n in names if re.fullmatch(r"madx-agent-os-9\.9\.9-x86_64\.vhdx\.zip\.\d{3}", n)]
+    assert qcow2_parts == ["madx-agent-os-9.9.9-x86_64.qcow2.zst.part0", "madx-agent-os-9.9.9-x86_64.qcow2.zst.part1", "madx-agent-os-9.9.9-x86_64.qcow2.zst.part2"]
+    assert zip_parts == ["madx-agent-os-9.9.9-x86_64.vhdx.zip.001", "madx-agent-os-9.9.9-x86_64.vhdx.zip.002", "madx-agent-os-9.9.9-x86_64.vhdx.zip.003"]
+    assert "madx-agent-os-9.9.9-x86_64.qcow2.zst" not in names and "madx-agent-os-9.9.9-x86_64.vhdx.zip" not in names
+    assert checksum_matches(dist, "madx-agent-os-9.9.9-x86_64.qcow2.zst", qcow2_parts)
+    assert checksum_matches(dist, "madx-agent-os-9.9.9-x86_64.vhdx.zip", zip_parts)
     assert sorted(n for n in names if n.endswith(".sha256sums")) == [
-        "herald-os-9.9.9-x86_64.qcow2.zst.sha256sums", "herald-os-9.9.9-x86_64.vhdx.zip.sha256sums",
+        "madx-agent-os-9.9.9-x86_64.qcow2.zst.sha256sums", "madx-agent-os-9.9.9-x86_64.vhdx.zip.sha256sums",
     ]
-    for name, parts in (("herald-os-9.9.9-x86_64.qcow2.zst", qcow2_parts), ("herald-os-9.9.9-x86_64.vhdx.zip", zip_parts)):
+    for name, parts in (("madx-agent-os-9.9.9-x86_64.qcow2.zst", qcow2_parts), ("madx-agent-os-9.9.9-x86_64.vhdx.zip", zip_parts)):
         lines = [line.split() for line in (dist / f"{name}.sha256sums").read_text().splitlines()]
         assert [listed for _, listed in lines] == parts
         assert all(digest == hashlib.sha256((dist / part).read_bytes()).hexdigest() for digest, part in lines)
@@ -197,26 +197,26 @@ def test_the_documented_commands_check_the_parts_join_them_and_check_the_whole(t
     assert package(tmp_path, builder_output(tmp_path, "qcow2", disk), "amd64", env).returncode == 0
     dist = tmp_path / "dist"
     script = """set -e
-    sha256sum -c --quiet herald-os-9.9.9-x86_64.qcow2.zst.sha256sums
-    sha256sum -c --quiet herald-os-9.9.9-x86_64.vhdx.zip.sha256sums
-    cat herald-os-9.9.9-x86_64.qcow2.zst.part* > herald-os-9.9.9-x86_64.qcow2.zst
-    cat herald-os-9.9.9-x86_64.vhdx.zip.[0-9][0-9][0-9] > herald-os-9.9.9-x86_64.vhdx.zip
-    sha256sum -c --quiet herald-os-9.9.9-x86_64.qcow2.zst.sha256
-    sha256sum -c --quiet herald-os-9.9.9-x86_64.vhdx.zip.sha256
+    sha256sum -c --quiet madx-agent-os-9.9.9-x86_64.qcow2.zst.sha256sums
+    sha256sum -c --quiet madx-agent-os-9.9.9-x86_64.vhdx.zip.sha256sums
+    cat madx-agent-os-9.9.9-x86_64.qcow2.zst.part* > madx-agent-os-9.9.9-x86_64.qcow2.zst
+    cat madx-agent-os-9.9.9-x86_64.vhdx.zip.[0-9][0-9][0-9] > madx-agent-os-9.9.9-x86_64.vhdx.zip
+    sha256sum -c --quiet madx-agent-os-9.9.9-x86_64.qcow2.zst.sha256
+    sha256sum -c --quiet madx-agent-os-9.9.9-x86_64.vhdx.zip.sha256
     """
     result = subprocess.run(["bash", "-c", script], cwd=dist, capture_output=True, text=True, check=False)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert (dist / "herald-os-9.9.9-x86_64.qcow2.zst").read_bytes() == disk
+    assert (dist / "madx-agent-os-9.9.9-x86_64.qcow2.zst").read_bytes() == disk
 
-    (dist / "herald-os-9.9.9-x86_64.vhdx.zip.002").write_bytes(b"damaged")
-    damaged = subprocess.run(["sha256sum", "-c", "--quiet", "herald-os-9.9.9-x86_64.vhdx.zip.sha256sums"],
+    (dist / "madx-agent-os-9.9.9-x86_64.vhdx.zip.002").write_bytes(b"damaged")
+    damaged = subprocess.run(["sha256sum", "-c", "--quiet", "madx-agent-os-9.9.9-x86_64.vhdx.zip.sha256sums"],
                              cwd=dist, capture_output=True, text=True, check=False)
     assert damaged.returncode != 0
-    assert "herald-os-9.9.9-x86_64.vhdx.zip.002: FAILED" in damaged.stdout
+    assert "madx-agent-os-9.9.9-x86_64.vhdx.zip.002: FAILED" in damaged.stdout
 
 
 @linux_only
-@pytest.mark.parametrize("arch, leftovers", [("amd64", (".vhdx", "disk.qcow2")), ("arm64", ("Herald OS.utm", "disk.qcow2"))])
+@pytest.mark.parametrize("arch, leftovers", [("amd64", (".vhdx", "disk.qcow2")), ("arm64", ("MadX Agent OS.utm", "disk.qcow2"))])
 def test_the_disk_and_the_conversions_are_gone_before_the_zip_is_checksummed(tmp_path, arch, leftovers):
     # A sha256sum that first lists every file packaging still holds, under the output and dist.
     real = shutil.which("sha256sum")
@@ -230,7 +230,7 @@ def test_the_disk_and_the_conversions_are_gone_before_the_zip_is_checksummed(tmp
     result = subprocess.run(["bash", str(PACKAGE), str(out), arch, "9.9.9", str(tmp_path / "dist")],
                             capture_output=True, text=True, env=full_env, check=False)
     assert result.returncode == 0, result.stderr
-    at_zip = seen.read_text().split("== herald-os-9.9.9-")[2]
+    at_zip = seen.read_text().split("== madx-agent-os-9.9.9-")[2]
     assert ".zip" in at_zip.splitlines()[0]
     held = at_zip.splitlines()[1:]
     assert any(line.endswith(".zip") for line in held)
@@ -242,7 +242,7 @@ def test_the_disk_and_the_conversions_are_gone_before_the_zip_is_checksummed(tmp
 @linux_only
 def test_no_work_files_are_left_behind_for_the_upload(tmp_path):
     assert package(tmp_path, builder_output(tmp_path, "qcow2"), "arm64").returncode == 0
-    assert not [p for p in (tmp_path / "dist").iterdir() if not p.name.startswith("herald-os-")]
+    assert not [p for p in (tmp_path / "dist").iterdir() if not p.name.startswith("madx-agent-os-")]
 
 
 @linux_only
@@ -262,7 +262,7 @@ def test_a_version_that_is_not_one_plain_word_is_refused_before_anything_is_writ
 def test_release_and_channel_versions_are_accepted(tmp_path, version):
     result = package(tmp_path, builder_output(tmp_path, "iso"), "amd64", version=version)
     assert result.returncode == 0, result.stderr
-    assert files(tmp_path) == [f"herald-os-{version}-x86_64.iso", f"herald-os-{version}-x86_64.iso.sha256"]
+    assert files(tmp_path) == [f"madx-agent-os-{version}-x86_64.iso", f"madx-agent-os-{version}-x86_64.iso.sha256"]
 
 
 @linux_only
@@ -281,10 +281,10 @@ def test_what_it_cannot_package_it_refuses(tmp_path, arch, kind, message):
 def test_try_sh_still_finds_only_the_aarch64_qcow2():
     pattern = re.search(r"grep -E -o '\"browser_download_url\": \*\"\[\^\"\]\*(.*?)\"'", (VM / "try.sh").read_text()).group(1)
     found = re.compile(pattern + "$")
-    assert found.search("herald-os-1.0-aarch64.qcow2.zst")
-    assert found.search("herald-os-1.0-aarch64.qcow2.zst.part1")
-    for other in ("herald-os-1.0-aarch64.utm.zip", "herald-os-1.0-aarch64.utm.zip.001",
-                  "herald-os-1.0-x86_64.qcow2.zst", "herald-os-1.0-x86_64.vhdx.zip.001"):
+    assert found.search("madx-agent-os-1.0-aarch64.qcow2.zst")
+    assert found.search("madx-agent-os-1.0-aarch64.qcow2.zst.part1")
+    for other in ("madx-agent-os-1.0-aarch64.utm.zip", "madx-agent-os-1.0-aarch64.utm.zip.001",
+                  "madx-agent-os-1.0-x86_64.qcow2.zst", "madx-agent-os-1.0-x86_64.vhdx.zip.001"):
         assert not found.search(other)
 
 
@@ -295,7 +295,7 @@ def test_the_utm_bundle_runs_on_apples_hypervisor_with_gpu_sound_clipboard_and_r
     disk = tmp_path / "disk.qcow2"
     disk.write_bytes(b"qcow2")
     bundle = utm.make(disk, tmp_path / "out", version="1.2.3")
-    assert bundle == tmp_path / "out" / "Herald OS.utm"
+    assert bundle == tmp_path / "out" / "MadX Agent OS.utm"
     config = plistlib.loads((bundle / "config.plist").read_bytes())
     assert config["Backend"] == "QEMU" and config["ConfigurationVersion"] == 4
     assert config["System"]["Architecture"] == "aarch64" and config["System"]["Target"] == "virt"
@@ -361,9 +361,9 @@ def test_the_install_table_lists_the_mac_and_windows_virtual_machines():
 
 
 MANUAL_JOIN_PAGES = [ROOT / "docs" / "manual" / "install-pc.md", ROOT / "docs" / "manual" / "virtual-machine.md"]
-# A file name in a join, written either `herald-os-<version>-…` or quoted around `$VERSION`, with any
-# glob after the closing quote: "herald-os-$VERSION-x86_64.vhdx.zip."[0-9][0-9][0-9].
-JOIN = re.compile(r'^\s*cat ("?herald-os-(?:<version>|\$VERSION)-[^\s>]+) > ("?herald-os-(?:<version>|\$VERSION)-[^\s"]+"?)$', re.M)
+# A file name in a join, written either `madx-agent-os-<version>-…` or quoted around `$VERSION`, with any
+# glob after the closing quote: "madx-agent-os-$VERSION-x86_64.vhdx.zip."[0-9][0-9][0-9].
+JOIN = re.compile(r'^\s*cat ("?madx-agent-os-(?:<version>|\$VERSION)-[^\s>]+) > ("?madx-agent-os-(?:<version>|\$VERSION)-[^\s"]+"?)$', re.M)
 
 
 def concrete(name: str) -> str:
@@ -397,11 +397,11 @@ def test_the_manuals_command_blocks_paste_as_they_are(page):
     version_set = False
     for block in bash:
         assert "<version>" not in block and "%VERSION%" not in block
-        if "herald-os-" not in block:
+        if "madx-agent-os-" not in block:
             continue
         version_set = version_set or re.search(r"^VERSION=\S+ +# replace with the version you downloaded\b.*$", block, re.M)
         assert version_set, f"$VERSION used before it is set:\n{block}"
-        assert not re.search(r"(?<![\"/])herald-os-\$VERSION", block), f"$VERSION outside quotes:\n{block}"
+        assert not re.search(r"(?<![\"/])madx-agent-os-\$VERSION", block), f"$VERSION outside quotes:\n{block}"
         assert subprocess.run(["bash", "-n"], input=block, text=True, check=False).returncode == 0
     for block in bat:
         assert "<version>" not in block and "$VERSION" not in block
@@ -409,12 +409,12 @@ def test_the_manuals_command_blocks_paste_as_they_are(page):
         assert lines[:2] == ["rem replace with the version you downloaded", lines[1]]
         assert re.fullmatch(r"set (?:\"VERSION=\S+\"|VERSION=\S+)", lines[1])
         for line in lines[2:]:
-            names = re.findall(r"herald-os-\S*", line)
-            assert names and all(n.startswith("herald-os-%VERSION%-") for n in names), line
+            names = re.findall(r"madx-agent-os-\S*", line)
+            assert names and all(n.startswith("madx-agent-os-%VERSION%-") for n in names), line
 
 
 def test_the_readme_names_the_files_the_release_carries():
     text = README.read_text()
-    for name in ("herald-os-<version>-aarch64.utm.zip", "herald-os-<version>-x86_64.vhdx.zip",
-                 "herald-os-<version>-x86_64.qcow2.zst"):
+    for name in ("madx-agent-os-<version>-aarch64.utm.zip", "madx-agent-os-<version>-x86_64.vhdx.zip",
+                 "madx-agent-os-<version>-x86_64.qcow2.zst"):
         assert name in text

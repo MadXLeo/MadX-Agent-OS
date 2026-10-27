@@ -1,16 +1,16 @@
 # Shared by herald-os-bin and herald-os-git (keep the two copies identical; CI compares them).
-# Lays out an unpacked Herald OS build (the release tarball, or electron-builder's linux-unpacked):
+# Lays out an unpacked MadX Agent OS build (the release tarball, or electron-builder's linux-unpacked):
 #   /opt/herald-os                    the app (its resources carry the CLIs, session, data, bridge)
 #   /usr/bin/herald-os*               the CLIs and session scripts, linked from the app
 #   /usr/share/herald-os/*            themes, catalog, niri template, omakase lists, migrations, bridge
-#   /usr/share/wayland-sessions/      the full Herald OS session for the login screen
-#   /usr/share/applications/          Herald OS as an app inside Hyprland, Omarchy or any desktop
+#   /usr/share/wayland-sessions/      the full MadX Agent OS session for the login screen
+#   /usr/share/applications/          MadX Agent OS as an app inside Hyprland, Omarchy or any desktop
 
 # The folder that holds resources/app.asar, wherever the archive put it.
 _herald_os_appdir() {
   local asar
   asar="$(find "$1" -path '*/resources/app.asar' -print -quit)"
-  [[ -n "$asar" ]] || { echo "no Herald OS build under $1" >&2; return 1; }
+  [[ -n "$asar" ]] || { echo "no MadX Agent OS build under $1" >&2; return 1; }
   dirname "$(dirname "$asar")"
 }
 
@@ -43,7 +43,7 @@ _herald_os_package() {
   install -Dm644 "$pkgdir$res/icons/herald-os.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/herald-os.png"
   install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/herald-os.desktop" <<'DESKTOP'
 [Desktop Entry]
-Name=Herald OS
+Name=MadX Agent OS
 Comment=The AI-native desktop built around Hermes Agent
 Exec=herald-os-app
 Icon=herald-os
@@ -54,4 +54,5 @@ Terminal=false
 DESKTOP
   install -Dm644 "$pkgdir$res/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "$pkgdir$res/NOTICE" "$pkgdir/usr/share/licenses/$pkgname/NOTICE"
+  python3 "$pkgdir$res/herald-os-linux/branding/install.py" --root "$pkgdir" --layout arch
 }

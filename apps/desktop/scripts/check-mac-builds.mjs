@@ -6,6 +6,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const appDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const product = JSON.parse(fs.readFileSync(path.join(appDir, '../../branding/product.json'), 'utf8'))
 
 /** What the release ships, in electron-builder's names: Apple Silicon and Intel. */
 export const MAC_ARCHES = ['arm64', 'x64']
@@ -89,7 +90,7 @@ function apps(releaseDir) {
   return fs
     .readdirSync(releaseDir, { withFileTypes: true })
     .filter(entry => entry.isDirectory())
-    .map(entry => path.join(releaseDir, entry.name, 'Herald OS.app'))
+    .map(entry => path.join(releaseDir, entry.name, `${product.name}.app`))
     .filter(app => fs.existsSync(app))
     .sort()
 }
@@ -119,10 +120,10 @@ export function macBuildProblems(releaseDir, { arches = MAC_ARCHES, version } = 
 
   for (const app of apps(releaseDir)) {
     const where = path.relative(releaseDir, app)
-    const executable = path.join(app, 'Contents', 'MacOS', 'Herald OS')
+    const executable = path.join(app, 'Contents', 'MacOS', product.name)
     const info = fs.existsSync(executable) ? machO(executable) : null
     if (!info || info.fat) {
-      problems.push(`${where} is ${info ? describe(info) : 'missing its Herald OS executable'}, not exactly one of ${arches.join(', ')}.`)
+      problems.push(`${where} is ${info ? describe(info) : 'missing its main executable'}, not exactly one of ${arches.join(', ')}.`)
       continue
     }
     const [arch] = info.arches
@@ -141,9 +142,9 @@ export function macBuildProblems(releaseDir, { arches = MAC_ARCHES, version } = 
 
   const expected = new Set()
   for (const arch of arches) {
-    if (!built.has(arch)) problems.push(`No Herald OS.app in ${releaseDir} is built for ${arch}.`)
+    if (!built.has(arch)) problems.push(`No ${product.name}.app in ${releaseDir} is built for ${arch}.`)
     for (const ext of ['dmg', 'zip']) {
-      const name = `HeraldOS-${version}-mac-${arch}.${ext}`
+      const name = `${product.distribution.artifactPrefix}-${version}-mac-${arch}.${ext}`
       expected.add(name)
       if (!fs.existsSync(path.join(releaseDir, name))) problems.push(`No ${name} in ${releaseDir}.`)
     }
@@ -167,6 +168,6 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const problems = [...packScriptProblems(scripts), ...macBuildProblems(path.join(appDir, 'release'), { version })]
 
   for (const problem of problems) console.log(`::error::${problem}`)
-  if (problems.length === 0) console.log(`release/ has a Herald OS.app, DMG and zip of ${version} for each of ${MAC_ARCHES.join(', ')}.`)
+  if (problems.length === 0) console.log(`release/ has a ${product.name}.app, DMG and zip of ${version} for each of ${MAC_ARCHES.join(', ')}.`)
   process.exit(problems.length ? 1 : 0)
 }

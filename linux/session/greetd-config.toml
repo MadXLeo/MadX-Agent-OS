@@ -1,4 +1,4 @@
-# greetd: log the session user straight into Herald OS on VT 1. No greeter UI.
+# greetd: log the session user straight into MadX Agent OS on VT 1. No greeter UI.
 # Installed to /etc/greetd/config.toml by linux/image/packages.sh; firstboot.sh fills in `user`. A
 # system switched from another bootc system gets greetd-login.toml, a login screen, instead.
 

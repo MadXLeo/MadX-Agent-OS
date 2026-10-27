@@ -7,7 +7,8 @@
 set -euo pipefail
 
 SRC="${HERALD_OS_SHARE:-/mnt/herald-os}"
-REPO="${HERALD_OS_REPO:-$HOME/Herald-OS}"
+REPO="${MADX_OS_REPO:-${HERALD_OS_REPO:-$HOME/MadX-Agent-OS}}"
+[[ -d "$REPO" || -n "${MADX_OS_REPO:-${HERALD_OS_REPO:-}}" ]] || REPO="$HOME/Herald-OS"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 mountpoint -q "$SRC" || [[ -d "$SRC/apps/desktop" ]] || { echo "shared folder not mounted at $SRC" >&2; exit 1; }

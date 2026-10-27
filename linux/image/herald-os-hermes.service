@@ -1,5 +1,5 @@
 [Unit]
-Description=Herald OS: install Hermes Agent once the computer is online (the first boot had no network)
+Description=MadX Agent OS: install Hermes Agent once the computer is online (the first boot had no network)
 # firstboot.sh system leaves the note when it could not install Hermes; this removes it once Hermes is
 # installed and set up. The shell waits for that, so it never starts a Hermes still being installed.
 ConditionPathExists=/var/lib/herald-os/hermes-pending

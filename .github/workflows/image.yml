@@ -1,4 +1,4 @@
-name: Herald OS image
+name: MadX Agent OS image
 
 # The Fedora bootc image (ADR-018) per architecture on matching runners, pushed to the repository's
 # GHCR package, joined into one multi-arch tag; then the installer ISO (x86_64) and the VM disks from
@@ -36,7 +36,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  IMAGE: ghcr.io/${{ github.repository_owner }}/herald-os
+  IMAGE: ghcr.io/madxleo/madx-agent-os
   # Signing waits for the key (cosign generate-key-pair; the public half goes in linux/image/cosign.pub).
   SIGNING: ${{ secrets.COSIGN_PRIVATE_KEY != '' && 'true' || 'false' }}
 
@@ -53,6 +53,7 @@ jobs:
         # dev-<commit> tag, so it never replaces a channel that installed machines follow.
         run: |
           case "$GITHUB_REF" in
+            refs/tags/v*-*) channel=edge ;;
             refs/tags/v*) channel=stable ;;
             refs/heads/main) channel=edge ;;
             *) channel="dev-${GITHUB_SHA::7}" ;;
@@ -68,12 +69,12 @@ jobs:
       packages: write
     # The NVIDIA image waits on Universal Blue's modules for each new kernel; until they are out it
     # fails, and that must not hold back the default image's multi-arch tag or its disks.
-    continue-on-error: ${{ matrix.image == 'herald-os-nvidia' }}
+    continue-on-error: ${{ matrix.image == 'madx-agent-os-nvidia' }}
     env:
       CHANNEL: ${{ needs.channel.outputs.channel }}
       # The default image goes out as one tag per architecture, joined by the manifest job; the
       # NVIDIA image, x86_64 only, as the channel's.
-      REPO: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}
+      REPO: ghcr.io/madxleo/${{ matrix.image }}
       TAG: ${{ needs.channel.outputs.channel }}${{ matrix.suffix }}
     strategy:
       fail-fast: false
@@ -81,19 +82,19 @@ jobs:
         include:
           - arch: amd64
             label: amd64
-            image: herald-os
+            image: madx-agent-os
             suffix: -amd64
             shell: x64
             runner: ubuntu-24.04
           - arch: arm64
             label: arm64
-            image: herald-os
+            image: madx-agent-os
             suffix: -arm64
             shell: arm64
             runner: ubuntu-24.04-arm
           - arch: amd64
             label: amd64, NVIDIA
-            image: herald-os-nvidia
+            image: madx-agent-os-nvidia
             suffix: ''
             shell: x64
             runner: ubuntu-24.04
@@ -104,7 +105,7 @@ jobs:
           persist-credentials: false
       - name: Make room for the NVIDIA image
         # Two images (the default one it starts from, then the NVIDIA one) and the akmods images.
-        if: matrix.image == 'herald-os-nvidia'
+        if: matrix.image == 'madx-agent-os-nvidia'
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
           df -h .
@@ -118,7 +119,7 @@ jobs:
           fi
       - uses: sigstore/cosign-installer@v3
         # The NVIDIA leg also checks Universal Blue's signatures on the akmods images.
-        if: env.SIGNING == 'true' || matrix.image == 'herald-os-nvidia'
+        if: env.SIGNING == 'true' || matrix.image == 'madx-agent-os-nvidia'
       - name: Check the signing key matches cosign.pub
         # Signing with a key other than the committed one ships signatures that installed machines reject.
         if: env.SIGNING == 'true'
@@ -150,9 +151,9 @@ jobs:
           npm run sync-upstream
           npm ci
           npm run dist:linux --workspace apps/desktop -- --${{ matrix.shell }}
-          cp apps/desktop/release/herald-os-*-linux-${{ matrix.shell }}.tar.gz herald-os-linux.tar.gz
+          cp apps/desktop/release/madx-agent-os-*-linux-${{ matrix.shell }}.tar.gz herald-os-linux.tar.gz
       - name: Pin the base and the NVIDIA modules to one kernel
-        if: matrix.image == 'herald-os-nvidia'
+        if: matrix.image == 'madx-agent-os-nvidia'
         # Universal Blue builds the modules for one kernel and tags them by it. All three images go in
         # by digest, so nothing can move between this step and the build, and the akmods images only
         # once their signature checks out against Universal Blue's key, committed in the repository.
@@ -179,7 +180,7 @@ jobs:
       - name: Build the image
         run: |
           base=(--build-arg SHELL_TARBALL=herald-os-linux.tar.gz)
-          if [[ "${{ matrix.image }}" != herald-os-nvidia ]]; then
+          if [[ "${{ matrix.image }}" != madx-agent-os-nvidia ]]; then
             sudo podman build -f linux/image/Containerfile "${base[@]}" -t "$REPO:$TAG" .
             exit 0
           fi
@@ -207,7 +208,7 @@ jobs:
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY --tlog-upload=false "$REPO@$(cat digest.txt)"
       - name: Say that the NVIDIA image did not go out
         # continue-on-error keeps the run green, so the failure would otherwise go unseen.
-        if: failure() && matrix.image == 'herald-os-nvidia'
+        if: failure() && matrix.image == 'madx-agent-os-nvidia'
         run: |
           msg="The NVIDIA image ($REPO:$TAG) was not built or pushed; its tags keep the last build. Usually Universal Blue has no modules for the new kernel yet; the log of this job says."
           echo "::warning title=NVIDIA image not published::$msg"
@@ -304,8 +305,8 @@ jobs:
           df -h .
       - uses: actions/upload-artifact@v4
         with:
-          name: herald-os-${{ matrix.type }}-${{ matrix.arch }}
-          path: dist/herald-os-*
+          name: madx-agent-os-${{ matrix.type }}-${{ matrix.arch }}
+          path: dist/madx-agent-os-*
           if-no-files-found: error
 
   release:
@@ -319,7 +320,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: herald-os-*
+          pattern: madx-agent-os-*
           path: disks
           merge-multiple: true
       - name: Upload the disks
@@ -328,5 +329,5 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           ls -l disks
-          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --draft --title "Herald OS $GITHUB_REF_NAME" --notes "Draft written by the release workflow."
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --draft --title "MadX Agent OS $GITHUB_REF_NAME" --notes "Draft written by the release workflow."
           gh release upload "$GITHUB_REF_NAME" disks/* --clobber

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Herald OS Linux, the system half: packages, services, the session and the boot splash. No session
+# MadX Agent OS Linux, the system half: packages, services, the session and the boot splash. No session
 # user exists yet; everything that lives in a home folder is firstboot.sh's. Runs as root.
 #
 #   packages.sh --image <shell.tar.gz>   building the bootc image (linux/image/Containerfile): the
@@ -48,7 +48,7 @@ if [[ "${HERALD_OS_OMAKASE:-1}" == "1" ]]; then
 fi
 
 # ---------------------------------------------------------------------------------------------
-step "The Herald OS session and CLIs ($BIN)"
+step "The MadX Agent OS session and CLIs ($BIN)"
 install -d "$BIN"
 install -m 0755 "$LINUX"/session/herald-os-compositor "$LINUX"/session/herald-os-session "$LINUX"/session/herald-os-niri-nested "$BIN/"
 install -m 0755 "$LINUX"/bin/herald-os* "$BIN/"
@@ -56,7 +56,7 @@ install -m 0755 "$LINUX"/bin/herald-os* "$BIN/"
 # The dev VM's cloud-init payload is unpacked at $SHARE itself, and cp refuses to copy onto itself.
 install -d "$SHARE"
 if [[ "$(realpath "$LINUX")" != "$(realpath "$SHARE")" ]]; then
-  for dir in themes omakase catalog niri migrations plymouth session; do
+  for dir in themes omakase catalog niri migrations plymouth session branding; do
     install -d "$SHARE/$dir"
     cp -R "$LINUX/$dir/." "$SHARE/$dir/"
   done
@@ -82,8 +82,7 @@ fi
 if [[ "$MODE" == "--image" ]]; then
   # herald-os tells its own image from other bootc systems (Silverblue, Bazzite, Bluefin) by this
   # line; on those it never runs bootc, since their updates and rollbacks are the person's.
-  sed -i --follow-symlinks '/^IMAGE_ID=/d' /usr/lib/os-release
-  echo 'IMAGE_ID=herald-os' >>/usr/lib/os-release
+  python3 "$LINUX/branding/os-release.py" /usr/lib/os-release
 
   step "The shell ($TARBALL)"
   install -d "$SHARE/app"
@@ -115,12 +114,12 @@ if [[ "$MODE" == "--image" ]]; then
   if [[ -f "$LINUX/image/cosign.pub" ]]; then
     install -Dm0644 "$LINUX/image/cosign.pub" /etc/pki/containers/herald-os.pub
     install -d /etc/containers/registries.d
-    printf 'docker:\n  ghcr.io/iamlukethedev/herald-os:\n    use-sigstore-attachments: true\n  ghcr.io/iamlukethedev/herald-os-nvidia:\n    use-sigstore-attachments: true\n' >/etc/containers/registries.d/herald-os.yaml
+    printf 'docker:\n  ghcr.io/madxleo/madx-agent-os:\n    use-sigstore-attachments: true\n  ghcr.io/madxleo/madx-agent-os-nvidia:\n    use-sigstore-attachments: true\n' >/etc/containers/registries.d/herald-os.yaml
     python3 - <<'PY'
 import json
 path = "/etc/containers/policy.json"
 policy = json.load(open(path))
-for repo in ("ghcr.io/iamlukethedev/herald-os", "ghcr.io/iamlukethedev/herald-os-nvidia"):
+for repo in ("ghcr.io/madxleo/madx-agent-os", "ghcr.io/madxleo/madx-agent-os-nvidia"):
     policy.setdefault("transports", {}).setdefault("docker", {})[repo] = [
         {"type": "sigstoreSigned", "keyPath": "/etc/pki/containers/herald-os.pub", "signedIdentity": {"type": "matchRepository"}}
     ]
@@ -192,4 +191,5 @@ else
   udevadm trigger --subsystem-match=block || true
 fi
 
+python3 "$LINUX/branding/install.py" --root / --layout "${MODE#--}"
 echo "==> system half done ($MODE)"

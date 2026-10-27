@@ -1,5 +1,5 @@
 [Unit]
-Description=Herald OS: check for updates
+Description=MadX Agent OS: check for updates
 
 [Service]
 Type=oneshot

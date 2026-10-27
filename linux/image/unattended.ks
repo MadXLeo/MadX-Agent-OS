@@ -1,4 +1,4 @@
-# An unattended Herald OS install: boot the installer ISO with inst.ks=<url of this file>.
+# An unattended MadX Agent OS install: boot the installer ISO with inst.ks=<url of this file>.
 # It erases one disk and encrypts it; change the passphrase (or remove --passphrase to be asked).
 # The %pre at the end picks the disk: DISK if set there, else the PC's only internal disk. With
 # several internal disks it stops and erases nothing until DISK is set. Every other disk is left
@@ -13,7 +13,7 @@ timezone UTC --utc
 zerombr
 autopart --type=btrfs --encrypted --passphrase=change-me
 # The image itself; the installer ISO points this at the image it was built from.
-ostreecontainer --url=ghcr.io/iamlukethedev/herald-os:stable
+ostreecontainer --url=ghcr.io/madxleo/madx-agent-os:stable
 # The first boot creates the session user; the shell's setup sets its password.
 rootpw --lock
 # The login screen needs graphical.target, which Anaconda does not pick for greetd by itself.
@@ -24,7 +24,7 @@ reboot
 
 %pre --interpreter=/usr/bin/bash --erroronfail --log=/tmp/herald-os-account.log
 # The account the first start makes, and who may sign in to it over SSH. All of it is optional: left
-# empty, the first start makes the account hermes, Herald OS's setup asks for its password, and SSH
+# empty, the first start makes the account hermes, MadX Agent OS's setup asks for its password, and SSH
 # stays off. Anything here that is not usable stops the install before a disk is erased, and
 # /tmp/herald-os-account.log says why.
 #

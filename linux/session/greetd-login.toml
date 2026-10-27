@@ -1,6 +1,6 @@
-# greetd on a system switched to Herald OS from another bootc system: a text login screen on VT 1
+# greetd on a system switched to MadX Agent OS from another bootc system: a text login screen on VT 1
 # (agreety, part of greetd), where each person signs in to their own account with its password and
-# gets the Herald OS session. firstboot.sh installs it as /etc/greetd/config.toml there.
+# gets the MadX Agent OS session. firstboot.sh installs it as /etc/greetd/config.toml there.
 
 [terminal]
 vt = 1

@@ -1079,7 +1079,7 @@ def test_status_says_whether_ssh_is_on_and_how(machine, capsys):
     before = len(machine.calls)
     machine.setup("--status")
     out = capsys.readouterr().out
-    assert "SSH: on (running)" in out and "keys only" in out and "open (Herald OS's rule)" in out
+    assert "SSH: on (running)" in out and "keys only" in out and "open (MadX Agent OS's rule)" in out
     assert "rate limit: at most 4 a minute new connections from each address" in out and "sessions: 1 open" in out
     # Status itself changes nothing and needs no root.
     assert machine.calls[before:] and all(looks(argv) and not root for root, argv in machine.calls[before:])

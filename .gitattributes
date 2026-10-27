@@ -1,0 +1,2 @@
+# The PKGBUILD verifies the exact bytes of its shared helper on every platform.
+/packaging/arch/*/herald-os-package.sh text eol=lf

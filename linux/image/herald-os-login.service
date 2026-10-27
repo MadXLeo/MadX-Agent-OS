@@ -1,5 +1,5 @@
 [Unit]
-Description=Herald OS: the login screen on a system switched from another bootc system
+Description=MadX Agent OS: the login screen on a system switched from another bootc system
 # Every boot, after the first-boot setup (whether or not it finished). On a switched system it makes
 # sure greetd shows a login screen when an account can sign in there, that the session user has no
 # empty password behind it, and that the session user is in wheel only with a password; it also puts right a

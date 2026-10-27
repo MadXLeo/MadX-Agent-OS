@@ -190,7 +190,7 @@ def test_docs_and_sheets_print_what_they_read(monkeypatch, capsys):
             {"name": "Untitled 2", "path": None, "modified": False, "active": False},
         ]}},
         "docs.read": {"ok": True, "summary": "Report.docx: 3 words, 2 headings", "data": {"outline": [{"level": 1, "text": "Report"}, {"level": 2, "text": "Costs"}], "content": "# Report\n\n## Costs\n\nRent."}},
-        "sheets.list": {"ok": True, "summary": "Nothing is open in Herald Sheets", "data": {"workbooks": []}},
+        "sheets.list": {"ok": True, "summary": "Nothing is open in MadX Sheets", "data": {"workbooks": []}},
         "sheets.read": {"ok": True, "summary": "Budget.xlsx: Sheet1 (3×2)", "data": {"values": [["Item", "Cost"], ["Rent", 1200]], "text": [["Item", "Cost"], ["Rent", "$1,200.00"]]}},
     }
     timeouts = []
@@ -207,7 +207,7 @@ def test_docs_and_sheets_print_what_they_read(monkeypatch, capsys):
     cli.docs_cmd(["list", "--json"])
     assert json.loads(capsys.readouterr().out) == replies["docs.list"]["data"]
     cli.sheets_cmd(["list"])
-    assert capsys.readouterr().out == "Nothing is open in Herald Sheets\n"
+    assert capsys.readouterr().out == "Nothing is open in MadX Sheets\n"
     # What the cells show when it differs from their values, else the values.
     cli.sheets_cmd(["read", "A1:B2"])
     assert capsys.readouterr().out == "Item\tCost\nRent\t$1,200.00\n"
@@ -338,7 +338,7 @@ def test_calc_prints_the_answer_its_working_or_its_data(monkeypatch, capsys):
 
     def run_os_wait(command, args=None, timeout=30):
         sent.append((command, args, timeout))
-        return history if command == "calc.history" else {"ok": True, "summary": "Opened Herald Calc"} if command == "calc.open" else replies[args["text"]]
+        return history if command == "calc.history" else {"ok": True, "summary": "Opened MadX Calc"} if command == "calc.open" else replies[args["text"]]
 
     monkeypatch.setattr(cli, "run_os_wait", run_os_wait)
     assert cli.calc_cmd(["84.50 + 15%"]) == 0
@@ -356,19 +356,19 @@ def test_calc_prints_the_answer_its_working_or_its_data(monkeypatch, capsys):
     cli.calc_cmd(["history", "--json"])
     assert json.loads(capsys.readouterr().out)["items"][0] == {"input": "84.50 + 15%", "result": "97.18"}
     cli.calc_cmd(["open"])
-    assert capsys.readouterr().out == "Opened Herald Calc\n"
+    assert capsys.readouterr().out == "Opened MadX Calc\n"
     assert [command for command, _, _ in sent] == ["calc.eval"] * 5 + ["calc.history"] * 2 + ["calc.open"]
     assert all(timeout >= 30 for _, _, timeout in sent)
 
 
 def test_calc_fails_with_the_engines_words(monkeypatch, capsys):
     calls = []
-    monkeypatch.setattr(cli, "relay", lambda cmd, args, *rest, **kwargs: calls.append((cmd, args)) or {"ok": False, "error": 'Herald Calc does not know "banana"'})
+    monkeypatch.setattr(cli, "relay", lambda cmd, args, *rest, **kwargs: calls.append((cmd, args)) or {"ok": False, "error": 'MadX Calc does not know "banana"'})
     with pytest.raises(SystemExit) as stopped:
         cli.calc_cmd(["banana", "+", "2"])
     assert stopped.value.code == 1
     assert calls == [("os-run", ["calc.eval", json.dumps({"text": "banana + 2"})])]
-    assert 'Herald Calc does not know "banana"' in capsys.readouterr().err
+    assert 'MadX Calc does not know "banana"' in capsys.readouterr().err
 
 
 def test_herald_keymap_is_the_template():
@@ -493,7 +493,7 @@ def test_omarchy_4_gets_lua_keys_a_menu_row_and_no_dispatcher(tmp_path, monkeypa
     assert cli.omarchy_install() == 0
     assert all(cli.omarchy_status().values())
     assert cli.HYPR_REQUIRE in lua.read_text()
-    assert 'o.bind("SUPER + ALT + H", "Herald OS", "herald-os-app")' in (home / ".config" / "hypr" / "herald-os.lua").read_text()
+    assert 'o.bind("SUPER + ALT + H", "MadX Agent OS", "herald-os-app")' in (home / ".config" / "hypr" / "herald-os.lua").read_text()
     # Omarchy 4 runs theme-set.d itself: no dispatcher, so the hook runs once.
     assert not (home / ".config" / "omarchy" / "hooks" / "theme-set").exists()
     assert (home / ".config" / "omarchy" / "hooks" / "theme-set.d" / "herald-os").exists()
@@ -550,7 +550,7 @@ def test_omarchy_install_and_remove_leave_things_as_they_were(tmp_path, monkeypa
     assert hook.stat().st_mode & 0o111 and "herald-os theme omarchy" in hook.read_text()
     assert cli.HYPR_SOURCE in hyprland.read_text()
     binds = (home / ".config" / "hypr" / "herald-os.conf").read_text()
-    assert "bindd = SUPER ALT, H, Herald OS keys, submap, herald" in binds and binds.rstrip().endswith("submap = reset")
+    assert "bindd = SUPER ALT, H, MadX Agent OS keys, submap, herald" in binds and binds.rstrip().endswith("submap = reset")
     # Installing twice adds nothing twice.
     cli.omarchy_install()
     assert hyprland.read_text().count(cli.HYPR_SOURCE) == 1
@@ -623,7 +623,7 @@ def test_setup_links_the_bridge_enables_it_and_says_what_changed(hermes_setup, c
     assert (hermes_home / "herald-os" / "tool-search-before").read_text() == "auto\n"
     out = capsys.readouterr().out
     assert "plugins.enabled" in out and "platform_toolsets.cli" in out and "it was auto" in out and "setup --undo" in out
-    # Running it again replaces its own link and keeps the value from before Herald OS.
+    # Running it again replaces its own link and keeps the value from before MadX Agent OS.
     assert cli.setup([]) == 0 and link.is_symlink()
     assert hermes.ran.count(["config", "set", "tools.tool_search.enabled", "off"]) == 1
     assert (hermes_home / "herald-os" / "tool-search-before").read_text() == "auto\n"

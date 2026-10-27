@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install the Herald OS omakase software set (linux/omakase/*.txt): Fedora packages as root,
+# Install the MadX Agent OS omakase software set (linux/omakase/*.txt): Fedora packages as root,
 # Flathub apps and web apps for the session user. Idempotent; safe to re-run after list changes.
 #
 #   herald-os-omakase [install|list] [--packages|--flatpaks|--webapps]
@@ -9,7 +9,7 @@ LISTS="${HERALD_OS_OMAKASE_DIR:-}"
 # The lists that came with this command come first: a checkout's, or the app's when the command is a
 # link into it (/opt/herald-os: the Arch package, the release tarball).
 HERE="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
-for candidate in "$LISTS" "$HERE/../omakase" "$HOME/Herald-OS/linux/omakase" /usr/local/share/herald-os-linux/omakase /usr/share/herald-os/omakase /opt/herald-os/resources/herald-os-linux/omakase; do
+for candidate in "$LISTS" "$HERE/../omakase" "$HOME/MadX-Agent-OS/linux/omakase" "$HOME/Herald-OS/linux/omakase" /usr/local/share/herald-os-linux/omakase /usr/share/herald-os/omakase /opt/herald-os/resources/herald-os-linux/omakase; do
   if [[ -n "$candidate" && -d "$candidate" ]]; then
     LISTS="$candidate"
     break

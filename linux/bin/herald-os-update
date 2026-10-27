@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Update Herald OS: the shell (repo + rebuild, or a newer release tarball in /opt/herald-os), one-shot
+# Update MadX Agent OS: the shell (repo + rebuild, or a newer release tarball in /opt/herald-os), one-shot
 # migrations, system packages (dnf on Fedora, pacman and the AUR helper on Arch, Omarchy's own updater
-# on Omarchy, the whole image with bootc on the Herald OS image, or rpm-ostree once packages are
+# on Omarchy, the whole image with bootc on the MadX Agent OS image, or rpm-ostree once packages are
 # layered on it), Flatpaks and Hermes Agent. `--check`
 # only reports and records whether anything is pending (the menu bar shows a dot). Channels
 # (~/.config/herald-os/channel): stable (default) or edge. A checkout tracks the repo's main branch on
@@ -12,17 +12,18 @@
 # `--migrate` only runs pending one-shot migrations (linux/dev/build.sh calls it after every build).
 #
 # Every step is reported in a summary at the end. The exit status is 1 when the system step or one of
-# Herald OS's own steps (shell, release, migrations, rebuild) failed; a Flatpak or Hermes Agent that
+# MadX Agent OS's own steps (shell, release, migrations, rebuild) failed; a Flatpak or Hermes Agent that
 # did not update is reported, but leaves the exit status at 0.
 set -uo pipefail
 
-REPO="$HOME/Herald-OS"
+REPO="$HOME/MadX-Agent-OS"
+[[ -d "$REPO" ]] || REPO="$HOME/Herald-OS"
 FORCE_REBUILD=""
 STATE="$HOME/.local/state/herald-os"
 CONFIG="$HOME/.config/herald-os"
 CHANNEL="$(cat "$CONFIG/channel" 2>/dev/null || echo stable)"
 MIGRATIONS_DONE="/var/lib/herald-os/migrations"
-# What tells the Herald OS image from other bootc and ostree systems (is_herald_image).
+# What tells the MadX Agent OS image from other bootc and ostree systems (is_herald_image).
 OSTREE_BOOTED=/run/ostree-booted
 OS_RELEASE=(/etc/os-release /usr/lib/os-release)
 IMAGE_SHELL=/usr/share/herald-os/app/resources/app.asar
@@ -64,11 +65,11 @@ now() { date -Iseconds 2>/dev/null || date +%Y-%m-%dT%H:%M:%S%z; }
 notify() { herald-os notify "$1" "${2:-}" >/dev/null 2>&1 || true; }
 report() { herald-os update-available "$1" "$2" >/dev/null 2>&1 || true; }
 
-# The Herald OS image: a booted bootc image whose os-release says IMAGE_ID=herald-os (or, built before
+# The MadX Agent OS image: a booted bootc image whose os-release says IMAGE_ID=herald-os (or, built before
 # that line, with the shell in /usr/share/herald-os/app, where only the image puts it).
 is_herald_image() {
   [[ -e "$OSTREE_BOOTED" ]] || return 1
-  grep -qsxE 'IMAGE_ID="?herald-os"?' "${OS_RELEASE[@]}" || [[ -f "$IMAGE_SHELL" ]]
+  grep -qsxE 'IMAGE_ID="?(madx-agent-os|herald-os)"?' "${OS_RELEASE[@]}" || [[ -f "$IMAGE_SHELL" ]]
 }
 
 # What updates the system underneath: Omarchy refuses a bare `pacman -Syu` (it updates its own
@@ -354,7 +355,7 @@ update_system() {
       else
         # Omarchy's updater asks questions; from the menu it belongs in Omarchy's own flow.
         echo "Omarchy updates the system itself: run omarchy-update (or Update in Omarchy's menu)."
-        notify "System updates go through Omarchy" "Run Update from Omarchy's menu; Herald OS updated its own parts."
+        notify "System updates go through Omarchy" "Run Update from Omarchy's menu; MadX Agent OS updated its own parts."
       fi
       ;;
     image)
@@ -368,7 +369,7 @@ update_system() {
       fi
       ;;
     ostree)
-      echo "This is not the Herald OS image, so the system is left to its own updates (its software center, rpm-ostree upgrade or bootc upgrade)."
+      echo "This is not the MadX Agent OS image, so the system is left to its own updates (its software center, rpm-ostree upgrade or bootc upgrade)."
       ;;
     *) return 0 ;;
   esac
@@ -619,7 +620,7 @@ if [[ -n "$TARBALL" ]]; then
   tarball_version="$("$TARBALL" check --channel "$CHANNEL")"
   case $? in
     0) pending_tarball=1 ;;
-    3) echo "WARNING: could not check for a newer Herald OS release" ;;
+    3) echo "WARNING: could not check for a newer MadX Agent OS release" ;;
   esac
 fi
 
@@ -644,10 +645,10 @@ plural() { [[ $1 -eq 1 ]] && echo "$1 $2" || echo "$1 ${2}s"; }
 
 if [[ $CHECK -eq 1 ]]; then
   total=$((pending_repo + pending_tarball + pending_pkgs + pending_flatpaks))
-  # What the menu bar shows, e.g. "Herald OS, 192 packages, 3 apps".
+  # What the menu bar shows, e.g. "MadX Agent OS, 192 packages, 3 apps".
   parts=()
-  [[ $pending_repo -gt 0 ]] && parts+=("Herald OS")
-  [[ $pending_tarball -gt 0 ]] && parts+=("Herald OS $tarball_version")
+  [[ $pending_repo -gt 0 ]] && parts+=("MadX Agent OS")
+  [[ $pending_tarball -gt 0 ]] && parts+=("MadX Agent OS $tarball_version")
   [[ $pending_pkgs -gt 0 ]] && parts+=("$(plural "$pending_pkgs" package)")
   [[ $pending_flatpaks -gt 0 ]] && parts+=("$(plural "$pending_flatpaks" app)")
   [[ $pkgs_unknown == true ]] && parts+=("system updates not checked")
@@ -664,8 +665,8 @@ if [[ $CHECK -eq 1 ]]; then
 fi
 
 # ---------------------------------------------------------------------------------------------
-echo "==> Herald OS update ($CHANNEL)"
-notify "Updating Herald OS" "This can take a few minutes."
+echo "==> MadX Agent OS update ($CHANNEL)"
+notify "Updating MadX Agent OS" "This can take a few minutes."
 
 # The line of a command's output that says what went wrong: its last error, or else its last line.
 error_of() {
@@ -727,11 +728,11 @@ fi
 
 # Before the migrations, so that the new version's migrations run in the same update.
 if [[ $pending_tarball -eq 1 ]]; then
-  echo "==> Herald OS $tarball_version (the release tarball in /opt/herald-os)"
+  echo "==> MadX Agent OS $tarball_version (the release tarball in /opt/herald-os)"
   if [[ -t 0 ]]; then
     sudo "$TARBALL" update "$tarball_version" || failed+=(herald-os)
   elif ! sudo -n "$TARBALL" update "$tarball_version"; then
-    echo "Herald OS $tarball_version did not install; in a terminal, herald-os update can ask for your password."
+    echo "MadX Agent OS $tarball_version did not install; in a terminal, herald-os update can ask for your password."
     failed+=(herald-os)
   fi
   if [[ " ${failed[*]-} " == *" herald-os "* ]]; then
@@ -821,7 +822,7 @@ report 0 "up to date"
 
 problems=(${failed[@]+"${failed[@]}"} ${warnings[@]+"${warnings[@]}"})
 
-# Hooks in ~/.config/herald-os/hooks/after-update.d/ and "after Herald OS updates" automations.
+# Hooks in ~/.config/herald-os/hooks/after-update.d/ and "after MadX Agent OS updates" automations.
 if command -v herald-os >/dev/null; then
   herald-os event after-update "problems=${problems[*]:-none}" >/dev/null 2>&1 || true
 fi
@@ -845,11 +846,11 @@ if [[ ${#warnings[@]} -gt 0 ]]; then
   notify "Update finished with problems" "${problems[*]}"
   echo "not updated: ${warnings[*]}" >&2
 elif [[ ${#skipped[@]} -gt 0 ]]; then
-  notify "Herald OS updated its own parts" "The system needs root: run sudo herald-os update in a terminal."
+  notify "MadX Agent OS updated its own parts" "The system needs root: run sudo herald-os update in a terminal."
 elif [[ $pending_tarball -eq 1 ]]; then
-  notify "Herald OS $tarball_version is installed" "Log out and back in (or restart herald-os-app) to use it."
+  notify "MadX Agent OS $tarball_version is installed" "Log out and back in (or restart herald-os-app) to use it."
 else
-  notify "Herald OS is up to date" "Restart the shell to use the new build."
+  notify "MadX Agent OS is up to date" "Restart the shell to use the new build."
 fi
 if [[ $pending_repo -gt 0 ]]; then
   herald-os-restart-shell >/dev/null 2>&1 || true

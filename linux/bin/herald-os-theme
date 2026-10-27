@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Herald OS theme engine.
+"""MadX Agent OS theme engine.
 
 One theme definition (linux/themes/<name>/theme.json) recolours the whole system at once: the
 shell (theme + accent preference), niri (borders, backdrop), swaylock, GTK 3/4 apps, the foot
@@ -29,6 +29,7 @@ _SOURCE = Path(__file__).resolve().parent.parent
 THEME_DIRS = [
     *([Path(os.environ["HERALD_OS_THEMES"])] if os.environ.get("HERALD_OS_THEMES") else []),
     (_SOURCE.parent if _SOURCE.name == "herald-os-linux" else _SOURCE) / "themes",
+    HOME / "MadX-Agent-OS" / "linux" / "themes",
     HOME / "Herald-OS" / "linux" / "themes",
     Path("/usr/local/share/herald-os-linux/themes"),
     Path("/usr/share/herald-os/themes"),
@@ -37,7 +38,7 @@ THEME_DIRS = [
 ]
 RUNTIME = Path(os.environ.get("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}")
 SOCKET = RUNTIME / "herald-os" / "control.sock"
-DEFAULT = "herald-ocean"
+DEFAULT = "madx-graphite"
 
 
 def die(message: str, code: int = 1) -> None:
@@ -208,7 +209,7 @@ HERMES_SKIN = "herald-os"
 def render_hermes_skin(theme: dict) -> str:
     """Hermes's own CLI and TUI skin in the theme's colours (the same mapping the shell writes)."""
     c = theme["colors"]
-    label = str(theme.get("label") or theme.get("name") or "Herald OS").replace('"', "'")
+    label = str(theme.get("label") or theme.get("name") or "MadX Agent OS").replace('"', "'")
     colors = {
         "banner_border": c["accent"], "banner_title": c["accent_strong"], "banner_accent": c["accent"],
         "banner_dim": c["fg_dim"], "banner_text": c["fg"], "ui_accent": c["accent"], "ui_label": c["accent_strong"],
@@ -220,8 +221,8 @@ def render_hermes_skin(theme: dict) -> str:
         "completion_menu_current_bg": c["surface"], "selection_bg": c["surface"], "shell_dollar": c["accent"],
         "voice_status_bg": c["bg2"],
     }
-    lines = [f'# Written by Herald OS from its "{label}" theme; Herald OS rewrites it when the theme changes.',
-             f"name: {HERMES_SKIN}", f'description: "Herald OS: {label}"', "colors:"]
+    lines = [f'# Written by MadX Agent OS from its "{label}" theme; MadX Agent OS rewrites it when the theme changes.',
+             f"name: {HERMES_SKIN}", f'description: "MadX Agent OS: {label}"', "colors:"]
     lines += [f'  {key}: "{value}"' for key, value in colors.items()]
     return "\n".join(lines) + "\n"
 

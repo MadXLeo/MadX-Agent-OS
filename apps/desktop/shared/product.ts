@@ -7,6 +7,13 @@ export const PRODUCT = {
   "version": "0.1.0-alpha",
   "slug": "madx-agent-os",
   "repository": "https://github.com/MadXLeo/MadX-Agent-OS",
+  "distribution": {
+    "image": "ghcr.io/madxleo/madx-agent-os",
+    "nvidiaImage": "ghcr.io/madxleo/madx-agent-os-nvidia",
+    "releasesApi": "https://api.github.com/repos/MadXLeo/MadX-Agent-OS/releases?per_page=30",
+    "artifactPrefix": "madx-agent-os",
+    "isoVolumeId": "MADX_AGENT_OS"
+  },
   "apps": {
     "studio": "MadX AI Studio",
     "core": "MadX Core",
@@ -23,10 +30,13 @@ export const PRODUCT = {
   },
   "appearance": {
     "theme": "graphite",
-    "accent": "ice"
+    "accent": "ice",
+    "linuxTheme": "madx-graphite"
   },
   "assets": {
-    "wordmark": "brand/madx-wordmark.png"
+    "wordmark": "brand/madx-wordmark.png",
+    "monogramViewBox": "100 -10 740 740",
+    "monogramClip": "M 110 90 H 810 V 155 H 790 V 510 L 810 640 H 110 Z"
   },
   "compatibility": {
     "electronProfile": "Herald OS",

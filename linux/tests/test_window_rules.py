@@ -15,7 +15,8 @@ def product_source(relative):
     """Resolve the small product constants in the source-level window contract fixture."""
     source = (DESKTOP / relative).read_text(encoding="utf-8")
     source = source.replace("${PRODUCT.name}", PRODUCT["name"])
-    source = source.replace("${PRODUCT.apps.slides}", PRODUCT["apps"]["slides"])
+    for app, name in PRODUCT["apps"].items():
+        source = source.replace("${PRODUCT.apps." + app + "}", name)
     return source.replace("`", "'")
 
 
@@ -66,19 +67,19 @@ def _dialog_titles():
     titles = set()
     nouns = re.search(r"OFFICE_NOUNS[^=]*=\s*\{([^}]*)\}", (DESKTOP / "shared" / "office" / "files.ts").read_text(encoding="utf-8")).group(1)
     for source in ("electron/office/ipc.ts", "electron/canvas/ipc.ts"):
-        text = (DESKTOP / source).read_text(encoding="utf-8")
+        text = product_source(source)
         for expr in re.findall(r"\btitle: ([^,}\n]+)", text):
             # A ternary's titles are its branches, not what it compares.
             titles |= set(re.findall(r"'([^']+)'", expr.split("?", 1)[-1]))
         titles |= set(re.findall(r"(?<!function )pickPdf\([^'\n]*'([^']+)'", text))
-        if "title: `Open a ${OFFICE_NOUNS[app]}`" in text:
+        if "title: 'Open a ${OFFICE_NOUNS[app]}'" in text:
             titles |= {f"Open a {noun}" for noun in re.findall(r"'([^']+)'", nouns)}
     return titles
 
 
 def test_the_shell_s_dialogs_float_in_a_checkout_and_packaged():
     titles = _dialog_titles()
-    assert {"Open a document", "Open a spreadsheet", "Open a presentation", "Save as", "Export as PDF", "Print to File", "Open in Herald Canvas"} <= titles
+    assert {"Open a document", "Open a spreadsheet", "Open a presentation", "Save as", "Export as PDF", "Print to File", f"Open in {PRODUCT['apps']['canvas']}"} <= titles
     # GTK titles its own print dialog.
     for title in titles | {"Print"}:
         for app_id in ("electron", "herald-os"):

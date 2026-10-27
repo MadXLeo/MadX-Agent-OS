@@ -1,4 +1,4 @@
-"""The niri config the Herald OS session starts with: Herald's own file, never the person's."""
+"""The niri config the MadX Agent OS session starts with: Herald's own file, never the person's."""
 
 import importlib.machinery
 import importlib.util

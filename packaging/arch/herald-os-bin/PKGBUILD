@@ -1,19 +1,19 @@
-# Maintainer: Luke The Dev <252071647+iamlukethedev@users.noreply.github.com>
+# Original packaging: Luke The Dev <252071647+iamlukethedev@users.noreply.github.com>
 #
-# Herald OS from the release tarball. Not on the AUR yet: build it from the repository with makepkg -si.
-# A local tarball builds too: HERALD_OS_TARBALL_URL=file:///path/herald-os-<v>-linux-x64.tar.gz makepkg -si --skipchecksums
+# MadX Agent OS from the release tarball. Not on the AUR yet: build it from the repository with makepkg -si.
+# A local tarball builds too: HERALD_OS_TARBALL_URL=file:///path/madx-agent-os-<v>-linux-x64.tar.gz makepkg -si --skipchecksums
 
-pkgname=herald-os-bin
-_version=0.1.0-alpha.5
-pkgver=0.1.0alpha.5
+pkgname=madx-agent-os-bin
+_version=0.1.0-alpha
+pkgver=0.1.0alpha
 pkgrel=1
 pkgdesc='An AI-native desktop built around Hermes Agent: a niri session, or an app inside Hyprland and Omarchy'
 arch=('x86_64' 'aarch64')
-url='https://github.com/iamlukethedev/Herald-OS'
+url='https://github.com/MadXLeo/MadX-Agent-OS'
 license=('MIT')
 depends=('gtk3' 'nss' 'alsa-lib' 'libsecret' 'libnotify' 'python' 'curl' 'wl-clipboard' 'wtype' 'grim' 'slurp')
 optdepends=(
-  'niri: the full Herald OS session (menu bar, dock, tiling)'
+  'niri: the full MadX Agent OS session (menu bar, dock, tiling)'
   'greetd: a login screen that starts the session'
   'swaybg: the wallpaper in the session'
   'swaylock: locking the session'
@@ -31,23 +31,23 @@ optdepends=(
   'ffmpeg: converting recordings'
   'zbar: reading QR codes from the screen'
   'tesseract: copying text from the screen'
-  'libheif: opening HEIC photos in Herald Canvas'
-  'imagemagick: opening TIFF and camera RAW files in Herald Canvas'
+  'libheif: opening HEIC photos in MadX Canvas'
+  'imagemagick: opening TIFF and camera RAW files in MadX Canvas'
   'flite: the system voice, in English, when Hermes cannot speak'
   'flatpak: installing apps from the catalog'
   'podman: the Windows VM and containers'
   'yay: AUR installs from the catalog'
 )
-provides=('herald-os')
-conflicts=('herald-os' 'herald-os-git')
+provides=('madx-agent-os' 'herald-os')
+conflicts=('madx-agent-os' 'madx-agent-os-git' 'herald-os' 'herald-os-bin' 'herald-os-git')
 options=('!strip' '!debug')
 install=herald-os.install
 source=('herald-os-package.sh')
-source_x86_64=("herald-os-${_version}-x64.tar.gz::${HERALD_OS_TARBALL_URL:-$url/releases/download/v${_version}/herald-os-${_version}-linux-x64.tar.gz}")
-source_aarch64=("herald-os-${_version}-arm64.tar.gz::${HERALD_OS_TARBALL_URL:-$url/releases/download/v${_version}/herald-os-${_version}-linux-arm64.tar.gz}")
+source_x86_64=("herald-os-${_version}-x64.tar.gz::${HERALD_OS_TARBALL_URL:-$url/releases/download/v${_version}/madx-agent-os-${_version}-linux-x64.tar.gz}")
+source_aarch64=("herald-os-${_version}-arm64.tar.gz::${HERALD_OS_TARBALL_URL:-$url/releases/download/v${_version}/madx-agent-os-${_version}-linux-arm64.tar.gz}")
 # From the release's .sha256 files, filled in for the tarballs once the release is built; a tarball
 # of your own (HERALD_OS_TARBALL_URL) needs --skipchecksums.
-sha256sums=('120a3b0922a8677c6790af4a93b04109030b5d7201bc85125b62031b152c247c')
+sha256sums=('f6bbc913ceabd729d735caa8d624e4353c6ea25016b8649fc04a69227cb3bfa2')
 sha256sums_x86_64=('SKIP')
 sha256sums_aarch64=('SKIP')
 

@@ -34,7 +34,7 @@ if [[ ! "$version" =~ ^[A-Za-z0-9._-]+$ ]]; then
 fi
 mkdir -p "$4"
 dist="$(cd "$4" && pwd)"
-base="herald-os-$version-$name"
+base="madx-agent-os-$version-$name"
 
 # finish <file> <part|numbered>: checksum, report and, when too big for one release file, split.
 finish() {
@@ -79,8 +79,8 @@ elif [[ -f "$out/qcow2/disk.qcow2" ]]; then
     qemu-img convert -c -O qcow2 "$disk" "$work/herald-os.qcow2"
     rm "$disk"
     python3 "$HERE/make-utm.py" --version "$version" --move "$work/herald-os.qcow2" "$work" >/dev/null
-    (cd "$work" && zip -q -0 -r "$dist/$base.utm.zip" "Herald OS.utm")
-    rm -r "$work/Herald OS.utm"
+    (cd "$work" && zip -q -0 -r "$dist/$base.utm.zip" "MadX Agent OS.utm")
+    rm -r "$work/MadX Agent OS.utm"
     finish "$dist/$base.utm.zip" numbered
   fi
 else

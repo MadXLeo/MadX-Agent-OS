@@ -1,4 +1,4 @@
-"""Herald OS from the release tarball: herald-os-tarball, and the commands finding their data in /opt/herald-os."""
+"""MadX Agent OS from the release tarball: herald-os-tarball, and the commands finding their data in /opt/herald-os."""
 
 import errno
 import hashlib
@@ -97,7 +97,7 @@ def test_versions_sort_the_way_semver_does():
 def release(tag, assets=("x64", "arm64"), prerelease=False, draft=False, checksums=True):
     files = []
     for arch in assets:
-        name = f"herald-os-{tag[1:]}-linux-{arch}.tar.gz"
+        name = f"madx-agent-os-{tag[1:]}-linux-{arch}.tar.gz"
         files.append({"name": name, "size": 1000, "browser_download_url": f"https://example.com/{tag}/{name}"})
         if checksums:
             files.append({"name": f"{name}.sha256", "browser_download_url": f"https://example.com/{tag}/{name}.sha256"})
@@ -185,12 +185,12 @@ def test_a_package_s_herald_os_is_left_to_the_package(layout, monkeypatch, capsy
     assert tb.status(layout) == 2 and tb.check(layout, "stable") == 2
     assert "herald-os-bin" in capsys.readouterr().err
     shutil.rmtree(layout.app)
-    assert "no Herald OS release tarball" in tb.not_a_tarball(layout)
+    assert "no MadX Agent OS release tarball" in tb.not_a_tarball(layout)
 
 
 def tarball_of(app: Path, version: str, arch: str, out: Path) -> tuple[Path, Path]:
     """A release tarball (one top folder, as electron-builder writes it) and its .sha256."""
-    name = f"herald-os-{version}-linux-{arch}.tar.gz"
+    name = f"madx-agent-os-{version}-linux-{arch}.tar.gz"
     with tarfile.open(out / name, "w:gz") as archive:
         archive.add(app, arcname=name[: -len(".tar.gz")])
     checksum = out / f"{name}.sha256"
@@ -250,7 +250,7 @@ def test_the_command_line_stages_into_herald_os_destdir(tmp_path):
     tool = tmp_path / "opt" / "herald-os" / "resources" / "herald-os-linux" / "bin" / "herald-os-tarball"
     assert subprocess.run([sys.executable, str(tool), "install"], env=env, capture_output=True, text=True).returncode == 0
     shown = subprocess.run([sys.executable, str(tmp_path / "usr" / "local" / "bin" / "herald-os-tarball"), "status"], env=env, capture_output=True, text=True)
-    assert shown.returncode == 0 and "Herald OS 0.1.0, from the release tarball" in shown.stdout
+    assert shown.returncode == 0 and "MadX Agent OS 0.1.0, from the release tarball" in shown.stdout
     assert subprocess.run([sys.executable, str(tool), "check", "--channel", "nightly"], env=env, capture_output=True).returncode == 2
 
 
@@ -299,7 +299,7 @@ def updater_env(tmp_path, check_exit: int):
 def test_the_updater_reports_and_installs_a_newer_release(tmp_path):
     env = updater_env(tmp_path, check_exit=0)
     checked = subprocess.run(["bash", str(BIN / "herald-os-update"), "--check", "--no-system"], env=env, capture_output=True, text=True, timeout=60)
-    assert checked.stdout.strip() == "Herald OS 0.2.0"
+    assert checked.stdout.strip() == "MadX Agent OS 0.2.0"
     assert json.loads((tmp_path / "home" / ".local" / "state" / "herald-os" / "update-available.json").read_text())["pending"] == 1
     subprocess.run(["bash", str(BIN / "herald-os-update"), "--no-system", "--no-hermes"], env=env, capture_output=True, text=True, timeout=60, stdin=subprocess.DEVNULL)
     assert (tmp_path / "home" / "tarball.log").read_text().splitlines()[-1] == "update 0.2.0"
@@ -467,7 +467,7 @@ def test_a_failed_exchange_leaves_everything_as_it_was(layout, published, monkey
     with pytest.raises(SystemExit):
         tb.update(layout)
     assert versions(layout) == ["0.1.0", None]
-    assert "Herald OS 0.1.0 is in" in capsys.readouterr().err
+    assert "MadX Agent OS 0.1.0 is in" in capsys.readouterr().err
     assert not list(layout.app.parent.glob(".herald-os-update-*"))
 
 

@@ -1,4 +1,4 @@
-# Herald OS Linux as a bootable container image (ADR-018): Fedora bootc with the Herald OS session,
+# MadX Agent OS Linux as a bootable container image (ADR-018): Fedora bootc with the MadX Agent OS session,
 # the CLIs and the prebuilt shell. Updates replace the whole image (bootc upgrade) and the previous
 # one stays in the boot menu. Built by .github/workflows/image.yml; locally, from the repo root, with
 # the shell tarball for the same architecture next to it:
@@ -18,9 +18,9 @@ RUN bash /tmp/herald-os/linux/image/packages.sh --image /tmp/herald-os/shell.tar
  && dnf clean all \
  && rm -rf /tmp/herald-os /var/cache/* /var/log/* /var/lib/dnf
 
-LABEL org.opencontainers.image.title="Herald OS" \
+LABEL org.opencontainers.image.title="MadX Agent OS" \
       org.opencontainers.image.description="An AI-native desktop built around Hermes Agent" \
-      org.opencontainers.image.source="https://github.com/iamlukethedev/Herald-OS" \
+      org.opencontainers.image.source="https://github.com/MadXLeo/MadX-Agent-OS" \
       org.opencontainers.image.licenses="MIT" \
       containers.bootc="1"
 

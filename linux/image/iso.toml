@@ -9,7 +9,7 @@
 # autopart --encrypted, with no passphrase (Anaconda asks for one, in a window of its own, once the
 # disks are read) and no clearpart or ignoredisk: nothing is erased unless the person chooses it,
 # every disk stays on the storage screen, and until someone changes it the layout goes into free
-# space, which is what keeps dual boot working (only Herald OS's own partitions are encrypted).
+# space, which is what keeps dual boot working (only MadX Agent OS's own partitions are encrypted).
 # Unticking the box there installs without encryption. Opening any screen of the installer stops it
 # from starting the install by itself; the Root Account screen still needs a visit, as before.
 #
@@ -23,3 +23,9 @@ xconfig --startxonboot
 
 [customizations.installer.modules]
 enable = ["org.fedoraproject.Anaconda.Modules.Localization", "org.fedoraproject.Anaconda.Modules.Timezone"]
+
+# Generated MadX ISO metadata; installation disk choices remain in Anaconda.
+[customizations.iso]
+volume_id = "MADX_AGENT_OS"
+application_id = "MadX Agent OS"
+publisher = "MadXCore"

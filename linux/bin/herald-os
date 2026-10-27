@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Herald OS command center.
+"""MadX Agent OS command center.
 
 Everything hotkeys and menus do is available here, so people and agents drive the system the same
 way. Shell-facing commands are relayed to the running shell over its control socket; system chores
@@ -55,7 +55,7 @@ call the tools directly.
                 panel wifi|bluetooth|audio|display|power|clock: the menu bar's quick panels
                 restart wifi|bluetooth|sound|touchpad: bring one back when it stopped working
                 toggle nightlight|dnd|idle|screensaver [on|off] | screensaver | idle show|set ...
-                os <command.id> [json args]: run any Herald OS command (the same ones Hermes uses)
+                os <command.id> [json args]: run any MadX Agent OS command (the same ones Hermes uses)
 """
 
 from __future__ import annotations
@@ -95,6 +95,7 @@ ICONS_DIR = HOME / ".local" / "share" / "icons" / "hermes-webapps"
 _SOURCE = Path(__file__).resolve().parent.parent
 THEME_DIRS = [
     (_SOURCE.parent if _SOURCE.name == "herald-os-linux" else _SOURCE) / "themes",
+    HOME / "MadX-Agent-OS" / "linux" / "themes",
     HOME / "Herald-OS" / "linux" / "themes",
     Path("/usr/local/share/herald-os-linux/themes"),
     Path("/usr/share/herald-os/themes"),
@@ -107,7 +108,7 @@ COMMANDS: dict[str, str] = {
     "ask": "Ask Hermes about the focused window, or about the given text",
     "command": "Open the Hermes command bar",
     "applications": "Open the application launcher",
-    "menu": "Open the Herald OS control menu; `menu check` reads your own entries in ~/.config/herald-os/menu.json",
+    "menu": "Open the MadX Agent OS control menu; `menu check` reads your own entries in ~/.config/herald-os/menu.json",
     "page": "Show a Hermes page: overview hermes missions memory files automations connections settings",
     "open": "Open a Hermes window: terminal system chat-popout",
     "launch": "Launch an installed application by name or desktop id",
@@ -115,7 +116,7 @@ COMMANDS: dict[str, str] = {
     "remove": "remove <catalog-id> | remove app <name> | remove webapp <name>",
     "catalog": "catalog list [--json] [--group <id>] | catalog install|remove|status <id>: AI tools, languages, editors, terminals, games, Windows, media, services, web apps",
     "windows": "windows start|stop|status|connect|remove [--purge]: the Windows VM (herald-os install windows)",
-    "update": "Update Herald OS, Hermes Agent and system packages (--check only reports)",
+    "update": "Update MadX Agent OS, Hermes Agent and system packages (--check only reports)",
     "theme": "theme list | theme set <name> | theme current | theme new <image> [name] | theme install <git-url>",
     "font": "font list | font set <family> [--mono]: the interface font, or the code and terminal font",
     "wallpaper": "Set the wallpaper image (path), or `wallpaper default`",
@@ -134,12 +135,12 @@ COMMANDS: dict[str, str] = {
     "crash": "crash list | crash diagnose [pid|name] (Hermes explains it) | crash mute <name> [off]",
     "event": "event <name> [key=value ...]: report an event so hooks and event automations run (login, after-update, …)",
     "hook": "hook list | hook install <event> <script> | hook dir: scripts that run when something happens",
-    "os": "Run a Herald OS command: os <command.id> [json args], e.g. os page.open '{\"name\": \"missions\"}'",
-    "canvas": "canvas open [file] | new [name] [WxH] | status | layers [project] | history | text <words> [--x …] | resize <WxH> [--anchor …] | crop <x> <y> <w> <h> [--ratio …] [--angle …] | preview [project] | export <file> [--project …] [--overwrite] | undo | redo [--steps <n>] | auto [tone|contrast|color] | align <edges> [--layers …] | distribute <mode> --layers … | guides … | filter <kind> [--amount …] | mask <layer> <action> | remove-background [layer] [--cutout] | fill <x> <y> <w> <h> [--layer …] [--new-layer]: Herald Canvas, the image editor",
-    "docs": "docs open [file] | new [name] [--template …] [--path …] [--content <markdown>|-] | list | read [document] [--part …] [--heading …] | find <text> | write <markdown>|- [--at …] [--heading …] [--mode …] | replace <find> <replacement> [--first] | format [--at …] [--bold] [--style …] [--color …] [--size …] [--align …] | table <json-rows> | image <file> [--width …] | insert-range [range] [--workbook …] | save [document] [--to …] [--overwrite] | pdf [document] [--to …] | undo | redo [--steps <n>]; --document picks the document: Herald Docs, the word processor",
-    "sheets": "sheets open [file] | new [name] [--template …] [--path …] | list | read [range] [--sheet …] | find <text> | write <range> <value…|json-rows> | fill <range> [formula] | format <range> <json> | sort <range> --by <column> [--descending] [--header] | filter <range> --by <column> --values <json> | filter --clear | freeze <rows> [columns] | add-sheet [name] | rename-sheet <sheet> <name> | remove-sheet <sheet> | replace <find> <replacement> [--first] | clean <range> dedupe|trim|numbers|dates|split|case | save [workbook] [--to …] [--overwrite] | pdf [workbook] | undo | redo [--steps <n>]; --workbook picks the workbook: Herald Sheets, the spreadsheet",
-    "slides": "slides open [file] | new [name] [--theme …] [--size …] [--path …] [--slides <json>|-] | list | read [presentation] [--slide …] | add-slide [title] [--layout …] [--body <text>|-] [--notes …] [--after …] | set-slide <slide> [--title …] [--body …] [--layout …] [--hidden|--shown] | notes <slide> <text>|- | move <slide> <to> | remove <slide> | theme <name> | from-doc [document] [--level <n>] [--notes] | insert-range [range] [--workbook …] [--slide …] | replace <find> <replacement> [--first] | save [presentation] [--to …] [--overwrite] | pdf [presentation] | undo | redo [--steps <n>]; --presentation picks the deck: Herald Slides, the presentation editor",
-    "calc": "calc <expression…> [--steps] [--json] | - (a note from stdin) | convert <value> <from> <to> | history [query] | open [text]: Herald Calc, exact math; quote a sum with * or brackets in it",
+    "os": "Run a MadX Agent OS command: os <command.id> [json args], e.g. os page.open '{\"name\": \"missions\"}'",
+    "canvas": "canvas open [file] | new [name] [WxH] | status | layers [project] | history | text <words> [--x …] | resize <WxH> [--anchor …] | crop <x> <y> <w> <h> [--ratio …] [--angle …] | preview [project] | export <file> [--project …] [--overwrite] | undo | redo [--steps <n>] | auto [tone|contrast|color] | align <edges> [--layers …] | distribute <mode> --layers … | guides … | filter <kind> [--amount …] | mask <layer> <action> | remove-background [layer] [--cutout] | fill <x> <y> <w> <h> [--layer …] [--new-layer]: MadX Canvas, the image editor",
+    "docs": "docs open [file] | new [name] [--template …] [--path …] [--content <markdown>|-] | list | read [document] [--part …] [--heading …] | find <text> | write <markdown>|- [--at …] [--heading …] [--mode …] | replace <find> <replacement> [--first] | format [--at …] [--bold] [--style …] [--color …] [--size …] [--align …] | table <json-rows> | image <file> [--width …] | insert-range [range] [--workbook …] | save [document] [--to …] [--overwrite] | pdf [document] [--to …] | undo | redo [--steps <n>]; --document picks the document: MadX Docs, the word processor",
+    "sheets": "sheets open [file] | new [name] [--template …] [--path …] | list | read [range] [--sheet …] | find <text> | write <range> <value…|json-rows> | fill <range> [formula] | format <range> <json> | sort <range> --by <column> [--descending] [--header] | filter <range> --by <column> --values <json> | filter --clear | freeze <rows> [columns] | add-sheet [name] | rename-sheet <sheet> <name> | remove-sheet <sheet> | replace <find> <replacement> [--first] | clean <range> dedupe|trim|numbers|dates|split|case | save [workbook] [--to …] [--overwrite] | pdf [workbook] | undo | redo [--steps <n>]; --workbook picks the workbook: MadX Sheets, the spreadsheet",
+    "slides": "slides open [file] | new [name] [--theme …] [--size …] [--path …] [--slides <json>|-] | list | read [presentation] [--slide …] | add-slide [title] [--layout …] [--body <text>|-] [--notes …] [--after …] | set-slide <slide> [--title …] [--body …] [--layout …] [--hidden|--shown] | notes <slide> <text>|- | move <slide> <to> | remove <slide> | theme <name> | from-doc [document] [--level <n>] [--notes] | insert-range [range] [--workbook …] [--slide …] | replace <find> <replacement> [--first] | save [presentation] [--to …] [--overwrite] | pdf [presentation] | undo | redo [--steps <n>]; --presentation picks the deck: MadX Slides, the presentation editor",
+    "calc": "calc <expression…> [--steps] [--json] | - (a note from stdin) | convert <value> <from> <to> | history [query] | open [text]: MadX Calc, exact math; quote a sum with * or brackets in it",
     "voice": "Talk to Hermes: voice [toggle|start|stop|mute] (default toggle)",
     "dictate": "Start or finish dictation: what you say is typed into the focused app",
     "emoji": "Emoji picker; the pick is typed into the focused app",
@@ -155,13 +156,13 @@ COMMANDS: dict[str, str] = {
     "update-available": "Internal: tell the menu bar how many updates are pending",
     "hermes-command": "Internal: how this account runs Hermes Agent, one argument per line, whichever way it was installed (--managed: only ~/.hermes/hermes-agent, which `herald-os update` updates); exits 1 without one",
     "channel": "Show or set the update channel: channel [stable|edge] (on the image, the image tag it follows)",
-    "rollback": "Go back to the previous version: the Herald OS image's at the next start (it stays in the boot menu), a release tarball's at the next login",
+    "rollback": "Go back to the previous version: the MadX Agent OS image's at the next start (it stays in the boot menu), a release tarball's at the next login",
     "firmware": "firmware [check|update]: device firmware through fwupd (the BIOS, the dock, the SSD)",
     "restart": "restart wifi|bluetooth|sound|touchpad: bring one back when it stopped working, before rebooting (the touchpad asks for your password)",
     "reset": "reset: erase this computer's account, apps and files and start setup again (asks to confirm)",
     "omakase": "Install the curated software set (omakase install | omakase list)",
     "wm": "A window-manager action: wm <niri action> [args] (on Hyprland the same names, or a dispatcher)",
-    "omarchy": "omarchy install | remove | status: run Herald OS inside Omarchy (theme hook, menu entry, keys)",
+    "omarchy": "omarchy install | remove | status: run MadX Agent OS inside Omarchy (theme hook, menu entry, keys)",
     "setup": "setup [--yes]: once per user after installing (Hermes Agent and the bridge plugin) | setup --undo: take back its changes to Hermes | setup fingerprint | setup fido2 | setup ssh [--key <public key>] [--github <user>] [--keys-file <file>] [--passwords] [--no-firewall | --offline-firewall] [--user <name>]: SSH for keys only, never root, rate-limited per address | setup ssh --off [--end-sessions] | setup ssh --status [--json]",
     "state": "Dump the shell's window-manager state",
     "debug": "Print diagnostics for bug reports",
@@ -192,7 +193,7 @@ def relay(cmd: str, args: list[str], extra: dict | None = None, *, quiet: bool =
     if not SOCKET.exists():
         if quiet:
             return {"ok": False, "error": "shell not running"}
-        die(f"the Herald OS shell is not running (no {SOCKET})", 3)
+        die(f"the MadX Agent OS shell is not running (no {SOCKET})", 3)
     payload = {"cmd": cmd, "args": args, **(extra or {})}
     try:
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
@@ -237,7 +238,7 @@ def compositor() -> str | None:
     return None
 
 
-# The niri actions Herald's own binds and docs use, as Hyprland dispatchers.
+# The niri actions MadX's own binds and docs use, as Hyprland dispatchers.
 HYPR_ACTIONS = {
     "close-window": ["killactive"],
     "fullscreen-window": ["fullscreen", "0"],
@@ -408,7 +409,7 @@ def install_webapp(name: str, url: str, icon_url: str | None = None) -> int:
     desktop.write_text(
         "[Desktop Entry]\n"
         f"Name={name}\n"
-        f"Comment=Herald OS web app for {host}\n"
+        f"Comment=MadX Agent OS web app for {host}\n"
         f"Exec=herald-os webapp-open {shell_quote(url)} {shell_quote(name)}\n"
         f"Icon={icon_path}\n"
         "Type=Application\n"
@@ -1761,7 +1762,7 @@ def run_os_wait(command: str, args: dict | None = None, timeout: float = 30) -> 
 
 
 # ---------------------------------------------------------------------------------------------
-# Herald Canvas: the image editor, through the same canvas.* commands Hermes uses.
+# MadX Canvas: the image editor, through the same canvas.* commands Hermes uses.
 CANVAS_USAGE = (
     "canvas open [<file>] | new [<name>] [<width>x<height>] | status | layers [<project>] | history [<project>] "
     "| text <words> [--x <px>] [--y <px>] [--width <px>] [--size <px>] [--font <family>] [--color <css>] [--align left|center|right] "
@@ -1994,14 +1995,14 @@ def canvas_cmd(args: list[str]) -> int:
         for doc in data.get("documents") or []:
             print(f"{'*' if doc.get('active') else ' '} {doc.get('name')}  {doc.get('width')}×{doc.get('height')}  {doc.get('path') or 'not saved'}{'  (edited)' if doc.get('modified') else ''}")
         if not data.get("documents"):
-            print("Nothing is open in Herald Canvas.")
+            print("Nothing is open in MadX Canvas.")
         return 0
     print(reply.get("summary") or "done")
     return 0
 
 
 # ---------------------------------------------------------------------------------------------
-# Herald Docs and Herald Sheets: documents and workbooks, through the same docs.* and sheets.*
+# MadX Docs and MadX Sheets: documents and workbooks, through the same docs.* and sheets.*
 # commands Hermes uses.
 DOCS_USAGE = (
     "docs open [<file>] | new [<name>] [--template <template>] [--path <file>] [--content <markdown>|-] | list "
@@ -2499,7 +2500,7 @@ def slides_cmd(args: list[str]) -> int:
 
 
 # ---------------------------------------------------------------------------------------------
-# Herald Calc: exact math, through the same calc.* commands Hermes uses.
+# MadX Calc: exact math, through the same calc.* commands Hermes uses.
 CALC_USAGE = "calc <expression…> [--steps] [--json] | - (lines from stdin, read as a note) | convert <value> <from> <to> | history [<query>] | open [<text>]"
 
 
@@ -2683,7 +2684,7 @@ def branding_cmd(args: list[str]) -> int:
         die(reply.get("error") or "the shell rejected the command", 1)
     view = reply.get("branding") or {}
     print(f"name:  {view.get('name') or '(none)'}")
-    print(f"logo:  {'yours' if view.get('logo') else 'the Herald logo'}")
+    print(f"logo:  {'yours' if view.get('logo') else 'the MadX logo'}")
     print(f"lock:  {view.get('lock') or 'the theme colours'}")
     return 0
 
@@ -2705,7 +2706,7 @@ DISK_USAGE = "password --disk [--new-owner] | password --disk --status"
 DISK_MIN = 8
 DISK_WRONG, DISK_NOT_ENCRYPTED, DISK_NO_ROOT, DISK_PARTLY, DISK_UNKNOWN, DISK_NOT_TAKEN_BACK, DISK_NOT_THE_PASSWORD = 3, 4, 5, 6, 7, 8, 9
 DISK_NOT_ENCRYPTED_TEXT = (
-    "this computer's disk is not encrypted, so there is no disk password to change. Herald OS encrypts "
+    "this computer's disk is not encrypted, so there is no disk password to change. MadX Agent OS encrypts "
     "the disk when it is installed, unless \"Encrypt my data\" was unticked; encrypting it now means "
     "installing again."
 )
@@ -2800,7 +2801,7 @@ def disk_devices() -> list[str]:
 
 
 def disk_unknown_text(error: DiskUnknown) -> str:
-    return (f"{error}, so Herald OS cannot tell which encrypted devices hold the root filesystem. Nothing was "
+    return (f"{error}, so MadX Agent OS cannot tell which encrypted devices hold the root filesystem. Nothing was "
             "changed: guessing could change the password of another disk.")
 
 
@@ -3206,7 +3207,7 @@ def update(check_only: bool) -> int:
     updater = shutil.which("herald-os-update")
     if updater:
         return subprocess.call([updater] + (["--check"] if check_only else []))
-    print("herald-os-update is not installed; run linux/dev/build.sh in your Herald-OS checkout to install it.")
+    print("herald-os-update is not installed; run linux/dev/build.sh in your MadX-Agent-OS checkout to install it.")
     return 1
 
 
@@ -3214,13 +3215,13 @@ SESSION_ENTRIES = (Path("/usr/share/wayland-sessions/herald-os.desktop"), Path("
 
 
 def session_hint() -> str:
-    """How to start Herald OS, from what this machine has: the login-screen entry and niri."""
+    """How to start MadX Agent OS, from what this machine has: the login-screen entry and niri."""
     listed = any(entry.exists() for entry in SESSION_ENTRIES)
     if listed and shutil.which("niri"):
-        return "Start the full session from your login screen (Herald OS), or run herald-os-app inside your desktop."
+        return "Start the full session from your login screen (MadX Agent OS), or run herald-os-app inside your desktop."
     if listed:
-        return "Run herald-os-app inside your desktop. The full session (Herald OS on your login screen) also needs niri."
-    return "Run herald-os-app inside your desktop. For the full session, install niri; then `sudo herald-os-tarball install` puts Herald OS on your login screen (docs/LINUX.md)."
+        return "Run herald-os-app inside your desktop. The full session (MadX Agent OS on your login screen) also needs niri."
+    return "Run herald-os-app inside your desktop. For the full session, install niri; then `sudo herald-os-tarball install` puts MadX Agent OS on your login screen (docs/LINUX.md)."
 
 
 def debug() -> int:
@@ -3231,7 +3232,7 @@ def debug() -> int:
         except Exception:  # noqa: BLE001
             print(f"{label:<14} unavailable")
 
-    print("Herald OS debug")
+    print("MadX Agent OS debug")
     line("os", ["sh", "-c", ". /etc/os-release && echo $PRETTY_NAME"])
     line("kernel", ["uname", "-r"])
     line("niri", ["niri", "--version"])
@@ -3250,7 +3251,7 @@ def debug() -> int:
 
 
 # ---------------------------------------------------------------------------------------------
-# Keymaps. Herald's niri config, ~/.config/niri/herald-os.kdl (the session starts niri with it), is
+# Keymaps. MadX's niri config, ~/.config/niri/herald-os.kdl (the session starts niri with it), is
 # rendered from its template; a personal ~/.config/niri/config.kdl is never touched. The Omarchy keymap
 # makes Super+C, X and V copy, cut and paste in every app (terminals included, through Ctrl+Insert and
 # Shift+Insert), and moves the Herald binds they replace one modifier over.
@@ -3262,6 +3263,7 @@ NIRI_CONFIG = HOME / ".config" / "niri" / "herald-os.kdl"
 # elsewhere (the image, the development VM) fall through to the folders after it.
 NIRI_TEMPLATES = [
     Path(__file__).resolve().parent.parent / "niri" / "config.kdl",
+    HOME / "MadX-Agent-OS" / "linux" / "niri" / "config.kdl",
     HOME / "Herald-OS" / "linux" / "niri" / "config.kdl",
     Path("/usr/local/share/herald-os-linux/niri/config.kdl"),
     Path("/usr/share/herald-os/niri/config.kdl"),
@@ -3271,7 +3273,7 @@ OMARCHY_BINDS = {
     "Mod+X": 'Mod+X hotkey-overlay-title="Cut" { spawn "wtype" "-M" "ctrl" "x" "-m" "ctrl"; }',
     "Mod+V": 'Mod+V hotkey-overlay-title="Paste" { spawn "wtype" "-M" "shift" "-k" "Insert" "-m" "shift"; }',
 }
-# Herald's own binds on those keys move here (both are free in the template).
+# MadX's own binds on those keys move here (both are free in the template).
 OMARCHY_MOVES = {"Mod+C": "Mod+Ctrl+C", "Mod+V": "Mod+Shift+V"}
 
 
@@ -3284,7 +3286,7 @@ def current_keymap() -> str:
 
 
 def render_keymap(template: str, keymap: str) -> str:
-    """The niri config for a keymap: the template unchanged for Herald's keys, rewritten for Omarchy's."""
+    """The niri config for a keymap: the template unchanged for MadX's keys, rewritten for Omarchy's."""
     if keymap != "omarchy":
         return template
     out: list[str] = []
@@ -3317,7 +3319,7 @@ def keymap_cmd(args: list[str]) -> int:
         die("keymap show | herald | omarchy | apply", 2)
     template = next((path for path in NIRI_TEMPLATES if path.is_file()), None)
     if not template:
-        die("the niri template is missing; reinstall Herald OS or run herald-os-build")
+        die("the niri template is missing; reinstall MadX Agent OS or run herald-os-build")
     rendered = render_keymap(template.read_text(), current_keymap())
     # niri reloads on every write: only a changed config is written, once and atomically, so it
     # never reads half a file.
@@ -3334,9 +3336,9 @@ def keymap_cmd(args: list[str]) -> int:
 # ---------------------------------------------------------------------------------------------
 # Per-user setup after installing the package: Hermes, and the bridge plugin that gives it the system.
 HERMES_HOME = Path(os.environ.get("HERMES_HOME") or HOME / ".hermes")
-BRIDGE_DIRS = [HOME / "Herald-OS" / "plugins" / "herald-os-bridge", Path("/usr/share/herald-os/bridge"), Path("/opt/herald-os/resources/herald-os-bridge")]
+BRIDGE_DIRS = [HOME / "MadX-Agent-OS" / "plugins" / "herald-os-bridge", HOME / "Herald-OS" / "plugins" / "herald-os-bridge", Path("/usr/share/herald-os/bridge"), Path("/opt/herald-os/resources/herald-os-bridge")]
 HERMES_INSTALLER = "https://hermes-agent.nousresearch.com/install.sh"
-# On the Herald OS image: Hermes did not install at the first boot, and herald-os-hermes.service is
+# On the MadX Agent OS image: Hermes did not install at the first boot, and herald-os-hermes.service is
 # installing it (firstboot.sh). What is in it says how that goes.
 HERMES_PENDING = Path("/var/lib/herald-os/hermes-pending")
 
@@ -3380,7 +3382,7 @@ ANSI = re.compile(r"\x1b\[[0-9;]*m")
 
 
 def tool_search_before() -> Path:
-    """Every Herald OS setup (this command, the app's first start, scripts/bootstrap.sh) writes the value
+    """Every MadX Agent OS setup (this command, the app's first start, scripts/bootstrap.sh) writes the value
     it found here before turning Tool Search off, and only the first time, so `setup --undo` can put it back."""
     return HERMES_HOME / "herald-os" / "tool-search-before"
 
@@ -3416,7 +3418,7 @@ def enable_bridge(hermes: list[str]) -> None:
     """User plugins are opt-in and a saved toolset list is authoritative, so both are recorded. Tool
     Search would hide plugin tools behind a lookup, and it has no per-plugin switch (ADR-010)."""
     hermes_step(hermes, ["plugins", "enable", "herald-os-bridge"], f"adds it to plugins.enabled in {HERMES_HOME / 'config.yaml'}")
-    hermes_step(hermes, ["tools", "enable", "herald_os"], "saves platform_toolsets.cli with herald_os in it (Herald OS's sessions share that list with the hermes CLI; the tools run only in Herald OS sessions)")
+    hermes_step(hermes, ["tools", "enable", "herald_os"], "saves platform_toolsets.cli with herald_os in it (MadX Agent OS's sessions share that list with the hermes CLI; the tools run only in MadX Agent OS sessions)")
     before, record = hermes_value(hermes, TOOL_SEARCH), tool_search_before()
     if before == "off":
         print(f"==> {TOOL_SEARCH} is off already")
@@ -3442,12 +3444,12 @@ def setup_undo() -> int:
         link.unlink()
         print(f"==> removed the plugin link {link}")
     elif link.exists():
-        print(f"==> {link} is a folder Herald OS did not make; left alone")
+        print(f"==> {link} is a folder MadX Agent OS did not make; left alone")
     # The app turns the bridge on at its first start unless this marker says that happened already.
     marker = HERMES_HOME / "herald-os" / "bridge-enabled"
     marker.parent.mkdir(parents=True, exist_ok=True)
     marker.touch()
-    print("Herald OS no longer changes your Hermes; `herald-os setup` makes the changes again.")
+    print("MadX Agent OS no longer changes your Hermes; `herald-os setup` makes the changes again.")
     return 0
 
 
@@ -3457,10 +3459,10 @@ def restore_tool_search(hermes: list[str]) -> None:
         print(f"==> {TOOL_SEARCH} is {current}, not off; left as it is")
     elif record.exists():
         before = record.read_text().strip()
-        hermes_step(hermes, ["config", "set", TOOL_SEARCH, before], f"back to {before}, its value before Herald OS")
+        hermes_step(hermes, ["config", "set", TOOL_SEARCH, before], f"back to {before}, its value before MadX Agent OS")
     else:
         # Setups before the record existed turned it off without one; Hermes's default is the likely value.
-        hermes_step(hermes, ["config", "set", TOOL_SEARCH, "auto"], f"back to Hermes's default, auto (Herald OS kept no record of the value before; hermes config set {TOOL_SEARCH} off if you had it off yourself)")
+        hermes_step(hermes, ["config", "set", TOOL_SEARCH, "auto"], f"back to Hermes's default, auto (MadX Agent OS kept no record of the value before; hermes config set {TOOL_SEARCH} off if you had it off yourself)")
     record.unlink(missing_ok=True)
 
 
@@ -3477,14 +3479,14 @@ def setup(args: list[str]) -> int:
     assume_yes = "--yes" in args or "-y" in args
     bridge = next((d for d in BRIDGE_DIRS if (d / "plugin.yaml").exists()), None)
     if not bridge:
-        die("the herald-os-bridge plugin is missing; reinstall Herald OS", 1)
+        die("the herald-os-bridge plugin is missing; reinstall MadX Agent OS", 1)
     hermes = hermes_command()
     if not hermes:
         if HERMES_PENDING.exists():
             # A second installer in the same checkout would race the one already at work.
             status = HERMES_PENDING.read_text().strip() or "pending"
             die(f"Hermes Agent is not installed yet. herald-os-hermes.service installs it once this computer is online, then sets it up ({status} now): `journalctl -u herald-os-hermes -f` follows it, `sudo systemctl restart herald-os-hermes` tries again at once", 1)
-        print(f"Hermes Agent is not installed. Herald OS runs on it; the installer is {HERMES_INSTALLER}")
+        print(f"Hermes Agent is not installed. MadX Agent OS runs on it; the installer is {HERMES_INSTALLER}")
         if not assume_yes:
             if not sys.stdin.isatty():
                 die("`herald-os setup --yes` installs it and then sets it up (in a terminal, `herald-os setup` asks first)", 1)
@@ -3500,14 +3502,14 @@ def setup(args: list[str]) -> int:
     if link.is_symlink():
         link.unlink()
     elif link.exists():
-        die(f"{link} exists and is not a link Herald OS made; move it aside and run setup again", 1)
+        die(f"{link} exists and is not a link MadX Agent OS made; move it aside and run setup again", 1)
     link.symlink_to(bridge)
     print(f"==> bridge plugin: {link} -> {bridge}")
     enable_bridge(hermes)
     print("==> Hermes can now use the system (files, apps, settings), asking before anything that changes it")
     print("    To take these changes back: herald-os setup --undo")
     if is_omarchy():
-        print("Omarchy: `herald-os omarchy install` adds Herald OS to its menu, theme and keys.")
+        print("Omarchy: `herald-os omarchy install` adds MadX Agent OS to its menu, theme and keys.")
     print(session_hint())
     return 0
 
@@ -3554,7 +3556,7 @@ def setup_sign_in(kind: str) -> int:
         if code == 0:
             print(f"Done: the lock screen and sudo accept your {what} as well as your password.")
         return code
-    # Arch: the line goes into sudo and Herald's lock screen (swaylock), with a backup of every
+    # Arch: the line goes into sudo and MadX's lock screen (swaylock), with a backup of every
     # file it changes. hyprlock does fingerprints itself and is left alone.
     changed = [file for file in PAM_FILES if Path(file).exists() and pam_enable(Path(file), pam)]
     if not any(Path(file).exists() for file in PAM_FILES):
@@ -3602,7 +3604,7 @@ SSH_UNITS = ("sshd.service", "sshd.socket")
 SSH_RICH_RULE = 'rule service name="ssh" accept'
 # The rate limit is per source address, which firewalld cannot express: a rich rule's `limit` counts
 # every source together (so anyone could use it up and lock everyone else out), and its direct
-# interface is deprecated and needs iptables. It is an nftables table of Herald OS's own instead,
+# interface is deprecated and needs iptables. It is an nftables table of MadX Agent OS's own instead,
 # hooked in before firewalld's (which leaves other tables alone): new SSH connections over the rate
 # from one IPv4 address, or one IPv6 /64, are dropped there, whatever the zone. A unit loads it at boot.
 SSH_LIMIT_TABLE = "herald_os_ssh"
@@ -4155,7 +4157,7 @@ def sshd_files(path: Path | None = None, depth: int = 0) -> tuple[list[tuple[str
 
 def file_state(path: Path) -> str:
     """"present" for a regular file, "absent", or "tampered" for a link or anything else in its place;
-    a link is never followed, so it cannot make someone else's file look like Herald's."""
+    a link is never followed, so it cannot make someone else's file look like MadX's."""
     try:
         mode = os.lstat(path).st_mode
     except FileNotFoundError:
@@ -4425,7 +4427,7 @@ def firewalld_running() -> bool:
 
 def firewall_zone() -> tuple[str, str] | None:
     """("firewall-cmd", zone) while firewalld runs, ("firewall-offline-cmd", zone) when it is installed
-    and stopped, else None. The default zone is the one Herald OS's connections use."""
+    and stopped, else None. The default zone is the one MadX Agent OS's connections use."""
     if firewalld_running():
         zone = root_run(["firewall-cmd", "--get-default-zone"])
         return ("firewall-cmd", zone.stdout.strip()) if zone.returncode == 0 and zone.stdout.strip() else None
@@ -4461,7 +4463,7 @@ def ssh_limit_unit(nft: str) -> str:
     return (
         "# Written by `herald-os setup ssh`; `herald-os setup ssh --off` removes it.\n"
         "[Unit]\n"
-        "Description=Herald OS: at most 4 new SSH connections a minute from each address\n"
+        "Description=MadX Agent OS: at most 4 new SSH connections a minute from each address\n"
         "Wants=network-pre.target\n"
         "Before=network-pre.target sshd.service sshd.socket\n"
         "\n"
@@ -4563,7 +4565,7 @@ def firewall_close() -> str:
     for permanent in ([], ["--permanent"]) if tool == "firewall-cmd" else ([],):
         root_step([tool, *permanent, f"--zone={zone}", f"--remove-rich-rule={SSH_RICH_RULE}"], "Closing SSH in the firewall")
     if root_run([tool, f"--zone={zone}", "--query-service=ssh"]).returncode == 0:
-        return f"Herald OS's rule is gone, but the firewall zone {zone} still lets SSH in by itself, which setup ssh did not add (sudo firewall-cmd --permanent --zone={zone} --remove-service=ssh closes it)"
+        return f"MadX Agent OS's rule is gone, but the firewall zone {zone} still lets SSH in by itself, which setup ssh did not add (sudo firewall-cmd --permanent --zone={zone} --remove-service=ssh closes it)"
     return f"closed in the firewall zone {zone}"
 
 
@@ -5028,7 +5030,7 @@ def ssh_off(opts: dict) -> int:
         root_step(["rm", "-f", str(SSHD_DROP_IN)], f"Removing {SSHD_DROP_IN}")
     ssh_limit_off()
     firewall = firewall_close()
-    print("SSH is off: sshd is stopped and disabled, and its Herald OS settings and rate limit are gone.")
+    print("SSH is off: sshd is stopped and disabled, and its MadX Agent OS settings and rate limit are gone.")
     print(f"    firewall: {firewall}")
     if account:
         print(f"    {ssh_dir(account) / 'authorized_keys'} is left as it is; its keys let no one in while SSH is off.")
@@ -5128,7 +5130,7 @@ def ssh_status(opts: dict) -> int:
     elif firewall["rule"] is None and firewall["service"] is None:
         print(f"    firewall: zone {firewall['zone'] or 'unknown'}; whether SSH gets in needs root (sudo herald-os setup ssh --status)")
     else:
-        door = "open (Herald OS's rule)" if firewall["rule"] else "open (the zone's own ssh service)" if firewall["service"] else "closed"
+        door = "open (MadX Agent OS's rule)" if firewall["rule"] else "open (the zone's own ssh service)" if firewall["service"] else "closed"
         print(f"    firewall: SSH {door} in zone {firewall['zone']}")
     print(f"    rate limit: {'at most ' + SSH_LIMIT_RATE.replace('/', ' a ') + ' new connections from each address' if state['rateLimit'] else 'none'}"
           + ("; sshd needs it to start" if state["limitRequired"] else ""))
@@ -5234,7 +5236,7 @@ IMAGE_SHELL = Path("/usr/share/herald-os/app/resources/app.asar")
 
 
 def is_image() -> bool:
-    """The Herald OS image (bootc): updates replace the whole system and can be undone. Another bootc
+    """The MadX Agent OS image (bootc): updates replace the whole system and can be undone. Another bootc
     or ostree system (Silverblue, Bazzite, Bluefin) is the person's own, and never gets bootc from here."""
     if not OSTREE_BOOTED.exists():
         return False
@@ -5243,7 +5245,7 @@ def is_image() -> bool:
             lines = path.read_text(errors="replace").splitlines()
         except OSError:
             continue
-        if any(line.strip() in ("IMAGE_ID=herald-os", 'IMAGE_ID="herald-os"') for line in lines):
+        if any(line.strip() in ("IMAGE_ID=herald-os", 'IMAGE_ID="herald-os"', "IMAGE_ID=madx-agent-os", 'IMAGE_ID="madx-agent-os"') for line in lines):
             return True
     # Images built before os-release named them: only the image puts the shell under /usr/share.
     return IMAGE_SHELL.is_file()
@@ -5280,10 +5282,10 @@ def rollback() -> int:
         tarball = shutil.which("herald-os-tarball")
         if tarball and Path("/opt/herald-os.previous/resources/app.asar").is_file():
             return subprocess.call(["sudo", *([] if sys.stdin.isatty() else ["-n"]), tarball, "rollback"])
-        die("rollback is for the Herald OS image and the release tarball; on this system, use your package manager's history", 2)
+        die("rollback is for the MadX Agent OS image and the release tarball; on this system, use your package manager's history", 2)
     code = subprocess.call(["sudo", "bootc", "rollback"])
     if code == 0:
-        notify("Rollback ready", "Restart to use the previous version of Herald OS; this one stays in the boot menu.")
+        notify("Rollback ready", "Restart to use the previous version of MadX Agent OS; this one stays in the boot menu.")
     return code
 
 
@@ -5317,7 +5319,7 @@ RESET_HELPER = Path("/usr/libexec/herald-os/reset-helper")
 def reset_disk_note(encrypted: bool | None) -> str:
     """What a reset leaves on the disk, said plainly; None when it cannot be told (pure; tested)."""
     if encrypted is None:
-        return ("Herald OS could not tell whether the disk is encrypted. If it is not, a reset deletes the files "
+        return ("MadX Agent OS could not tell whether the disk is encrypted. If it is not, a reset deletes the files "
                 "but is not a secure erase: someone with the disk and recovery tools may get some of them back.")
     if encrypted:
         return ("The disk is encrypted, and its password stays the current one until whoever sets it up next "
@@ -5329,12 +5331,12 @@ def reset_disk_note(encrypted: bool | None) -> str:
 
 def reset(args: list[str]) -> int:
     if not RESET_HELPER.exists():
-        die("reset is for the Herald OS image", 2)
+        die("reset is for the MadX Agent OS image", 2)
     if not sys.stdin.isatty():
         die("reset needs a terminal: it asks you to confirm and for your password", 2)
     user = os.environ.get("USER", "")
     print(f"This erases {user}'s files, apps and settings on this computer, then restarts into setup.")
-    print("Herald OS itself stays. Back up anything you want to keep first.")
+    print("MadX Agent OS itself stays. Back up anything you want to keep first.")
     try:
         encrypted: bool | None = bool(disk_devices())
     except DiskUnknown:
@@ -5347,7 +5349,7 @@ def reset(args: list[str]) -> int:
 
 
 # ---------------------------------------------------------------------------------------------
-# Omarchy: Herald OS as an app inside it (herald-os-app), wearing Omarchy's theme, in its menu, on
+# Omarchy: MadX Agent OS as an app inside it (herald-os-app), wearing Omarchy's theme, in its menu, on
 # its own keys. Herald never overwrites a file Omarchy or the person owns: it adds one marked line
 # to theirs, or prints what to add. Omarchy 4 (Lua Hyprland config, its menu JSONC, state under
 # ~/.local/state) and Omarchy 3 (hyprland.conf, ~/.config/omarchy/current) are both handled.
@@ -5363,16 +5365,16 @@ HYPR_SOURCE = "source = ~/.config/hypr/herald-os.conf  # herald-os"
 HERALD_HYPR_LUA = HYPR_DIR / "herald-os.lua"
 HYPR_REQUIRE = 'require("hypr.herald-os")  -- herald-os'
 APP_DESKTOP = APPS_DIR / "herald-os-app.desktop"
-THEME_HOOK = "#!/bin/sh\n# Herald OS follows the Omarchy theme (herald-os omarchy remove takes this out).\nexec herald-os theme omarchy >/dev/null 2>&1\n"
+THEME_HOOK = "#!/bin/sh\n# MadX Agent OS follows the Omarchy theme (herald-os omarchy remove takes this out).\nexec herald-os theme omarchy >/dev/null 2>&1\n"
 HOOK_DISPATCHER = (
     "#!/bin/sh\n# herald-os: runs every hook in theme-set.d with the theme's name.\n"
     'for hook in "$(dirname "$0")"/theme-set.d/*; do [ -x "$hook" ] && "$hook" "$@"; done\n'
 )
 # Omarchy's menu parser drops whole-line // comments only: a comment after a row breaks the whole file.
-MENU_MARK = "  // Herald OS (herald-os omarchy remove takes it out):"
-MENU_LINE = '  "herald-os": {"icon": "󰚩", "label": "Herald OS", "action": "herald-os-app", "description": "Hermes as your desktop"},'
-HYPR_LUA_BINDS = """-- Herald OS (written by `herald-os omarchy install`; `herald-os omarchy remove` takes it out).
-o.bind("SUPER + ALT + H", "Herald OS", "herald-os-app")
+MENU_MARK = "  // MadX Agent OS (herald-os omarchy remove takes it out):"
+MENU_LINE = '  "herald-os": {"icon": "󰚩", "label": "MadX Agent OS", "action": "herald-os-app", "description": "Hermes as your desktop"},'
+HYPR_LUA_BINDS = """-- MadX Agent OS (written by `herald-os omarchy install`; `herald-os omarchy remove` takes it out).
+o.bind("SUPER + ALT + H", "MadX Agent OS", "herald-os-app")
 o.bind("SUPER + ALT + A", "Ask Hermes about this window", "herald-os ask")
 o.bind("SUPER + ALT + C", "Hermes command bar", "herald-os command")
 o.bind("SUPER + ALT + V", "Talk to Hermes", "herald-os voice")
@@ -5380,12 +5382,12 @@ o.bind("SUPER + ALT + X", "Dictate into the focused app", "herald-os dictate")
 o.bind("SUPER + ALT + E", "Emoji", "herald-os emoji")
 o.bind("SUPER + ALT + M", "Hermes missions", "herald-os page missions")
 """
-HYPR_BINDS = """# Herald OS (written by `herald-os omarchy install`; `herald-os omarchy remove` takes it out).
-# Super+Alt+H, then: Return opens Herald OS, A asks about this window, C opens the command bar,
+HYPR_BINDS = """# MadX Agent OS (written by `herald-os omarchy install`; `herald-os omarchy remove` takes it out).
+# Super+Alt+H, then: Return opens MadX Agent OS, A asks about this window, C opens the command bar,
 # V talks to Hermes, X dictates into the focused app, E picks an emoji, M shows Missions.
-bindd = SUPER ALT, H, Herald OS keys, submap, herald
+bindd = SUPER ALT, H, MadX Agent OS keys, submap, herald
 submap = herald
-bindd = , Return, Open Herald OS, exec, herald-os-app
+bindd = , Return, Open MadX Agent OS, exec, herald-os-app
 bindd = , A, Ask Hermes about this window, exec, herald-os ask
 bindd = , C, Hermes command bar, exec, herald-os command
 bindd = , V, Talk to Hermes, exec, herald-os voice
@@ -5408,7 +5410,7 @@ def is_omarchy() -> bool:
 
 
 def omarchy_app_mode() -> bool:
-    """Herald runs inside Omarchy (Hyprland), not as its own niri session."""
+    """MadX runs inside Omarchy (Hyprland), not as its own niri session."""
     return is_omarchy() and compositor() == "hyprland"
 
 
@@ -5466,10 +5468,12 @@ def split_jsonc_comment(line: str) -> tuple[str, str]:
 
 
 def menu_with_herald(text: str) -> str | None:
-    """Omarchy 4's menu JSONC (an object of dotted ids) with Herald's row added before its closing
+    """Omarchy 4's menu JSONC (an object of dotted ids) with MadX's row added before its closing
     brace, or None when it is already there or the file is not such an object (pure; tested)."""
     if '"herald-os"' in text:
-        return None
+        # Update only the exact generated legacy row. Preserve edits and custom menu entries.
+        legacy = MENU_LINE.replace("MadX Agent OS", "Herald OS")
+        return text.replace(legacy, MENU_LINE) if legacy in text else None
     lines = text.rstrip().splitlines()
     close = len(lines) - 1
     if close < 0 or split_jsonc_comment(lines[close])[0].strip() != "}" or split_jsonc_comment(lines[0])[0].strip()[:1] not in ("{", ""):
@@ -5484,8 +5488,9 @@ def menu_with_herald(text: str) -> str | None:
 
 
 def menu_without_herald(text: str) -> str:
-    """The menu JSONC with Herald's row taken out again (pure; tested)."""
-    ours = (MENU_MARK.strip(), MENU_LINE.strip())
+    """The menu JSONC with MadX's row taken out again (pure; tested)."""
+    ours = tuple(value for line in (MENU_MARK.strip(), MENU_LINE.strip())
+                 for value in (line, line.replace("MadX Agent OS", "Herald OS")))
     return "\n".join(line for line in text.splitlines() if line.strip() not in ours) + "\n"
 
 
@@ -5514,7 +5519,7 @@ def omarchy_install() -> int:
     notes: list[str] = []
     APPS_DIR.mkdir(parents=True, exist_ok=True)
     APP_DESKTOP.write_text(
-        "[Desktop Entry]\nName=Herald OS\nComment=The AI-native desktop, as an app\nExec=herald-os-app\n"
+        "[Desktop Entry]\nName=MadX Agent OS\nComment=The AI-native desktop, as an app\nExec=herald-os-app\n"
         "Icon=herald-os\nType=Application\nCategories=System;Utility;\nTerminal=false\nStartupWMClass=herald-os\n"
     )
     # Theme hook: Omarchy runs theme-set.d itself on 4; on 3 a small dispatcher does.
@@ -5530,7 +5535,7 @@ def omarchy_install() -> int:
         dispatcher.write_text(HOOK_DISPATCHER)
         dispatcher.chmod(0o755)
     elif "theme-set.d" not in dispatcher.read_text(errors="replace"):
-        notes.append(f'Your {dispatcher} hook exists; add this line so Herald follows themes:\n  for hook in ~/.config/omarchy/hooks/theme-set.d/*; do [ -x "$hook" ] && "$hook" "$@"; done')
+        notes.append(f'Your {dispatcher} hook exists; add this line so MadX follows themes:\n  for hook in ~/.config/omarchy/hooks/theme-set.d/*; do [ -x "$hook" ] && "$hook" "$@"; done')
     # The menu: Omarchy 4's JSONC extensions (Omarchy 3 had none; Applications lists Herald there).
     if OMARCHY_MENU.exists():
         updated = menu_with_herald(OMARCHY_MENU.read_text(errors="replace"))
@@ -5555,9 +5560,9 @@ def omarchy_install() -> int:
         keys = "Super+Alt+H then Return"
     else:
         keys = "Applications"
-        notes.append(f"No Hyprland config in {HYPR_DIR}; Herald's keys were not added.")
+        notes.append(f"No Hyprland config in {HYPR_DIR}; MadX's keys were not added.")
     relay("theme-omarchy", [], quiet=True)
-    print(f"Herald OS is set up inside Omarchy: open it from the Omarchy menu, Applications or {keys}.")
+    print(f"MadX Agent OS is set up inside Omarchy: open it from the Omarchy menu, Applications or {keys}.")
     for note in notes:
         print(note)
     return 0
@@ -5571,15 +5576,16 @@ def omarchy_remove() -> int:
         dispatcher.unlink()
     if OMARCHY_MENU.exists():
         text = OMARCHY_MENU.read_text(errors="replace")
-        if text.startswith("// Added by Herald OS"):
-            # An earlier Herald OS wrote this whole file.
+        if text.startswith(("// Added by MadX Agent OS", "// Added by Herald OS")):
+            # An earlier MadX Agent OS wrote this whole file.
             OMARCHY_MENU.unlink()
-        elif MENU_LINE.strip() in text or MENU_MARK.strip() in text:
+        elif any(line in text for current in (MENU_LINE.strip(), MENU_MARK.strip())
+                 for line in (current, current.replace("MadX Agent OS", "Herald OS"))):
             OMARCHY_MENU.write_text(menu_without_herald(text))
     for config, line in ((HYPR_DIR / "hyprland.conf", HYPR_SOURCE), (HYPR_DIR / "hyprland.lua", HYPR_REQUIRE)):
         if config.exists() and line in config.read_text(errors="replace"):
             config.write_text(without_line(config.read_text(errors="replace"), line))
-    print("Herald OS is out of Omarchy's theme hook, menu and keys.")
+    print("MadX Agent OS is out of Omarchy's theme hook, menu and keys.")
     return 0
 
 
@@ -5806,10 +5812,10 @@ def main(argv: list[str]) -> int:
     if cmd == "theme":
         sub = args[0] if args else "current"
         if sub == "omarchy":
-            # Omarchy's theme-set hook: Herald's colours follow Omarchy's theme.
+            # Omarchy's theme-set hook: MadX's colours follow Omarchy's theme.
             reply = relay("theme-omarchy", [], quiet=True)
             if not reply.get("ok"):
-                die(reply.get("error") or "the Herald OS shell is not running", 1)
+                die(reply.get("error") or "the MadX Agent OS shell is not running", 1)
             print(reply.get("theme", ""))
             return 0
         if omarchy_app_mode() and sub in ("list", "current", "set"):

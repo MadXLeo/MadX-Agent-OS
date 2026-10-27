@@ -1,4 +1,4 @@
-"""Telling the Herald OS image from other bootc and ostree systems (Silverblue, Bazzite, Bluefin)."""
+"""Telling the MadX Agent OS image from other bootc and ostree systems (Silverblue, Bazzite, Bluefin)."""
 
 import importlib.machinery
 import json
@@ -20,7 +20,7 @@ FEDORA = 'NAME="Fedora Linux"\nVERSION_ID=44\nID=fedora\n'
 SILVERBLUE = FEDORA + 'VARIANT="Silverblue"\nVARIANT_ID=silverblue\n'
 HERALD = FEDORA + "IMAGE_ID=herald-os\n"
 # Each machine: whether it booted from an image, its /usr/lib/os-release and whether the shell is in
-# /usr/share/herald-os/app, then whether it is the Herald OS image.
+# /usr/share/herald-os/app, then whether it is the MadX Agent OS image.
 MACHINES = {
     "herald-os": ((True, HERALD, False), True),
     "herald-os, quoted": ((True, FEDORA + 'IMAGE_ID="herald-os"\n', False), True),
@@ -87,7 +87,7 @@ def test_on_silverblue_rollback_and_channel_never_run_bootc(tmp_path, monkeypatc
 
 def test_the_image_build_names_the_image_in_os_release():
     packages = (ROOT / "linux" / "image" / "packages.sh").read_text()
-    assert "echo 'IMAGE_ID=herald-os' >>/usr/lib/os-release" in packages
+    assert 'python3 "$LINUX/branding/os-release.py" /usr/lib/os-release' in packages
 
 
 # The NVIDIA image (ADR-029): Containerfile.nvidia on top of the default image, a leg of the workflow.
@@ -136,20 +136,20 @@ def step(name: str) -> dict:
 def test_the_workflow_builds_the_nvidia_image_next_to_the_default_one():
     job = image_job()
     legs = {(leg["image"], leg["arch"]): leg for leg in job["strategy"]["matrix"]["include"]}
-    assert set(legs) == {("herald-os", "amd64"), ("herald-os", "arm64"), ("herald-os-nvidia", "amd64")}
+    assert set(legs) == {("madx-agent-os", "amd64"), ("madx-agent-os", "arm64"), ("madx-agent-os-nvidia", "amd64")}
     # The default image keeps its per-architecture tags (the manifest job joins them) and its check names.
-    assert legs[("herald-os", "amd64")]["suffix"] == "-amd64" and legs[("herald-os", "arm64")]["suffix"] == "-arm64"
-    assert legs[("herald-os", "amd64")]["label"] == "amd64" and legs[("herald-os", "arm64")]["label"] == "arm64"
-    assert legs[("herald-os-nvidia", "amd64")]["suffix"] == ""
+    assert legs[("madx-agent-os", "amd64")]["suffix"] == "-amd64" and legs[("madx-agent-os", "arm64")]["suffix"] == "-arm64"
+    assert legs[("madx-agent-os", "amd64")]["label"] == "amd64" and legs[("madx-agent-os", "arm64")]["label"] == "arm64"
+    assert legs[("madx-agent-os-nvidia", "amd64")]["suffix"] == ""
     build = step("Build the image")["run"]
     assert build.count("-f linux/image/Containerfile ") == 2 and "-f linux/image/Containerfile.nvidia" in build
     assert '--build-arg "AKMODS_REF=$AKMODS_REF" --build-arg "AKMODS_NVIDIA_REF=$AKMODS_NVIDIA_REF"' in build
     assert '--build-arg "FEDORA_BOOTC=$FEDORA_BOOTC"' in build
     # A missing NVIDIA module build never holds back the default image, and does not go unseen.
-    assert job["continue-on-error"] == "${{ matrix.image == 'herald-os-nvidia' }}"
+    assert job["continue-on-error"] == "${{ matrix.image == 'madx-agent-os-nvidia' }}"
     assert job["env"]["REPO"].endswith("/${{ matrix.image }}")
     said = step("Say that the NVIDIA image did not go out")
-    assert said["if"] == "failure() && matrix.image == 'herald-os-nvidia'"
+    assert said["if"] == "failure() && matrix.image == 'madx-agent-os-nvidia'"
     assert "::warning" in said["run"] and '>>"$GITHUB_STEP_SUMMARY"' in said["run"]
 
 
@@ -157,13 +157,13 @@ def test_the_nvidia_leg_makes_room_first_and_says_how_much_there_is():
     names = [s.get("name") or s.get("uses") for s in image_job()["steps"]]
     assert names[:2] == ["actions/checkout@v7", "Make room for the NVIDIA image"]
     room = step("Make room for the NVIDIA image")
-    assert room["if"] == "matrix.image == 'herald-os-nvidia'" and room["run"].rstrip().endswith("df -h .")
+    assert room["if"] == "matrix.image == 'madx-agent-os-nvidia'" and room["run"].rstrip().endswith("df -h .")
 
 
 def test_the_nvidia_leg_pins_every_image_by_digest_and_checks_universal_blues_signatures():
     pin = step("Pin the base and the NVIDIA modules to one kernel")
     run = pin["run"]
-    assert pin["if"] == "matrix.image == 'herald-os-nvidia'"
+    assert pin["if"] == "matrix.image == 'madx-agent-os-nvidia'"
     assert '.Labels["ostree.linux"]' in run and 'tag="ghcr.io/ublue-os/$repo:main-44-$kernel"' in run
     assert 'echo "FEDORA_BOOTC=${base%:*}@$digest"' in run
     assert 'ref="ghcr.io/ublue-os/$repo@$(jq -r .Digest <<<"$inspect")"' in run
@@ -171,7 +171,7 @@ def test_the_nvidia_leg_pins_every_image_by_digest_and_checks_universal_blues_si
     assert 'echo "$tag is $ref (signature verified)"' in run and "AKMODS_NVIDIA_REF" in run
     # cosign is there for this leg even while the project does not sign its own images.
     installer = next(s for s in image_job()["steps"] if s.get("uses", "").startswith("sigstore/cosign-installer"))
-    assert installer["if"] == "env.SIGNING == 'true' || matrix.image == 'herald-os-nvidia'"
+    assert installer["if"] == "env.SIGNING == 'true' || matrix.image == 'madx-agent-os-nvidia'"
     assert image_job()["steps"].index(installer) < image_job()["steps"].index(pin)
 
 
@@ -197,7 +197,7 @@ def test_the_committed_repository_keys_are_the_ones_nvidia_sh_pins(tmp_path, nam
 
 def test_the_signature_policy_covers_both_images():
     packages = (ROOT / "linux" / "image" / "packages.sh").read_text()
-    for repo in ("ghcr.io/iamlukethedev/herald-os", "ghcr.io/iamlukethedev/herald-os-nvidia"):
+    for repo in ("ghcr.io/madxleo/madx-agent-os", "ghcr.io/madxleo/madx-agent-os-nvidia"):
         assert f'"{repo}"' in packages and f"  {repo}:\\n    use-sigstore-attachments: true" in packages
 
 
@@ -499,7 +499,7 @@ CHANGES = {
 }
 # Every key, empty, as rpm-ostree reports them for the image as built.
 CLEAN = {key: {} if key == "base-remote-replacements" else False if key == "regenerate-initramfs" else [] for key in CHANGES}
-NVIDIA_REF = "ghcr.io/iamlukethedev/herald-os-nvidia"
+NVIDIA_REF = "ghcr.io/madxleo/madx-agent-os-nvidia"
 
 
 def deployments(booted: dict | None = None, staged: dict | None = None, rollback: dict | None = None,
@@ -654,11 +654,11 @@ def test_the_switch_and_the_update_agree_on_rpm_ostree_changes():
 
 
 SIGNED_POLICY = {"default": [{"type": "insecureAcceptAnything"}], "transports": {"docker": {
-    f"ghcr.io/iamlukethedev/{repo}": [{"type": "sigstoreSigned", "keyPath": "KEY", "signedIdentity": {"type": "matchRepository"}}]
-    for repo in ("herald-os", "herald-os-nvidia")}}}
+    f"ghcr.io/madxleo/{repo}": [{"type": "sigstoreSigned", "keyPath": "KEY", "signedIdentity": {"type": "matchRepository"}}]
+    for repo in ("madx-agent-os", "madx-agent-os-nvidia")}}}
 
 
-def policy_with(tmp_path: Path, default=None, repos=("herald-os", "herald-os-nvidia"), key_path=None) -> dict:
+def policy_with(tmp_path: Path, default=None, repos=("madx-agent-os", "madx-agent-os-nvidia"), key_path=None) -> dict:
     policy = json.loads(json.dumps(SIGNED_POLICY).replace('"KEY"', json.dumps(key_path or str(tmp_path / "herald-os.pub"))))
     if default is not None:
         policy["default"] = default
@@ -693,7 +693,7 @@ def test_with_the_key_and_a_stricter_default_rebases_signed(tmp_path, default):
 @pytest.mark.parametrize("case", ["no entry for the nvidia image", "another key", "no policy", "unreadable policy"])
 def test_with_the_key_but_no_requirement_for_it_nothing_is_switched(tmp_path, case):
     policy = {
-        "no entry for the nvidia image": policy_with(tmp_path, repos=("herald-os",)),
+        "no entry for the nvidia image": policy_with(tmp_path, repos=("madx-agent-os",)),
         "another key": policy_with(tmp_path, key_path="/etc/pki/containers/other.pub"),
         "no policy": None,
         "unreadable policy": "{not json",

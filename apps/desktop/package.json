@@ -140,8 +140,8 @@
   "build": {
     "appId": "dev.iamluke.heraldos",
     "productName": "MadX Agent OS",
-    "executableName": "Herald OS",
-    "artifactName": "HeraldOS-${version}-${os}-${arch}.${ext}",
+    "executableName": "MadX Agent OS",
+    "artifactName": "madx-agent-os-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "release"
     },
@@ -240,7 +240,7 @@
       "category": "System",
       "icon": "build/icon.png",
       "executableName": "herald-os",
-      "artifactName": "herald-os-${version}-linux-${arch}.${ext}",
+      "artifactName": "madx-agent-os-${version}-linux-${arch}.${ext}",
       "target": [
         "tar.gz"
       ],
@@ -255,7 +255,8 @@
             "omakase/**",
             "migrations/**",
             "plymouth/**",
-            "!**/__pycache__/**"
+            "!**/__pycache__/**",
+            "branding/**"
           ]
         },
         {

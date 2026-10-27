@@ -1,6 +1,6 @@
 name: Release
 
-# Builds what Herald OS ships. A tag (v0.2.0) attaches the builds to a draft GitHub release; a manual
+# Builds what MadX Agent OS ships. A tag (v0.2.0) attaches the builds to a draft GitHub release; a manual
 # run only uploads them as workflow artifacts. Nothing here makes the repository or a release public.
 
 on:
@@ -134,8 +134,8 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
           shopt -s nullglob
-          apps=(apps/desktop/release/*/"Herald OS.app")
-          (( ${#apps[@]} )) || { echo "::error::No Herald OS.app under apps/desktop/release"; exit 1; }
+          apps=(apps/desktop/release/*/"MadX Agent OS.app")
+          (( ${#apps[@]} )) || { echo "::error::No MadX Agent OS.app under apps/desktop/release"; exit 1; }
           for app in "${apps[@]}"; do
             codesign --verify --deep --strict --verbose=2 "$app"
             details="$(codesign --display --verbose=4 "$app" 2>&1)"
@@ -154,12 +154,12 @@ jobs:
           for zip in apps/desktop/release/*.zip; do
             dir="$(mktemp -d)"
             ditto -x -k "$zip" "$dir"
-            xcrun stapler validate "$dir/Herald OS.app"
-            spctl --assess --type execute -vv "$dir/Herald OS.app"
+            xcrun stapler validate "$dir/MadX Agent OS.app"
+            spctl --assess --type execute -vv "$dir/MadX Agent OS.app"
           done
       - uses: actions/upload-artifact@v4
         with:
-          name: herald-os-macos
+          name: madx-agent-os-macos
           path: |
             apps/desktop/release/*.dmg
             apps/desktop/release/*.zip
@@ -196,20 +196,21 @@ jobs:
         run: npm run dist:linux --workspace apps/desktop -- --${{ matrix.arch }}
       - name: Check what the tarball carries
         run: |
-          tarball="$(ls apps/desktop/release/herald-os-*-linux-*.tar.gz)"
+          tarball="$(ls apps/desktop/release/madx-agent-os-*-linux-*.tar.gz)"
           listing="$(tar -tzf "$tarball")"
           for required in /herald-os /resources/app.asar /resources/herald-os-linux/bin/herald-os /resources/herald-os-linux/bin/herald-os-catalog \
-            /resources/herald-os-linux/session/herald-os-session /resources/themes/ /resources/catalog/ai.json /resources/herald-os-bridge/plugin.yaml; do
+            /resources/herald-os-linux/session/herald-os-session /resources/themes/madx-graphite/ /resources/catalog/ai.json /resources/herald-os-bridge/plugin.yaml \
+            /resources/herald-os-linux/branding/install.py /resources/herald-os-linux/branding/product.json; do
             grep -q -- "$required" <<<"$listing" || { echo "::error::$required is missing from $tarball"; exit 1; }
           done
           # Named as downloaded, so sha256sum -c works next to the download.
           (cd "$(dirname "$tarball")" && sha256sum "$(basename "$tarball")") | tee "$tarball.sha256"
       - uses: actions/upload-artifact@v4
         with:
-          name: herald-os-linux-${{ matrix.arch }}
+          name: madx-agent-os-linux-${{ matrix.arch }}
           path: |
-            apps/desktop/release/herald-os-*-linux-*.tar.gz
-            apps/desktop/release/herald-os-*-linux-*.tar.gz.sha256
+            apps/desktop/release/madx-agent-os-*-linux-*.tar.gz
+            apps/desktop/release/madx-agent-os-*-linux-*.tar.gz.sha256
           if-no-files-found: error
 
   release:
@@ -223,7 +224,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: herald-os-*
+          pattern: madx-agent-os-*
           path: dist
           merge-multiple: true
       - name: Upload to the draft release
@@ -232,7 +233,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           shopt -s nullglob
-          files=(dist/*.dmg dist/*.zip dist/herald-os-*-linux-*.tar.gz dist/herald-os-*-linux-*.tar.gz.sha256)
+          files=(dist/*.dmg dist/*.zip dist/madx-agent-os-*-linux-*.tar.gz dist/madx-agent-os-*-linux-*.tar.gz.sha256)
           (( ${#files[@]} )) || { echo "::error::No build artifacts to attach"; exit 1; }
-          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --draft --title "Herald OS $GITHUB_REF_NAME" --notes "Draft written by the release workflow."
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --draft --title "MadX Agent OS $GITHUB_REF_NAME" --notes "Draft written by the release workflow."
           gh release upload "$GITHUB_REF_NAME" "${files[@]}" --clobber

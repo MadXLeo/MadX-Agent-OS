@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# The NVIDIA GPU, and what the Herald OS image does with it (ADR-029). Two notices, each said once:
+# The NVIDIA GPU, and what the MadX Agent OS image does with it (ADR-029). Two notices, each said once:
 #
 # - switch: the default image drives an NVIDIA GPU with nouveau, which runs the screen but has no
-#   CUDA, so local models get no GPU. The NVIDIA image (ghcr.io/iamlukethedev/herald-os-nvidia) has
+#   CUDA, so local models get no GPU. The NVIDIA image (ghcr.io/madxleo/madx-agent-os-nvidia) has
 #   NVIDIA's driver: says how to switch.
 # - secure-boot: on the NVIDIA image with Secure Boot on, the kernel only loads the driver once
 #   Universal Blue's signing key is enrolled. When the driver is not loaded, says how to enroll it.
 #
-# Anywhere but on the Herald OS image, or with nothing to say, says nothing.
+# Anywhere but on the MadX Agent OS image, or with nothing to say, says nothing.
 #
 #   herald-os-gpu-check                   print the notice (the first boot writes it to the journal)
 #   herald-os-gpu-check --notify          also show it as a notification, once each (herald-os-session)
@@ -22,7 +22,7 @@ MODULES="${HERALD_OS_MODULES:-/usr/lib/modules}"
 OS_RELEASE="${HERALD_OS_OS_RELEASE:-/usr/lib/os-release}"
 ARCH="${HERALD_OS_ARCH:-$(uname -m)}"
 STATE="${HERALD_OS_STATE:-${XDG_STATE_HOME:-$HOME/.local/state}/herald-os}"
-NVIDIA_IMAGE=ghcr.io/iamlukethedev/herald-os-nvidia
+NVIDIA_IMAGE=ghcr.io/madxleo/madx-agent-os-nvidia
 KEY=/etc/pki/akmods/certs/akmods-ublue.der
 # The UEFI global variable: four bytes of attributes, then 1 while Secure Boot is on.
 SECURE_BOOT="$SYSFS/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c"
@@ -38,7 +38,7 @@ BOOT_FREE_MIN=$((400 * 1024 * 1024))
 BOOT_SIZE_MIN=$((1800 * 1024 * 1024))
 BOOT_SIZE_REFUSE=$((1200 * 1024 * 1024))
 
-herald_image() { grep -Eqx 'IMAGE_ID="?herald-os"?' "$OS_RELEASE" 2>/dev/null; }
+herald_image() { grep -Eqx 'IMAGE_ID="?(madx-agent-os|herald-os)"?' "$OS_RELEASE" 2>/dev/null; }
 
 # A display controller (PCI class 0x03xxxx: VGA, 3D or other) from NVIDIA (vendor 0x10de).
 nvidia_gpu() {
@@ -198,7 +198,7 @@ switch() {
     shift
   done
   channel="${channel:-$(current_channel)}"
-  herald_image || { echo "this is not the Herald OS image: nothing to switch" >&2; exit 2; }
+  herald_image || { echo "this is not the MadX Agent OS image: nothing to switch" >&2; exit 2; }
   [[ "$ARCH" == x86_64 ]] || { echo "the NVIDIA image is x86_64 only" >&2; exit 2; }
   read -r size avail < <(df -B1 --output=size,avail "$BOOT" | tail -n 1)
   if (( avail < BOOT_FREE_MIN )); then
@@ -237,7 +237,7 @@ if [[ "$ARCH" != x86_64 ]] || ! herald_image || ! nvidia_gpu; then
 fi
 
 if ! nvidia_driver; then
-  notice switch "NVIDIA graphics found" "This computer has an NVIDIA GPU, which this Herald OS image drives without CUDA, so local models do not use it. The NVIDIA image has NVIDIA's driver: run \`herald-os-gpu-check switch $(current_channel)\` in a terminal (it checks /boot has room first), restart, then, with Secure Boot on, enroll Universal Blue's key once (docs/LINUX.md, \"The NVIDIA image\")."
+  notice switch "NVIDIA graphics found" "This computer has an NVIDIA GPU, which this MadX Agent OS image drives without CUDA, so local models do not use it. The NVIDIA image has NVIDIA's driver: run \`herald-os-gpu-check switch $(current_channel)\` in a terminal (it checks /boot has room first), restart, then, with Secure Boot on, enroll Universal Blue's key once (docs/LINUX.md, \"The NVIDIA image\")."
 elif ! nvidia_loaded && secure_boot; then
   notice secure-boot "The NVIDIA driver did not load" "Secure Boot is on, and it loads the driver only once Universal Blue's key is enrolled; until then the NVIDIA GPU is not used. Run \`sudo mokutil --import $KEY\` in a terminal, choose a one-time password, restart, and in MOK Manager pick Enroll MOK, Continue, Yes, type that password, then Reboot (docs/LINUX.md, \"The NVIDIA image\")."
 fi

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-# Build the Herald OS shell inside the Linux VM (run as the session user).
+# Build the MadX Agent OS shell inside the Linux VM (run as the session user).
 # Fetches the upstream snapshot, installs Node workspaces, links + enables the bridge plugin
 # (scripts/bootstrap.sh), compiles the shell, and fixes Electron's sandbox helper permissions.
 #
 #   herald-os-build            # after linux/dev/push.sh or herald-os-sync
 set -euo pipefail
 
-REPO="${HERALD_OS_REPO:-$HOME/Herald-OS}"
+REPO="${MADX_OS_REPO:-${HERALD_OS_REPO:-$HOME/MadX-Agent-OS}}"
+[[ -d "$REPO" || -n "${MADX_OS_REPO:-${HERALD_OS_REPO:-}}" ]] || REPO="$HOME/Herald-OS"
 export PATH="$HOME/.local/bin:$PATH"
 
 [[ -d "$REPO/apps/desktop" ]] || { echo "repo not found at $REPO (push it from the Mac: linux/dev/push.sh)" >&2; exit 1; }
@@ -52,7 +53,7 @@ if [[ -d "$REPO/linux/session" ]] && command -v sudo >/dev/null; then
   systemctl --user enable herald-os-update-check.timer 2>/dev/null || true
   mkdir -p "$HOME/.config/niri" "$HOME/.config/swaylock"
   # niri reloads its config as soon as it changes, so every file it includes must already exist.
-  [[ -f "$HOME/.config/niri/outputs.kdl" ]] || echo "// Written by the Herald OS Display panel." >"$HOME/.config/niri/outputs.kdl"
+  [[ -f "$HOME/.config/niri/outputs.kdl" ]] || echo "// Written by the MadX Agent OS Display panel." >"$HOME/.config/niri/outputs.kdl"
   sudo install -D -m 0644 "$REPO/linux/niri/config.kdl" /usr/local/share/herald-os-linux/niri/config.kdl
   # herald-os.kdl is rendered from the template with the chosen keymap (herald-os keymap herald|omarchy).
   herald-os keymap apply || install -m 0644 "$REPO/linux/niri/config.kdl" "$HOME/.config/niri/herald-os.kdl"
@@ -75,6 +76,10 @@ if [[ -d "$REPO/linux/session" ]] && command -v sudo >/dev/null; then
   sudo cp -R "$REPO"/linux/themes/. /usr/local/share/herald-os-linux/themes/
   sudo cp -R "$REPO"/linux/omakase/. /usr/local/share/herald-os-linux/omakase/
   sudo cp -R "$REPO"/linux/catalog/. /usr/local/share/herald-os-linux/catalog/
+
+  sudo install -d /usr/local/share/herald-os-linux/branding
+  sudo cp -R "$REPO"/linux/branding/. /usr/local/share/herald-os-linux/branding/
+  sudo python3 "$REPO/linux/branding/install.py" --root / --layout dev
 
   echo "==> one-shot migrations"
   HERALD_OS_REPO="$REPO" bash "$REPO/linux/bin/herald-os-update" --migrate || echo "WARNING: a migration failed; see above"

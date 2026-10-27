@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Herald OS Linux, the per-machine half: the session user and everything in a home folder. Runs as
+# MadX Agent OS Linux, the per-machine half: the session user and everything in a home folder. Runs as
 # root and is safe to re-run. The shell's first-boot setup then lets the person choose a name and a
 # password, join Wi-Fi and sign in to Hermes.
 #
@@ -17,7 +17,7 @@ set -euo pipefail
 
 PHASE="${1:-all}"
 STATE=/var/lib/herald-os
-# There on a system switched to Herald OS from another bootc system, which brought accounts of its
+# There on a system switched to MadX Agent OS from another bootc system, which brought accounts of its
 # own; written the first time it is seen, so it stays so through `herald-os reset`.
 SWITCHED="$STATE/switched"
 # There once the first boot found an install from the image: accounts added since (and folders in
@@ -87,9 +87,9 @@ for candidate in /usr/share/herald-os /usr/local/share/herald-os-linux "$(cd "$(
     break
   fi
 done
-[[ -n "$SHARE" ]] || { echo "firstboot: the Herald OS files are missing (run packages.sh first)" >&2; exit 1; }
+[[ -n "$SHARE" ]] || { echo "firstboot: the MadX Agent OS files are missing (run packages.sh first)" >&2; exit 1; }
 
-# What a system switched to Herald OS brought along, one line each; an install from the image has
+# What a system switched to MadX Agent OS brought along, one line each; an install from the image has
 # none, since the session user is the first account it gets. Accounts in login.defs's UID range or
 # systemd-homed's that are older than the session user (all of them while it does not exist yet),
 # folders in /home that are not the session user's, a system account's (root's stray folders are no
@@ -124,7 +124,7 @@ earlier_accounts() {
   done
 }
 
-# Whether this system was switched to Herald OS from another one. Worked out once and written down
+# Whether this system was switched to MadX Agent OS from another one. Worked out once and written down
 # either way, so it holds through `herald-os reset` and accounts added later. Only first-boot setup,
 # or a run after it finished, writes the answer down: before that, the accounts (systemd-homed's,
 # SSSD's) may not be there yet, and an "image install" written down then would stay wrong for good.
@@ -216,7 +216,7 @@ login_screen_due() {
         LOGIN_SCREEN_DUE=yes
         echo "the login screen is for: $who"
       else
-        echo "WARNING: switched from another system, but none of its accounts can sign in at a login screen (no shell, or no password): $HERMES_USER signs in by itself, Herald OS's setup asks for its password at once, and it joins wheel only once it has one"
+        echo "WARNING: switched from another system, but none of its accounts can sign in at a login screen (no shell, or no password): $HERMES_USER signs in by itself, MadX Agent OS's setup asks for its password at once, and it joins wheel only once it has one"
       fi
     fi
   fi
@@ -398,7 +398,7 @@ ssh_keys() {
 
 # Hermes Agent for the session user: installed unless it is there already, in whichever layout
 # (`herald-os hermes-command` looks for it the way the shell does), given the voice extras, and set
-# up for Herald OS. Fails while there is still no Hermes.
+# up for MadX Agent OS. Fails while there is still no Hermes.
 hermes_step() {
   step "Hermes Agent for $HERMES_USER"
   if [[ -f /etc/herald-os/ref ]]; then
@@ -450,7 +450,7 @@ hermes_later() {
     return 0
   fi
   if online; then echo retrying; else echo offline; fi >"$PENDING"
-  echo "WARNING: Hermes Agent did not install (offline?); herald-os-hermes.service installs it once this computer is online, and Herald OS starts it then"
+  echo "WARNING: Hermes Agent did not install (offline?); herald-os-hermes.service installs it once this computer is online, and MadX Agent OS starts it then"
 }
 
 # herald-os-hermes.service: wait for the network, then install and set up Hermes; a failed try is

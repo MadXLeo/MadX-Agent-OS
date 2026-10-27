@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build the cloud-init NoCloud seed (cidata.iso) that turns a stock Fedora Cloud image into a
-# Herald OS Linux machine on first boot: creates the `hermes` user, installs an SSH key, embeds
+# MadX Agent OS Linux machine on first boot: creates the `hermes` user, installs an SSH key, embeds
 # the `linux/` payload (provisioner, session files, dev scripts) and runs the provisioner.
 #
 #   bash linux/vm/make-seed.sh            # writes linux/vm/build/cidata.iso
@@ -35,12 +35,12 @@ PAYLOAD_B64="$(cd "$LINUX_DIR" && COPYFILE_DISABLE=1 tar czf - --exclude './vm/b
 
 cat >"$SEED/meta-data" <<EOF
 instance-id: herald-os-$(date +%Y%m%d%H%M%S)
-local-hostname: herald-os
+local-hostname: madx-agent-os
 EOF
 
 cat >"$SEED/user-data" <<EOF
 #cloud-config
-hostname: herald-os
+hostname: madx-agent-os
 preserve_hostname: false
 timezone: $(readlink /etc/localtime | sed 's|.*/zoneinfo/||' || echo UTC)
 
@@ -81,7 +81,7 @@ runcmd:
   - [chmod, -R, a+rX, /usr/local/share/herald-os-linux]
   - [bash, /usr/local/share/herald-os-linux/provision.sh, --dev-vm]
 
-final_message: "cloud-init finished after \$UPTIME seconds; the Herald OS provisioning log is /var/log/herald-os-provision.log"
+final_message: "cloud-init finished after \$UPTIME seconds; the MadX Agent OS provisioning log is /var/log/herald-os-provision.log"
 EOF
 
 rm -f "$BUILD/cidata.iso"

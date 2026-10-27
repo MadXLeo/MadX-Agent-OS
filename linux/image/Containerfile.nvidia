@@ -38,7 +38,7 @@ RUN --mount=type=bind,from=akmods,src=/rpms/ublue-os,dst=/tmp/akmods \
  && dnf clean all \
  && rm -rf /tmp/herald-os /var/cache/* /var/log/* /var/lib/dnf
 
-LABEL org.opencontainers.image.title="Herald OS (NVIDIA)" \
+LABEL org.opencontainers.image.title="MadX Agent OS (NVIDIA)" \
       org.opencontainers.image.description="An AI-native desktop built around Hermes Agent, with NVIDIA's driver and CUDA"
 
 RUN bootc container lint

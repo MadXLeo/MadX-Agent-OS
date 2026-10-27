@@ -26,12 +26,12 @@ function universal(arches: Arch[]) {
 }
 
 const VERSION = '0.2.0'
-const CONTENTS = 'Herald OS.app/Contents'
+const CONTENTS = 'MadX Agent OS.app/Contents'
 const UNPACKED = `${CONTENTS}/Resources/app.asar.unpacked/node_modules/node-pty`
 const FRAMEWORK = `${CONTENTS}/Frameworks/Electron Framework.framework`
 /** How a problem names a file in the Intel app at release/mac/. */
-const inMac = (rel: string) => `mac/Herald OS.app: ${path.relative('Herald OS.app', rel)}`
-const HELPER = `${CONTENTS}/Frameworks/Herald OS Helper (GPU).app/Contents/MacOS/Herald OS Helper (GPU)`
+const inMac = (rel: string) => `mac/MadX Agent OS.app: ${path.relative('MadX Agent OS.app', rel)}`
+const HELPER = `${CONTENTS}/Frameworks/MadX Agent OS Helper (GPU).app/Contents/MacOS/MadX Agent OS Helper (GPU)`
 
 describe('check-mac-builds', () => {
   let root = ''
@@ -51,14 +51,14 @@ describe('check-mac-builds', () => {
   }
 
   /**
-   * What electron-builder leaves for one architecture: release/<dir>/Herald OS.app with Electron's
+   * What electron-builder leaves for one architecture: release/<dir>/MadX Agent OS.app with Electron's
    * framework and a helper app, both node-pty darwin prebuilds and a Windows one, plus this
    * version's DMG and zip. `files` replaces (or, with null, removes) files inside release/<dir>/.
    */
   function build(dir: string, arch: 'arm64' | 'x64', files: Record<string, Buffer | string | null> = {}) {
     const at = (rel: string) => path.join(root, dir, rel)
     const layout: Record<string, Buffer | string | null> = {
-      [`${CONTENTS}/MacOS/Herald OS`]: thin(arch),
+      [`${CONTENTS}/MacOS/MadX Agent OS`]: thin(arch),
       [`${CONTENTS}/Info.plist`]: '<plist/>',
       [`${FRAMEWORK}/Versions/A/Electron Framework`]: thin(arch),
       [`${FRAMEWORK}/Versions/A/Libraries/libffmpeg.dylib`]: thin(arch),
@@ -75,8 +75,8 @@ describe('check-mac-builds', () => {
     for (const [rel, contents] of Object.entries(layout)) if (contents !== null) write(at(rel), contents)
     fs.symlinkSync('A', at(`${FRAMEWORK}/Versions/Current`))
     fs.symlinkSync('Versions/Current/Electron Framework', at(`${FRAMEWORK}/Electron Framework`))
-    write(path.join(root, `HeraldOS-${VERSION}-mac-${arch}.dmg`))
-    write(path.join(root, `HeraldOS-${VERSION}-mac-${arch}.zip`))
+    write(path.join(root, `madx-agent-os-${VERSION}-mac-${arch}.dmg`))
+    write(path.join(root, `madx-agent-os-${VERSION}-mac-${arch}.zip`))
   }
 
   const check = () => macBuildProblems(root, { version: VERSION })
@@ -183,11 +183,11 @@ describe('check-mac-builds', () => {
     release()
     build('mac-arm64', 'arm64')
     build('mac', 'x64')
-    fs.renameSync(path.join(root, `HeraldOS-${VERSION}-mac-x64.dmg`), path.join(root, 'HeraldOS-0.1.9-mac-x64.dmg'))
+    fs.renameSync(path.join(root, `madx-agent-os-${VERSION}-mac-x64.dmg`), path.join(root, 'madx-agent-os-0.1.9-mac-x64.dmg'))
 
     expect(check()).toEqual([
-      `No HeraldOS-${VERSION}-mac-x64.dmg in ${root}.`,
-      `HeraldOS-0.1.9-mac-x64.dmg in ${root} is not this build's (${VERSION}); it would be uploaded with it.`
+      `No madx-agent-os-${VERSION}-mac-x64.dmg in ${root}.`,
+      `madx-agent-os-0.1.9-mac-x64.dmg in ${root} is not this build's (${VERSION}); it would be uploaded with it.`
     ])
     expect(macBuildProblems(root, {})).toEqual([expect.stringContaining('No version')])
   })
@@ -195,27 +195,27 @@ describe('check-mac-builds', () => {
   it('asks for the Intel build when only the Apple Silicon one was packaged', () => {
     release()
     build('mac-arm64', 'arm64')
-    fs.rmSync(path.join(root, `HeraldOS-${VERSION}-mac-arm64.zip`))
+    fs.rmSync(path.join(root, `madx-agent-os-${VERSION}-mac-arm64.zip`))
 
     expect(check()).toEqual([
-      `No HeraldOS-${VERSION}-mac-arm64.zip in ${root}.`,
-      `No Herald OS.app in ${root} is built for x64.`,
-      `No HeraldOS-${VERSION}-mac-x64.dmg in ${root}.`,
-      `No HeraldOS-${VERSION}-mac-x64.zip in ${root}.`
+      `No madx-agent-os-${VERSION}-mac-arm64.zip in ${root}.`,
+      `No MadX Agent OS.app in ${root} is built for x64.`,
+      `No madx-agent-os-${VERSION}-mac-x64.dmg in ${root}.`,
+      `No madx-agent-os-${VERSION}-mac-x64.zip in ${root}.`
     ])
   })
 
   it('catches an Intel app whose main binary is arm64, so two apps claim arm64', () => {
-    const problems = pair({ [`${CONTENTS}/MacOS/Herald OS`]: thin('arm64') })
+    const problems = pair({ [`${CONTENTS}/MacOS/MadX Agent OS`]: thin('arm64') })
 
-    expect(problems).toContain('mac/Herald OS.app and mac-arm64/Herald OS.app are both built for arm64.')
-    expect(problems).toContain(`No Herald OS.app in ${root} is built for x64.`)
+    expect(problems).toContain('mac/MadX Agent OS.app and mac-arm64/MadX Agent OS.app are both built for arm64.')
+    expect(problems).toContain(`No MadX Agent OS.app in ${root} is built for x64.`)
     expect(problems).toContain(`${inMac(HELPER)} is x64, not arm64 alone.`)
   })
 
   it('rejects a universal main binary', () => {
-    expect(pair({ [`${CONTENTS}/MacOS/Herald OS`]: universal(['x64', 'arm64']) })[0]).toBe(
-      'mac/Herald OS.app is universal (x64 and arm64), not exactly one of arm64, x64.'
+    expect(pair({ [`${CONTENTS}/MacOS/MadX Agent OS`]: universal(['x64', 'arm64']) })[0]).toBe(
+      'mac/MadX Agent OS.app is universal (x64 and arm64), not exactly one of arm64, x64.'
     )
   })
 

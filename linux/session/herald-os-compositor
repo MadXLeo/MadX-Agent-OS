@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Entry point greetd runs as the session user: start the compositor with the Herald OS shell.
+# Entry point greetd runs as the session user: start the compositor with the MadX Agent OS shell.
 #
 #   HERALD_OS_COMPOSITOR=niri (default)  niri manages every window; the shell runs as panels.
 #   HERALD_OS_COMPOSITOR=cage            Stage 1 kiosk: the shell is the only client.
@@ -26,6 +26,10 @@ for legacy in "${!HERMES_OS_@}"; do
   current="HERALD_OS_${legacy#HERMES_OS_}"
   [[ -n "${!current:-}" ]] || export "$current=${!legacy}"
 done
+# MadX environment names take precedence, including an explicitly empty value.
+for current in "${!MADX_OS_@}"; do
+  export "HERALD_OS_${current#MADX_OS_}=${!current}"
+done
 
 COMPOSITOR="${HERALD_OS_COMPOSITOR:-niri}"
 
@@ -38,7 +42,7 @@ echo "$(date -Is) starting $COMPOSITOR (renderer=${WLR_RENDERER:-gpu})"
 # Herald's own niri config, rendered at every start from the installed template and the person's
 # keymap (and written only when that changed, as after an update). niri is given it by path, so a
 # personal ~/.config/niri/config.kdl is never read or rewritten. Without it niri would start bare,
-# without Herald OS, so the shell runs under cage instead.
+# without MadX Agent OS, so the shell runs under cage instead.
 NIRI_KDL="$HOME/.config/niri/herald-os.kdl"
 if [[ "$COMPOSITOR" != "cage" ]] && command -v niri >/dev/null 2>&1 && ! herald-os keymap apply; then
   echo "could not render $NIRI_KDL (herald-os keymap apply)"
@@ -57,7 +61,7 @@ export HERALD_OS_SHELL_MODE=panels
 mkdir -p "$HOME/.config/niri"
 if [[ ! -f "$HOME/.config/niri/local.kdl" ]]; then
   {
-    echo "// Machine-specific niri overrides. Herald OS never overwrites this file."
+    echo "// Machine-specific niri overrides. MadX Agent OS never overwrites this file."
     if [[ -n "${HERALD_OS_SCALE:-}" ]]; then
       for status in /sys/class/drm/card*-*/status; do
         [[ "$(cat "$status" 2>/dev/null)" == "connected" ]] || continue
@@ -76,7 +80,7 @@ if [[ ! -f "$HOME/.config/niri/theme.kdl" ]] && command -v herald-os-theme >/dev
 fi
 [[ -f "$HOME/.config/niri/theme.kdl" ]] || echo "// theme pending" >"$HOME/.config/niri/theme.kdl"
 # The Display panel writes outputs.kdl; the managed config includes it, so it must exist.
-[[ -f "$HOME/.config/niri/outputs.kdl" ]] || echo "// Written by the Herald OS Display panel." >"$HOME/.config/niri/outputs.kdl"
+[[ -f "$HOME/.config/niri/outputs.kdl" ]] || echo "// Written by the MadX Agent OS Display panel." >"$HOME/.config/niri/outputs.kdl"
 
 # The shell scales through the compositor under niri; do not also zoom the page.
 unset HERALD_OS_ZOOM

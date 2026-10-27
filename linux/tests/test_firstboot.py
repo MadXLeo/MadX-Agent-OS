@@ -173,7 +173,7 @@ def test_offline_the_first_boot_leaves_hermes_to_the_service_and_says_so(tmp_pat
     result = machine.run("hermes_step || hermes_later")
     assert result.returncode == 0, result.stderr
     assert machine.note() == "offline\n"
-    assert "herald-os-hermes.service installs it once this computer is online, and Herald OS starts it then" in result.stdout
+    assert "herald-os-hermes.service installs it once this computer is online, and MadX Agent OS starts it then" in result.stdout
     assert "herald-os setup" not in machine.log()
 
 
@@ -212,7 +212,7 @@ def test_the_note_is_one_path_for_firstboot_the_service_the_cli_and_the_shell():
 
 
 # The session account and the login screen: an install from the image, and a system switched to
-# Herald OS from another bootc system (Silverblue, Bazzite), which brings accounts of its own. The
+# MadX Agent OS from another bootc system (Silverblue, Bazzite), which brings accounts of its own. The
 # stand-ins rewrite files with awk, not sed -i, which BSD sed reads differently (macOS CI).
 SYSTEM_ACCOUNTS = "root:x:0:0:root:/root:/bin/bash\ngreetd:x:976:976::/var/lib/greetd:/sbin/nologin\nnobody:x:65534:65534::/:/sbin/nologin\n"
 AUTOLOGIN = (ROOT / "linux" / "session" / "greetd-config.toml").read_text()
