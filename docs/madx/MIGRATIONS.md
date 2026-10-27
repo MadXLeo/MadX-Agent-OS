@@ -1,7 +1,27 @@
 # Namespace and data migration register
 
-This register deliberately separates product text from compatibility identifiers. The first
-increment does not rename systemd units, bridge tools, disk layouts or active policy files.
+This register deliberately separates product text from compatibility identifiers. Phase 1 adds
+MadX aliases and identity metadata while retaining canonical systemd units, bridge tools, disk
+layouts and user state. The table records original contracts and the cutover requirements.
+
+## Phase 1 implementation update
+
+`linux/branding/install.py` creates relative MadX command, install/share/icon and service aliases
+under an explicit root. It checks all destinations before writing, refuses existing foreign files
+or symlinked parents, is idempotent, and rolls back only links it created when a write fails. It
+never copies/moves settings, changes partitions, enables units or redirects an existing update
+deployment. Image, development, Arch and tarball installers invoke it; old tarballs without the
+helper remain supported on rollback. Symlink mutation tests still require Linux.
+
+Native display metadata, service descriptions, icons, new-install theme and ISO metadata use MadX.
+Artifact producers/consumers and registry signature scopes were changed together. Alpha tags target
+edge, not stable. Both old and new IMAGE_ID values are accepted; Fedora ID/ID_LIKE remain intact.
+Existing bootc deployments continue following their configured reference; there is no automatic
+upstream-to-MadX registry rebase. Omarchy only rewrites exact previously generated menu rows and
+recognizes both markers on removal. Historical migration recognizers remain unchanged.
+
+The retained names and required native checks are listed in REMAINING_ISSUES.md. Installer runtime
+branding and real package/upgrade/rollback validation are still open gates.
 
 | Identifier | Current contract | Planned cutover and validation |
 | --- | --- | --- |

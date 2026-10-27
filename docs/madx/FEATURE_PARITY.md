@@ -11,6 +11,26 @@ Validation codes: **T** = included in attempted desktop suite (see BASELINE.md f
 integration; **V** = requires disposable-VM validation; **N** = new capability, not implemented.
 Typecheck/build success alone does not establish functional parity. No existing feature is removed.
 
+## Phase 1 evidence update — 2026-10-27
+
+The full renderer/shared suite now passes **4,915 tests in 351 files**, with five skips and no
+failures. This covers the existing shell, commands, Office, Canvas, Calc, settings, voice, pet/room,
+gateway stores and translation behavior. Main-process migration regressions pass their 89-test
+recheck; 128 other main-process failures reproduce on the original source under Windows. Linux
+source/configuration checks pass 40 tests, with 26 environment skips. See VALIDATION.md for exact
+scope. H and V gates below remain open, including actual Hermes integration.
+
+| Migration area | Implemented preservation | Evidence / remaining gate |
+| --- | --- | --- |
+| Desktop display and command routing | Product constants; old spoken names still resolve; all 386 literal IDs across 39 command modules retained | Renderer suite and source comparison pass; native interaction H |
+| Slides, pet and screensaver | Shared old/new presentation detection; no privacy leak during presentation | New title tests and renderer tests pass; compositor V |
+| Profile and preferences | Legacy Chromium profile reused; original storage keys and saved themes retained | Profile tests pass; real existing-profile upgrade H |
+| Linux commands and services | MadX aliases target existing files/units; no second service enabled | Conflict/plan tests pass; real symlink and systemd V |
+| Packaging and release identity | Coordinated filenames, metadata, checksums, registry policy; legacy executable/data layout retained | Static checks pass; package/image build V |
+| Upgrades and rollback | Both IMAGE_ID values accepted; tarball's original swap directories unchanged | Detector tests pass; actual upgrade/rollback V |
+| Installer and splash | ISO identity, graphite Plymouth and supplied wordmark; encrypted interactive storage unchanged | Source/config tests pass; visual branding, unlock and boot V |
+| Hermes tool permissions and persisted files | Bridge IDs, schemas, plugin identity and engine pin retained | Renderer/client checks pass; complete Python suite and real gateway P + H |
+
 | Discovered feature | Implementation (repository-relative) | MadX mapping | Validation / status |
 | --- | --- | --- | --- |
 | Single-window desktop, windows, focus, resize, spaces | `src/shell/`, `src/store/windows.ts` in `apps/desktop` | Retain, MadX shell identity | T + H |
@@ -56,12 +76,12 @@ Typecheck/build success alone does not establish functional parity. No existing 
 | Bridge file batches, dry run, undo, destructive prompts | `plugins/herald-os-bridge`, `SECURITY.md` | Preserve policy/protected paths and audit | P + H |
 | Login, user session, first boot, offline Hermes recovery | `linux/session`, `linux/image/*service`, `firstboot.sh` | Retain bootable shell when AI is absent | P + V |
 | Package catalog, Flatpak, omakase and Linux app discovery | `linux/catalog`, `linux/omakase`, `linux/bin` | Retain app installation and permissions | P + V |
-| bootc image, OSTree updates and rollback | `linux/image`, `linux/bin/herald-os-update`, `linux/migrations` | MadX distribution migration pending | P + V |
+| bootc image, OSTree updates and rollback | `linux/image`, `linux/bin/herald-os-update`, `linux/migrations` | MadX identity and dual image detection; existing rollback path retained | Source checks pass; P + V |
 | Tarball, Arch, Hyprland and Omarchy integrations | `packaging/arch`, `linux/bin/herald-os-tarball`, `linux/session` | Preserve non-bootc installation paths | P + H |
 | NVIDIA image, kernel/driver consistency | `linux/image/Containerfile.nvidia`, `nvidia.sh` | Retain separate NVIDIA build | P + V |
 | ISO, encrypted install, UEFI, recovery | `linux/image/iso.toml`, `unattended.ks`, installer workflow | Investigate reported GRUB failure; not fixed | P + V |
 | QCOW2, VHDX, UTM and VM helpers | `linux/vm`, `linux/tests/test_vm_disks.py` | Preserve virtual disk artifacts | P + V |
-| Release signing, checksums, OCI, macOS packaging | `.github/workflows`, `apps/desktop/scripts`, `build/licenses` | Independent MadX channels pending | T + P + V |
+| Release signing, checksums, OCI, macOS packaging | `.github/workflows`, `apps/desktop/scripts`, `build/licenses` | MadX artifact/channel configuration; alpha tags follow edge | Static inputs checked; signing/publication and T + P + V remain |
 | Licenses, copyright, notices and upstream updates | `LICENSE`, `NOTICE`, `SECURITY.md`, `upstream/` | Preserve attribution, add MadX provenance | Audited source; package audit pending |
 | Local/cloud model lifecycle and tool-calling probes | Proposed Models adapters | MadX Models | N |
 | Hardware-aware GPU reservations and NPU probing | Proposed resource admission | MadX AI Studio | N |

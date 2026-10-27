@@ -1,0 +1,274 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-27",
+  "platform": "Windows",
+  "node": "22.23.3",
+  "npm": "10.9.9",
+  "baseline": "7ff5f81",
+  "phase1Complete": false,
+  "rendererShared": {
+    "files": 351,
+    "total": 4920,
+    "passed": 4915,
+    "failed": 0,
+    "skipped": 5,
+    "rawReportSha256": "0715f525893769253b8c7d731949ef27e57d431b87911f1f88320567893c0409"
+  },
+  "broadMainProcessAndScripts": {
+    "files": 80,
+    "total": 1005,
+    "passed": 840,
+    "failed": 148,
+    "skipped": 17,
+    "rawReportSha256": "cb7c0494d51f7da57be422548b43ace9ce4277a7ef779f02c0fc614866d7ea44"
+  },
+  "baselineFailedFileComparison": {
+    "files": 26,
+    "total": 567,
+    "passed": 427,
+    "failed": 128,
+    "skipped": 12,
+    "rawReportSha256": "625179dda1765389acb8f373925fff3d9bc648e66c3b99a255b117ccb941cd91"
+  },
+  "mainMigrationRecheck": {
+    "files": 6,
+    "total": 89,
+    "passed": 89,
+    "failed": 0,
+    "skipped": 0,
+    "rawReportSha256": "80ea52cc34922216641ea3dab500fd1b47b0a40ef03dcf20914b84789cbe1d06"
+  },
+  "migrationFailuresFixed": [
+    {
+      "file": "electron/calc/notes.test.ts",
+      "test": "Herald Calc's notes keep at most CALC_NOTES_MAX: a new note past that is refused, while editing one still works",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS without it, lets macOS ask once, discards that capture, explains, and never selects a region",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS asks macOS only once a launch, and does not stack explanations",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS opens the Screen Recording pane when the person asks to",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS Quit & Reopen relaunches Herald OS so a changed switch applies",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS Not Now opens and relaunches nothing",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS when a restriction (device management, Screen Time, parental controls) decides, says so, without asking macOS",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS says the same in Simplified Chinese",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS a probe that fails or times out still ends in the permission message",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS a folder that cannot be made does not hide the permission message",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS stops the text and QR readers before anything is read or copied",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS does not start a recording",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/capture.test.ts",
+      "test": "the Screen Recording check on macOS hands nothing over to be attached to a question",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/dictation.test.ts",
+      "test": "typing into another app on macOS without Accessibility, explains before macOS asks, leaves the text copied and presses nothing",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/dictation.test.ts",
+      "test": "typing into another app on macOS a refused Automation prompt names Automation and offers its pane",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/dictation.test.ts",
+      "test": "typing into another app on macOS keystrokes refused by Accessibility name Accessibility and offer its pane",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/dictation.test.ts",
+      "test": "typing into another app on macOS shows a different explanation once the first has closed",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/ipc/dictation.test.ts",
+      "test": "typing into another app on macOS says the same in Simplified Chinese",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/pet/window.test.ts",
+      "test": "what covers the pet knows the audience window by the title Herald Slides gives it",
+      "result": "passed on recheck"
+    },
+    {
+      "file": "electron/office/templates.test.ts",
+      "test": "OfficeTemplates reaches nothing outside its folder: ids are UUIDs and apps are Office apps",
+      "result": "passed on recheck"
+    }
+  ],
+  "remainingBaselineFailures": [
+    {
+      "file": "electron/atomic-write.test.ts",
+      "failed": 5
+    },
+    {
+      "file": "electron/native-notification.test.ts",
+      "failed": 2
+    },
+    {
+      "file": "scripts/after-pack.test.ts",
+      "failed": 1
+    },
+    {
+      "file": "scripts/check-mac-builds.test.ts",
+      "failed": 15
+    },
+    {
+      "file": "scripts/check-mac-signatures.test.ts",
+      "failed": 5
+    },
+    {
+      "file": "electron/backend/bridge-plugin.test.ts",
+      "failed": 5
+    },
+    {
+      "file": "electron/backend/resolve.test.ts",
+      "failed": 7
+    },
+    {
+      "file": "electron/canvas/package-io.test.ts",
+      "failed": 1
+    },
+    {
+      "file": "electron/events/sources.test.ts",
+      "failed": 1
+    },
+    {
+      "file": "electron/office/convert.test.ts",
+      "failed": 3
+    },
+    {
+      "file": "electron/office/print.test.ts",
+      "failed": 1
+    },
+    {
+      "file": "electron/ipc/fs-read.test.ts",
+      "failed": 61
+    },
+    {
+      "file": "electron/ipc/fs.test.ts",
+      "failed": 4
+    },
+    {
+      "file": "electron/ipc/setup.test.ts",
+      "failed": 3
+    },
+    {
+      "file": "electron/ipc/terminal.test.ts",
+      "failed": 3
+    },
+    {
+      "file": "electron/room/activity.test.ts",
+      "failed": 2
+    },
+    {
+      "file": "electron/room/log.test.ts",
+      "failed": 2
+    },
+    {
+      "file": "electron/shell/notification-daemon.test.ts",
+      "failed": 1
+    },
+    {
+      "file": "electron/shell/os-control.test.ts",
+      "failed": 2
+    },
+    {
+      "file": "electron/wm/niri.test.ts",
+      "failed": 3
+    },
+    {
+      "file": "electron/theme/omarchy.test.ts",
+      "failed": 1
+    }
+  ],
+  "sourceChecks": {
+    "typecheck": "passed",
+    "productionBuild": "passed",
+    "brandingMetadataAndAssets": "passed",
+    "legacyCopyAudit": "passed; no unreviewed capitalized product-copy findings",
+    "nativeParsers": {
+      "python": 65,
+      "bash": 39,
+      "toml": 6,
+      "result": "passed"
+    },
+    "linuxSelectedTests": {
+      "passed": 40,
+      "skipped": 26,
+      "failed": 0
+    },
+    "commandIds": {
+      "baseline": "7ff5f81",
+      "files": 39,
+      "literalCommandIds": 386,
+      "result": "unchanged"
+    },
+    "protectedFilesUnchanged": [
+      "apps/desktop/shared/ipc.ts",
+      "apps/desktop/preload/index.ts",
+      "upstream/UPSTREAM.lock",
+      "LICENSE",
+      "NOTICE"
+    ],
+    "workflows": {
+      "yamlFiles": 5,
+      "shellBlocks": "parsed with bash -n",
+      "result": "passed; native jobs not executed"
+    }
+  },
+  "limits": [
+    "Main-process runs include a few renderer regression files; do not sum these totals with the full renderer run.",
+    "128 remaining failures reproduced on the original source under Windows; supported Linux/macOS runs remain required.",
+    "Native package/image/ISO builds, installer appearance, systemd aliases, real Hermes integration, upgrade and rollback remain unvalidated.",
+    "No host partition, EFI, firmware, publication or deployment changes."
+  ],
+  "sourceCommits": [
+    "cc829a8e7c36eca607d8983103ccba6f489cc4f4",
+    "9dd5ce9"
+  ]
+}
