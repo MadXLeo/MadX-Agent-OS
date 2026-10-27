@@ -216,7 +216,7 @@ describe('unit arithmetic', () => {
   })
 
   it('names a unit it does not know instead of guessing', async () => {
-    expect(await evaluate('5 km in parsecs', CONTEXT)).toMatchObject({ ok: false, error: "Herald doesn't know the unit “parsecs”" })
+    expect(await evaluate('5 km in parsecs', CONTEXT)).toMatchObject({ ok: false, error: "MadX OS doesn't know the unit “parsecs”" })
     expect((await answer('$50 to Mum')).display).toBe('$50.00')
     expect((await answer('3 hours in the office')).display).toBe('3 h')
   })

@@ -37,7 +37,7 @@ vi.mock('../store/windows.ts', async importOriginal => ({
 
 const ENV = { hermesHome: '/h/.hermes', homeDir: '/h', version: '0.0.0', isDev: false }
 const WM = $wm.get()
-const CALC_WINDOW: WmWindow = { id: 7, title: 'Herald OS · Calc', appId: 'herald-os', pid: 1, workspaceId: 1, focused: false, floating: true, urgent: false, ours: true }
+const CALC_WINDOW: WmWindow = { id: 7, title: 'MadX Agent OS · Calc', appId: 'herald-os', pid: 1, workspaceId: 1, focused: false, floating: true, urgent: false, ours: true }
 
 let root: Root | null = null
 let container: HTMLElement
@@ -75,37 +75,37 @@ afterEach(() => {
 })
 
 describe('the Dock on the Mac', () => {
-  it('has Herald Calc after Herald Office, before Applications', async () => {
+  it('has MadX Calc after MadX Office, before Applications', async () => {
     $env.set({ ...ENV, platform: 'darwin', shellMode: 'desktop' })
     await show(<Dock />)
 
     expect(buttons().map(item => item.dataset.dockItem)).toEqual(['hermes', 'files', 'room', 'canvas', 'office', 'calc', 'applications', 'trash'])
-    expect(button('Herald Calc').dataset.dockItem).toBe('calc')
+    expect(button('MadX Calc').dataset.dockItem).toBe('calc')
   })
 
-  it('opens Herald Calc, and shows it running while its window is open', async () => {
+  it('opens MadX Calc, and shows it running while its window is open', async () => {
     $env.set({ ...ENV, platform: 'darwin', shellMode: 'desktop' })
     await show(<Dock />)
-    await act(async () => button('Herald Calc').click())
+    await act(async () => button('MadX Calc').click())
 
     expect(edges.opened).toEqual(['calc'])
-    expect(running('Herald Calc')).toBe(false)
+    expect(running('MadX Calc')).toBe(false)
 
-    act(() => $windows.set({ w1: { id: 'w1', appId: 'calc', title: 'Herald Calc', bounds: { x: 0, y: 0, width: 780, height: 560 }, z: 1, phase: 'open', maximized: false } }))
+    act(() => $windows.set({ w1: { id: 'w1', appId: 'calc', title: 'MadX Calc', bounds: { x: 0, y: 0, width: 780, height: 560 }, z: 1, phase: 'open', maximized: false } }))
 
-    expect(running('Herald Calc')).toBe(true)
+    expect(running('MadX Calc')).toBe(true)
     expect(running('Pet Room')).toBe(false)
   })
 })
 
 describe('the Dock in panels mode', () => {
-  it('pins Herald Calc after Herald Office, and opens it', async () => {
+  it('pins MadX Calc after MadX Office, and opens it', async () => {
     $env.set({ ...ENV, platform: 'linux', shellMode: 'panels' })
     await show(<DockSurface />)
 
-    expect(buttons().map(item => item.getAttribute('aria-label'))).toEqual(['Hermes', 'Files', 'Pet Room', 'Herald Canvas', 'Herald Office', 'Herald Calc', 'Applications', 'Trash'])
+    expect(buttons().map(item => item.getAttribute('aria-label'))).toEqual(['Hermes', 'Files', 'Pet Room', 'MadX Canvas', 'MadX Office', 'MadX Calc', 'Applications', 'Trash'])
 
-    await act(async () => button('Herald Calc').click())
+    await act(async () => button('MadX Calc').click())
 
     expect(edges.opened).toEqual(['calc'])
   })
@@ -115,10 +115,10 @@ describe('the Dock in panels mode', () => {
     $wm.set({ ...WM, available: true, windows: [CALC_WINDOW] })
     await show(<DockSurface />)
 
-    expect(buttons().filter(item => item.getAttribute('aria-label') === 'Herald Calc')).toHaveLength(1)
-    expect(running('Herald Calc')).toBe(true)
+    expect(buttons().filter(item => item.getAttribute('aria-label') === 'MadX Calc')).toHaveLength(1)
+    expect(running('MadX Calc')).toBe(true)
 
-    await act(async () => button('Herald Calc').click())
+    await act(async () => button('MadX Calc').click())
 
     expect(edges.actions).toEqual([{ type: 'focus-window', id: 7 }])
     expect(edges.opened).toEqual([])

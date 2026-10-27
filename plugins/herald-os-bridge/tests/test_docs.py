@@ -14,8 +14,8 @@ def _mod(plugin, name):
 
 
 CATALOGUE = [
-    {"id": "office.list", "title": "What is open in Herald Office", "tier": "read", "args": []},
-    {"id": "docs.list", "title": "What is open in Herald Docs", "tier": "read", "args": []},
+    {"id": "office.list", "title": "What is open in MadX Office", "tier": "read", "args": []},
+    {"id": "docs.list", "title": "What is open in MadX Docs", "tier": "read", "args": []},
     {"id": "docs.read", "title": "Read a document", "tier": "read", "args": []},
     {"id": "docs.write", "title": "Write in a document", "tier": "act", "args": []},
     {"id": "docs.edit", "title": "Make several edits in a document at once", "tier": "act", "args": []},
@@ -162,7 +162,7 @@ def test_the_descriptions_teach_the_workflow_and_point_to_the_skill(plugin):
     assert 'skill_view name="herald-os-bridge:herald-docs"' in description
     for words in ("action=list", "list_all", "part=selection", "at=marked", "action=edit", "one step the person can undo", "Never save unless the person asks", "insert_range", "tab"):
         assert words in description
-    assert "`office`" in tools.OS_UI_SCHEMA["description"] and "Herald Docs, Sheets and Slides" in tools.OS_UI_SCHEMA["description"]
+    assert "`office`" in tools.OS_UI_SCHEMA["description"] and "MadX Docs, Sheets and Slides" in tools.OS_UI_SCHEMA["description"]
 
 
 def test_saving_or_exporting_over_a_file_asks_every_time(plugin, tmp_path):
@@ -273,7 +273,7 @@ def test_not_knowing_what_is_open_counts_a_file_as_closed(plugin, shell, tmp_pat
 
     def run_command(command, args=None, **kwargs):
         if command == "office.list":
-            raise RuntimeError("Herald OS did not answer")
+            raise RuntimeError("MadX Agent OS did not answer")
         return answer(command, args, **kwargs)
 
     monkeypatch.setattr(ui, "run_command", run_command)
@@ -297,7 +297,7 @@ def test_a_shell_without_herald_docs_says_to_update(plugin, shell, monkeypatch):
     monkeypatch.setattr(ui, "list_commands", lambda: [{"id": "page.open", "tier": "read"}])
     tools._UI_CATALOGUE.clear()
     reply = json.loads(tools.handle_docs({"action": "list"}))
-    assert reply["success"] is False and "Herald Docs" in reply["error"] and "update Herald OS" in reply["error"]
+    assert reply["success"] is False and "MadX Docs" in reply["error"] and "update MadX Agent OS" in reply["error"]
     reply = json.loads(tools.handle_docs({"action": "paint"}))
     assert reply["success"] is False and "export_pdf" in reply["error"]
 
@@ -509,7 +509,7 @@ def test_an_older_shell_without_the_new_commands_says_to_update_and_keeps_the_re
     tools._UI_CATALOGUE.clear()
     for action in DEPTH:
         reply = json.loads(tools.handle_docs({"action": action, "content": "x", "text": "x", "note": "footnote 1", "comment": "c1", "comments": REVIEW}))
-        assert reply["success"] is False and "update Herald OS" in reply["error"], action
+        assert reply["success"] is False and "update MadX Agent OS" in reply["error"], action
     assert not [command for command, _, _ in calls if command != "office.list"]
     reply = json.loads(tools.handle_docs({"action": "read", "part": "outline"}))
     assert reply["success"] is True and calls[-1][0] == "docs.read"

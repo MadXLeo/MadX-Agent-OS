@@ -1,6 +1,6 @@
-# Herald Calc
+# MadX Calc
 
-Herald Calc is the calculator built into Herald OS. Its main view is a notepad where you write math
+MadX Calc is the calculator built into MadX Agent OS. Its main view is a notepad where you write math
 the way you would say it ("20% of 84.50", "5 km in miles", "days until Dec 25") and every line
 shows its answer on the right as you type. It also has a classic keypad with scientific and
 programmer modes, graphs, a searchable history, and buttons that turn a note into a spreadsheet or
@@ -8,7 +8,7 @@ a table in a document. It is the same exact engine Hermes uses for math, so the 
 gives you are worked out, not guessed.
 
 Open it from the Dock, from Applications (`Cmd+Shift+A`, `Super+A` on Linux; type "calculator",
-"calc", "convert" or "units"), by asking Hermes, or by saying "open the calculator". On Herald OS
+"calc", "convert" or "units"), by asking Hermes, or by saying "open the calculator". On MadX Agent OS
 Linux it opens as a compact floating window over your work. `Cmd+1` to `Cmd+4` (`Ctrl` on Linux)
 switch between its Notes, Keypad, Graph and History views.
 
@@ -70,15 +70,15 @@ Point at an answer to see the working, step by step, and to copy it or put it on
 ### Notes
 
 Keep as many notes as you like in the list on the left (hide it with the sidebar button, or make
-the window narrow). Every note saves itself as you type. The first time you open Herald Calc, a
+the window narrow). Every note saves itself as you type. The first time you open MadX Calc, a
 Welcome note shows each kind of line.
 
 ## Currency rates
 
-Herald Calc converts currencies with the European Central Bank's daily reference rates, which it
+MadX Calc converts currencies with the European Central Bank's daily reference rates, which it
 fetches from [Frankfurter](https://frankfurter.dev), a free service that needs no account. This is
 the app's only network call: it happens at most once a day, only when a calculation needs a
-currency, and it sends nothing about you. The rates are kept in Herald's data folder, so
+currency, and it sends nothing about you. The rates are kept in MadX's data folder, so
 conversions keep working offline with the last rates; the note then says which day's rates it used
 ("Rates from 15 Oct").
 
@@ -86,7 +86,7 @@ The ECB publishes rates for about 30 currencies, once each working day around 16
 European Time. They are reference rates, not the rate a bank or card will give you.
 
 To stop the fetch, open the settings menu at the top right and turn off **Fetch currency rates
-daily**. The last rates you have keep working; Herald fetches nothing until you turn it back on.
+daily**. The last rates you have keep working; MadX fetches nothing until you turn it back on.
 
 ## Graphs
 
@@ -99,8 +99,8 @@ edit.
 - **Trace.** Point at the graph to read exact values: a dot on each curve and the x and y there.
 - **Asymptotes and gaps.** `tan(x)` and `1/x` are never joined across their asymptotes, which
   show as faint dashed lines, and `sqrt(x)` or `log(x)` simply stop where they have no value.
-- **From Herald Sheets.** Write `plot column B of Budget.xlsx` (or `plot B2:B40 of ~/Sales.xlsx`)
-  to draw a column's numbers, from a workbook open in Herald Sheets or a file on disk.
+- **From MadX Sheets.** Write `plot column B of Budget.xlsx` (or `plot B2:B40 of ~/Sales.xlsx`)
+  to draw a column's numbers, from a workbook open in MadX Sheets or a file on disk.
 
 ## The keypad
 
@@ -125,20 +125,20 @@ Reduce Motion (Settings > Appearance, or your system's setting) keeps the number
 The History view (`Cmd+4`) lists your calculations from the notepad, the keypad, your voice and
 Hermes, newest first. Search it in your own words: "that mortgage thing", "coffee last week".
 Choose one to bring it back into the note in front. **Clear history** deletes all of it. The
-history stays on this computer, in Herald's data folder.
+history stays on this computer, in MadX's data folder.
 
-## Herald Office
+## MadX Office
 
-- **Copy to Sheets** makes a new workbook in Herald Sheets from the note in front, a row for each
+- **Copy to Sheets** makes a new workbook in MadX Sheets from the note in front, a row for each
   line: real formulas where a line maps cleanly ("budget - rent" refers to the rows `budget` and
   `rent` came from, "sum" becomes `=SUM(…)`, "84.50 + 15%" becomes `=84.5*(1+15%)`), values for the
   rest (units, dates, converted currencies), and each line's label in the column next to it.
-- **Copy to Docs** makes a new document in Herald Docs with the note as a neat table, a section
+- **Copy to Docs** makes a new document in MadX Docs with the note as a neat table, a section
   for each heading.
 
 ## Hermes and your voice
 
-Hermes uses Herald Calc's engine for any arithmetic, percentage, unit, currency, date or time-zone
+Hermes uses MadX Calc's engine for any arithmetic, percentage, unit, currency, date or time-zone
 question, through its `calc` tool, and shows you the working. Ask it to "plot sin(x) from 0 to
 10" or to "open my calculation history". See [docs/SYSTEM-BRIDGE.md](../SYSTEM-BRIDGE.md).
 
@@ -147,7 +147,7 @@ miles is 10 km", "convert 100 dollars to euros", "what time is it in Tokyo". Any
 thinking or your context ("what's 15% of my rent") goes to Hermes as usual. See
 [docs/VOICE.md](../VOICE.md).
 
-On Herald OS Linux, `herald-os calc "20% of 84.50"` prints the answer (`--steps` adds the working),
+On MadX Agent OS Linux, `herald-os calc "20% of 84.50"` prints the answer (`--steps` adds the working),
 `herald-os calc - < budget.txt` works out a whole note, `herald-os calc convert 5 km miles`
 converts, and `herald-os calc history mortgage` searches the history.
 

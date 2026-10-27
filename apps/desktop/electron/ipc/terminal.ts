@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { BrowserWindow, clipboard, ipcMain, type IpcMainInvokeEvent, type WebContents } from 'electron'
 import fs from 'node:fs'
 import { createRequire } from 'node:module'
@@ -195,7 +196,7 @@ export function registerTerminalIpc(getWindow: () => BrowserWindow | null): void
   // go through main; only the shell's own pages may ask.
   const fromShell = (event: IpcMainInvokeEvent) => {
     if (!event.senderFrame || !isShellPage(event.senderFrame.url)) {
-      throw new Error('Only Herald OS itself may use the clipboard')
+      throw new Error(`Only ${PRODUCT.name} itself may use the clipboard`)
     }
   }
 

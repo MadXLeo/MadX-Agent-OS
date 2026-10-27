@@ -1,6 +1,6 @@
-# Building and customizing the Herald OS image
+# Building and customizing the MadX Agent OS image
 
-Herald OS Linux ships as a Fedora bootc image (ADR-018): a container image that is also a bootable
+MadX Agent OS Linux ships as a Fedora bootc image (ADR-018): a container image that is also a bootable
 system. This page is for building that image yourself, booting your build and changing what goes
 into it. [docs/LINUX.md](LINUX.md#the-herald-os-image-fedora-bootc) covers what the image is, its
 installer and disks, signing and switching another bootc system to it; the
@@ -61,7 +61,7 @@ image's layer, `nvidia.sh`, prints four `--- <step>` lines of its own and ends w
    the newest kernel in `/usr/lib/modules` is rebuilt with `dracut --no-hostonly`.
 8. **Services.** Flathub is written as a remote in `/etc/flatpak/remotes.d` (downloaded from
    `dl.flathub.org` during the build); NetworkManager, Bluetooth, greetd, a text console on
-   `tty2`, the `plocate` timer, firewalld and the Herald OS units are enabled; the default target is
+   `tty2`, the `plocate` timer, firewalld and the MadX Agent OS units are enabled; the default target is
    `graphical.target`, the default firewall zone is `herald-os`, and `sshd` is disabled.
 
 ## Building it locally
@@ -116,8 +116,8 @@ npm run dist:linux --workspace apps/desktop -- --x64     # --arm64 on an aarch64
 cp apps/desktop/release/herald-os-*-linux-x64.tar.gz herald-os-linux.tar.gz   # -linux-arm64 there
 ```
 
-`npm run dist:linux` writes `apps/desktop/release/herald-os-<version>-linux-<x64|arm64>.tar.gz`
-(`herald-os-0.1.0-alpha.4-linux-x64.tar.gz`, about 160 MB, at version 0.1.0-alpha.4): the app,
+`npm run dist:linux` writes `apps/desktop/release/madx-agent-os-<version>-linux-<x64|arm64>.tar.gz`
+(`madx-agent-os-0.1.0-alpha.4-linux-x64.tar.gz`, about 160 MB, at version 0.1.0-alpha.4): the app,
 with the bridge plugin and the icon under `resources/`. The Containerfile copies the
 tarball from the build context, so it has to be inside the repository; `herald-os-linux.tar.gz` at
 the root is the name it expects and is ignored by git. `--build-arg SHELL_TARBALL=<path>` names
@@ -190,9 +190,9 @@ sudo chown -R "$(id -u)" output
 bash linux/vm/package-disk.sh output amd64 <version> dist   # arm64 for an aarch64 disk
 ```
 
-`dist/` then has `herald-os-<version>-x86_64.qcow2.zst` and `herald-os-<version>-x86_64.vhdx.zip`
-(or `herald-os-<version>-aarch64.qcow2.zst` and `herald-os-<version>-aarch64.utm.zip`), or
-`herald-os-<version>-x86_64.iso`, each with a `.sha256`, and split into parts when over 2 GiB
+`dist/` then has `madx-agent-os-<version>-x86_64.qcow2.zst` and `madx-agent-os-<version>-x86_64.vhdx.zip`
+(or `madx-agent-os-<version>-aarch64.qcow2.zst` and `madx-agent-os-<version>-aarch64.utm.zip`), or
+`madx-agent-os-<version>-x86_64.iso`, each with a `.sha256`, and split into parts when over 2 GiB
 ([docs/LINUX.md](LINUX.md#the-herald-os-image-fedora-bootc) has the parts and how to join them).
 `<version>` may use only letters, digits, `.`, `_` and `-`. `package-disk.sh` deletes the builder's
 `disk.qcow2` once it is converted.
@@ -200,7 +200,7 @@ bash linux/vm/package-disk.sh output amd64 <version> dist   # arm64 for an aarch
 ### In CI, on your fork
 
 `.github/workflows/image.yml` pushes to `ghcr.io/<repository owner>/herald-os`, so on a fork it
-publishes to your own GHCR package. Run "Herald OS image" from the Actions tab: a run from a branch
+publishes to your own GHCR package. Run "MadX Agent OS image" from the Actions tab: a run from a branch
 other than `main` gets the tag `dev-<first 7 characters of the commit>`, so it never replaces a
 channel, and ticking "Also build the ISO and the VM disk" adds the disks as artifacts of the run.
 A push to `main` that touches the image's files publishes `edge`, and a `v*` tag publishes
@@ -211,7 +211,7 @@ public: the GHCR package stays private until you change it in the package's sett
 
 ### Switching a running system
 
-On Herald OS, or another bootc system, switch to an image in a registry:
+On MadX Agent OS, or another bootc system, switch to an image in a registry:
 
 ```bash
 sudo bootc status                # the image you run now, to come back to
@@ -220,7 +220,7 @@ systemctl reboot
 ```
 
 For example `ghcr.io/<owner>/herald-os:dev-1a2b3c4` from a run on your fork, after `podman push`
-of your local build to a registry of your own, or `ghcr.io/iamlukethedev/herald-os:edge`. Where
+of your local build to a registry of your own, or `ghcr.io/madxleo/madx-agent-os:edge`. Where
 `bootc` is missing or refuses, rpm-ostree does the same:
 
 ```bash
@@ -228,7 +228,7 @@ sudo rpm-ostree rebase ostree-unverified-registry:<registry>/<owner>/herald-os:<
 ```
 
 To boot an image you built on the machine itself, without a registry, switch to it in root's image
-store, where `sudo podman build` put it (the image has Podman, so a Herald OS machine can build its
+store, where `sudo podman build` put it (the image has Podman, so a MadX Agent OS machine can build its
 own next image):
 
 ```bash
@@ -238,9 +238,9 @@ systemctl reboot
 
 The new image starts on the next restart, and the one before stays in the boot menu:
 `herald-os rollback` (or `sudo bootc rollback`) makes it the default again. A machine that already
-ran Herald OS keeps its account and Hermes, since the first-boot units run once per machine
+ran MadX Agent OS keeps its account and Hermes, since the first-boot units run once per machine
 (`/var/lib/herald-os/firstboot-done`); on a system switched from another bootc system, the first
-boot does more, as in [Switching a bootc system to Herald OS](LINUX.md#switching-a-bootc-system-to-herald-os).
+boot does more, as in [Switching a bootc system to MadX Agent OS](LINUX.md#switching-a-bootc-system-to-herald-os).
 
 Afterwards, on your build:
 
@@ -252,7 +252,7 @@ Afterwards, on your build:
   there. After `bootc switch --transport containers-storage`, the channel switch looks for
   `localhost/herald-os:<channel>` in a registry, fails and leaves the channel as it was; switch
   back to a registry image with `bootc switch` first.
-- Keep `IMAGE_ID=herald-os`. `herald-os` and `herald-os-update` tell the Herald OS image from other
+- Keep `IMAGE_ID=herald-os`. `herald-os` and `herald-os-update` tell the MadX Agent OS image from other
   bootc systems by that line, and leave other systems' updates and rollbacks alone.
 
 ### In a virtual machine
@@ -326,7 +326,7 @@ What the image carries:
   [Make it yours](manual/make-it-yours.md#writing-a-theme-by-hand) describes the file.
 - **The container image's labels** (`org.opencontainers.image.*` in the Containerfile): what
   registries show for it.
-- **os-release:** only `IMAGE_ID` is Herald's, and the update tools depend on it
+- **os-release:** only `IMAGE_ID` is MadX's, and the update tools depend on it
   ([above](#switching-a-running-system)).
 
 The logo and name in About and the lock-screen picture are per account, not part of the image:
@@ -336,7 +336,7 @@ Settings > About > Branding or `herald-os branding set`
 ### Signing
 
 `packages.sh` installs a signature policy only when `linux/image/cosign.pub` exists, and that policy
-names `ghcr.io/iamlukethedev/herald-os` and `ghcr.io/iamlukethedev/herald-os-nvidia`, so either
+names `ghcr.io/madxleo/madx-agent-os` and `ghcr.io/madxleo/madx-agent-os-nvidia`, so either
 image accepts signed updates of itself and of the other. Without the file, as today, a build accepts updates
 without a signature check. With it committed, the image workflow stops unless `COSIGN_PRIVATE_KEY`
 is set and matches it. [docs/LINUX.md](LINUX.md#the-herald-os-image-fedora-bootc) has the

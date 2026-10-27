@@ -1,6 +1,6 @@
 # Trying it in a virtual machine
 
-A virtual machine runs Herald OS Linux in a window on the computer you already have, so you can try
+A virtual machine runs MadX Agent OS Linux in a window on the computer you already have, so you can try
 the whole operating system without installing it. Nothing outside the virtual machine changes.
 
 Each release carries ready-made virtual machines: a UTM bundle for an Apple Silicon Mac, a Hyper-V
@@ -14,15 +14,15 @@ Silicon disk that `try.sh` uses ([From the terminal on an Apple Silicon Mac](#fr
 No Homebrew or terminal needed:
 
 1. Install [UTM](https://mac.getutm.app), a free app that runs virtual machines.
-2. Download `herald-os-<version>-aarch64.utm.zip` from the
-   [releases page](https://github.com/iamlukethedev/Herald-OS/releases) and open it. Finder unpacks
-   `Herald OS.utm`. If the release has it in parts, see [Files in parts](#files-in-parts).
-3. Double-click `Herald OS.utm`. UTM adds it to its list; press the play button.
+2. Download `madx-agent-os-<version>-aarch64.utm.zip` from the
+   [releases page](https://github.com/MadXLeo/MadX-Agent-OS/releases) and open it. Finder unpacks
+   `MadX Agent OS.utm`. If the release has it in parts, see [Files in parts](#files-in-parts).
+3. Double-click `MadX Agent OS.utm`. UTM adds it to its list; press the play button.
 
 The bundle gives the virtual machine 4 cores and 6 GB of memory; UTM's settings for the machine
 change them. It runs on Apple's hypervisor with GPU-accelerated graphics, and asks UTM for sound, a
-shared clipboard and a screen that follows the window's size. How much of that Herald OS Linux uses
-inside UTM is still being tested ([#67](https://github.com/iamlukethedev/Herald-OS/issues/67)).
+shared clipboard and a screen that follows the window's size. How much of that MadX Agent OS Linux uses
+inside UTM is still being tested ([#67](https://github.com/MadXLeo/MadX-Agent-OS/issues/67)).
 
 ## On Windows, with Hyper-V
 
@@ -30,8 +30,8 @@ Hyper-V comes with Windows 11 Pro, Enterprise and Education. Windows 11 Home has
 [the installer in another virtual machine](#with-the-installer-virtualbox-and-others) instead.
 
 1. Turn Hyper-V on: Start, type "Turn Windows features on or off", tick **Hyper-V** and restart.
-2. Download `herald-os-<version>-x86_64.vhdx.zip` from the
-   [releases page](https://github.com/iamlukethedev/Herald-OS/releases) and unpack it to a folder
+2. Download `madx-agent-os-<version>-x86_64.vhdx.zip` from the
+   [releases page](https://github.com/MadXLeo/MadX-Agent-OS/releases) and unpack it to a folder
    with 40 GB free; the disk grows up to that as you use it. If the release has it in parts, see
    [Files in parts](#files-in-parts).
 3. In Hyper-V Manager, **New > Virtual Machine**: generation 2, 6144 MB of memory, the **Default
@@ -46,14 +46,14 @@ shared clipboard there yet.
 
 ## On Linux or an Intel Mac
 
-`herald-os-<version>-x86_64.qcow2.zst` (and `aarch64` for ARM machines) is a ready-made disk for
+`madx-agent-os-<version>-x86_64.qcow2.zst` (and `aarch64` for ARM machines) is a ready-made disk for
 QEMU, virt-manager, GNOME Boxes or UTM on an Intel Mac. Unpack it with `zstd -d`, then create a
 machine that boots with UEFI from it as an existing disk, with 4 cores, 6 GB of memory and room for
 the disk to grow to 40 GB.
 
 ## With the installer: VirtualBox and others
 
-Any virtual machine that boots with UEFI can also install Herald OS from the x86_64 installer ISO,
+Any virtual machine that boots with UEFI can also install MadX Agent OS from the x86_64 installer ISO,
 as in [Installing on a PC](install-pc.md): VirtualBox with EFI turned on, on Windows 11 Home for
 example. The Hyper-V disk has not been tried in VirtualBox. Give the machine 4 cores, 6 GB of memory
 and a 40 GB disk, which is what CI installs it with, and skip writing a USB stick: point the virtual
@@ -74,9 +74,9 @@ and check the result:
 
 ```bash
 VERSION=0.1.0-alpha.5    # replace with the version you downloaded (alpha.5 is the first release with these files)
-shasum -a 256 -c "herald-os-$VERSION-x86_64.vhdx.zip.sha256sums"    # each part; sha256sum -c on Linux
-cat "herald-os-$VERSION-x86_64.vhdx.zip."[0-9][0-9][0-9] > "herald-os-$VERSION-x86_64.vhdx.zip"
-shasum -a 256 -c "herald-os-$VERSION-x86_64.vhdx.zip.sha256"          # the joined file
+shasum -a 256 -c "madx-agent-os-$VERSION-x86_64.vhdx.zip.sha256sums"    # each part; sha256sum -c on Linux
+cat "madx-agent-os-$VERSION-x86_64.vhdx.zip."[0-9][0-9][0-9] > "madx-agent-os-$VERSION-x86_64.vhdx.zip"
+shasum -a 256 -c "madx-agent-os-$VERSION-x86_64.vhdx.zip.sha256"          # the joined file
 ```
 
 The `.utm.zip` joins the same way. The `.part0`, `.part1` files, here the Apple Silicon disk, join
@@ -84,9 +84,9 @@ with `.part*` instead:
 
 ```bash
 VERSION=0.1.0-alpha.5    # replace with the version you downloaded (alpha.5 is the first release with these files)
-shasum -a 256 -c "herald-os-$VERSION-aarch64.qcow2.zst.sha256sums"    # sha256sum -c on Linux
-cat "herald-os-$VERSION-aarch64.qcow2.zst.part"* > "herald-os-$VERSION-aarch64.qcow2.zst"
-shasum -a 256 -c "herald-os-$VERSION-aarch64.qcow2.zst.sha256"
+shasum -a 256 -c "madx-agent-os-$VERSION-aarch64.qcow2.zst.sha256sums"    # sha256sum -c on Linux
+cat "madx-agent-os-$VERSION-aarch64.qcow2.zst.part"* > "madx-agent-os-$VERSION-aarch64.qcow2.zst"
+shasum -a 256 -c "madx-agent-os-$VERSION-aarch64.qcow2.zst.sha256"
 ```
 
 On Windows, in a Command Prompt, join the parts with a `+` between each, then compare the hash
@@ -95,12 +95,12 @@ On Windows, in a Command Prompt, join the parts with a `+` between each, then co
 ```bat
 rem replace with the version you downloaded
 set "VERSION=0.1.0-alpha.5"
-copy /b herald-os-%VERSION%-x86_64.vhdx.zip.001 + herald-os-%VERSION%-x86_64.vhdx.zip.002 herald-os-%VERSION%-x86_64.vhdx.zip
-certutil -hashfile herald-os-%VERSION%-x86_64.vhdx.zip SHA256
+copy /b madx-agent-os-%VERSION%-x86_64.vhdx.zip.001 + madx-agent-os-%VERSION%-x86_64.vhdx.zip.002 madx-agent-os-%VERSION%-x86_64.vhdx.zip
+certutil -hashfile madx-agent-os-%VERSION%-x86_64.vhdx.zip SHA256
 ```
 
-If there are more parts, add `+ herald-os-%VERSION%-x86_64.vhdx.zip.003` (and so on) in order. To list them, run
-`dir herald-os-%VERSION%-x86_64.vhdx.zip.*`. Don't use a wildcard with `copy /b`, because it may join the parts out of order.
+If there are more parts, add `+ madx-agent-os-%VERSION%-x86_64.vhdx.zip.003` (and so on) in order. To list them, run
+`dir madx-agent-os-%VERSION%-x86_64.vhdx.zip.*`. Don't use a wildcard with `copy /b`, because it may join the parts out of order.
 
 On Windows, 7-Zip's right-click menu also has **CRC SHA > SHA-256** for a file.
 
@@ -111,7 +111,7 @@ with Apple's Virtualization framework:
 
 ```bash
 brew install qemu zstd
-git clone https://github.com/iamlukethedev/Herald-OS.git && cd Herald-OS && bash linux/vm/try.sh
+git clone https://github.com/MadXLeo/MadX-Agent-OS.git && cd MadX-Agent-OS && bash linux/vm/try.sh
 ```
 
 This virtual machine gets 4 cores and 8 GB of memory; on a Mac with 8 GB in total, start it with
@@ -121,9 +121,9 @@ This virtual machine gets 4 cores and 8 GB of memory; on a Mac with 8 GB in tota
 ## The system key in a virtual machine
 
 On real hardware the system key is `Super`. When the virtual machine has no graphics acceleration,
-Herald OS runs its window manager nested and uses `Alt` instead, because the host keeps `Super` (or
+MadX Agent OS runs its window manager nested and uses `Alt` instead, because the host keeps `Super` (or
 `Command`) for itself: `Super+A` becomes `Alt+A`, and so on. `Super+Alt+Space` then collapses into
-`Alt+Space`, so open the Herald OS menu with `Alt+M` (`Super+M` on hardware).
+`Alt+Space`, so open the MadX Agent OS menu with `Alt+M` (`Super+M` on hardware).
 
 - **Hyper-V** has no graphics acceleration for Linux, so use `Alt`.
 - **UTM** gives the virtual machine accelerated graphics, so `Super` should work as on hardware, but
@@ -137,6 +137,6 @@ Retina screen: [Troubleshooting](troubleshooting.md#apps-look-too-large-or-too-s
 
 ## Building it from your checkout
 
-To work on Herald OS Linux itself, the development virtual machine builds it from your checkout; the
-[README](../../README.md#herald-os-linux-in-a-virtual-machine) and [docs/LINUX.md](../LINUX.md) have
+To work on MadX Agent OS Linux itself, the development virtual machine builds it from your checkout; the
+[README](../../README.md#madx-agent-os-linux-in-a-virtual-machine) and [docs/LINUX.md](../LINUX.md) have
 the steps.

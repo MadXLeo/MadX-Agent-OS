@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { type RoomSummary, summarizeRoom } from '../features/room/model/summary.ts'
 import { refreshRoomOnce } from '../features/room/store.ts'
 import { fail, ok, type OsCommand } from '../store/os-commands.ts'
@@ -16,7 +17,7 @@ const listed = (parts: string[]): string => (parts.length > 1 ? `${parts.slice(0
 /** Work outside Herald, when the elsewhere lane is on: read out after the Room's own, apart from it. */
 function elsewhereText(lines: readonly string[]): string {
   const shown = lines.slice(0, MAX_LINES)
-  const text = `Outside Herald: ${shown.join('. ')}`
+  const text = `Outside ${PRODUCT.shortName}: ${shown.join('. ')}`
 
   return lines.length > shown.length ? `${text}, and ${lines.length - shown.length} more` : text
 }

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../product.ts'
 /*
  * Which files Herald Docs, Sheets and Slides open and save. Main builds its dialogs from this, the
  * windows pick their reader and writer from it, and Files offers "Edit in" only for what an app
@@ -8,7 +9,7 @@ export type OfficeApp = 'docs' | 'sheets' | 'slides'
 
 export const OFFICE_APPS: readonly OfficeApp[] = ['docs', 'sheets', 'slides']
 
-export const OFFICE_APP_NAMES: Record<OfficeApp, string> = { docs: 'Herald Docs', sheets: 'Herald Sheets', slides: 'Herald Slides' }
+export const OFFICE_APP_NAMES: Record<OfficeApp, string> = { docs: PRODUCT.apps.docs, sheets: PRODUCT.apps.sheets, slides: PRODUCT.apps.slides }
 
 /** What each app calls one of its files, for dialogs and messages. */
 export const OFFICE_NOUNS: Record<OfficeApp, string> = { docs: 'document', sheets: 'spreadsheet', slides: 'presentation' }

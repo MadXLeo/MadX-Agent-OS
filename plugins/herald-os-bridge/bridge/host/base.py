@@ -11,7 +11,7 @@ from ..documents import DocumentText
 
 
 class HostNotSupported(RuntimeError):
-    """Raised by adapters for platforms Herald OS does not implement yet."""
+    """Raised by adapters for platforms MadX Agent OS does not implement yet."""
 
 
 @dataclass
@@ -185,7 +185,7 @@ class HostAdapter(ABC):
     @abstractmethod
     def set_wifi_power(self, enabled: bool) -> None: ...
 
-    # --- the menu bar's quick panels (Herald OS Linux; other hosts say so) ------------------
+    # --- the menu bar's quick panels (MadX Agent OS Linux; other hosts say so) ------------------
     def wifi_networks(self) -> list[dict[str, Any]]:
         raise HostNotSupported(f"listing Wi-Fi networks is not available on {self.platform}")
 

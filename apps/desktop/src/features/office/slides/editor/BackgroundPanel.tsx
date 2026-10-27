@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import { useRef, useState } from 'react'
 import { cn } from '../../../../lib/cn.ts'
 import type { Background, Color, Slot } from '../deck.ts'
@@ -85,7 +86,7 @@ export function BackgroundPanel({ doc, onDone }: { doc: SlidesDocument; onDone: 
           if (picked) {
             void commands.readPicture(picked).then(
               (picture) => apply({ kind: 'image', src: picture.src, natural: picture.natural }),
-              () => commands.notify('Herald Slides could not read that picture')
+              () => commands.notify(`${PRODUCT.apps.slides} could not read that picture`)
             )
           }
         }}

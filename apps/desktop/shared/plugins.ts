@@ -1,3 +1,4 @@
+import { PRODUCT } from './product.ts'
 /*
  * Widget plugins (ADR-019): a folder with a manifest.json and web files, shown in a sandboxed frame
  * that can only talk to the shell through a message channel. Shared by main (which serves and
@@ -187,7 +188,7 @@ export function describePermissions(manifest: PluginManifest): string[] {
 
   for (const permission of manifest.permissions) {
     if (permission.startsWith('run:')) {
-      lines.push(`Run the Herald OS command ${permission.slice(4)} (changes still ask you first)`)
+      lines.push(`Run the ${PRODUCT.name} command ${permission.slice(4)} (changes still ask you first)`)
     }
   }
 

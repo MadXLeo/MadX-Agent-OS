@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { IconArrowsShuffle, IconBackground, IconChevronDown, IconChevronRight, IconContrast, IconCube3dSphere, IconEye, IconEyeOff, IconLink, IconLinkOff, IconMask, IconStack2, IconTrash } from '@tabler/icons-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -903,7 +904,7 @@ function HeraldControls({ layer, edit }: { layer: CanvasLayer; edit: Edit }) {
   const settings = heraldOf(layer)
 
   if (!settings) {
-    return <div className="px-3 py-2 text-[12px] text-fg-3">{String(layer.heraldAdjustment?.kind)} comes from a newer Herald Canvas: it shows as its stand-in here, and keeps its settings for that version.</div>
+    return <div className="px-3 py-2 text-[12px] text-fg-3">{String(layer.heraldAdjustment?.kind)} comes from a newer {PRODUCT.apps.canvas}: it shows as its stand-in here, and keeps its settings for that version.</div>
   }
 
   const set = (change: (settings: HeraldAdjustment) => Partial<HeraldAdjustment>) =>

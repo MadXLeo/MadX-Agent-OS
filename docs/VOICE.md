@@ -1,13 +1,13 @@
 # Voice ("Jarvis mode")
 
-Talk to Hermes and hear it answer, from anywhere in Herald OS. Hermes stays the brain in every
+Talk to Hermes and hear it answer, from anywhere in MadX Agent OS. Hermes stays the brain in every
 mode: the same sessions, tools, memory and approval cards; only the audio path changes.
 
 ## Starting a conversation
 
 | How | Where |
 | --- | --- |
-| Global hotkey (`Alt+Space` by default) | Any app, while Herald OS runs |
+| Global hotkey (`Alt+Space` by default) | Any app, while MadX Agent OS runs |
 | "Hey Hermes" wake word | Anywhere, when enabled in Settings > Voice |
 | Microphone button | Menu bar, Overview composer, Hermes composer, Applications overlay |
 | `herald-os voice [toggle\|start\|stop\|mute]`, `Mod+V` | Linux session |
@@ -38,7 +38,7 @@ conversation closes on its own.
 | NeuTTS / KittenTTS / Piper | Free, local | Install the matching extra in the Hermes venv |
 
 If the configured provider cannot run (no API key, a managed gateway your account is not entitled
-to, a missing package), Herald OS switches that setting to the free provider (`local` for speech
+to, a missing package), MadX Agent OS switches that setting to the free provider (`local` for speech
 to text, `edge` for speech), tells you once, and retries. Pick a different provider in Settings
 whenever you want it back.
 
@@ -66,14 +66,14 @@ echo cancellation keeps it out of the microphone, which it could not do for a vo
 played by itself.
 
 The first time in a session the system voice stands in, a notice says so in plain words: "Microsoft's
-free voice isn't working right now, so Herald OS is using your Mac's voice. Updating Hermes usually
+free voice isn't working right now, so MadX Agent OS is using your Mac's voice. Updating Hermes usually
 fixes it." (on Linux, "the system voice"). When the computer has no voice of its own, or it fails
 too, a notice says that instead, also once, and replies show in the captions without being spoken.
 Neither repeats for later replies, conversations or notifications; the error itself goes to
 `~/.hermes/logs/herald-os.log`. Say hello reports which voice spoke: Hermes's, or that it failed and
 the system voice said hello instead.
 
-The Herald OS Linux image lists flite for this, but not espeak-ng, so its system voice speaks English
+The MadX Agent OS Linux image lists flite for this, but not espeak-ng, so its system voice speaks English
 only.
 
 ### Live (opt-in)
@@ -92,13 +92,13 @@ to Hermes. Replies start in under a second and interruptions feel natural.
 
 ## Controlling the OS by voice
 
-Every user-visible action in Herald OS is a command in one registry (`apps/desktop/src/store/os-commands.ts`,
+Every user-visible action in MadX Agent OS is a command in one registry (`apps/desktop/src/store/os-commands.ts`,
 catalogue under `apps/desktop/src/commands/`). Three things call it:
 
 1. **The voice fast path.** Simple utterances match a command locally in under 100 ms and cost no
    tokens: "open missions", "show my memory", "open the terminal", "close this window", "remember
    that I prefer short answers", "pause the daily digest", "start a mission to …", "open Safari",
-   "hide the sidebar", "switch to the live voice engine", "what's 15% of 340". Herald says a short
+   "hide the sidebar", "switch to the live voice engine", "what's 15% of 340". MadX says a short
    acknowledgement ("Opening Missions.") or the answer. Anything that needs reasoning, is long, or
    is destructive goes to Hermes.
 2. **Hermes itself** through the `os_ui` tool (bridge plugin): `list` the catalogue, read the
@@ -117,7 +117,7 @@ field you were in before clicking the mic is remembered): "type how are you ques
 "type ls -la and press enter", "new line", "press escape", "select all", "select the last word",
 "copy", "cut", "paste", "undo", "redo", "delete that", "delete the last word", "clear the field",
 "scroll down", "go to the top". Say "comma", "period", "question mark", "new line" for punctuation.
-With Herald Docs, Sheets or Slides in front in the one-window desktop shell (macOS), dictation
+With MadX Docs, Sheets or Slides in front in the one-window desktop shell (macOS), dictation
 (`Cmd+Ctrl+X`, or "start dictation") and "type …" go into the document itself, as one step to undo
 and without the clipboard: at the caret in a Docs page (each "new line" starts a paragraph, or a
 list's next item), into the active Sheets cell and on down the column (a number becomes a number,
@@ -128,14 +128,14 @@ it. A cell being edited, the find bar, the speaker notes or any other field take
 before; so does another app in front. In the Linux panels session the Office apps are windows of
 their own and get dictation as typed keys.
 
-**Files and apps stay inside Herald OS.** "Open hello.pdf" (or "open hello dot pdf", "open the file
+**Files and apps stay inside MadX Agent OS.** "Open hello.pdf" (or "open hello dot pdf", "open the file
 report") finds the file by name in your home folder (Spotlight on macOS, a bounded `find` on Linux;
 exact names beat partial ones, user folders beat caches) and shows PDFs, images, text and media in a
-Herald OS viewer window (Chromium's PDF viewer, no network, no downloads). Other file types open in
+MadX Agent OS viewer window (Chromium's PDF viewer, no network, no downloads). Other file types open in
 Files with the file selected; say "open it in its app" to hand one to macOS. "Open Apps" is the
-Herald OS app launcher. A transcript that looks like a web address but ends in a file extension
+MadX Agent OS app launcher. A transcript that looks like a web address but ends in a file extension
 ("www.openhello.pdf") is treated as a file. When Hermes calls `system_open` while the shell is
-running, web pages open in a Herald OS window, files in the viewer and folders in Files; only a
+running, web pages open in a MadX Agent OS window, files in the viewer and folders in Files; only a
 named Mac app ("open it in Preview") leaves the OS.
 
 **Documents go to Hermes whole.** "Find the invoice from Acme in my Downloads, rename it properly and
@@ -150,22 +150,22 @@ Moving or renaming files shows the approval card (see below). Right after Hermes
 something, "undo that" (or "take that back") goes to Hermes, which reverses its own change; at
 other times it is the text field's undo.
 
-**Herald Office work goes to Hermes too.** Asking to make or change a document, a sheet or a deck
+**MadX Office work goes to Hermes too.** Asking to make or change a document, a sheet or a deck
 sends the sentence to Hermes as said; it never fills a command's slot or starts a build: "make a
 budget for my trip", "write a cover letter", "draft a report on our Q3 numbers", "create a
 presentation about volcanoes", "turn this into slides", "make this a table", "add a total row", "add
 a column for tax", "fill in the rest of this column", "sum the March sales", "sort this by date",
 "translate this paragraph into Spanish", "make the heading bold", "make slide 3 a two-column
 comparison", "hide column C". The app commands stay instant: "new document", "new spreadsheet",
-"new presentation", "new slide", "open Herald Docs", "open Sheets", "open Slides", "save the
+"new presentation", "new slide", "open MadX Docs", "open Sheets", "open Slides", "save the
 document", "save the presentation", "undo"; "open budget.xlsx" finds the file and shows it in
-Files, where Edit in Herald Sheets opens it. Every spoken request also carries what Herald Office
+Files, where Edit in MadX Sheets opens it. Every spoken request also carries what MadX Office
 has open, for the model only and before the screen line: the document in front with its file, its
 sheet and selection (or the selected text, or the slide), and the other open documents, so "this
 sheet", "this paragraph" and "the selection" mean what you are looking at.
 
-**Simple math is answered at once.** A spoken sum goes straight to Herald Calc's exact engine
-(`calc.eval`) and Herald speaks the answer with no Hermes turn: "what's 15% of 340" ("15% of 340 is
+**Simple math is answered at once.** A spoken sum goes straight to MadX Calc's exact engine
+(`calc.eval`) and MadX speaks the answer with no Hermes turn: "what's 15% of 340" ("15% of 340 is
 51"), "what is two plus two", "three hundred and forty divided by eight", "half of 340", "84.50 plus
 15%", "2,400 plus 180 split three ways", "two to the power of ten", "the square root of 144", "how
 many miles is 10 km", "how many cups in a litre", "convert 100 dollars to euros" (at the European
@@ -175,16 +175,16 @@ length is inches, as in the notepad, and the answer says so), "what time is it i
 "Calculate …" and "work out …" count too. The grammar (`lib/voice/math.ts`) reads number words ("fifteen", "three hundred and
 forty", "one point five", "a million", "two and a half", "half"), spoken operators (plus, minus,
 take away, times, divided by, over, to the power of, squared, cubed, square root of, percent, of,
-off, split N ways) and the units, currencies and places Herald Calc knows; every other word sends
+off, split N ways) and the units, currencies and places MadX Calc knows; every other word sends
 the sentence to Hermes, and so does anything over 16 words. What goes to Hermes, as said, is math
 that needs thought or context: the person's own numbers ("what's 15% of my rent", "what's the
 total of my invoices"), advice ("how much should I tip"), and why or explain ("why is 0.1 plus 0.2
 not 0.3 in JavaScript", "explain compound interest"). Hermes then does the math with the same
 engine (the `calc` tool). A sum the engine cannot read goes to Hermes as well. Starting a
 conversation loads the engine, so the first answer is as quick as the rest; each answer shows in the
-caption and is kept in Herald Calc's history. "Open the calculator", "open the scientific
+caption and is kept in MadX Calc's history. "Open the calculator", "open the scientific
 calculator", "open the graphing calculator", "show my calculations" and "what was my last
-calculation" open Herald Calc or read from its history.
+calculation" open MadX Calc or read from its history.
 
 **Approvals by voice.** While one of the conversation's approval cards is up, a short answer decides
 it instead of interrupting Hermes: "yes", "yes, go ahead", "do it", "approve" or "okay" allow it
@@ -239,16 +239,16 @@ Settings > Voice: enable, microphone permission, engine, wake word, hotkey (Elec
 syntax), follow-up window, speak notifications aloud, speech providers, Live limits, the microphone
 the voice listens through with a level bar, and two test buttons ("Say hello", "Start talking").
 
-Preferences live in Herald OS's `prefs.json` (`voice.*`). Speech providers and the wake word's
+Preferences live in MadX Agent OS's `prefs.json` (`voice.*`). Speech providers and the wake word's
 enabled flag are written to the Hermes runtime's `config.yaml` (`stt.provider`, `tts.provider`,
 `wake_word.enabled`) so `hermes tools` and the CLI see the same choice.
 
 ### Choosing the microphone
 
-Hermes is the brain in every mode, so a conversation's microphone is Herald OS's to choose. On
-Herald OS Linux the shell *is* the session, so the Sound panel sets the machine's PipeWire default
-and that is what the voice uses. Everywhere else Herald OS is one app among others, so its choice
-belongs to Herald OS alone: `voice.inputDevice` in `prefs.json`, applied with Chromium's
+Hermes is the brain in every mode, so a conversation's microphone is MadX Agent OS's to choose. On
+MadX Agent OS Linux the shell *is* the session, so the Sound panel sets the machine's PipeWire default
+and that is what the voice uses. Everywhere else MadX Agent OS is one app among others, so its choice
+belongs to MadX Agent OS alone: `voice.inputDevice` in `prefs.json`, applied with Chromium's
 `getUserMedia({ deviceId: { exact } })`, and the machine's default is left to the system.
 
 - **Automatic** (`null`, the default) follows the system default, so wearing a headset and having
@@ -283,20 +283,20 @@ The same control is in the menu bar's Sound panel (macOS and the other desktop h
 Settings > Voice, and the `audio.input` and `audio.devices` commands reach it without the mouse.
 
 Local transcription accuracy: Hermes's default local model (`base`) mishears short commands. Once,
-when voice is on and `stt.provider` is `local`, Herald OS sets `stt.local.model: small.en` (about
-0.8 s per sentence on a laptop CPU) unless you chose another model, and writes a Herald OS
+when voice is on and `stt.provider` is `local`, MadX Agent OS sets `stt.local.model: small.en` (about
+0.8 s per sentence on a laptop CPU) unless you chose another model, and writes a MadX Agent OS
 vocabulary to `stt.local.initial_prompt` unless you wrote your own. Settings > Voice > Transcription
 model switches between fast, accurate, multilingual and most-accurate models.
 
 ## Requirements and troubleshooting
 
 - macOS asks for microphone access on the first conversation. If it was denied: System Settings >
-  Privacy & Security > Microphone > Herald OS.
+  Privacy & Security > Microphone > MadX Agent OS.
 - `npm run bootstrap` reports the runtime version and whether `openwakeword`, `faster_whisper` and
   `edge_tts` import in the Hermes venv (`pip install 'hermes-agent[voice]'` inside the venv adds them).
   Today's Hermes installs keep no venv in the checkout; there
   `hermes pm install --extra voice --extra edge-tts --extra wake-openwakeword` adds them, and
-  `hermes update` keeps them. The Herald OS image adds them at its first boot either way.
+  `hermes update` keeps them. The MadX Agent OS image adds them at its first boot either way.
 - **Microsoft's free voice returns 403**: the system voice speaks instead, and herald-os.log shows
   `TTS generation failed (edge): 403`. Microsoft changed what its read-aloud service asks for, and
   Hermes needs edge-tts 7.3.0 or newer to answer it. Until Hermes ships a newer edge-tts, upgrade it in
@@ -309,15 +309,15 @@ model switches between fast, accurate, multilingual and most-accurate models.
   `<hermes venv python>` is `venv/bin/python` in a Hermes checkout that has a venv, or the
   `venv/bin/python` under `~/.hermes/installs/<install>/environments/<environment>/` for an install
   `hermes pm` manages. A `hermes update` may put the older edge-tts back until Hermes raises its pin,
-  so run the upgrade again if the 403 returns. Herald OS never changes Hermes's environment itself.
-- When the model provider is signed out (expired or revoked login), Herald OS shows its sign-in
-  card: one click opens the provider's page with a one-time code inside Herald OS, as a Herald OS
+  so run the upgrade again if the 403 returns. MadX Agent OS never changes Hermes's environment itself.
+- When the model provider is signed out (expired or revoked login), MadX Agent OS shows its sign-in
+  card: one click opens the provider's page with a one-time code inside MadX Agent OS, as a MadX Agent OS
   window beside the card (never the system browser), and both the page and the card close
   themselves once the sign-in is approved. The voice says so too instead of failing silently.
   Settings > Hermes & agents > Model provider shows the current state and a Sign in button, and
   switches to another provider.
 - The wake word runs inside the Hermes runtime (openWakeWord, on-device). On runtimes older than
-  0.21.3 the runtime opens the host mic itself; newer ones take audio from Herald OS. Only one
+  0.21.3 the runtime opens the host mic itself; newer ones take audio from MadX Agent OS. Only one
   Hermes client can own the detector at a time.
 - A conversation that hears nothing closes with "Heard nothing": the microphone opened but no speech
   reached the endpointing. Check the level meter in Settings > Voice or the Sound panel, and that
@@ -341,7 +341,7 @@ apps/desktop/src/lib/voice/speak-fallback.ts  the speech chain (provider, free v
 apps/desktop/src/lib/voice/system-voice.ts    the computer's own voice, a few sentences at a time
 apps/desktop/electron/platform/system-voice.ts  say / espeak-ng / flite rendered to WAV in main
 apps/desktop/src/lib/voice/speech-text.ts     sanitizer, sentence chunker, commentary chunking, stop phrases
-apps/desktop/src/lib/voice/math.ts            spoken math: the sentence Herald Calc's engine reads, or null (pure)
+apps/desktop/src/lib/voice/math.ts            spoken math: the sentence MadX Calc's engine reads, or null (pure)
 apps/desktop/src/features/voice/               VoiceOrb, MicButton, VoiceIndicator
 apps/desktop/src/features/office/typing.ts     dictation into the Docs page, Sheets cell or Slides text box in front
 apps/desktop/electron/ipc/voice.ts        mic permission, audio WebSocket URL, global hotkey

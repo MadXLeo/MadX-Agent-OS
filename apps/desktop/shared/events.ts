@@ -1,3 +1,4 @@
+import { PRODUCT } from './product.ts'
 /*
  * Things that happen on this computer that people's own hook scripts and Hermes automations can
  * react to. Main emits them (electron/events/), hooks run from ~/.config/herald-os/hooks/<name>.d/,
@@ -42,7 +43,7 @@ export const HERALD_EVENTS: readonly EventInfo[] = [
   { name: 'network-change', label: 'When the network changes', details: ['online', 'wifi'], automation: true },
   { name: 'crash', label: 'When a program crashes', details: ['app', 'pid', 'reason'], automation: true },
   { name: 'theme-set', label: 'When the theme changes', details: ['theme'], automation: true },
-  { name: 'after-update', label: 'After Herald OS updates', details: [], automation: true },
+  { name: 'after-update', label: `After ${PRODUCT.name} updates`, details: [], automation: true },
   { name: 'lock', label: 'When I lock the screen', details: [], automation: false },
   { name: 'sleep', label: 'When the computer goes to sleep', details: [], automation: false }
 ]

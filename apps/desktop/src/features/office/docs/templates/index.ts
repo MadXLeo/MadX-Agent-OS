@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import { blankDocument, DEFAULT_MARGIN, defaultPage, type DocJSON, PAGE_SIZES, type PageSizeName } from '../../../../../shared/office/document.ts'
 import type { TemplateContext } from './build.ts'
 import { coverLetter, cv } from './career.ts'
@@ -34,7 +35,7 @@ const BUILT_IN: readonly Template[] = [
   {
     id: 'blank',
     name: 'Blank document',
-    description: 'An empty page in Herald’s own styles.',
+    description: `An empty page in ${PRODUCT.shortName}’s own styles.`,
     build: ({ paper }) => blankDocument({ ...paper, margins: { top: DEFAULT_MARGIN, right: DEFAULT_MARGIN, bottom: DEFAULT_MARGIN, left: DEFAULT_MARGIN } })
   },
   { id: 'letter', name: 'Letter', description: 'A formal letter with a letterhead and today’s date.', build: letter },
@@ -59,7 +60,7 @@ function contextFor(options: TemplateOptions): TemplateContext {
   const size = options.size?.toLowerCase()
 
   if (size !== undefined && !(size in PAGE_SIZES)) {
-    throw new Error(`“${options.size}” is not a paper size Herald Docs has; it has ${Object.keys(PAGE_SIZES).join(', ')}`)
+    throw new Error(`“${options.size}” is not a paper size ${PRODUCT.apps.docs} has; it has ${Object.keys(PAGE_SIZES).join(', ')}`)
   }
 
   const named = size === undefined ? null : PAGE_SIZES[size as PageSizeName]
@@ -75,7 +76,7 @@ export function documentFromTemplate(id: string, options: TemplateOptions = {}):
   const template = BUILT_IN.find((entry) => entry.id === id)
 
   if (!template) {
-    throw new Error(`Herald Docs has no template “${id}”; its templates are ${TEMPLATES.map((entry) => entry.id).join(', ')}`)
+    throw new Error(`${PRODUCT.apps.docs} has no template “${id}”; its templates are ${TEMPLATES.map((entry) => entry.id).join(', ')}`)
   }
 
   return template.build(contextFor(options))

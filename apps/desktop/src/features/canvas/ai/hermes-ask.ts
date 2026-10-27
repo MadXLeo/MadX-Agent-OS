@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 /*
  * Asking Hermes from the Canvas window: the pictures it needs are saved under /tmp, and the
  * request goes the way every "Ask Hermes" in Herald goes, to the Hermes window (its own renderer
@@ -25,7 +26,7 @@ const rawOf = (raster: Raster) => ({ width: raster.width, height: raster.height,
 async function contextOf(doc: CanvasDocument): Promise<ImageContext> {
   // Hermes opens the project, and places what it makes with the canvas tool, on this computer.
   if (!hermesReadsLocalFiles()) {
-    throw new Error('Canvas AI needs Hermes on this computer, and the Hermes Herald OS is attached to runs elsewhere')
+    throw new Error(`Canvas AI needs Hermes on this computer, and the Hermes ${PRODUCT.name} is attached to runs elsewhere`)
   }
 
   if (!doc.path && isPanels) {

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { BrowserWindow, dialog, ipcMain, shell, type WebContents } from 'electron'
 import { constants as fsConstants, type FSWatcher, watch as watchFs } from 'node:fs'
 import fs from 'node:fs/promises'
@@ -448,7 +449,7 @@ export async function revealablePath(target: string): Promise<string> {
  * Paths the shell may walk or measure in depth: readable, and inside the home folder, the Hermes home or a
  * temporary folder once symlinks resolve.
  */
-export async function assertConfined(target: string, outside = 'Herald OS only looks through folders inside your home folder'): Promise<CheckedPath> {
+export async function assertConfined(target: string, outside = `${PRODUCT.name} only looks through folders inside your home folder`): Promise<CheckedPath> {
   const { path: file, real, places } = await checkReadable(target)
 
   if (![...places.homes, ...places.hermes, ...places.temps].some(root => within(real, root))) {
@@ -567,13 +568,13 @@ export async function checkWritable(target: string, options: WritableOptions = {
   const inside = (candidate: string) => editable.some(root => within(candidate, root) && comparable(candidate) !== comparable(root))
 
   if (!inside(file)) {
-    throw new Error('Herald OS only edits files inside your home folder')
+    throw new Error(`${PRODUCT.name} only edits files inside your home folder`)
   }
 
   const real = await outsideSecrets(file, places, async entry => (options.entry ? path.join(await realpathDeep(path.dirname(entry)), path.basename(entry)) : realpathDeep(entry)))
 
   if (!inside(real)) {
-    throw new Error('Herald OS only edits files inside your home folder')
+    throw new Error(`${PRODUCT.name} only edits files inside your home folder`)
   }
 
   if ([file, real].some(candidate => SYSTEM_ROOTS.some(root => within(candidate, root)))) {

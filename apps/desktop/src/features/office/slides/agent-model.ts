@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { DocJSON } from '../../../../shared/office/document.ts'
 import type { WorkbookSnapshot } from '../../../../shared/office/workbook.ts'
 import { parseJsonArg } from '../agent-model.ts'
@@ -1355,7 +1356,7 @@ function rangeIn(args: Args, source: SheetSource): { range?: string; sheet?: str
 
   if (range.toLowerCase() === 'selection') {
     if (!source.selection) {
-      throw new Error(`Only a workbook open in Herald Sheets has a selection: give a range of ${source.name}, like A1:D12`)
+      throw new Error(`Only a workbook open in ${PRODUCT.apps.sheets} has a selection: give a range of ${source.name}, like A1:D12`)
     }
 
     return { range: source.selection.range, sheet: source.selection.sheet }

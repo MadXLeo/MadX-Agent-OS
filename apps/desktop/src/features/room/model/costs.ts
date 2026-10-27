@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { RoomAgent, RoomCostStatus, RoomKind, RoomResult, RoomRowUsage, RoomSessionCounts, RoomState, RoomUsage } from './types.ts'
 
 /*
@@ -229,7 +230,7 @@ export function roomTotal(state: Pick<RoomState, 'agents'>): RoomMeter | null {
   }
 
   const title = [
-    "Tokens and cost Hermes counted for the conversations, missions, automations' latest runs and work outside Herald in the room.",
+    `Tokens and cost Hermes counted for the conversations, missions, automations' latest runs and work outside ${PRODUCT.shortName} in the room.`,
     "Helpers are not added: Hermes adds a helper's cost to the conversation that started it.",
     estimated ? (billed ? "Part of the cost is Hermes's estimate." : "The cost is Hermes's estimate.") : billed && !unknown ? 'The cost is what the providers billed.' : null,
     unknown ? `Hermes does not know the cost of ${unknown === 1 ? 'one of them' : `${unknown} of them`}, so the total is an estimate.` : null,

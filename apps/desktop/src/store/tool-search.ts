@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { rest } from '../lib/rest.ts'
 import { $backend } from './backend.ts'
 import { notify } from './notifications.ts'
@@ -40,6 +41,6 @@ export function bindBridgeSetupNotice(): () => void {
     }
 
     said = state.bridgeError
-    notify({ key: 'bridge-setup', title: 'Hermes cannot use the system tools yet', body: `${state.bridgeError}. Herald OS tries again at its next start.`, level: 'error' })
+    notify({ key: 'bridge-setup', title: 'Hermes cannot use the system tools yet', body: `${state.bridgeError}. ${PRODUCT.name} tries again at its next start.`, level: 'error' })
   })
 }

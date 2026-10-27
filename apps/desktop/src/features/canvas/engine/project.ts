@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 /*
  * Opening, saving and exporting Herald Canvas documents. Layer images come from the main process
  * as exact pixels where it can decode them; anything else is decoded here through WebGL, which
@@ -222,7 +223,7 @@ export async function openProject(file: string): Promise<CanvasDocument> {
 }
 
 /** Take a project's state from disk into an open document, as one undoable step. */
-export async function reloadProject(doc: CanvasDocument, project: CanvasProject, label = 'Changed outside Herald Canvas'): Promise<void> {
+export async function reloadProject(doc: CanvasDocument, project: CanvasProject, label = `Changed outside ${PRODUCT.apps.canvas}`): Promise<void> {
   const loaded = await loadProject(project)
   const keep = loaded.state.layers.some((layer) => layer.id === doc.state.activeLayerId) ? doc.state.activeLayerId : loaded.state.activeLayerId
   doc.extra = loaded.extra

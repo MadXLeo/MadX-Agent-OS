@@ -14,9 +14,9 @@ def _mod(plugin, name):
 
 
 CATALOGUE = [
-    {"id": "office.list", "title": "What is open in Herald Office", "tier": "read", "args": []},
+    {"id": "office.list", "title": "What is open in MadX Office", "tier": "read", "args": []},
     {"id": "slides.read", "title": "Read a presentation", "tier": "read", "args": []},
-    {"id": "slides.open", "title": "Open Herald Slides", "tier": "act", "args": []},
+    {"id": "slides.open", "title": "Open MadX Slides", "tier": "act", "args": []},
     {"id": "slides.addSlide", "title": "Add a slide", "tier": "act", "args": []},
     {"id": "slides.setSlide", "title": "Change a slide", "tier": "act", "args": []},
     {"id": "slides.removeSlide", "title": "Remove a slide", "tier": "mutate", "args": []},
@@ -259,7 +259,7 @@ def test_a_shell_without_herald_slides_says_to_update(plugin, shell, monkeypatch
     monkeypatch.setattr(ui, "list_commands", lambda: [{"id": "page.open", "tier": "read"}])
     tools._UI_CATALOGUE.clear()
     reply = json.loads(tools.handle_slides({"action": "read"}))
-    assert reply["success"] is False and "Herald Slides" in reply["error"] and "update Herald OS" in reply["error"]
+    assert reply["success"] is False and "MadX Slides" in reply["error"] and "update MadX Agent OS" in reply["error"]
 
 
 def test_the_masters_themes_transitions_groups_connectors_borders_fills_and_sheets_map_to_their_commands(plugin):
@@ -463,7 +463,7 @@ def test_an_older_shell_without_the_new_commands_says_to_update_and_keeps_the_re
     tools._UI_CATALOGUE.clear()
     for action in DEPTH:
         reply = json.loads(tools.handle_slides({"action": action, "elements": ["shape-1"], "name": "Brand", "theme": "custom-brand", "kind": "fade"}))
-        assert reply["success"] is False and "update Herald OS" in reply["error"], action
+        assert reply["success"] is False and "update MadX Agent OS" in reply["error"], action
     assert not [command for command, _, _ in calls if command != "office.list"]
     reply = json.loads(tools.handle_slides({"action": "read", "presentation": "Q3 review"}))
     assert reply["success"] is True and calls[-1][0] == "slides.read"

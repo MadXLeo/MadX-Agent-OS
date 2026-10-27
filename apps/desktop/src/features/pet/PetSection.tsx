@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import {
   IconActivity,
@@ -187,7 +188,7 @@ function Gallery({ active, onPicked }: { active: string | null; onPicked: (error
   if (!pets) {
     return (
       <div className="flex flex-col gap-2">
-        <div className="text-[12px] text-fg-3">The gallery lives at petdex.dev: browsing it and installing a pet reach that site, and nothing else leaves this computer for it. Herald itself ships no pet artwork.</div>
+        <div className="text-[12px] text-fg-3">The gallery lives at petdex.dev: browsing it and installing a pet reach that site, and nothing else leaves this computer for it. {PRODUCT.shortName} itself ships no pet artwork.</div>
         <div>
           <GlassButton size="sm" onClick={load} disabled={loading}>
             {loading ? 'Loading the gallery…' : 'Browse the petdex gallery'}
@@ -315,7 +316,7 @@ export function PetSection() {
         <SettingsRow icon={<IconEyeOff />} label="Put away for now" description={`For a screen share. ${petShortcutLabel()} or the paw in the menu bar does the same.`} keywords="pet hide screen share">
           <Toggle checked={prefs.hidden} onChange={next => run('hidden', setPetPrefs({ hidden: next }))} label="Put away for now" />
         </SettingsRow>
-        <SettingsRow icon={<IconWalk />} label="Walk to Hermes's work" description="Sits by the Herald Docs, Sheets, Slides or Canvas window Hermes is working in." keywords="pet follow windows office canvas">
+        <SettingsRow icon={<IconWalk />} label="Walk to Hermes's work" description={`Sits by the ${PRODUCT.apps.docs}, Sheets, Slides or Canvas window Hermes is working in.`} keywords="pet follow windows office canvas">
           <Toggle checked={prefs.followWindows} onChange={next => run('follow', setPetPrefs({ followWindows: next }))} label="Walk to Hermes's work" />
         </SettingsRow>
       </SettingsGroup>

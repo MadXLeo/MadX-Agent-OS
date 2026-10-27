@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconAlertTriangle, IconFolder, IconPuzzle, IconRefresh, IconSparkles, IconWorld } from '@tabler/icons-react'
 import { useState } from 'react'
@@ -12,7 +13,7 @@ import { openApp } from '../../../store/windows.ts'
 import { useT } from '../../../store/i18n.ts'
 import { errorText, InlineNote, markSaved, SectionTitle, SettingsGroup, SettingsRow } from './shared.tsx'
 
-const MAKE_A_WIDGET = 'Make me a Herald OS widget that '
+const MAKE_A_WIDGET = `Make me a ${PRODUCT.name} widget that `
 
 /*
  * Settings > Plugins: widgets for the menu bar, the Overview and their own windows (ADR-019). Each

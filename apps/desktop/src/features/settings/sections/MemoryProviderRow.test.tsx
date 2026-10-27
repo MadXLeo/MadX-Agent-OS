@@ -257,7 +257,7 @@ describe('MemoryProviderRow', () => {
       bridge.handler = async () => body
       await mount()
 
-      expect(container.textContent).toContain('Could not read the memory provider: Hermes sent a memory status Herald does not understand.')
+      expect(container.textContent).toContain('Could not read the memory provider: Hermes sent a memory status MadX OS does not understand.')
       expect(trigger().textContent).toBe('Unavailable')
       expect(trigger().disabled).toBe(true)
     })

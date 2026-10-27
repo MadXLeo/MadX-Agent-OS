@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { OfficeAdapter } from '../types.ts'
 import type { Deck } from './deck.ts'
 import { newDeck } from './model.ts'
@@ -13,7 +14,7 @@ export const slidesAdapter: OfficeAdapter<Deck> = {
   blank: (name) => newDeck(name),
   read: async (bytes, extension, name) => {
     if (extension !== '.pptx') {
-      throw new Error(`Herald Slides opens PowerPoint presentations (.pptx); ${extension || 'this file'} comes in a later version`)
+      throw new Error(`${PRODUCT.apps.slides} opens PowerPoint presentations (.pptx); ${extension || 'this file'} comes in a later version`)
     }
 
     const { readPresentation } = await import('./pptx/read.ts')
@@ -22,7 +23,7 @@ export const slidesAdapter: OfficeAdapter<Deck> = {
   },
   write: async (model, extension) => {
     if (extension !== '.pptx') {
-      throw new Error(`Herald Slides saves PowerPoint presentations (.pptx); ${extension} comes in a later version`)
+      throw new Error(`${PRODUCT.apps.slides} saves PowerPoint presentations (.pptx); ${extension} comes in a later version`)
     }
 
     const [{ writePptx }, { shrinkFactors }] = await Promise.all([import('./pptx/export.ts'), import('./view/fit.ts')])

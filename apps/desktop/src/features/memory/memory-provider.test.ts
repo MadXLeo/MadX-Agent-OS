@@ -127,7 +127,7 @@ describe('parseMemoryStatus', () => {
 
   it('refuses payloads the row cannot read', () => {
     for (const raw of [null, undefined, {}, [], '<html>oops</html>', { active: '', providers: { a: 1 } }, { active: 5, providers: [] }, { active: '', providers: [{ name: 7 }] }, { active: '', providers: [null] }]) {
-      expect(() => parseMemoryStatus(raw)).toThrow('Hermes sent a memory status Herald does not understand.')
+      expect(() => parseMemoryStatus(raw)).toThrow('Hermes sent a memory status MadX OS does not understand.')
     }
   })
 })

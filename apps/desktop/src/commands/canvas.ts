@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { ADJUSTMENT_KINDS, BLEND_MODES, HERALD_ADJUSTMENT_KINDS } from '../../shared/canvas/comp-format.ts'
 import { MASK_ACTIONS } from '../features/canvas/mask-actions.ts'
 import { messageOf } from '../features/canvas/errors.ts'
@@ -54,9 +55,9 @@ const done = async (work: Promise<{ summary: string; data?: Record<string, unkno
 export const canvasCommands: readonly OsCommand[] = [
   {
     id: 'canvas.open',
-    title: 'Open Herald Canvas',
+    title: `Open ${PRODUCT.apps.canvas}`,
     description:
-      'Open Herald Canvas, or open a .comp project in it so the person sees it. An image becomes a new project in ~/Pictures/Herald Canvas (the original is never changed); a Photoshop document (.psd, .psb) keeps its layers, and the answer lists anything approximated. The answer gives the project path to work on.',
+      `Open ${PRODUCT.apps.canvas}, or open a .comp project in it so the person sees it. An image becomes a new project in ~/Pictures/${PRODUCT.apps.canvas} (the original is never changed); a Photoshop document (.psd, .psb) keeps its layers, and the answer lists anything approximated. The answer gives the project path to work on.`,
     tier: 'act',
     args: [{ name: 'path', type: 'string', description: 'An image or a .comp project (full path or ~/…)' }],
     phrases: ['open herald canvas', 'open canvas', 'open the image editor'],
@@ -65,7 +66,7 @@ export const canvasCommands: readonly OsCommand[] = [
   {
     id: 'canvas.new',
     title: 'Start a new image',
-    description: 'Make a new .comp project (in ~/Pictures/Herald Canvas unless a folder is given; the name is never reused) and open it. Answers with its path, which later commands take as project.',
+    description: `Make a new .comp project (in ~/Pictures/${PRODUCT.apps.canvas} unless a folder is given; the name is never reused) and open it. Answers with its path, which later commands take as project.`,
     tier: 'act',
     args: [
       { name: 'name', type: 'string', description: 'The project name, e.g. "Spring poster"' },
@@ -80,8 +81,8 @@ export const canvasCommands: readonly OsCommand[] = [
   },
   {
     id: 'canvas.status',
-    title: 'What is open in Herald Canvas',
-    description: 'The images open in Herald Canvas (path, size, unsaved edits) and which one is in front.',
+    title: `What is open in ${PRODUCT.apps.canvas}`,
+    description: `The images open in ${PRODUCT.apps.canvas} (path, size, unsaved edits) and which one is in front.`,
     tier: 'read',
     args: [],
     run: async () => done((await canvas()).status())
@@ -299,7 +300,7 @@ export const canvasCommands: readonly OsCommand[] = [
   {
     id: 'canvas.addAdjustment',
     title: 'Add an adjustment layer',
-    description: `Add an adjustment layer, which changes everything below it (or only the layer below, with clip). Kinds: ${[...ADJUSTMENT_KINDS, ...HERALD_ADJUSTMENT_KINDS].join(', ')}. settings is JSON over the defaults, e.g. {"hue": 10, "saturation": 25} for Hue/Saturation, {"exposureSettings": {"exposure": 0.5}} for Exposure, {"brightness": 20, "contrast": 15} for Brightness/Contrast, {"vibrance": 30} for Vibrance, {"table": "~/LUTs/Film.cube"} for Color Lookup; the herald-canvas skill lists every field. The last eight are Herald's own: Compositor shows Brightness/Contrast (and Vibrance without vibrance, a Photo Filter without preserveLuminosity) the same, and the others as no change.`,
+    description: `Add an adjustment layer, which changes everything below it (or only the layer below, with clip). Kinds: ${[...ADJUSTMENT_KINDS, ...HERALD_ADJUSTMENT_KINDS].join(', ')}. settings is JSON over the defaults, e.g. {"hue": 10, "saturation": 25} for Hue/Saturation, {"exposureSettings": {"exposure": 0.5}} for Exposure, {"brightness": 20, "contrast": 15} for Brightness/Contrast, {"vibrance": 30} for Vibrance, {"table": "~/LUTs/Film.cube"} for Color Lookup; the herald-canvas skill lists every field. The last eight are ${PRODUCT.shortName}'s own: Compositor shows Brightness/Contrast (and Vibrance without vibrance, a Photo Filter without preserveLuminosity) the same, and the others as no change.`,
     tier: 'act',
     args: [
       project,
@@ -363,7 +364,7 @@ export const canvasCommands: readonly OsCommand[] = [
     id: 'canvas.placeImage',
     title: 'Place a picture in a box',
     description:
-      'Place a picture (a file, or an http(s) address) as a new layer in a box in canvas pixels (the rest of the canvas for what is left out): fit=cover fills the box and cuts what overflows (the default), contain fits inside it, stretch fills it exactly. mask is a grayscale image spread over the same box (white shows, black hides) that becomes the layer’s mask: Herald saves one for generative fill, so a generated picture is kept to the selection.',
+      `Place a picture (a file, or an http(s) address) as a new layer in a box in canvas pixels (the rest of the canvas for what is left out): fit=cover fills the box and cuts what overflows (the default), contain fits inside it, stretch fills it exactly. mask is a grayscale image spread over the same box (white shows, black hides) that becomes the layer’s mask: ${PRODUCT.shortName} saves one for generative fill, so a generated picture is kept to the selection.`,
     tier: 'act',
     args: [
       project,
@@ -381,7 +382,7 @@ export const canvasCommands: readonly OsCommand[] = [
     id: 'canvas.removeBackground',
     title: 'Remove the background of a layer',
     description:
-      'Find a layer’s subject with the on-device model and hide everything else: mode=mask (the default) adds a layer mask, so nothing is erased; mode=cutout puts just the subject on a new layer above and hides the original. threshold (0 to 1, 0.5 by default) moves the edge in or out, feather softens it in pixels. Needs the ISNet model on this computer: when it is missing, the answer says so, and only the person can allow its download in Herald Canvas.',
+      `Find a layer’s subject with the on-device model and hide everything else: mode=mask (the default) adds a layer mask, so nothing is erased; mode=cutout puts just the subject on a new layer above and hides the original. threshold (0 to 1, 0.5 by default) moves the edge in or out, feather softens it in pixels. Needs the ISNet model on this computer: when it is missing, the answer says so, and only the person can allow its download in ${PRODUCT.apps.canvas}.`,
     tier: 'act',
     args: [
       project,
@@ -457,7 +458,7 @@ export const canvasCommands: readonly OsCommand[] = [
   },
   {
     id: 'canvas.undo',
-    title: 'Undo in Herald Canvas',
+    title: `Undo in ${PRODUCT.apps.canvas}`,
     description: 'Undo the last change to the image in front (or project), whoever made it; steps undoes several. canvas.history lists the steps.',
     tier: 'act',
     args: [project, { name: 'steps', type: 'number', description: 'How many steps to undo (1)' }],
@@ -466,7 +467,7 @@ export const canvasCommands: readonly OsCommand[] = [
   },
   {
     id: 'canvas.redo',
-    title: 'Redo in Herald Canvas',
+    title: `Redo in ${PRODUCT.apps.canvas}`,
     description: 'Redo what was last undone in the image in front (or project); steps redoes several.',
     tier: 'act',
     args: [project, { name: 'steps', type: 'number', description: 'How many steps to redo (1)' }],

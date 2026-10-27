@@ -1,3 +1,4 @@
+import { PRODUCT } from '../product.ts'
 /*
  * Herald Canvas projects: the `.comp` package, a folder holding `manifest.json` and an `images/`
  * folder of 8-bit PNGs (RGBA layers, grayscale masks). The same format is read by Compositor on the
@@ -900,7 +901,7 @@ type HeraldRangeName = keyof typeof HERALD_RANGES
  */
 function parseHeraldAdjustment(value: unknown, field: string): HeraldAdjustment {
   if (!isObject(value) || typeof value.kind !== 'string' || !value.kind) {
-    fail(`${field} is not a Herald Canvas adjustment`, field)
+    fail(`${field} is not a ${PRODUCT.apps.canvas} adjustment`, field)
   }
 
   if (!isHeraldKind(value.kind)) {
@@ -1269,7 +1270,7 @@ function parseLayer(value: unknown, index: number): LayerRecord {
 
   if (value.heraldAdjustment !== undefined && value.heraldAdjustment !== null) {
     if (!layer.adjustment) {
-      fail(`${field} has Herald Canvas adjustment settings but is not an adjustment layer`, `${field}.heraldAdjustment`)
+      fail(`${field} has ${PRODUCT.apps.canvas} adjustment settings but is not an adjustment layer`, `${field}.heraldAdjustment`)
     }
 
     layer.heraldAdjustment = parseHeraldAdjustment(value.heraldAdjustment, `${field}.heraldAdjustment`)
@@ -1366,7 +1367,7 @@ export function parseManifest(value: unknown): CompManifest {
   }
 
   if (value.format !== FORMAT_ID) {
-    fail('This is not a Herald Canvas or Compositor project', 'format')
+    fail(`This is not a ${PRODUCT.apps.canvas} or Compositor project`, 'format')
   }
 
   const version = integer(value.version, 'version', 1, 1_000)

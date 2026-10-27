@@ -97,7 +97,7 @@ describe('the slide master and its layouts', () => {
     expect(read.headerFooter).toBeUndefined()
   })
 
-  it('names the master and its layouts by id, Herald’s name or the deck’s own', () => {
+  it('names the master and its layouts by id, MadX OS’s name or the deck’s own', () => {
     const deck = renameLayoutStep(pitch(), { layout: 'title-content', name: 'Bullets' }).deck
 
     expect(['', 'master', 'Slide Master', 'two columns', 'Section Header', 'bullets'].map((value) => masterPlaceOf(deck, value))).toEqual(['master', 'master', 'master', 'two-content', 'section', 'title-content'])
@@ -185,14 +185,14 @@ describe('the slide master and its layouts', () => {
     expect(() => renameLayoutStep(deck, { name: 'Big' })).toThrow('Say which layout to rename')
   })
 
-  it('puts Herald’s own master back', () => {
+  it('puts MadX OS’s own master back', () => {
     const deck = addLogoStep(pitch(), { source: '~/logo.png' }, { front: null, pictures }).deck
     const reset = resetMasterStep(deck)
 
     expect(reset.deck.master).toBeUndefined()
     expect(readMaster(reset.deck).master.elements).toEqual([])
-    expect(reset.done).toMatch(/^put Herald’s own master and layouts back/)
-    expect(resetMasterStep(pitch()).done).toBe('it already has Herald’s own master')
+    expect(reset.done).toMatch(/^put MadX OS’s own master and layouts back/)
+    expect(resetMasterStep(pitch()).done).toBe('it already has MadX OS’s own master')
   })
 
   it('sets the date, slide number and footer every slide shows, title slides left without them', () => {
@@ -295,7 +295,7 @@ describe('themes', () => {
     expect(() => themeFromArgs({ name: 'Odd', background: 'navy' }, THEMES[0], THEMES)).toThrow('A theme’s background colour is one of its colours')
   })
 
-  it('lists Herald’s themes and the person’s', () => {
+  it('lists MadX OS’s themes and the person’s', () => {
     const listed = themesList([brand])
 
     expect(listed.themes.map((theme) => theme.id)).toEqual(THEMES.map((theme) => theme.id))
@@ -502,7 +502,7 @@ describe('tables and slides from a sheet', () => {
       ['Region', 'Units'],
       ['Region 1', '100']
     ])
-    expect(() => insertRangeStep(deck, { slide: 2, workbook: 'Sales.xlsx', range: 'selection' }, { front: null, sheets: new Map([['Sales.xlsx', { ...source, selection: null }]]) })).toThrow('Only a workbook open in Herald Sheets has a selection: give a range of Sales.xlsx, like A1:D12')
+    expect(() => insertRangeStep(deck, { slide: 2, workbook: 'Sales.xlsx', range: 'selection' }, { front: null, sheets: new Map([['Sales.xlsx', { ...source, selection: null }]]) })).toThrow('Only a workbook open in MadX Sheets has a selection: give a range of Sales.xlsx, like A1:D12')
     expect(() => insertRangeStep(deck, { workbook: 'Other.xlsx' }, { front: null, sheets })).toThrow('The workbook Other.xlsx was not read')
   })
 
@@ -524,13 +524,13 @@ describe('tables and slides from a sheet', () => {
   })
 })
 
-// Documents as Herald Docs holds them.
+// Documents as MadX Docs holds them.
 const p = (text: string): DocNode => ({ type: 'paragraph', content: [{ type: 'text', text }] })
 const h = (level: number, text: string): DocNode => ({ type: 'heading', attrs: { level }, content: [{ type: 'text', text }] })
 const ul = (...items: string[]): DocNode => ({ type: 'bulletList', content: items.map((item) => ({ type: 'listItem', content: [p(item)] })) })
 const doc = (...content: DocNode[]): DocJSON => ({ type: 'doc', content })
 
-/** A change of Herald Docs' made to a document as on a file, and the document it leaves. */
+/** A change of MadX Docs' made to a document as on a file, and the document it leaves. */
 function made(change: Change, json: DocJSON): DocJSON {
   const state = stateOf(json)
   const tr = change.build(state, null, false)(state)
@@ -668,7 +668,7 @@ describe('reading a deck’s depth', () => {
     deck = setHeaderFooterStep(deck, { number: true, date: true }).deck
     const read = readDeck(deck)
 
-    expect(read).toMatchObject({ theme: 'Herald', transition: 'fade', headerFooter: { date: { format: 'numeric' }, slideNumber: true } })
+    expect(read).toMatchObject({ theme: 'MadX OS', transition: 'fade', headerFooter: { date: { format: 'numeric' }, slideNumber: true } })
     expect(read.slides[0]).not.toHaveProperty('theme')
     expect(read.slides[0]).not.toHaveProperty('transition')
     expect(read.slides[1]).toMatchObject({ theme: 'Midnight', transition: { kind: 'push', direction: 'up', seconds: 0.5 } })

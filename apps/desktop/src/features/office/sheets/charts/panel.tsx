@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import { IconArrowDown, IconArrowUp, IconPlus, IconTrash, IconX } from '@tabler/icons-react'
 import { ICommandService } from '@univerjs/core'
 import { type ReactNode, useEffect, useRef, useState } from 'react'
@@ -278,7 +279,7 @@ function ChartPanel({ docKey, chart }: { docKey: string; chart: string }) {
   const target = liveTarget(docKey)
   const palettes = [
     ['Workbook theme', target ? workbookPalette(target.workbook) : OFFICE_ACCENTS],
-    ['Herald', heraldPalette()],
+    [PRODUCT.shortName, heraldPalette()],
     ['Office', OFFICE_ACCENTS]
   ] as const
   const colorOf = (i: number) => description.series[i]?.color ?? description.palette[i % Math.max(1, description.palette.length)] ?? '#4472c4'

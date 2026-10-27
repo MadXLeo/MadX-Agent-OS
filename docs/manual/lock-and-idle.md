@@ -1,15 +1,15 @@
 # Lock screen, idle and the screensaver
 
-What Herald OS Linux does when you step away, and how to lock it yourself.
+What MadX Agent OS Linux does when you step away, and how to lock it yourself.
 
 ## Locking
 
-`Super+Ctrl+L` locks the screen, as does Lock in the System section of the Herald OS menu, or
+`Super+Ctrl+L` locks the screen, as does Lock in the System section of the MadX Agent OS menu, or
 `herald-os lock`. Type your password to unlock. The lock screen follows your theme, and
 `herald-os branding set --lock <image>` puts your own picture on it (see
 [Make it yours](make-it-yours.md#branding)).
 
-Locking needs a password on your account: a lock nobody could undo would shut you out, so Herald OS
+Locking needs a password on your account: a lock nobody could undo would shut you out, so MadX Agent OS
 refuses to lock an account without one and says so. Set one in the first-start setup, or later with
 `herald-os password` in a terminal. A fingerprint or security key can unlock it too; see
 [Security](security.md).
@@ -33,24 +33,24 @@ prints the timings in **seconds** (`lock=600` is 10 minutes), while
 Stay awake stops all of that for as long as it is on, for a presentation, a download or a long
 build: `Super+Ctrl+I`, Settings > General > Switches > Stay awake, or `herald-os toggle idle`. A light
 in the menu bar shows it is on; click it to turn it off. On a Mac, Stay awake keeps the Mac from
-sleeping while Herald OS runs.
+sleeping while MadX Agent OS runs.
 
 ## The screensaver
 
 The screensaver shows the living wallpaper and a large clock after a few idle minutes. Turn it on in
 Settings > General > Switches > Screensaver, and choose the minutes there (5 unless you change it).
-Show it now with Toggle > Show the screensaver in the Herald OS menu, or `herald-os screensaver`.
+Show it now with Toggle > Show the screensaver in the MadX Agent OS menu, or `herald-os screensaver`.
 Any key or movement of the mouse ends it. It does not lock the screen by itself; the lock comes at
 its own time.
 
 Settings > Pet Room can show [the Pet Room](room.md#the-room-as-the-screensaver) instead of the
-clock: Hermes's work as pets, with no names or words. While Herald Slides presents, or while the
+clock: Hermes's work as pets, with no names or words. While MadX Slides presents, or while the
 desktop pet is put away for a screen share, the clock shows instead.
 
 ## Night light
 
 Night light warms the screen's colours for the evening: `Super+Ctrl+N`, Settings > General >
-Switches > Night light, or `herald-os toggle nightlight`. It is part of Herald OS Linux; on a Mac,
+Switches > Night light, or `herald-os toggle nightlight`. It is part of MadX Agent OS Linux; on a Mac,
 use macOS's own Night Shift.
 
 ## Power

@@ -87,7 +87,7 @@ def main() -> int:
         print("    Hermes config: nothing to migrate")
         return 0
     save_config(migrated)
-    print("    Hermes config: moved Hermes OS plugin, toolset and approvals to Herald OS")
+    print("    Hermes config: migrated the legacy plugin, toolset and approvals for MadX Agent OS")
     return 0
 
 

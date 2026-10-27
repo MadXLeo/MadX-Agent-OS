@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../product.ts'
 import ExcelJS from 'exceljs'
 import JSZip from 'jszip'
 import { CELL_TYPE, type CellMatrix, type CellSnapshot, type SheetSnapshot, type WorkbookSnapshot } from '../workbook.ts'
@@ -364,7 +365,7 @@ function convertSheet(worksheet: ExcelJS.Worksheet, source: PackageSheet, id: st
   }
 
   if (formulasWithBrackets) {
-    notes.add('Formulas that refer to tables by column name, or to other workbooks, do not work in Herald Sheets; they keep their last values until worked out again.')
+    notes.add(`Formulas that refer to tables by column name, or to other workbooks, do not work in ${PRODUCT.apps.sheets}; they keep their last values until worked out again.`)
   }
 
   // Links: the address from the package, the text the cell shows.
@@ -445,7 +446,7 @@ function convertSheet(worksheet: ExcelJS.Worksheet, source: PackageSheet, id: st
   const { rules: conditional, dropped: droppedRules } = conditionalFromExcel(formats, source.tail, palette)
 
   if (droppedRules) {
-    notes.add(`${droppedRules === 1 ? 'One conditional format is' : `${droppedRules} conditional formats are`} not kept: Herald Sheets has no equivalent.`)
+    notes.add(`${droppedRules === 1 ? 'One conditional format is' : `${droppedRules} conditional formats are`} not kept: ${PRODUCT.apps.sheets} has no equivalent.`)
   }
 
   const extras: SheetExtras = {}
@@ -527,7 +528,7 @@ async function loadBook(bytes: Uint8Array): Promise<ExcelJS.Workbook> {
     try {
       await book.xlsx.load((await withoutUnkeptParts(bytes)) as unknown as ArrayBuffer, options)
     } catch {
-      throw new Error(`Herald Sheets could not read this workbook: ${error instanceof Error ? error.message : String(error)}`)
+      throw new Error(`${PRODUCT.apps.sheets} could not read this workbook: ${error instanceof Error ? error.message : String(error)}`)
     }
 
     return book
@@ -577,7 +578,7 @@ export async function workbookFromXlsx(input: Uint8Array | ArrayBuffer, options:
   })
 
   if (!sheets.length) {
-    throw new Error('This workbook has no worksheets Herald Sheets can show (only charts or macro sheets).')
+    throw new Error(`This workbook has no worksheets ${PRODUCT.apps.sheets} can show (only charts or macro sheets).`)
   }
 
   const { names, print } = definedNamesFromPackage(pkg.definedNames, ids)

@@ -1,3 +1,5 @@
+> Historical upstream design record, preserved for provenance. Current MadX work is tracked in [docs/madx](../madx/).
+
 # Landscape: AI-native operating environments (September 2026)
 
 What else exists, what each does well, and which ideas are worth carrying into Herald OS. Kept

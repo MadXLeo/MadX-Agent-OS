@@ -4,36 +4,37 @@
 
 <h1 align="center">MadX Agent OS</h1>
 
-**MadXCore · 0.1.0-alpha — migration in progress.** The first desktop identity increment is
-implemented; this is not yet a validated MadX OS release. Start with the
+**MadXCore · 0.1.0-alpha — Phase 1 validation in progress.** Source branding and compatibility
+migrations are being validated; this is not yet an installable, validated MadX OS release. Start with the
 [current results](docs/madx/VALIDATION.md), [feature parity register](docs/madx/FEATURE_PARITY.md),
 [architecture](docs/madx/ARCHITECTURE.md) and [next implementation task](docs/madx/NEXT.md).
-The inherited installation guide below still describes upstream releases, paths and commands.
-Do not interpret those download links as newly built or tested MadX artifacts.
+The guide below describes the intended release layout. Downloads and native installation must
+pass the release gates in that validation report before use. Legacy command and state paths remain
+supported; MadX aliases point to the same implementation.
 
 <p align="center">
   An agent-native operating system, with <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a> as the interface.
 </p>
 
 <p align="center">
-  <a href="https://github.com/iamlukethedev/Herald-OS/releases"><img src="https://img.shields.io/github/v/release/iamlukethedev/Herald-OS?include_prereleases&label=release" alt="Latest release"></a>
-  <a href="https://github.com/iamlukethedev/Herald-OS/actions/workflows/ci.yml"><img src="https://github.com/iamlukethedev/Herald-OS/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/MadXLeo/MadX-Agent-OS/releases"><img src="https://img.shields.io/github/v/release/MadXLeo/MadX-Agent-OS?include_prereleases&label=release" alt="Latest release"></a>
+  <a href="https://github.com/MadXLeo/MadX-Agent-OS/actions/workflows/ci.yml"><img src="https://github.com/MadXLeo/MadX-Agent-OS/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
-  <a href="https://discord.gg/RHyFZ7FX6E"><img src="https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
-![The Herald OS desktop](docs/images/desktop.png)
+The screenshots in `docs/images/` are historical upstream references. Updated native desktop
+screenshots will be captured during Linux and macOS validation.
 
-Herald OS is an operating system built around an AI agent. Instead of working through menus and
+MadX Agent OS is an operating system built around an AI agent. Instead of working through menus and
 folders yourself, you talk or type to Hermes, and it works across the whole machine: it opens apps,
 finds and organises files, watches what is running, remembers what matters to you, runs routines on
 a schedule, and builds software while you watch. Every action that changes something goes through a
 permission system you control.
 
 > [!NOTE]
-> **Herald OS is an independent project by [Luke The Dev](https://github.com/iamlukethedev).** It is
+> **MadX Agent OS is a MadXCore distribution derived from [Herald OS](https://github.com/iamlukethedev/Herald-OS), by Luke The Dev.** It is
 > not an official Hermes or Nous Research product, and it is not affiliated with, sponsored by or
-> endorsed by Nous Research. Herald OS runs on [Hermes Agent](https://github.com/NousResearch/hermes-agent),
+> endorsed by Nous Research. MadX Agent OS runs on [Hermes Agent](https://github.com/NousResearch/hermes-agent),
 > the open-source agent Nous Research publishes, which is installed alongside it.
 
 > **Status: alpha (0.1).** Expect rough edges, and keep backups of anything you let an agent
@@ -41,13 +42,13 @@ permission system you control.
 
 ## Install
 
-Every download is on the [releases page](https://github.com/iamlukethedev/Herald-OS/releases).
+Every download is on the [releases page](https://github.com/MadXLeo/MadX-Agent-OS/releases).
 Pick the way that matches your machine:
 
 | Your machine | What to install |
 | --- | --- |
-| A Mac, Apple Silicon or Intel | [Herald OS for macOS](#macos) |
-| A PC you can give to Herald OS | [The Herald OS Linux installer](#herald-os-linux-on-a-pc) |
+| A Mac, Apple Silicon or Intel | [MadX Agent OS for macOS](#macos) |
+| A PC you can give to MadX Agent OS | [The MadX Agent OS Linux installer](#madx-agent-os-linux-on-a-pc) |
 | Arch Linux | [The Arch package](#arch-linux) |
 | Omarchy | [The Arch package, then one command](#omarchy) |
 | Another Linux | [The tarball](#another-linux) |
@@ -57,7 +58,7 @@ Pick the way that matches your machine:
 
 Hermes needs a model provider whichever you pick: a [Nous Portal](https://portal.nousresearch.com)
 account, or an API key for a provider Hermes supports (OpenRouter, OpenAI, Anthropic, a local model,
-and others). Herald OS shows a sign-in card the first time Hermes needs one, and Settings > Hermes &
+and others). MadX Agent OS shows a sign-in card the first time Hermes needs one, and Settings > Hermes &
 agents > Model provider switches to another provider or takes its API key, a custom endpoint's
 included.
 
@@ -73,41 +74,41 @@ source ~/.zshrc
 hermes setup
 ```
 
-**2. Install Herald OS.** Download `HeraldOS-<version>-mac-arm64.dmg` (Apple Silicon) or
-`HeraldOS-<version>-mac-x64.dmg` (Intel) from the
-[releases page](https://github.com/iamlukethedev/Herald-OS/releases), open it and drag Herald OS to
+**2. Install MadX Agent OS.** Download `madx-agent-os-<version>-mac-arm64.dmg` (Apple Silicon) or
+`madx-agent-os-<version>-mac-x64.dmg` (Intel) from the
+[releases page](https://github.com/MadXLeo/MadX-Agent-OS/releases), open it and drag MadX Agent OS to
 Applications. Apple menu > About This Mac says which you have: "Chip: Apple M…" is Apple Silicon,
 "Processor: … Intel …" is Intel.
 
 **3. Let it open.** This build is not notarized by Apple yet, so macOS stops it the first time.
-Run this once, then open Herald OS from Applications:
+Run this once, then open MadX Agent OS from Applications:
 
 ```bash
-xattr -dr com.apple.quarantine "/Applications/Herald OS.app"
+xattr -dr com.apple.quarantine "/Applications/MadX Agent OS.app"
 ```
 
-Or, without Terminal: open Herald OS once and close the warning, then go to System Settings >
-Privacy & Security, scroll to Security, click Open Anyway next to "Herald OS was blocked", and
+Or, without Terminal: open MadX Agent OS once and close the warning, then go to System Settings >
+Privacy & Security, scroll to Security, click Open Anyway next to "MadX Agent OS was blocked", and
 confirm with your password. Since macOS Sequoia, right-click > Open no longer skips the warning.
 
-Herald OS takes over the screen: `Cmd+Ctrl+F` leaves or re-enters fullscreen and `Cmd+Q` quits. On
+MadX Agent OS takes over the screen: `Cmd+Ctrl+F` leaves or re-enters fullscreen and `Cmd+Q` quits. On
 its first start it adds its system tools to Hermes (`~/.hermes/plugins/herald-os-bridge`). macOS asks
 for each of these the first time a feature needs it:
 
 - **Microphone**: talking to Hermes, dictation, and screen recordings with sound.
 - **Camera**: the camera bubble on a screen recording, when you turn it on.
 - **Screen Recording**: asking Hermes about the screen, copying text or a QR code from it,
-  screenshots and screen recordings. Without it, Herald OS captures nothing and says where to turn
-  it on (System Settings > Privacy & Security > Screen & System Audio Recording); reopen Herald OS
+  screenshots and screen recordings. Without it, MadX Agent OS captures nothing and says where to turn
+  it on (System Settings > Privacy & Security > Screen & System Audio Recording); reopen MadX Agent OS
   after switching it on.
 - **Accessibility and Automation**: typing an emoji or dictation into another app (through System
   Events), and Hermes listing or quitting apps, locking the screen, switching dark mode and moving
   files to the Trash (through Finder). The first time you type an emoji or dictation into another
-  app, Herald OS explains these two before macOS asks; until both are allowed, the text stays on the
-  clipboard and Herald OS says which one is missing.
+  app, MadX Agent OS explains these two before macOS asks; until both are allowed, the text stays on the
+  clipboard and MadX Agent OS says which one is missing.
 - **Calendars**: today's events on the Overview.
 - **Local Network**: Hermes reaching a model server or another device on your network, such as a
-  custom endpoint at a `192.168…` address. Hermes runs inside Herald OS, so this is Herald OS's to
+  custom endpoint at a `192.168…` address. Hermes runs inside MadX Agent OS, so this is MadX Agent OS's to
   allow.
 - **Files and Folders**: your Desktop, Documents and Downloads, for recent files on the Overview,
   the Files page and Hermes's file tools.
@@ -116,34 +117,34 @@ for each of these the first time a feature needs it:
 
 #### On an Intel Mac
 
-Download `HeraldOS-<version>-mac-x64.dmg` and follow the steps above. The Intel build is the same
+Download `madx-agent-os-<version>-mac-x64.dmg` and follow the steps above. The Intel build is the same
 app built for x86_64, with node-pty's Intel binaries for the Terminal, but it is new and has not
-been tried on an Intel Mac yet: please [open an issue](https://github.com/iamlukethedev/Herald-OS/issues)
+been tried on an Intel Mac yet: please [open an issue](https://github.com/MadXLeo/MadX-Agent-OS/issues)
 if something does not work.
 
 To try the whole OS instead, open the ready-made x86_64 disk in [UTM](https://mac.getutm.app), as in
 [On Linux or an Intel Mac](#on-linux-or-an-intel-mac), or install the x86_64 installer ISO from
-[Herald OS Linux on a PC](#herald-os-linux-on-a-pc) in a VM that boots with UEFI. CI installs it in
+[MadX Agent OS Linux on a PC](#madx-agent-os-linux-on-a-pc) in a VM that boots with UEFI. CI installs it in
 QEMU with UEFI, 4 cores, 6 GB of memory and a 40 GB disk
 ([installer-test.yml](.github/workflows/installer-test.yml)).
 
-### Herald OS Linux on a PC
+### MadX Agent OS Linux on a PC
 
 The whole operating system, for a 64-bit Intel or AMD PC: Fedora underneath, everything you see is
-Herald.
+MadX.
 
 1. Download both parts of the installer from the
-   [releases page](https://github.com/iamlukethedev/Herald-OS/releases),
-   `herald-os-<version>-x86_64.iso.part0` and `.part1` (GitHub takes files of up to 2 GB), and join
+   [releases page](https://github.com/MadXLeo/MadX-Agent-OS/releases),
+   `madx-agent-os-<version>-x86_64.iso.part0` and `.part1` (GitHub takes files of up to 2 GB), and join
    them. On macOS or Linux:
 
    ```bash
-   shasum -a 256 -c herald-os-<version>-x86_64.iso.sha256sums   # each part; sha256sum -c on Linux
-   cat herald-os-<version>-x86_64.iso.part* > herald-os-<version>-x86_64.iso
-   shasum -a 256 -c herald-os-<version>-x86_64.iso.sha256         # the joined file
+   shasum -a 256 -c madx-agent-os-<version>-x86_64.iso.sha256sums   # each part; sha256sum -c on Linux
+   cat madx-agent-os-<version>-x86_64.iso.part* > madx-agent-os-<version>-x86_64.iso
+   shasum -a 256 -c madx-agent-os-<version>-x86_64.iso.sha256         # the joined file
    ```
 
-   On Windows: `copy /b herald-os-<version>-x86_64.iso.part0 + herald-os-<version>-x86_64.iso.part1 herald-os-<version>-x86_64.iso`.
+   On Windows: `copy /b madx-agent-os-<version>-x86_64.iso.part0 + madx-agent-os-<version>-x86_64.iso.part1 madx-agent-os-<version>-x86_64.iso`.
 2. Write the ISO to a USB stick of 8 GB or more with
    [Fedora Media Writer](https://fedoraproject.org/workstation/download) or
    [balenaEtcher](https://etcher.balena.io).
@@ -151,13 +152,13 @@ Herald.
    install next to Windows, and encrypts it unless you untick "Encrypt my data". The disk password
    is typed at every start, before Bluetooth is up, so use a wired keyboard or one with a 2.4 GHz
    receiver for it; `herald-os password --disk` changes it later. Secure Boot can stay on.
-4. The first start sets up Hermes Agent, then Herald OS asks for your name, a password and Wi-Fi.
+4. The first start sets up Hermes Agent, then MadX Agent OS asks for your name, a password and Wi-Fi.
 
 Updates come as a whole new version of the system: `herald-os update` installs one, and
 `herald-os rollback` goes back to the one before. Already on Fedora Silverblue or another bootc
-system? It can switch to the Herald OS image in place, which replaces the system you run: try it on
+system? It can switch to the MadX Agent OS image in place, which replaces the system you run: try it on
 a spare machine or in a virtual machine. Afterwards a login screen asks who signs in, and your own
-account and its password keep working. Herald OS also adds a `hermes` account, which stays locked,
+account and its password keep working. MadX Agent OS also adds a `hermes` account, which stays locked,
 and is not an administrator, until you give it a password (`sudo passwd hermes`).
 [docs/LINUX.md](docs/LINUX.md#switching-a-bootc-system-to-herald-os) has the steps, what changes and
 how to go back.
@@ -165,16 +166,16 @@ how to go back.
 ### Arch Linux
 
 ```bash
-git clone https://github.com/iamlukethedev/Herald-OS.git
-cd Herald-OS/packaging/arch/herald-os-bin
+git clone https://github.com/MadXLeo/MadX-Agent-OS.git
+cd MadX-Agent-OS/packaging/arch/herald-os-bin
 makepkg -si
-herald-os setup        # once per user: Hermes Agent and Herald's system tools
+herald-os setup        # once per user: Hermes Agent and MadX's system tools
 ```
 
 The package downloads the release build for your architecture (x86_64 or aarch64). Then choose
-Herald OS on your login screen for the full session (it needs `niri`; the package's optional
-dependencies list what each panel uses), or run `herald-os-app` to use Herald OS as an app inside
-your current desktop. The session applies Herald's theme to GTK apps, foot and GNOME's colour
+MadX Agent OS on your login screen for the full session (it needs `niri`; the package's optional
+dependencies list what each panel uses), or run `herald-os-app` to use MadX Agent OS as an app inside
+your current desktop. The session applies MadX's theme to GTK apps, foot and GNOME's colour
 scheme for the account that runs it, so on a desktop you already use, try it from a second account.
 The package is not on the AUR yet.
 
@@ -186,44 +187,44 @@ Install [the Arch package](#arch-linux), then:
 herald-os omarchy install
 ```
 
-Herald OS becomes an app inside Omarchy. It follows Omarchy's theme and has a row on the Omarchy
+MadX Agent OS becomes an app inside Omarchy. It follows Omarchy's theme and has a row on the Omarchy
 menu. `Super+Alt+H` opens it, and `Super+Alt+A`, `C`, `V`, `X`, `E` and `M` ask Hermes about the
 window, open the command bar, talk, dictate, pick an emoji and show Missions. `herald-os omarchy
 remove` takes it all out again. This has been tested against Omarchy 4's own configuration and
-scripts, but not yet on an Omarchy machine: [reports](https://github.com/iamlukethedev/Herald-OS/issues)
+scripts, but not yet on an Omarchy machine: [reports](https://github.com/MadXLeo/MadX-Agent-OS/issues)
 are welcome.
 
 ### Another Linux
 
 The tarball carries the app, its command-line tools and the full session. Download
-`herald-os-<version>-linux-x64.tar.gz` and its `.sha256` from the
-[releases page](https://github.com/iamlukethedev/Herald-OS/releases) (the `arm64` ones on ARM), then:
+`madx-agent-os-<version>-linux-x64.tar.gz` and its `.sha256` from the
+[releases page](https://github.com/MadXLeo/MadX-Agent-OS/releases) (the `arm64` ones on ARM), then:
 
 ```bash
-sha256sum -c herald-os-<version>-linux-x64.tar.gz.sha256
+sha256sum -c madx-agent-os-<version>-linux-x64.tar.gz.sha256
 sudo mkdir -p /opt/herald-os
-sudo tar -xzf herald-os-<version>-linux-x64.tar.gz -C /opt/herald-os --strip-components=1
+sudo tar -xzf madx-agent-os-<version>-linux-x64.tar.gz -C /opt/herald-os --strip-components=1
 sudo /opt/herald-os/resources/herald-os-linux/bin/herald-os-tarball install
-herald-os setup        # once per user: Hermes Agent and Herald's system tools
-herald-os-app          # Herald OS as an app inside your desktop
+herald-os setup        # once per user: Hermes Agent and MadX's system tools
+herald-os-app          # MadX Agent OS as an app inside your desktop
 ```
 
-`herald-os-tarball install` puts the `herald-os` commands in `/usr/local/bin` and Herald OS in your
+`herald-os-tarball install` puts the `herald-os` commands in `/usr/local/bin` and MadX Agent OS in your
 application menu, and, if niri is installed, on your login screen; `sudo herald-os-tarball remove`
 takes them out again. `herald-os update` installs a new release once its checksum matches, and
 `herald-os rollback` goes back to the version before.
 
 The full session needs niri and the tools its menu bar and panels use (Fedora's package names are
-in [linux/image/packages.txt](linux/image/packages.txt)). It also applies Herald's theme to the
+in [linux/image/packages.txt](linux/image/packages.txt)). It also applies MadX's theme to the
 account that runs it: GTK 3 and 4 apps (`gtk.css`), the foot terminal (`foot.ini`) and GNOME's
 colour scheme and GTK theme. On a desktop you already use, try it from a second account.
 [docs/LINUX.md](docs/LINUX.md#another-linux-the-release-tarball) has the details.
 
 ### The whole OS in a virtual machine
 
-Each release carries ready-made virtual machines of Herald OS Linux, so you can try the whole
+Each release carries ready-made virtual machines of MadX Agent OS Linux, so you can try the whole
 operating system without installing it. The first start sets itself up in a few minutes, Hermes
-Agent included, then Herald OS asks for your name and a password. Give the virtual machine 4 cores,
+Agent included, then MadX Agent OS asks for your name and a password. Give the virtual machine 4 cores,
 6 GB of memory and 40 GB of disk space. The UTM bundle and the Hyper-V disk come with releases built
 after 0.1.0-alpha.4; earlier releases have only the Apple Silicon disk for `try.sh`. The manual's
 [Trying it in a virtual machine](docs/manual/virtual-machine.md) has the same steps, with the
@@ -237,16 +238,16 @@ part. From a terminal, check the parts, join them and check the result (the `.vh
 `.utm.zip` is the same, and the `qcow2.zst` parts are `.part0`, `.part1`):
 
 ```bash
-shasum -a 256 -c herald-os-<version>-x86_64.vhdx.zip.sha256sums   # sha256sum -c on Linux
-cat herald-os-<version>-x86_64.vhdx.zip.[0-9][0-9][0-9] > herald-os-<version>-x86_64.vhdx.zip
-shasum -a 256 -c herald-os-<version>-x86_64.vhdx.zip.sha256
+shasum -a 256 -c madx-agent-os-<version>-x86_64.vhdx.zip.sha256sums   # sha256sum -c on Linux
+cat madx-agent-os-<version>-x86_64.vhdx.zip.[0-9][0-9][0-9] > madx-agent-os-<version>-x86_64.vhdx.zip
+shasum -a 256 -c madx-agent-os-<version>-x86_64.vhdx.zip.sha256
 ```
 
 In Windows' Command Prompt:
 
 ```bat
-copy /b herald-os-<version>-x86_64.vhdx.zip.001 + herald-os-<version>-x86_64.vhdx.zip.002 herald-os-<version>-x86_64.vhdx.zip
-certutil -hashfile herald-os-<version>-x86_64.vhdx.zip SHA256
+copy /b madx-agent-os-<version>-x86_64.vhdx.zip.001 + madx-agent-os-<version>-x86_64.vhdx.zip.002 madx-agent-os-<version>-x86_64.vhdx.zip
+certutil -hashfile madx-agent-os-<version>-x86_64.vhdx.zip SHA256
 ```
 
 Then compare the hash with the one in the `.sha256`. With more parts, add a `+` and the next part
@@ -257,14 +258,14 @@ for each.
 For a Mac with Apple Silicon, without Homebrew or a terminal:
 
 1. Install [UTM](https://mac.getutm.app), a free app that runs virtual machines.
-2. Download `herald-os-<version>-aarch64.utm.zip` from the
-   [releases page](https://github.com/iamlukethedev/Herald-OS/releases) and open it. Finder unpacks
-   `Herald OS.utm`.
-3. Double-click `Herald OS.utm`. UTM adds it to its list; press the play button.
+2. Download `madx-agent-os-<version>-aarch64.utm.zip` from the
+   [releases page](https://github.com/MadXLeo/MadX-Agent-OS/releases) and open it. Finder unpacks
+   `MadX Agent OS.utm`.
+3. Double-click `MadX Agent OS.utm`. UTM adds it to its list; press the play button.
 
 The bundle runs on Apple's hypervisor with GPU-accelerated graphics, and asks UTM for sound, a
-shared clipboard and a screen that follows the window's size. How much of that Herald OS Linux uses
-inside UTM is still being tested ([#67](https://github.com/iamlukethedev/Herald-OS/issues/67)).
+shared clipboard and a screen that follows the window's size. How much of that MadX Agent OS Linux uses
+inside UTM is still being tested ([#67](https://github.com/MadXLeo/MadX-Agent-OS/issues/67)).
 UTM's settings for the machine change its cores and memory.
 
 #### On Windows with Hyper-V
@@ -272,8 +273,8 @@ UTM's settings for the machine change its cores and memory.
 Hyper-V comes with Windows 11 Pro, Enterprise and Education (not Home):
 
 1. Turn it on: Start, type "Turn Windows features on or off", tick **Hyper-V** and restart.
-2. Download `herald-os-<version>-x86_64.vhdx.zip` from the
-   [releases page](https://github.com/iamlukethedev/Herald-OS/releases) and unpack it to a folder
+2. Download `madx-agent-os-<version>-x86_64.vhdx.zip` from the
+   [releases page](https://github.com/MadXLeo/MadX-Agent-OS/releases) and unpack it to a folder
    with 40 GB free; the disk grows up to that as you use it. To check it, 7-Zip's right-click menu
    has **CRC SHA > SHA-256**; compare with the `.sha256`.
 3. In Hyper-V Manager, **New > Virtual Machine**: generation 2, 6144 MB of memory, the **Default
@@ -288,7 +289,7 @@ shared clipboard there yet.
 
 #### On Linux or an Intel Mac
 
-`herald-os-<version>-x86_64.qcow2.zst` (and `aarch64` for ARM machines) is the same disk for QEMU,
+`madx-agent-os-<version>-x86_64.qcow2.zst` (and `aarch64` for ARM machines) is the same disk for QEMU,
 virt-manager, GNOME Boxes or UTM on an Intel Mac. Unpack it with `zstd -d`, then create a machine
 that boots with UEFI from it as an existing disk.
 
@@ -299,46 +300,49 @@ Virtualization framework through vfkit:
 
 ```bash
 brew install qemu zstd
-git clone https://github.com/iamlukethedev/Herald-OS.git && cd Herald-OS
+git clone https://github.com/MadXLeo/MadX-Agent-OS.git && cd MadX-Agent-OS
 bash linux/vm/try.sh
 ```
 
-To build the VM from your checkout instead and work on Herald OS Linux, see
-[Building from source](#herald-os-linux-in-a-virtual-machine).
+To build the VM from your checkout instead and work on MadX Agent OS Linux, see
+[Building from source](#madx-agent-os-linux-in-a-virtual-machine).
 
-## How Herald OS fits together
+## How MadX Agent OS fits together
 
-**Herald OS Linux is the operating system.** Fedora supplies the kernel, drivers and packages, and
-everything you see is Herald. The machine boots to the Herald splash screen and signs you straight
-in. The niri compositor arranges the windows, Herald draws the menu bar, dock, notifications, app
+**MadX Agent OS Linux is the operating system.** Fedora supplies the kernel, drivers and packages, and
+everything you see is MadX. The machine boots to the MadX splash screen and signs you straight
+in. The niri compositor arranges the windows, MadX draws the menu bar, dock, notifications, app
 launcher and system menus, and its theme styles the lock screen. Hermes starts with the session,
 with tools to see and operate the machine. Linux apps such as Firefox, LibreOffice and VS Code run
 as windows inside it, and a curated set comes preinstalled. It installs on a PC from the installer
 image or runs in a virtual machine, and it updates as a whole system you can roll back.
 
-**On Arch Linux and Omarchy,** Herald OS is a package: the full session from the login screen, or
-Herald as an app inside Hyprland and Omarchy, following Omarchy's theme and keys.
+**On Arch Linux and Omarchy,** MadX Agent OS is a package: the full session from the login screen, or
+MadX as an app inside Hyprland and Omarchy, following Omarchy's theme and keys.
 
-**Herald OS also runs on a Mac,** fullscreen over macOS: the same interface, agent and tools, with
-macOS underneath handling the hardware and your Mac apps. It is the quickest way to try Herald OS,
+**MadX Agent OS also runs on a Mac,** fullscreen over macOS: the same interface, agent and tools, with
+macOS underneath handling the hardware and your Mac apps. It is the quickest way to try MadX Agent OS,
 and where most of it is built.
 
-Herald OS does not fork Hermes. It runs a standard Hermes Agent install and adds its system
+MadX Agent OS does not fork Hermes. It runs a standard Hermes Agent install and adds its system
 abilities as a regular Hermes plugin, `herald-os-bridge`.
 
 ## A look around
 
+The following are archived upstream screenshots of the retained features. They are not screenshots
+of a validated MadX build. Current artwork is in [branding](branding/README.md).
+
 <table>
   <tr>
-    <td width="50%"><img src="docs/images/boot.png" alt="The Herald OS boot screen"></td>
+    <td width="50%"><img src="docs/images/boot.png" alt="Historical upstream boot screen"></td>
     <td width="50%"><img src="docs/images/applications.png" alt="The application launcher"></td>
   </tr>
   <tr>
-    <td>Herald OS Linux boots to its own splash screen and signs you straight in.</td>
-    <td>The launcher holds Herald's own apps and every installed Linux app.</td>
+    <td>MadX Agent OS Linux boots to its own splash screen and signs you straight in.</td>
+    <td>The launcher holds MadX's own apps and every installed Linux app.</td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/images/control-menu.png" alt="The Herald OS menu"></td>
+    <td width="50%"><img src="docs/images/control-menu.png" alt="Historical upstream control menu"></td>
     <td width="50%"><img src="docs/images/hermes.png" alt="Hermes answering with its system tools"></td>
   </tr>
   <tr>
@@ -356,7 +360,7 @@ abilities as a regular Hermes plugin, `herald-os-bridge`.
   them from the Hermes page or the Overview, or say "talk to Alfred"; each bot's conversations stay
   in its own session list, and new conversations keep the bot chosen last. See
   [the manual](docs/manual/README.md#talking-to-your-other-bots).
-- **Pick up where you left off.** When you open Herald OS or come back after a break, Hermes looks
+- **Pick up where you left off.** When you open MadX Agent OS or come back after a break, Hermes looks
   at your recent documents, project folders (with their git state), conversations and today's
   calendar, and puts up to three threads of work on the Overview. Continue reopens a thread's
   conversation, folder and files; its suggested next step starts only when you click it.
@@ -377,17 +381,17 @@ abilities as a regular Hermes plugin, `herald-os-bridge`.
   project's files, the code as it is written, the commands it runs, and a live preview.
 - **Crash help**: when a program crashes, a notification offers to have Hermes read the crash
   report and explain, in plain words, what went wrong and whether it is worth reporting.
-- **Herald Canvas**: a layered image editor with masks, blend modes, adjustment layers, layer
+- **MadX Canvas**: a layered image editor with masks, blend modes, adjustment layers, layer
   effects and editable text, drawn on the GPU. Remove backgrounds, select objects and fill holes with
   models that run on your computer, open and export Photoshop files, and ask Hermes for a poster or a
   warmer photo while you watch it work. Its projects open in Compositor on the Mac. See
   [the manual](docs/manual/canvas.md).
-- **Herald Office**: Herald Docs, Sheets and Slides for Word, Excel and PowerPoint files: real pages
+- **MadX Office**: MadX Docs, Sheets and Slides for Word, Excel and PowerPoint files: real pages
   with headers, footers, comments and tables of contents; formulas, charts and summaries; themes,
   masters and a presenter view. Ask Hermes for a cover letter, a cleaner column or slides from a
-  report and watch each change land as a step you can undo. Before Herald first saves over a file,
+  report and watch each change land as a step you can undo. Before MadX first saves over a file,
   it says what the file would lose and backs it up. See [the manual](docs/manual/office.md).
-- **Herald Calc**: a notepad where you write math the way you say it ("20% of 84.50", "5 km in
+- **MadX Calc**: a notepad where you write math the way you say it ("20% of 84.50", "5 km in
   miles", "100 USD in BRL", "days until Dec 25", "9am Sydney in New York") and every line answers
   as you type, in exact decimals. A classic keypad with scientific and programmer modes, graphs you
   can pan, zoom and trace, a searchable history, and a note becomes a workbook with real formulas in
@@ -402,7 +406,7 @@ abilities as a regular Hermes plugin, `herald-os-bridge`.
   working on stands as a petdex pet of its own. Pets walk to the area for the tool they use, stand
   at the desk of the document they work on, say the step they are on, hand notes to the helpers they
   start and get the results back, and hold up a sign when they need your OK, from what Hermes
-  reports and nothing else. A lane for Hermes at work outside Herald and the room as your
+  reports and nothing else. A lane for Hermes at work outside MadX and the room as your
   screensaver are there when you turn them on. See [the manual](docs/manual/room.md).
 - **Make it yours**: twelve themes (two light) that also dress Hermes's own command line, a theme
   made from any image, themes installed from git, your own fonts, and Hermes can design one from a
@@ -417,13 +421,13 @@ abilities as a regular Hermes plugin, `herald-os-bridge`.
   a warning at 90%.
 - **When something happens**: automations that run when you log in, come back after a break, the
   battery runs low or a program crashes, and hook scripts for the same moments.
-- **On Herald OS Linux, the rest of an OS**: a control menu to install and remove apps, change the
+- **On MadX Agent OS Linux, the rest of an OS**: a control menu to install and remove apps, change the
   theme and update the system; one-click installs for AI tools such as Claude Code, Codex and local
   models; themes that recolour everything from the menu bar to the terminal; Wi-Fi, Bluetooth,
   sound, display and battery panels; screenshots, screen recording, night light and do not disturb;
   web apps in their own windows; clipboard history, a lock screen and a power menu; fingerprint and
   security-key sign-in; a firewall that refuses incoming connections; and one command,
-  `herald-os update`, that updates Herald OS, Hermes and Fedora, with `herald-os rollback` to undo
+  `herald-os update`, that updates MadX Agent OS, Hermes and Fedora, with `herald-os rollback` to undo
   it.
 
 The [manual](docs/manual/README.md) covers installing and using all of it, with every hotkey,
@@ -431,17 +435,17 @@ pages for people coming from macOS and Windows, and help for when something goes
 
 ## Building from source
 
-To work on Herald OS, or to run what is on `main`:
+To work on MadX Agent OS, or to run what is on `main`:
 
-- **Herald OS Linux in a virtual machine** gives you the whole operating system, built from your
+- **MadX Agent OS Linux in a virtual machine** gives you the whole operating system, built from your
   checkout. The first setup takes about half an hour, most of it downloads.
-- **Herald OS on macOS** runs from your checkout in a few minutes if you already have Node.js.
-- **Your own Herald OS image**, the bootable system the installer and the VM disks are made from,
+- **MadX Agent OS on macOS** runs from your checkout in a few minutes if you already have Node.js.
+- **Your own MadX Agent OS image**, the bootable system the installer and the VM disks are made from,
   builds from your checkout with Podman on Linux. [docs/BUILDING-THE-IMAGE.md](docs/BUILDING-THE-IMAGE.md)
   covers the recipe, the build, switching a machine to your build, and adding packages, Flatpaks
   and branding.
 
-### Herald OS Linux in a virtual machine
+### MadX Agent OS Linux in a virtual machine
 
 You need an Apple Silicon Mac with [Homebrew](https://brew.sh) and about 20 GB of free disk space.
 The virtual machine gets 4 cores and 8 GB of memory; on a Mac with 8 GB in total, start it with
@@ -452,8 +456,8 @@ The virtual machine gets 4 cores and 8 GB of memory; on a Mac with 8 GB in total
 
 ```bash
 brew install qemu
-git clone https://github.com/iamlukethedev/Herald-OS.git
-cd Herald-OS
+git clone https://github.com/MadXLeo/MadX-Agent-OS.git
+cd MadX-Agent-OS
 ```
 
 **2. Download Fedora and prepare the first boot.**
@@ -463,7 +467,7 @@ bash linux/vm/download-image.sh   # Fedora Cloud for ARM, about 500 MB
 bash linux/vm/make-seed.sh        # first-boot setup and an SSH key, in linux/vm/build/
 ```
 
-**3. Boot the virtual machine.** A window opens on your Mac. The first boot installs Herald OS:
+**3. Boot the virtual machine.** A window opens on your Mac. The first boot installs MadX Agent OS:
 the system packages, Hermes Agent and the default apps.
 
 ```bash
@@ -474,34 +478,34 @@ bash linux/vm/run-qemu.sh console   # follow the install; Ctrl+C stops watching
 Wait until the console prints `==> Provisioning complete`. That takes 30 to 45 minutes, mostly
 downloads. If it prints `==> Provisioning FAILED` instead, see [Troubleshooting](#troubleshooting).
 
-**4. Install the Herald shell.** This copies your checkout into the VM, builds it there and starts
-Herald OS:
+**4. Install the MadX shell.** This copies your checkout into the VM, builds it there and starts
+MadX Agent OS:
 
 ```bash
 bash linux/dev/push.sh
 ```
 
-**5. Sign Hermes in.** The first time Hermes needs a model, Herald OS shows a sign-in card with a
+**5. Sign Hermes in.** The first time Hermes needs a model, MadX Agent OS shows a sign-in card with a
 short code: open the link on any device and enter the code. To use an API key or another provider
 instead, choose it under Settings > Hermes & agents > Model provider (or run `hermes setup` in a
 shell in the VM, `bash linux/dev/push.sh ssh`).
 
 From then on, `bash linux/vm/run-qemu.sh stop` shuts the VM down and `bash linux/vm/run-qemu.sh`
-starts it again, straight into Herald OS. After you change the code on your Mac,
+starts it again, straight into MadX Agent OS. After you change the code on your Mac,
 `bash linux/dev/push.sh` installs it. [docs/LINUX.md](docs/LINUX.md) covers UTM, display scaling on
 Retina screens, the session model and the dev loop.
 
-### Herald OS on macOS from source
+### MadX Agent OS on macOS from source
 
 You need:
 
-- **macOS 13 (Ventura) or later on Apple Silicon.** Intel Macs are untested. Herald OS is
+- **macOS 13 (Ventura) or later on Apple Silicon.** Intel Macs are untested. MadX Agent OS is
   developed on macOS 26. `npm run dist:mac` builds both the Apple Silicon and the Intel app.
 - **Node.js 22.12 or later** ([nodejs.org](https://nodejs.org), or `brew install node`).
 - **Git**, and the Xcode Command Line Tools (`xcode-select --install`) for native modules.
 - **Hermes Agent 0.21.3 or later**, with a model provider set up (step 1 below).
 
-**1. Install Hermes Agent and choose a model.** Herald OS on macOS uses your own Hermes install.
+**1. Install Hermes Agent and choose a model.** MadX Agent OS on macOS uses your own Hermes install.
 If you don't have it yet:
 
 ```bash
@@ -511,7 +515,7 @@ hermes setup
 ```
 
 `hermes setup` walks you through choosing a model provider and signing in. You can change it later
-with `hermes model`, or from Herald OS under Settings > Hermes & agents. Check that Hermes works on
+with `hermes model`, or from MadX Agent OS under Settings > Hermes & agents. Check that Hermes works on
 its own before going further:
 
 ```bash
@@ -522,8 +526,8 @@ hermes        # say hello, then exit with Ctrl+D
 **2. Get the code.**
 
 ```bash
-git clone https://github.com/iamlukethedev/Herald-OS.git
-cd Herald-OS
+git clone https://github.com/MadXLeo/MadX-Agent-OS.git
+cd MadX-Agent-OS
 ```
 
 **3. Bootstrap.**
@@ -540,13 +544,13 @@ This is safe to re-run, and you should re-run it after every `git pull`. It:
 4. migrates settings from the project's earlier name (Hermes OS), if you had it installed;
 5. reports which optional voice packages your Hermes install has.
 
-**4. Start Herald OS.**
+**4. Start MadX Agent OS.**
 
 ```bash
 npm run dev
 ```
 
-Herald OS starts your Hermes runtime in the background (`hermes serve`, on 127.0.0.1 only), shows
+MadX Agent OS starts your Hermes runtime in the background (`hermes serve`, on 127.0.0.1 only), shows
 the boot screen, and takes over the screen. `Cmd+Ctrl+F` leaves or re-enters fullscreen; `Cmd+Q`
 quits and stops the backend it started.
 
@@ -563,22 +567,22 @@ a restart (`Ctrl+C`, then `npm run dev` again).
 - **Voice works (optional).** Press `Alt+Space` and allow microphone access when macOS asks.
   Settings > Voice has "Say hello" and "Start talking" buttons to test it.
 
-## Using Herald OS
+## Using MadX Agent OS
 
 ### Keyboard shortcuts
 
-On Herald OS Linux the system key is `Super` (the Windows or Command key), and `Super+K` lists every
+On MadX Agent OS Linux the system key is `Super` (the Windows or Command key), and `Super+K` lists every
 shortcut. In the virtual machine the system key is `Alt` (`Option` on a Mac keyboard) instead, so
-`Super+A` becomes `Alt+A`: the Mac keeps `Command` for itself. Herald's own pages also answer to
+`Super+A` becomes `Alt+A`: the Mac keeps `Command` for itself. MadX's own pages also answer to
 `Ctrl` on Linux, so `Ctrl+K` and `Ctrl+1` work everywhere.
 
-| Action | Herald OS Linux | macOS |
+| Action | MadX Agent OS Linux | macOS |
 | --- | --- | --- |
 | Command bar | `Super+Shift+Space` or `Ctrl+K` | `Cmd+K` |
 | All applications | `Super+A` | `Cmd+Shift+A` |
 | Talk to Hermes | `Super+V` | `Alt+Space` |
 | Ask Hermes about the focused window | `Super+Space` | |
-| Herald OS menu: apps, themes, updates | `Super+M` or `Super+Alt+Space` | |
+| MadX Agent OS menu: apps, themes, updates | `Super+M` or `Super+Alt+Space` | |
 | Overview, Hermes, Missions, Memory, Files, Automations, Connections | `Ctrl+1` ... `Ctrl+7` | `Cmd+1` ... `Cmd+7` |
 | Settings | `Super+,` | `Cmd+,` |
 | Terminal | `Super+Return` | `Cmd+8` |
@@ -613,7 +617,7 @@ and words it must leave out, such as a client's name.
 
 | What | Where |
 | --- | --- |
-| Herald OS preferences | `~/.hermes/herald-os/prefs.json` (edit them in Settings) |
+| MadX Agent OS preferences | `~/.hermes/herald-os/prefs.json` (edit them in Settings) |
 | Audit log, control socket | `~/.hermes/herald-os/` |
 | Log file | `~/.hermes/logs/herald-os.log` |
 | Hermes config, memories, sessions, credentials | `~/.hermes/`, managed by Hermes |
@@ -623,14 +627,14 @@ A few options come from environment variables, mostly for development: starting 
 throwaway Hermes home (`HERMES_HOME=/tmp/herald-test`). [.env.example](.env.example) lists them
 all.
 
-#### What Herald OS changes in your Hermes
+#### What MadX Agent OS changes in your Hermes
 
-Herald OS runs on your own Hermes, so a few of its changes reach Hermes's other sessions too:
+MadX Agent OS runs on your own Hermes, so a few of its changes reach Hermes's other sessions too:
 
 - **The system bridge plugin.** Setup (the Mac app's first start, `herald-os setup`, or
   `npm run bootstrap`) links it into `~/.hermes/plugins/herald-os-bridge`, adds it to
   `plugins.enabled`, and saves the `cli` platform's toolset list with `herald_os` in it. Its tools
-  run only in sessions Herald OS starts; Telegram, Discord, cron and the `hermes` CLI never get them.
+  run only in sessions MadX Agent OS starts; Telegram, Discord, cron and the `hermes` CLI never get them.
 - **Tool search off** (`tools.tool_search.enabled: off`), so Hermes calls the system tools directly.
   Hermes has one switch for every session, so plugin and MCP tools are listed directly everywhere.
   The earlier value is kept in `~/.hermes/herald-os/tool-search-before`, and Settings > Hermes &
@@ -656,12 +660,12 @@ for that app's architecture alone, and that the DMGs and zips carry `package.jso
 - **A local build is not notarized.** electron-builder signs it with a code-signing identity from
   your keychain if it finds one, and leaves it unsigned otherwise. A copy that was downloaded or sent
   to you will not open the first time: choose Open Anyway in System Settings → Privacy & Security, or
-  run `xattr -dr com.apple.quarantine "/Applications/Herald OS.app"`. The release workflow
+  run `xattr -dr com.apple.quarantine "/Applications/MadX Agent OS.app"`. The release workflow
   (`.github/workflows/release.yml`) builds a signed and notarized one when the repository has the
   `MAC_CERTIFICATE_P12`, `MAC_CERTIFICATE_PASSWORD`, `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` and
   `APPLE_TEAM_ID` secrets; set the same variables locally (`CSC_LINK` and `CSC_KEY_PASSWORD` for the
   certificate) to notarize from your Mac.
-- **macOS notifications need a signed build.** Notifications still appear inside Herald OS, but the
+- **macOS notifications need a signed build.** Notifications still appear inside MadX Agent OS, but the
   macOS ones it sends while you are in another app only work when the build is code-signed.
 - **The system tools plugin comes with the app.** On its first start the app links its copy into
   `~/.hermes/plugins` and enables it. A link from a checkout (`npm run bootstrap`) stays as it is.
@@ -675,21 +679,21 @@ npm run dist:linux --workspace apps/desktop            # this machine's architec
 npm run dist:linux --workspace apps/desktop -- --arm64  # or pick one
 ```
 
-This writes `herald-os-<version>-linux-<arch>.tar.gz` to `apps/desktop/release/`: the app, with the
+This writes `madx-agent-os-<version>-linux-<arch>.tar.gz` to `apps/desktop/release/`: the app, with the
 `herald-os` CLIs, the niri session, themes, the install catalog and the bridge plugin under
 `resources/`. Build on the target architecture (node-pty is compiled, not cross-built); the release
 workflow builds x64 and arm64 on matching runners. The tarball is what the Arch package and the
-Herald OS image install; on its own, unpack it to `/opt/herald-os` and run
+MadX Agent OS image install; on its own, unpack it to `/opt/herald-os` and run
 `sudo /opt/herald-os/resources/herald-os-linux/bin/herald-os-tarball install`, as in
 [Another Linux](#another-linux).
 
 ## Project layout
 
 ```
-apps/desktop/               The Herald shell: Electron main (electron/), preload/, React interface (src/)
+apps/desktop/               The MadX shell: Electron main (electron/), preload/, React interface (src/)
 packages/hermes-client/     Typed client for the Hermes gateway (JSON-RPC over WebSocket, REST)
 plugins/herald-os-bridge/   Hermes plugin: system tools, permission tiers, audit log, UI control
-linux/                      Herald OS Linux: provisioning, session, niri config, themes, apps, VM tooling
+linux/                      MadX Agent OS Linux: provisioning, session, niri config, themes, apps, VM tooling
 examples/widgets/           sample widget plugins (ADR-019)
 scripts/                    bootstrap, upstream sync, bridge tests, secret scan
 upstream/                   UPSTREAM.lock, the pinned Hermes version the shell builds against
@@ -713,7 +717,7 @@ CI runs all of these on Ubuntu and macOS. [CONTRIBUTING.md](CONTRIBUTING.md) has
 
 ## Updating
 
-- **Herald OS Linux:** `herald-os update` (or Update in the Herald OS menu) installs the new system,
+- **MadX Agent OS Linux:** `herald-os update` (or Update in the MadX Agent OS menu) installs the new system,
   Hermes Agent and the Flatpak apps, and `herald-os rollback` goes back.
 - **The Mac app:** download the new DMG and replace the app in Applications. `hermes update` updates
   Hermes itself, whenever you like.
@@ -729,27 +733,27 @@ does not change the shell's code. Moving the pin is described in [upstream/READM
 
 ## Troubleshooting
 
-- **"No Hermes runtime found", or the boot screen never finishes.** Herald OS keeps looking and
-  starts Hermes as soon as it is installed. On the Herald OS image, a first start without a network
+- **"No Hermes runtime found", or the boot screen never finishes.** MadX Agent OS keeps looking and
+  starts Hermes as soon as it is installed. On the MadX Agent OS image, a first start without a network
   installs it once you are online (`journalctl -u herald-os-hermes` shows how that goes). Otherwise
   run `hermes doctor`. If Hermes lives somewhere other than `~/.hermes/hermes-agent` and is not on
   your PATH, start with `HERALD_OS_HERMES_ROOT=/path/to/hermes-agent npm run dev`. The cause is
   usually in `~/.hermes/logs/herald-os.log`.
-- **macOS says Herald OS "is damaged", "cannot be opened" or "Apple could not verify Herald OS is
+- **macOS says MadX Agent OS "is damaged", "cannot be opened" or "Apple could not verify MadX Agent OS is
   free of malware".** The build is not notarized yet: run
-  `xattr -dr com.apple.quarantine "/Applications/Herald OS.app"` and open it again, or click Open
+  `xattr -dr com.apple.quarantine "/Applications/MadX Agent OS.app"` and open it again, or click Open
   Anyway in System Settings > Privacy & Security after the first attempt. 0.1.0-alpha.4
   shipped without a signature over the app bundle; if it still says "damaged", sign your copy ad
-  hoc with `codesign --force --deep --sign - "/Applications/Herald OS.app"`.
+  hoc with `codesign --force --deep --sign - "/Applications/MadX Agent OS.app"`.
 - **Hermes uses shell commands instead of its system tools.** `hermes plugins list` should show
   `herald-os-bridge` as enabled; `hermes plugins enable herald-os-bridge` turns it on. From a
-  checkout, re-run `npm run bootstrap`; on Linux, `herald-os setup`. Then restart Herald OS.
+  checkout, re-run `npm run bootstrap`; on Linux, `herald-os setup`. Then restart MadX Agent OS.
 - **The VM's first boot fails or never finishes.** A failed step prints
   `==> Provisioning FAILED at line N`, and `bash linux/vm/run-qemu.sh console` shows where it
   stopped. `/var/log/herald-os-provision.log` in the VM has the whole run (`bash linux/dev/push.sh ssh`
   opens a shell there). `bash linux/vm/run-qemu.sh reset` deletes the VM's disk so the next start
   begins again.
-- **Herald OS Linux shows a black screen after `push.sh`.** Open a shell with
+- **MadX Agent OS Linux shows a black screen after `push.sh`.** Open a shell with
   `bash linux/dev/push.sh ssh` and read `~/.local/state/herald-os/shell.log` and
   `journalctl -u greetd`.
 - **`npm run dev` waits on a download.** Electron downloads itself on first use. Bootstrap does this
@@ -758,20 +762,18 @@ does not change the shell's code. Moving the pin is described in [upstream/READM
   `npm run bootstrap` again.
 - **The microphone does nothing on macOS.** Check System Settings > Privacy & Security >
   Microphone. In development the permission belongs to Electron (or your terminal); in a built
-  release, to Herald OS.
+  release, to MadX Agent OS.
 - **Stuck fullscreen on macOS.** `Cmd+Ctrl+F`, or start with `HERALD_OS_WINDOWED=1 npm run dev`.
-- **Still stuck?** Ask in #help on [Discord](https://discord.gg/RHyFZ7FX6E), or open an issue on
-  GitHub.
+- **Still stuck?** Open an issue in the [MadX repository](https://github.com/MadXLeo/MadX-Agent-OS/issues).
 
 ## Contributing and security
 
-Contributions are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md). Come and ask questions, share
-ideas or show what you built on [Discord](https://discord.gg/RHyFZ7FX6E). Please report
+Contributions are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md). Please report
 vulnerabilities privately, as described in [SECURITY.md](SECURITY.md).
 
 ## License
 
-[MIT](LICENSE). Herald OS builds on [Hermes Agent](https://github.com/NousResearch/hermes-agent) by
-Nous Research, also MIT; see [NOTICE](NOTICE). Herald OS is an independent project and is not
+[MIT](LICENSE). MadX Agent OS builds on [Hermes Agent](https://github.com/NousResearch/hermes-agent) by
+Nous Research, also MIT; see [NOTICE](NOTICE). MadX Agent OS is an independent project and is not
 affiliated with Nous Research; the Hermes names refer to Nous Research's project and are used only
-to say what Herald OS runs on.
+to say what MadX Agent OS runs on.

@@ -16,10 +16,11 @@ export function userThemesDir(): string {
 /** Theme folders shipped with Herald OS, first match wins (the same order as linux/bin/herald-os-theme). */
 function builtinThemeDirs(): string[] {
   const candidates = [
-    process.env.HERALD_OS_THEMES,
+    process.env.MADX_OS_THEMES ?? process.env.HERALD_OS_THEMES,
     // Packaged builds carry linux/themes as a resource; a checkout reads the repository copy.
     process.resourcesPath ? path.join(process.resourcesPath, 'themes') : undefined,
     path.resolve(app.getAppPath(), '..', '..', 'linux', 'themes'),
+    path.join(os.homedir(), 'MadX-Agent-OS', 'linux', 'themes'),
     path.join(os.homedir(), 'Herald-OS', 'linux', 'themes'),
     '/usr/local/share/herald-os-linux/themes',
     '/usr/share/herald-os/themes'

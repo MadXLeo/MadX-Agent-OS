@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 /*
  * What Herald Canvas asks Hermes for: generative fill, a generated layer, and an edit planned from
  * a description. Hermes works through its own tools (its image generation tool, the canvas tool),
@@ -69,7 +70,7 @@ export function generativeFillRequest(request: GenerativeFill): string {
   const name = `Generative Fill: ${promptName(what, 'fill')}`
 
   return [
-    `In Herald Canvas the person selected part of ${describeImage(image)} and asked for generative fill: ${what ? quoted(what) : 'nothing in particular, so carry on what is around the selection'}.`,
+    `In ${PRODUCT.apps.canvas} the person selected part of ${describeImage(image)} and asked for generative fill: ${what ? quoted(what) : 'nothing in particular, so carry on what is around the selection'}.`,
     '',
     `1. Look at ${request.context}: the area as it is now (${box.width}×${box.height} pixels from x ${box.x}, y ${box.y}), and ${request.mask}, white where the new picture goes.`,
     `2. Make the picture with your image generation tool, aspect_ratio "${aspectFor(box.width, box.height)}". If the tool can edit an image (it takes an image_url), give it ${request.context} and describe the change; otherwise describe the whole area so it matches the surroundings (light, perspective, colour, grain).`,
@@ -95,7 +96,7 @@ export function generatedLayerRequest(request: GeneratedLayer): string {
   const placement = box ? ` x=${box.x} y=${box.y} width=${box.width} height=${box.height} fit=contain` : ' fit=contain'
 
   return [
-    `In Herald Canvas the person asked for a new generated layer in ${describeImage(image)}: ${quoted(request.prompt.trim())}.`,
+    `In ${PRODUCT.apps.canvas} the person asked for a new generated layer in ${describeImage(image)}: ${quoted(request.prompt.trim())}.`,
     '',
     `1. Make the picture with your image generation tool, aspect_ratio "${aspectFor(area.width, area.height)}" (${box ? `it goes in a ${box.width}×${box.height} box at x ${box.x}, y ${box.y}` : 'it fills the canvas'}). If the picture should stand on its own (a logo, an object, a sticker), ask for a plain background the person can remove with Layer > Remove Background.`,
     `2. Save it as a PNG at ${request.result} (download it first if the tool answers with an address).`,
@@ -121,7 +122,7 @@ export function editRequest(edit: EditRequest): string {
   const shown = edit.layers.slice(0, 30)
 
   return [
-    `In Herald Canvas the person is working on ${describeImage(image)} and asks: ${quoted(edit.request.trim())}.`,
+    `In ${PRODUCT.apps.canvas} the person is working on ${describeImage(image)} and asks: ${quoted(edit.request.trim())}.`,
     '',
     'Layers, top to bottom:',
     ...shown.map((line) => `- ${line}`),

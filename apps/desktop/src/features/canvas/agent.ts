@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 /*
  * What Hermes (and the command bar, voice and the CLI) does in Herald Canvas. A command works on a
  * project: the one it names, or the image in front. When that project is open in this window the
@@ -142,7 +143,7 @@ export async function target(project?: unknown): Promise<Target> {
 
   if (named) {
     if (!isProjectPath(named)) {
-      throw new Error(`${baseName(named)} is not a Herald Canvas project (a folder ending in ${PROJECT_EXTENSION}); open it with canvas.open first`)
+      throw new Error(`${baseName(named)} is not a ${PRODUCT.apps.canvas} project (a folder ending in ${PROJECT_EXTENSION}); open it with canvas.open first`)
     }
 
     const open = $documents.get().find((doc) => doc.path === named)
@@ -170,7 +171,7 @@ export async function target(project?: unknown): Promise<Target> {
     return target(current)
   }
 
-  throw new Error('No image is open in Herald Canvas: open one (canvas.open) or start one (canvas.new)')
+  throw new Error(`No image is open in ${PRODUCT.apps.canvas}: open one (canvas.open) or start one (canvas.new)`)
 }
 
 /** Record a change as one undoable step (marked as a command's in the History panel), and save it where it lives. */
@@ -290,7 +291,7 @@ export async function loadImage(source: string): Promise<Raster> {
   const extension = /(\.[^./]+)$/.exec(file)?.[1]?.toLowerCase() ?? ''
 
   if (!CANVAS_IMAGE_EXTENSIONS.has(extension)) {
-    throw new Error(`Herald Canvas does not read ${extension || 'that kind of file'}`)
+    throw new Error(`${PRODUCT.apps.canvas} does not read ${extension || 'that kind of file'}`)
   }
 
   return readPicture(file)
@@ -342,7 +343,7 @@ export async function open(path: unknown): Promise<Outcome> {
   if (typeof path !== 'string' || !path.trim()) {
     openInCanvas()
 
-    return { summary: 'Opened Herald Canvas' }
+    return { summary: `Opened ${PRODUCT.apps.canvas}` }
   }
 
   const file = resolve(path)
@@ -354,17 +355,17 @@ export async function open(path: unknown): Promise<Outcome> {
   if (isProjectPath(file)) {
     await show(file)
 
-    return { summary: `Opened ${baseName(file)} in Herald Canvas`, data: { path: file } }
+    return { summary: `Opened ${baseName(file)} in ${PRODUCT.apps.canvas}`, data: { path: file } }
   }
 
   // An image becomes a project beside the others, so edits never touch the original; a Photoshop document keeps its layers.
   const { doc, notes } = isLayeredImage(file) ? await (await import('./psd/psd.ts')).documentFromPsd(file) : { doc: await documentFromImage(file), notes: [] as string[] }
-  const project = await freeProjectPath(resolve('~/Pictures/Herald Canvas'), baseName(file))
+  const project = await freeProjectPath(resolve(`~/Pictures/${PRODUCT.apps.canvas}`), baseName(file))
   await saveProject(doc, project)
   await show(project)
 
   return {
-    summary: `Opened ${fileName(file)} in Herald Canvas as ${baseName(project)} (the original is untouched)${notes.length ? `. Approximated: ${notes.join('; ')}` : ''}`,
+    summary: `Opened ${fileName(file)} in ${PRODUCT.apps.canvas} as ${baseName(project)} (the original is untouched)${notes.length ? `. Approximated: ${notes.join('; ')}` : ''}`,
     data: { path: project, source: file, width: doc.state.width, height: doc.state.height, layers: doc.state.layers.length, ...(notes.length ? { notes } : {}) }
   }
 }
@@ -378,7 +379,7 @@ export async function create(args: Record<string, unknown>): Promise<Outcome> {
   }
 
   const background = (['white', 'black', 'transparent'] as const).find((kind) => kind === args.background) ?? 'white'
-  const folder = resolve(typeof args.folder === 'string' && args.folder.trim() ? args.folder : '~/Pictures/Herald Canvas')
+  const folder = resolve(typeof args.folder === 'string' && args.folder.trim() ? args.folder : `~/Pictures/${PRODUCT.apps.canvas}`)
   const file = await freeProjectPath(folder, typeof args.name === 'string' ? args.name : 'Untitled')
   const doc = newDocument(width, height, background, Math.round(finite(args.resolution) ?? 72))
 
@@ -412,7 +413,7 @@ export async function status(): Promise<Outcome> {
   const current = documents.find((doc) => doc.active) ?? documents[0]
 
   return {
-    summary: documents.length ? `${documents.length} image${documents.length === 1 ? '' : 's'} open${current ? `; in front: ${current.name}` : ''}` : 'Nothing is open in Herald Canvas',
+    summary: documents.length ? `${documents.length} image${documents.length === 1 ? '' : 's'} open${current ? `; in front: ${current.name}` : ''}` : `Nothing is open in ${PRODUCT.apps.canvas}`,
     data: { documents: documents.map(({ key: _key, ...doc }) => doc), current: current?.path ?? null }
   }
 }
@@ -685,7 +686,7 @@ export async function setAdjustment(args: Record<string, unknown>): Promise<Outc
   const herald = heraldOf(layer)
 
   if (layer.heraldAdjustment && !herald) {
-    throw new Error(`${layer.name} is a ${String(layer.heraldAdjustment.kind)} adjustment from a newer Herald Canvas: this version cannot change it`)
+    throw new Error(`${layer.name} is a ${String(layer.heraldAdjustment.kind)} adjustment from a newer ${PRODUCT.apps.canvas}: this version cannot change it`)
   }
 
   if (Object.keys(settings).length) {
@@ -1286,7 +1287,7 @@ export async function step(direction: 'undo' | 'redo', args: Record<string, unkn
       // The Canvas window is its own process there: it takes the request as its payload.
       await window.heraldOS.shell.open('window:canvas', { type: 'payload', payload: { command: direction, path: on.doc.path, steps: count, at: Date.now() } })
 
-      return { summary: `Asked Herald Canvas to ${direction} ${count === 1 ? 'a step' : `${count} steps`} in ${on.doc.name}` }
+      return { summary: `Asked ${PRODUCT.apps.canvas} to ${direction} ${count === 1 ? 'a step' : `${count} steps`} in ${on.doc.name}` }
     }
 
     throw new Error('Undo works in the open Canvas window: open the project first')

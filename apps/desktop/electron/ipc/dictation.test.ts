@@ -154,7 +154,7 @@ describe('typing into another app on macOS', () => {
     expect(pastes()).toHaveLength(0)
     expect(electron.isTrustedAccessibilityClient).not.toHaveBeenCalledWith(true)
     expect(dialogs()).toEqual([
-      expect.objectContaining({ message: 'Allow Herald OS to type into other apps', buttons: ['Continue', 'Not Now'], defaultId: 0, cancelId: 1 })
+      expect.objectContaining({ message: 'Allow MadX Agent OS to type into other apps', buttons: ['Continue', 'Not Now'], defaultId: 0, cancelId: 1 })
     ])
     expect(String(dialogs()[0].detail)).toMatch(/System Events \(Automation\), and for Accessibility\. Until both are allowed, what you pick or dictate stays on the clipboard/)
   })
@@ -214,8 +214,8 @@ describe('typing into another app on macOS', () => {
     await flush()
 
     expect(electron.clipboard).toBe('hello')
-    expect(dialogs()[0]).toMatchObject({ message: 'Herald OS needs Automation permission', buttons: ['Open System Settings', 'Not Now'], cancelId: 1 })
-    expect(String(dialogs()[0].detail)).toMatch(/Privacy & Security > Automation, turn on System Events under Herald OS/)
+    expect(dialogs()[0]).toMatchObject({ message: 'MadX Agent OS needs Automation permission', buttons: ['Open System Settings', 'Not Now'], cancelId: 1 })
+    expect(String(dialogs()[0].detail)).toMatch(/Privacy & Security > Automation, turn on System Events under MadX Agent OS/)
     expect(electron.openExternal).toHaveBeenCalledWith('x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_Automation')
   })
 
@@ -227,7 +227,7 @@ describe('typing into another app on macOS', () => {
     expect(await type('hello')).toEqual({ typed: false, copied: true, missing: 'accessibility' })
     await flush()
 
-    expect(dialogs()[0]).toMatchObject({ message: 'Herald OS needs Accessibility permission' })
+    expect(dialogs()[0]).toMatchObject({ message: 'MadX Agent OS needs Accessibility permission' })
     expect(electron.openExternal).toHaveBeenCalledWith('x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_Accessibility')
   })
 
@@ -257,7 +257,7 @@ describe('typing into another app on macOS', () => {
     run.mockResolvedValueOnce({ code: 1, stdout: '', stderr: AUTOMATION_REFUSED })
     await type('two')
 
-    expect(dialogs().map(options => options.message)).toEqual(['Allow Herald OS to type into other apps', 'Herald OS needs Automation permission'])
+    expect(dialogs().map(options => options.message)).toEqual(['Allow MadX Agent OS to type into other apps', 'MadX Agent OS needs Automation permission'])
   })
 
   it('gives the clipboard its old text back after a paste, not the pasted text', async () => {
@@ -279,7 +279,7 @@ describe('typing into another app on macOS', () => {
     electron.language = 'zh-CN'
     await type('hello')
 
-    expect(dialogs()[0]).toMatchObject({ message: '允许 Herald OS 在其他应用中输入', buttons: ['继续', '以后再说'] })
+    expect(dialogs()[0]).toMatchObject({ message: '允许 MadX Agent OS 在其他应用中输入', buttons: ['继续', '以后再说'] })
   })
 })
 

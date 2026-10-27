@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import {
   IconArmchair2,
   IconBrain,
@@ -43,13 +44,13 @@ export const AREA_ICONS: Record<RoomArea, Icon> = {
 
 /** What a desk is called when document names are off. */
 const DESK_KINDS: Partial<Record<RoomArea, string>> = {
-  docs: 'A document open in Herald Docs',
-  sheets: 'A workbook open in Herald Sheets',
-  slides: 'A presentation open in Herald Slides',
-  canvas: 'A project open in Herald Canvas'
+  docs: `A document open in ${PRODUCT.apps.docs}`,
+  sheets: `A workbook open in ${PRODUCT.apps.sheets}`,
+  slides: `A presentation open in ${PRODUCT.apps.slides}`,
+  canvas: `A project open in ${PRODUCT.apps.canvas}`
 }
 
-export const LANE_TITLE = 'Outside Herald'
+export const LANE_TITLE = `Outside ${PRODUCT.shortName}`
 
 const box = (rect: Rect) => ({ left: rect.x, top: rect.y, width: rect.width, height: rect.height })
 

@@ -65,7 +65,7 @@ describe('dictation into another app', () => {
 
     expect(edges.notify).toHaveBeenCalledWith({
       title: 'Dictation copied',
-      body: expect.stringMatching(/^Herald OS can't type into other apps without the Automation permission for System Events .*Paste it where you want it: /),
+      body: expect.stringMatching(/^MadX Agent OS can't type into other apps without the Automation permission for System Events .*Paste it where you want it: /),
       level: 'warn'
     })
   })

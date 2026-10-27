@@ -6,7 +6,7 @@ document.
 ## Dictation
 
 1. Put the cursor where the words should go.
-2. Press `Super+Ctrl+X` on Herald OS Linux or `Cmd+Ctrl+X` on a Mac, and speak.
+2. Press `Super+Ctrl+X` on MadX Agent OS Linux or `Cmd+Ctrl+X` on a Mac, and speak.
 3. Pause, and the words are typed where the cursor is. Pressing the key again, or clicking the
    dictation light in the menu bar, finishes straight away.
 
@@ -23,7 +23,7 @@ Accessibility permission. When typing is not possible, the words are left on the
 
 ## Emoji
 
-1. Press `Super+Ctrl+E` on Herald OS Linux or `Cmd+Ctrl+E` on a Mac.
+1. Press `Super+Ctrl+E` on MadX Agent OS Linux or `Cmd+Ctrl+E` on a Mac.
 2. Search ("party", "thumbs up"), or pick from the list.
 3. Press Return, and the emoji is typed where you were.
 

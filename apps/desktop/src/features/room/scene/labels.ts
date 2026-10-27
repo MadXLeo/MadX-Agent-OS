@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { RoomKind } from '../../../../shared/room.ts'
 import type { RoomSummary } from '../model/summary.ts'
 import type { RoomAgent, RoomCaps, RoomFact, RoomPhase, RoomResult, RoomState } from '../model/types.ts'
@@ -9,11 +10,11 @@ import type { RoomAgent, RoomCaps, RoomFact, RoomPhase, RoomResult, RoomState } 
 
 const UNTITLED: Record<RoomKind, string> = { conversation: 'A conversation', mission: 'A mission', helper: 'A helper', automation: 'An automation', elsewhere: 'A Hermes session' }
 
-export const KIND_NAMES: Record<RoomKind, string> = { conversation: 'Conversation', mission: 'Mission', helper: 'Helper', automation: 'Automation', elsewhere: 'Outside Herald' }
+export const KIND_NAMES: Record<RoomKind, string> = { conversation: 'Conversation', mission: 'Mission', helper: 'Helper', automation: 'Automation', elsewhere: `Outside ${PRODUCT.shortName}` }
 
 /** The agent's title, or what it is when Hermes has not named it yet. */
 export function agentTitle(agent: Pick<RoomAgent, 'title' | 'kind'> & Partial<Pick<RoomAgent, 'parentId'>>): string {
-  return agent.title.trim() || (agent.kind === 'elsewhere' && agent.parentId ? 'A helper outside Herald' : UNTITLED[agent.kind])
+  return agent.title.trim() || (agent.kind === 'elsewhere' && agent.parentId ? `A helper outside ${PRODUCT.shortName}` : UNTITLED[agent.kind])
 }
 
 /** A step label as a bubble shows it: first letter capitalised. */
@@ -113,7 +114,7 @@ export function countsOf(summary: Pick<RoomSummary, CountId>): { id: CountId; te
     idle: count => `${count} idle`,
     helpers: count => `${count} ${count === 1 ? 'helper' : 'helpers'}`,
     automations: count => `${count} ${count === 1 ? 'automation' : 'automations'} running`,
-    elsewhere: count => `${count} active outside Herald`
+    elsewhere: count => `${count} active outside ${PRODUCT.shortName}`
   }
 
   return (Object.keys(texts) as CountId[]).filter(id => summary[id] > 0).map(id => ({ id, text: texts[id](summary[id]) }))
@@ -125,7 +126,7 @@ const CAPS: Record<keyof RoomCaps, string> = {
   delegation: 'its helpers',
   config: 'its settings',
   automations: 'its automations',
-  sessionsDb: 'its sessions outside Herald'
+  sessionsDb: `its sessions outside ${PRODUCT.shortName}`
 }
 
 function orList(parts: readonly string[]): string {
@@ -158,9 +159,9 @@ export function roomNotices({ connected, state, pets }: { connected: boolean; st
   ]
 }
 
-export const EMPTY_ROOM_TEXT = 'No Hermes work right now. Pets come in when Hermes starts working in Herald.'
+export const EMPTY_ROOM_TEXT = `No Hermes work right now. Pets come in when Hermes starts working in ${PRODUCT.shortName}.`
 
-export const EMPTY_LANE_TEXT = 'No Hermes work outside Herald in the last hour.'
+export const EMPTY_LANE_TEXT = `No Hermes work outside ${PRODUCT.shortName} in the last hour.`
 
 /** The lane's note under its name, and its tooltip: coarse from the session list, or with live steps while live detail is on. */
 export function laneWords(live: boolean): { note: string; about: string } {
@@ -168,11 +169,11 @@ export function laneWords(live: boolean): { note: string; about: string } {
     ? {
         note: 'Live steps from Hermes in each app',
         about:
-          "Hermes work outside Herald: titles and activity from Hermes's session list once a minute, and the tool each piece of work uses, the helpers it starts and the approvals it waits on, by name only, from Herald's bridge plugin in each Hermes process. Approvals there are answered there."
+          `Hermes work outside ${PRODUCT.shortName}: titles and activity from Hermes's session list once a minute, and the tool each piece of work uses, the helpers it starts and the approvals it waits on, by name only, from ${PRODUCT.shortName}'s bridge plugin in each Hermes process. Approvals there are answered there.`
       }
     : {
         note: 'Coarse: titles and activity, read once a minute',
-        about: "Hermes work outside Herald, from Hermes's session list: titles and whether each is active, read once a minute. The room shows no steps for it."
+        about: `Hermes work outside ${PRODUCT.shortName}, from Hermes's session list: titles and whether each is active, read once a minute. The room shows no steps for it.`
       }
 }
 

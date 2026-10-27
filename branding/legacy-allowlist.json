@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    { "files": ["README.md", "apps/desktop/src/features/settings/sections/AboutSection.tsx"], "pattern": "derived from.*Herald OS", "category": "required-attribution", "reason": "Fork provenance and upstream copyright." },
+    { "files": ["branding/product.json", "apps/desktop/shared/product.ts", "linux/branding/product.json"], "pattern": "electronProfile.*Herald OS", "category": "compatibility-contract", "reason": "Reuse existing profile without discarding settings or cookies." },
+    { "files": ["apps/desktop/electron/context/snapshot.ts"], "pattern": "const SELF =", "category": "compatibility-contract", "reason": "Exclude both product names from screen context." },
+    { "files": ["apps/desktop/electron/crash/parse.ts"], "pattern": "const OURSELVES =", "category": "compatibility-contract", "reason": "Recognize crashes from legacy and current application bundles." },
+    { "files": ["apps/desktop/shared/product-windows.ts"], "pattern": "Herald (Slides Audience|OS · Slides)", "category": "compatibility-contract", "reason": "Suppress the pet and room during old or new Slides presentations." },
+    { "files": ["linux/niri/config.kdl"], "pattern": "(match|exclude) app-id=", "category": "compatibility-contract", "reason": "Place both old and new windows correctly during upgrade." },
+    { "files": ["scripts/madx/branding.mjs"], "pattern": "Herald", "category": "compatibility-contract", "reason": "Generator deliberately emits dual-name window matching and replaces old product metadata." },
+    { "files": ["linux/bin/herald-os"], "pattern": "(legacy = MENU_LINE|line.replace|current.replace|text.startswith)", "category": "compatibility-contract", "reason": "Update or remove only recognized generated Omarchy menu entries." },
+    { "files": ["linux/migrations/2026-10-03-herald-os-rename.sh", "linux/migrations/2026-10-08-herald-niri-config.sh", "scripts/migrate-hermes-config.py"], "pattern": "Herald", "category": "historical-migration", "reason": "Earlier migration recognizers must continue reading their original markers." },
+    { "files": ["apps/desktop/electron/theme/themes.ts", "linux/bin/herald-os", "linux/bin/herald-os-app", "linux/bin/herald-os-theme", "linux/bin/herald-os-catalog", "linux/bin/herald-os-omakase", "linux/bin/herald-os-update", "linux/dev/build.sh", "linux/dev/sync.sh", "linux/dev/push.sh", "linux/provision.sh", "linux/session/herald-os-session", "docs/LINUX.md"], "pattern": "Herald-OS", "category": "compatibility-contract", "reason": "Legacy checkout lookup and the existing development VM workspace remain supported." }
+  ]
+}

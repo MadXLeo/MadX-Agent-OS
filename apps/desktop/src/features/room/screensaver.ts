@@ -1,3 +1,4 @@
+import { isSlidesPresentation } from '../../../shared/product-windows.ts'
 import { useStore } from '@nanostores/react'
 import { useEffect, useState } from 'react'
 import type { WmWindow } from '../../../shared/ipc.ts'
@@ -14,12 +15,9 @@ import { $roomPrefs } from './prefs.ts'
  * or the desktop pet put away for a screen share.
  */
 
-const SLIDES_TITLE = 'Herald OS · Slides'
-const AUDIENCE_TITLE = 'Herald Slides Audience'
-
 /** Herald Slides presenting, as the compositor's windows show it: its audience window open, or Slides full screen. */
 export function presentingIn(windows: readonly Pick<WmWindow, 'title' | 'fullscreen'>[]): boolean {
-  return windows.some(win => win.title === AUDIENCE_TITLE || (win.title === SLIDES_TITLE && win.fullscreen === true))
+  return windows.some(isSlidesPresentation)
 }
 
 /** Why the screensaver shows the clock rather than the Room; null when the Room may show. */

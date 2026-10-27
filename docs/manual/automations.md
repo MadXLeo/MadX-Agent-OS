@@ -31,9 +31,9 @@ space". Or press **New automation** and fill in:
 | When the network changes | Optionally only for one Wi-Fi network |
 | When a program crashes | Optionally only for one program |
 | When the theme changes | |
-| After Herald OS updates | |
+| After MadX Agent OS updates | |
 
-Event automations run while Herald OS is open, each time the event happens on this computer.
+Event automations run while MadX Agent OS is open, each time the event happens on this computer.
 Scheduled ones run whenever Hermes is running.
 
 ## Managing them
@@ -44,7 +44,7 @@ disk check now".
 
 ## Hooks
 
-For something that should run a script rather than ask Hermes, Herald OS Linux has hooks: executable
+For something that should run a script rather than ask Hermes, MadX Agent OS Linux has hooks: executable
 files in `~/.config/herald-os/hooks/<event>.d/` run when the event happens. `herald-os hook list`
 shows them and `herald-os hook install battery-low ~/bin/dim` adds one.
 [Make it yours](make-it-yours.md#hooks) has examples, and

@@ -331,7 +331,7 @@ describe('reading, finding and replacing', () => {
     deck = addTextStep(deck, { slide: 2, text: 'Draft', x: 10.4, y: 20.6, width: 100, height: 30 }, none).deck
     const read = readDeck(deck)
 
-    expect(read).toMatchObject({ title: 'Pitch', size: 'wide (16:9)', theme: 'Herald', transition: 'fade', slideCount: 3 })
+    expect(read).toMatchObject({ title: 'Pitch', size: 'wide (16:9)', theme: 'MadX OS', transition: 'fade', slideCount: 3 })
     expect(read.slides[0]).toMatchObject({ number: 1, layout: 'title', title: 'Pitch', body: 'Seed round' })
     expect(read.slides[1]).toMatchObject({ number: 2, title: 'Plan', body: 'Research\n  Interviews', notes: 'Slow down', hidden: true })
     expect(read.slides[1].elements.map((element) => ('text' in element ? element.text : element.kind))).toEqual(['Title', 'Text', 'Draft'])

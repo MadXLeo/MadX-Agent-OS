@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { baseName, extensionOf, officeAppFor } from '../../../../shared/office/files.ts'
 import type { WorkbookSnapshot } from '../../../../shared/office/workbook.ts'
 import { cellName, quoteSheet, rangeName } from '../../../../shared/office/xlsx/address.ts'
@@ -34,7 +35,7 @@ async function located(ref: unknown): Promise<Local<WorkbookSnapshot>> {
   const found = await locate('sheets', session, ref)
 
   if (found.kind === 'remote') {
-    throw new Error(`${found.entry.name} is open in another Herald Sheets window: ask there`)
+    throw new Error(`${found.entry.name} is open in another ${PRODUCT.apps.sheets} window: ask there`)
   }
 
   return found
@@ -109,7 +110,7 @@ function rangeArg(value: unknown, docKey: string | null): string {
   const selection = docKey ? selectionIn(docKey) : null
 
   if (!selection) {
-    throw new Error('Only a workbook open in Herald Sheets has a selection: give a range like B2:D9')
+    throw new Error(`Only a workbook open in ${PRODUCT.apps.sheets} has a selection: give a range like B2:D9`)
   }
 
   return `${quoteSheet(selection.sheet)}!${selection.range}`
@@ -149,7 +150,7 @@ export async function open(args: Args): Promise<Outcome> {
   if (!text(args.path)) {
     openInOffice('sheets')
 
-    return { summary: 'Opened Herald Sheets' }
+    return { summary: `Opened ${PRODUCT.apps.sheets}` }
   }
 
   const file = resolve(text(args.path))
@@ -159,13 +160,13 @@ export async function open(args: Args): Promise<Outcome> {
   }
 
   if (officeAppFor(file, { libreOffice: false }) !== 'sheets') {
-    throw new Error(`Herald Sheets opens Excel workbooks (.xlsx) and CSV files, not ${fileName(file)}`)
+    throw new Error(`${PRODUCT.apps.sheets} opens Excel workbooks (.xlsx) and CSV files, not ${fileName(file)}`)
   }
 
   if (isPanels) {
     openInOffice('sheets', { file })
 
-    return { summary: `Opened ${fileName(file)} in Herald Sheets`, data: { path: file } }
+    return { summary: `Opened ${fileName(file)} in ${PRODUCT.apps.sheets}`, data: { path: file } }
   }
 
   openApp('sheets')
@@ -175,7 +176,7 @@ export async function open(args: Args): Promise<Outcome> {
   const book = live ? describeWorkbook(live) : null
 
   return {
-    summary: `Opened ${doc.name} in Herald Sheets${doc.notes.length ? ` (shown differently: ${doc.notes.join('; ')})` : ''}`,
+    summary: `Opened ${doc.name} in ${PRODUCT.apps.sheets}${doc.notes.length ? ` (shown differently: ${doc.notes.join('; ')})` : ''}`,
     data: { name: doc.name, path: doc.path, ...(book ?? {}), ...(doc.notes.length ? { notes: doc.notes } : {}) }
   }
 }
@@ -224,7 +225,7 @@ export async function create(args: Args): Promise<Outcome> {
   if (isPanels) {
     openInOffice('sheets', { blank: true })
 
-    return { summary: 'Started a new workbook in Herald Sheets; write into it with sheets.write', data: { name: name || 'Untitled' } }
+    return { summary: `Started a new workbook in ${PRODUCT.apps.sheets}; write into it with sheets.write`, data: { name: name || 'Untitled' } }
   }
 
   const doc = session.create({ name: name || undefined, model })
@@ -242,7 +243,7 @@ export async function list(): Promise<Outcome> {
   const current = books.find((entry) => entry.active) ?? books[0]
 
   return {
-    summary: books.length ? `${books.length} workbook${books.length === 1 ? '' : 's'} open${current ? `; in front: ${current.name}${current.selection ? ` (${current.selection})` : ''}` : ''}` : 'Nothing is open in Herald Sheets',
+    summary: books.length ? `${books.length} workbook${books.length === 1 ? '' : 's'} open${current ? `; in front: ${current.name}${current.selection ? ` (${current.selection})` : ''}` : ''}` : `Nothing is open in ${PRODUCT.apps.sheets}`,
     data: { workbooks: books.map(({ key: _key, app: _app, front: _front, ...entry }) => entry), current: current ? (current.path ?? current.name) : null }
   }
 }
@@ -490,13 +491,13 @@ export async function depth(command: DepthCommand, args: Args, context: Pick<Com
 
   if (work.view) {
     if (target.kind === 'file') {
-      throw new Error(`${fileName(target.path)} is not open in Herald Sheets: open it (sheets.open) first`)
+      throw new Error(`${fileName(target.path)} is not open in ${PRODUCT.apps.sheets}: open it (sheets.open) first`)
     }
 
     const live = (await showDocument('sheets', session, target.doc)) ? liveTarget(target.doc.key) : null
 
     if (!live) {
-      throw new Error(`${target.doc.name} is not showing in Herald Sheets`)
+      throw new Error(`${target.doc.name} is not showing in ${PRODUCT.apps.sheets}`)
     }
 
     const { said, data } = await work.run(live, given, context.source)
@@ -664,14 +665,14 @@ export async function step(direction: 'undo' | 'redo', args: Args): Promise<Outc
   const target = await located(args.workbook)
 
   if (target.kind === 'file') {
-    throw new Error(`Undo works in the open Herald Sheets window: ${fileName(target.path)} is not open`)
+    throw new Error(`Undo works in the open ${PRODUCT.apps.sheets} window: ${fileName(target.path)} is not open`)
   }
 
   const { doc } = target
   await withEditor('sheets', doc)
 
   if (!doc.editor) {
-    throw new Error(`${doc.name} is not showing in Herald Sheets`)
+    throw new Error(`${doc.name} is not showing in ${PRODUCT.apps.sheets}`)
   }
 
   const count = stepCount(args.steps)

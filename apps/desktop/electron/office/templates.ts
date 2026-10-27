@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import crypto from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
@@ -47,7 +48,7 @@ export class OfficeTemplates {
 
   private folder(app: unknown): string {
     if (!OFFICE_APPS.includes(app as OfficeApp)) {
-      throw new Error(`${String(app)} is not a Herald Office app`)
+      throw new Error(`${String(app)} is not a ${PRODUCT.apps.office} app`)
     }
 
     return path.join(this.root, app as OfficeApp)

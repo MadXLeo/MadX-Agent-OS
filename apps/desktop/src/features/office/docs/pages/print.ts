@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import { Editor, type NodeViewRenderer } from '@tiptap/core'
 import type { Node as PMNode } from '@tiptap/pm/model'
 import { type PrintPage, printView, tocBlockHtml } from '../../../../../shared/office/doc-html.ts'
@@ -195,7 +196,7 @@ export async function printDocument(model: DocJSON, title: string): Promise<stri
       return printView(laid.doc, title, laid.pages)
     }
   } catch (error) {
-    console.error('Herald Docs could not lay the pages out for printing', error)
+    console.error(`${PRODUCT.apps.docs} could not lay the pages out for printing`, error)
   }
 
   return printView(model, title)

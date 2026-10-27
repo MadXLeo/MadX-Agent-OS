@@ -1,14 +1,14 @@
 ---
 name: herald-sheets
-description: Work in Herald Sheets, the spreadsheet in Herald OS - read workbooks, write values and formulas (a formula from a description, explaining one, filling it down), fill a column from examples, clean data (duplicates, spaces, numbers and dates kept as text, splitting a column, letter case, filling down), make and change charts, summarize a table as a pivot table does, name ranges, set dropdown lists and other validation, comment on cells and leave notes, say what stands out, build a workbook such as a trip budget, format numbers and cells, sort, filter, freeze, manage sheets, put a range in a Herald Docs report, save Excel and CSV files and export PDFs, all through the sheets tool
+description: Work in MadX Sheets, the spreadsheet in MadX Agent OS - read workbooks, write values and formulas (a formula from a description, explaining one, filling it down), fill a column from examples, clean data (duplicates, spaces, numbers and dates kept as text, splitting a column, letter case, filling down), make and change charts, summarize a table as a pivot table does, name ranges, set dropdown lists and other validation, comment on cells and leave notes, say what stands out, build a workbook such as a trip budget, format numbers and cells, sort, filter, freeze, manage sheets, put a range in a MadX Docs report, save Excel and CSV files and export PDFs, all through the sheets tool
 metadata:
   hermes:
     tags: [herald-os, sheets, spreadsheet, excel, xlsx, csv, formulas, functions, budget, data cleaning, dedupe, dates, sort, filter, charts, pivot table, summary, named ranges, validation, dropdown, comments, notes, analysis, pdf]
 ---
 
-# Herald Sheets
+# MadX Sheets
 
-Herald Sheets is the spreadsheet built into Herald OS. It opens and saves Excel workbooks (`.xlsx`)
+MadX Sheets is the spreadsheet built into MadX Agent OS. It opens and saves Excel workbooks (`.xlsx`)
 and CSV files, and the person watches every change land in the Sheets window. Use the `sheets`
 tool whenever they want a spreadsheet read, built or changed: "total this column", "what does
 this formula do", "remove the duplicates", "make me a budget for the Lisbon trip", "what stands
@@ -16,9 +16,9 @@ out in these sales", "sort by date", "save it as a CSV".
 
 ## The workflow
 
-1. **Find the workbook.** `sheets action=list` shows the workbooks open in Herald Sheets: name,
+1. **Find the workbook.** `sheets action=list` shows the workbooks open in MadX Sheets: name,
    path, unsaved edits, the one in front (`active`) and the range selected in each.
-   `sheets action=list_all` adds what is open in Herald Docs and Slides, and `os_ui action=state`
+   `sheets action=list_all` adds what is open in MadX Docs and Slides, and `os_ui action=state`
    carries the same list as `office`. "This sheet" is the one in front, and "these cells" are
    its selection (`range=selection`). Name a workbook by its file
    (`workbook="~/Documents/Budget.xlsx"`) or by its tab (`workbook="Budget.xlsx"`); left out, a
@@ -51,10 +51,10 @@ out in these sales", "sort by date", "save it as a CSV".
    before you say it is done.
 
 An open workbook changes in its window. A file that is not open is read, changed and written
-straight back to disk: the person is asked first every time, Herald backs the original up the
+straight back to disk: the person is asked first every time, MadX backs the original up the
 first time it writes over it, and it refuses when the file holds something it cannot keep (see
 the end). Then open it (`sheets action=open path="~/Documents/Budget.xlsx"`; the answer lists the
-sheets and anything Herald shows differently) and work in the window.
+sheets and anything MadX shows differently) and work in the window.
 
 ## A formula from a description
 
@@ -242,7 +242,7 @@ said where.
 
 ## Across documents
 
-A range goes into a Herald Docs document as a table, as its cells show: `docs
+A range goes into a MadX Docs document as a table, as its cells show: `docs
 action=insert_range workbook="Budget.xlsx" range="A1:D6" document="Trip notes.docx" at=end`. A
 table from a document comes the other way by reading it (`docs action=read`) and writing its rows
 in one `write`. `list_all` finds what is open in both.
@@ -252,8 +252,8 @@ in one `write`. `list_all` finds what is open in both.
 - Never save unless the person asks. An open workbook keeps its unsaved edits (its tab says so),
   and they save with Ctrl+S (⌘S on a Mac) or ask you to.
 - "Save it": `sheets action=save`. Saving over the workbook's own file asks the person every
-  time; the first time Herald writes over a file it shows what it cannot keep, and the original
-  goes to Herald's Office backups.
+  time; the first time MadX writes over a file it shows what it cannot keep, and the original
+  goes to MadX's Office backups.
 - A workbook never saved needs a place: `sheets action=save to="~/Documents/Trip budget.xlsx"`. A
   file that exists is replaced only with `overwrite=true`, which asks first.
 - A CSV file keeps only values: the sheet in front, each cell as it shows (a formula's result, a
@@ -262,9 +262,9 @@ in one `write`. `list_all` finds what is open in both.
 - A PDF: `sheets action=export_pdf` writes the sheet in front as a new PDF in ~/Documents, laid
   out as it prints, or `to="~/Desktop/Budget.pdf"`. Say where it went.
 
-## What Herald Sheets cannot do yet
+## What MadX Sheets cannot do yet
 
-It makes no pivot tables of its own, and cannot change one made in Excel: Herald keeps it in the
+It makes no pivot tables of its own, and cannot change one made in Excel: MadX keeps it in the
 file for Excel to refresh, and `summarize` makes the same kind of summary in live formulas. Other
 parts it cannot make, such as slicers and sparklines, stay in the file as Excel saved them. Say so
 plainly, and offer what works.

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { matches } from '../../../lib/shortcuts.ts'
 import type { OfficeSession } from '../session.ts'
@@ -58,7 +59,7 @@ export function officeMenus<Model>(source: MenuSource<Model>): OfficeMenu[] {
         ...(source.file ?? []),
         {
           id: 'notes',
-          label: 'What Herald changed…',
+          label: `What ${PRODUCT.shortName} changed…`,
           enabled: () => Boolean(doc()?.notes.length),
           run: () => {
             const active = doc()

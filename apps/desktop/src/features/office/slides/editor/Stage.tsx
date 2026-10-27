@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { Box, ConnectorEnd, ConnectorPreset, Deck, SlideElement } from '../deck.ts'
@@ -545,7 +546,7 @@ export function Stage({ doc, onContextMenu }: { doc: SlidesDocument; onContextMe
     }
 
     if (!pictures.length && !decks.length) {
-      slidesSession.notify(`Herald Slides does not take ${files[0].name}`, 'error')
+      slidesSession.notify(`${PRODUCT.apps.slides} does not take ${files[0].name}`, 'error')
     }
   }
 

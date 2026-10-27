@@ -1,14 +1,14 @@
 ---
 name: herald-slides
-description: Make and change presentations in Herald Slides, the presentation editor in Herald OS - a deck from a topic (an outline first, a title slide, one idea a slide, short bullets, speaker notes, a closing slide), decks from a Herald Docs document and slides of a Herald Sheets range, layouts chosen for the content, the slide master and its layouts (a logo, slide numbers, a footer and the date on every slide, placeholders, backgrounds), themes and custom themes in a brand's colours, transitions, gradients, flowcharts and diagrams with grouped shapes and connectors, table borders, speaker notes for every slide, pictures, tables, text boxes and shapes, reordering, duplicating and hiding slides, find and replace, saving PowerPoint files and exporting PDFs, all through the slides tool
+description: Make and change presentations in MadX Slides, the presentation editor in MadX Agent OS - a deck from a topic (an outline first, a title slide, one idea a slide, short bullets, speaker notes, a closing slide), decks from a MadX Docs document and slides of a MadX Sheets range, layouts chosen for the content, the slide master and its layouts (a logo, slide numbers, a footer and the date on every slide, placeholders, backgrounds), themes and custom themes in a brand's colours, transitions, gradients, flowcharts and diagrams with grouped shapes and connectors, table borders, speaker notes for every slide, pictures, tables, text boxes and shapes, reordering, duplicating and hiding slides, find and replace, saving PowerPoint files and exporting PDFs, all through the slides tool
 metadata:
   hermes:
     tags: [herald-os, slides, presentation, deck, powerpoint, pptx, talk, pitch, outline, speaker notes, layouts, slide master, logo, slide numbers, footer, themes, custom themes, brand, transitions, gradients, shapes, flowchart, diagram, connectors, groups, table borders, pdf]
 ---
 
-# Herald Slides
+# MadX Slides
 
-Herald Slides is the presentation editor built into Herald OS. It opens and saves PowerPoint files
+MadX Slides is the presentation editor built into MadX Agent OS. It opens and saves PowerPoint files
 (`.pptx`), and the person watches every change land in the Slides window. Use the `slides` tool
 whenever they want a deck made or changed: "make a deck about our Q3 results", "turn my report
 into slides", "put the budget table on a slide", "add our logo and slide numbers", "make it
@@ -16,9 +16,9 @@ darker", "draw the approval process as a flowchart", "export it as a PDF".
 
 ## The workflow
 
-1. **Find the deck.** `slides action=list` shows the presentations open in Herald Slides: name,
+1. **Find the deck.** `slides action=list` shows the presentations open in MadX Slides: name,
    path, unsaved edits, the one in front (`active`), its slide in front and what is selected.
-   `slides action=list_all` adds what is open in Herald Docs and Sheets, and `os_ui action=state`
+   `slides action=list_all` adds what is open in MadX Docs and Sheets, and `os_ui action=state`
    carries the same list as `office`. "This slide" is the slide in front. Name a deck by its file
    (`presentation="~/Documents/Q3 review.pptx"`) or by its tab (`presentation="Q3 review"`); left
    out, a call works on the one in front.
@@ -38,10 +38,10 @@ darker", "draw the approval process as a flowchart", "export it as a PDF".
    changed.
 
 An open deck changes in its window. A file that is not open is read, changed and written straight
-back to disk: the person is asked first every time, Herald backs the original up the first time
+back to disk: the person is asked first every time, MadX backs the original up the first time
 it writes over it, and it refuses when the file holds something it cannot keep (see the end).
 Then open it (`slides action=open path="~/Documents/Q3 review.pptx"`; the answer lists the slides
-and what Herald shows differently from the file) and work in the window, above all before naming
+and what MadX shows differently from the file) and work in the window, above all before naming
 elements, whose ids a file that is not open may not keep from one call to the next.
 
 ## A deck from a topic
@@ -135,7 +135,7 @@ the header and footer.
 - **Backgrounds:** `set_background layout=master gradient="background2 to background"` behind every
   slide, `layout=section` for section slides, `slide="1, 7"` for some slides; `source=` a picture.
 - `show_master_graphics show=false slide=1` hides the logo and bands on a slide (a cover photo),
-  `layout=` on a layout's slides; `rename_layout`, and `reset_master` puts Herald's own master
+  `layout=` on a layout's slides; `rename_layout`, and `reset_master` puts MadX's own master
   back (it asks the person first, as `remove_from_master` does).
 
 ## Themes and backgrounds
@@ -152,7 +152,7 @@ brown with orange accents). `set_theme slide="3, 4"` gives some slides a theme o
 
 - **Custom themes:** for a brand, `make_theme name="Acme" from=slate colors={"accent1": "#e4002b",
   "text": "#1d1d1b"} headingFont="Futura" apply=true` saves a theme of the person's own for every
-  deck and puts it on this one. `list_themes` lists Herald's and theirs (by id and name);
+  deck and puts it on this one. `list_themes` lists MadX's and theirs (by id and name);
   `delete_theme` takes one away and asks first. Keep text readable on its backgrounds.
 - `set_slide background=accent1` colours one slide (a section slide, the closing slide);
   `set_background gradient="navy to teal" angle=45` gives slides a gradient. Colours are `#rrggbb`,
@@ -189,7 +189,7 @@ Without a place, things go in the middle or into the slide's empty placeholder.
   `cover` (fills the box, cut to fit) or `stretch`; `fit=slide` fills the whole slide. Use the
   person's pictures, or ones they ask you to find or make.
 - Tables: `slides action=add_table slide="Prices" cells=[["Plan", "Price"], ["Base", "$9"],
-  ["Pro", "$19"]]` (the first row is the header); or `insert_range` from Herald Sheets. Lines:
+  ["Pro", "$19"]]` (the first row is the header); or `insert_range` from MadX Sheets. Lines:
   `set_cell_borders range="A1:C1" sides=bottom color=accent1 width=2` (`sides` outer, inner, all,
   top, bottom, left, right or none; cells as a sheet names them, or `row 1`, `column 2`).
 - Text boxes: `add_text text="Draft" x=40 y=480 size="18" color=accent2`.
@@ -251,19 +251,19 @@ everywhere (`all=false` only the first; leaving out `replacement` deletes the ma
 - Never save unless the person asks. An open deck keeps its unsaved edits (its tab says so), and
   they save with Ctrl+S (⌘S on a Mac) or ask you to.
 - "Save it": `slides action=save`. Saving over the deck's own file asks the person every time;
-  the first time Herald writes over a file it shows what it cannot keep, and the original goes to
-  Herald's Office backups.
+  the first time MadX writes over a file it shows what it cannot keep, and the original goes to
+  MadX's Office backups.
 - A deck never saved needs a place: `slides action=save to="~/Documents/Q3 review.pptx"`. A file
   that exists is replaced only with `overwrite=true`, which asks first.
 - A PDF: `slides action=export_pdf` writes a page a slide (hidden slides left out) to a new file
   in ~/Documents, or `to="~/Desktop/Q3 review.pdf"`. Say where it went.
 
-## What Herald Slides cannot do yet
+## What MadX Slides cannot do yet
 
 No animations (a file's animations and automatic timings are not kept), no charts (a file's
 charts are approximated, and its SmartArt shows as a drawing until `convert_to_shapes`), videos
 shown as their poster frame, sounds left out, and no comments, macros, embedded fonts, sections
 or custom shows. Opening a file lists what it had. Say so plainly, and offer what works: a table
 or a big-number slide in place of a chart, a diagram of shapes and connectors in place of
-SmartArt, a picture exported from Herald Canvas in place of a drawing, a duplicated slide with one
+SmartArt, a picture exported from MadX Canvas in place of a drawing, a duplicated slide with one
 more bullet in place of a build animation.

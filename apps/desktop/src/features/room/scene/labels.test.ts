@@ -181,7 +181,7 @@ describe('capsNotice', () => {
   it('names what this Hermes cannot list yet', () => {
     expect(capsNotice({ ...ALL_CAPS, delegation: false })).toBe('This Hermes cannot list its helpers yet: update Hermes')
     expect(capsNotice({ ...ALL_CAPS, activeList: false, delegation: false, config: false })).toBe('This Hermes cannot list its running sessions, its helpers or its settings yet: update Hermes')
-    expect(capsNotice({ ...ALL_CAPS, automations: false, sessionsDb: false })).toBe('This Hermes cannot list its automations or its sessions outside Herald yet: update Hermes')
+    expect(capsNotice({ ...ALL_CAPS, automations: false, sessionsDb: false })).toBe('This Hermes cannot list its automations or its sessions outside MadX OS yet: update Hermes')
   })
 })
 
@@ -204,11 +204,11 @@ describe('roomNotices', () => {
   })
 })
 
-describe('work outside Herald', () => {
+describe('work outside MadX OS', () => {
   const waiting = agent({ id: 'e:tg1', kind: 'elsewhere', phase: 'waiting', step: 'waiting for your OK in Telegram', elsewhere: { where: 'Telegram', active: true, lastActiveAt: 1, approval: true, liveAt: 1 } })
 
-  it('names a helper outside Herald that has no title', () => {
-    expect(agentTitle(agent({ kind: 'elsewhere', parentId: 'e:tg1' }))).toBe('A helper outside Herald')
+  it('names a helper outside MadX OS that has no title', () => {
+    expect(agentTitle(agent({ kind: 'elsewhere', parentId: 'e:tg1' }))).toBe('A helper outside MadX OS')
     expect(agentTitle(agent({ kind: 'elsewhere' }))).toBe('A Hermes session')
     expect(agentTitle(agent({ kind: 'helper', parentId: 's:1' }))).toBe('A helper')
   })
@@ -225,7 +225,7 @@ describe('work outside Herald', () => {
   })
 
   it('says the lane is coarse, or that it shows live steps while live detail is on', () => {
-    expect(laneWords(false)).toEqual({ note: 'Coarse: titles and activity, read once a minute', about: "Hermes work outside Herald, from Hermes's session list: titles and whether each is active, read once a minute. The room shows no steps for it." })
+    expect(laneWords(false)).toEqual({ note: 'Coarse: titles and activity, read once a minute', about: "Hermes work outside MadX OS, from Hermes's session list: titles and whether each is active, read once a minute. The room shows no steps for it." })
     expect(laneWords(true).note).toBe('Live steps from Hermes in each app')
     expect(laneWords(true).about).toContain('by name only')
     expect(laneWords(true).about).toContain('Approvals there are answered there.')

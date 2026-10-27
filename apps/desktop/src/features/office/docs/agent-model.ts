@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { Node as PMNode } from '@tiptap/pm/model'
 import type { EditorState } from '@tiptap/pm/state'
 import { markdownFromDocument } from '../../../../shared/office/doc-text.ts'
@@ -75,7 +76,7 @@ export function placeFor(state: EditorState | null, args: Args, marked: Marked |
   }
 
   if (!state) {
-    throw new Error(`at=${where} needs the document open in Herald Docs, where it has a selection: open it first (docs.open)`)
+    throw new Error(`at=${where} needs the document open in ${PRODUCT.apps.docs}, where it has a selection: open it first (docs.open)`)
   }
 
   const range = where === 'marked' || (where === 'after' && marked) ? marked : { from: state.selection.from, to: state.selection.to }
@@ -134,7 +135,7 @@ export function targetFor(state: EditorState | null, args: Args, marked: Marked 
   }
 
   if (!state) {
-    throw new Error(`at=${at} needs the document open in Herald Docs: open it first (docs.open), or say which text, heading or all`)
+    throw new Error(`at=${at} needs the document open in ${PRODUCT.apps.docs}: open it first (docs.open), or say which text, heading or all`)
   }
 
   if (at === 'marked') {

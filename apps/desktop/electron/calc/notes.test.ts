@@ -27,7 +27,7 @@ function setup() {
   return { root, dir, clock, onChange, store, onDisk }
 }
 
-describe("Herald Calc's notes", () => {
+describe("MadX Calc's notes", () => {
   it('make a new note under a short random id, in a file of its own only the person can read', async () => {
     const { store, dir, onDisk, onChange } = setup()
     const note = await store.save({ text: '# Groceries\n2 * 3.50' })
@@ -138,7 +138,7 @@ describe("Herald Calc's notes", () => {
       fs.writeFileSync(path.join(dir, `${id}.json`), JSON.stringify({ id, text: `Note ${index}`, createdAt: 1, updatedAt: 1 + index }))
     }
 
-    await expect(store.save({ text: 'One too many' })).rejects.toThrow(`Herald Calc keeps at most ${CALC_NOTES_MAX} notes; delete one to make room.`)
+    await expect(store.save({ text: 'One too many' })).rejects.toThrow(`MadX Calc keeps at most ${CALC_NOTES_MAX} notes; delete one to make room.`)
     await expect(store.save({ id: 'brand-new', text: 'Also one too many' })).rejects.toThrow('delete one to make room')
     expect(await store.save({ id: 'note-7', text: 'Note 7, edited' })).toEqual({ id: 'note-7', text: 'Note 7, edited', createdAt: 1, updatedAt: clock.now })
 

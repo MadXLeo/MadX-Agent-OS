@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { InstalledApp, ShellCommand, WmWindow } from '../../../shared/ipc.ts'
@@ -284,7 +285,7 @@ export function DockSurface() {
     const canvasWindows = ours.filter(w => ourFloatingAppId(w) === 'canvas')
     list.push({
       id: 'hermes:canvas',
-      label: 'Herald Canvas',
+      label: PRODUCT.apps.canvas,
       render: () => <AppTile id="canvas" size={44} />,
       onClick: () => (canvasWindows.length > 0 ? focusGroup('hermes:canvas', canvasWindows) : openInCanvas()),
       running: canvasWindows.length > 0,
@@ -296,7 +297,7 @@ export function DockSurface() {
     const officeWindows = ours.filter(w => isOfficeApp(ourFloatingAppId(w) ?? ''))
     list.push({
       id: 'hermes:office',
-      label: 'Herald Office',
+      label: PRODUCT.apps.office,
       render: () => <AppTile id="office" size={44} />,
       onClick: () => (officeWindows.length > 0 ? focusGroup('hermes:office', officeWindows) : void openSurface('command', { type: 'applications' })),
       running: officeWindows.length > 0,
@@ -306,7 +307,7 @@ export function DockSurface() {
     const calcWindows = ours.filter(w => ourFloatingAppId(w) === 'calc')
     list.push({
       id: 'hermes:calc',
-      label: 'Herald Calc',
+      label: PRODUCT.apps.calc,
       render: () => <AppTile id="calc" size={44} />,
       onClick: () => (calcWindows.length > 0 ? focusGroup('hermes:calc', calcWindows) : openApp('calc')),
       running: calcWindows.length > 0,

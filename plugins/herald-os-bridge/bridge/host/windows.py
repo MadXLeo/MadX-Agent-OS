@@ -9,7 +9,7 @@ from typing import Any, Literal, Sequence
 from ..documents import DocumentText
 from .base import AppInfo, FileSearch, FoundFile, HostAdapter, HostNotSupported, PortListener, ProcessRow
 
-_MESSAGE = "The Herald OS system bridge does not support Windows yet."
+_MESSAGE = "The MadX Agent OS system bridge does not support Windows yet."
 
 
 class WindowsHost(HostAdapter):

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 // Local speech recognition tuning. Hermes's default local model ("base") mishears short commands
 // ("open Herod app", "www.openhello.pdf"); "small.en" with a Herald OS vocabulary prompt gets them right
 // at roughly 0.8 s per utterance on a laptop CPU. See docs/VOICE.md.
@@ -14,7 +15,7 @@ export const LOCAL_STT_MODELS = [
 
 /** Words Whisper should expect: page names, command verbs and file words. */
 export const STT_VOCABULARY =
-  'Herald OS voice commands: hey Hermes, open Apps, Missions, Memory, Files, Automations, Connections, Settings, Terminal, System, Overview. ' +
+  `${PRODUCT.name} voice commands: hey Hermes, open Apps, Missions, Memory, Files, Automations, Connections, Settings, Terminal, System, Overview. ` +
   'Open hello.pdf, open the Downloads folder, type, paste, copy, select all, minimize, maximize, close window.'
 
 export interface LocalSttConfig {

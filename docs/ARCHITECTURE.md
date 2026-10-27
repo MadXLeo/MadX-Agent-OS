@@ -1,7 +1,7 @@
-# Herald OS Architecture
+# MadX Agent OS Architecture
 
-Herald OS is an agent-native operating system: it makes Hermes Agent the primary interface between
-the user and the computer. Herald OS Linux is the whole system (Fedora underneath, the Herald shell
+MadX Agent OS is an agent-native operating system: it makes Hermes Agent the primary interface between
+the user and the computer. MadX Agent OS Linux is the whole system (Fedora underneath, the MadX shell
 as the session); on macOS the same shell runs fullscreen over the macOS desktop. It is a separate
 product from Hermes Desktop: it consumes the upstream Hermes runtime unchanged and grows its own
 shell on top.
@@ -45,7 +45,7 @@ flowchart LR
 Both seams (`HostPlatform` in Electron main, `HostAdapter` in the bridge plugin) are implemented per
 host. The renderer and the agent see identical tool names and return shapes on every platform.
 
-| | macOS | Linux (Herald OS Linux) | Windows |
+| | macOS | Linux (MadX Agent OS Linux) | Windows |
 | --- | --- | --- | --- |
 | Shell runs as | fullscreen over the macOS desktop | the whole session: `greetd` -> `niri` -> shell (`cage` as a fallback) | stub |
 | `HostPlatform` | `platform/darwin.ts` (`plutil`, `sips`, `qlmanage`, `mdfind`, EventKit JXA) | `platform/linux.ts` (`/proc`, `.desktop` entries, icon themes, `nmcli`, `recently-used.xbel`, GNOME thumbnail cache) | `platform/generic.ts` |
@@ -78,11 +78,11 @@ Setup, session model and dev loop for Linux: `docs/LINUX.md`.
 ## Wire contract
 
 The wire is declared in Python (`tui_gateway/contracts`) and generated into
-`apps/shared/src/gateway-contract.generated.ts` upstream. Herald OS re-exports that file through
+`apps/shared/src/gateway-contract.generated.ts` upstream. MadX Agent OS re-exports that file through
 `packages/hermes-client`, so a field the backend stops sending fails `tsc` here instead of drifting.
 
 Sessions are created with `source: "herald_os"`. Upstream only folds Desktop-only GUI tools into
-sessions whose source is `desktop`, so a Herald OS session never receives tools whose client half
+sessions whose source is `desktop`, so a MadX Agent OS session never receives tools whose client half
 lives in Hermes Desktop.
 
 A conversation can also run as another Hermes profile, a bot (`src/store/bots.ts`; the roster is
@@ -106,7 +106,7 @@ and a small window manager. Its apps are registered in `src/shell/apps.ts`:
 
 - **Pages** of the main Hermes window, picked from its sidebar: Overview, Hermes (chat), Missions,
   Memory, Files, Automations, Connections, Settings.
-- **Floating apps** with their own window: Terminal, System, Web, Studio, Herald Canvas, Herald
+- **Floating apps** with their own window: Terminal, System, Web, Studio, MadX Canvas, MadX
   Docs, Sheets and Slides, and a chat pop-out.
 
 It runs in one of two modes, chosen by Electron main (`electron/shell/mode.ts`):
@@ -127,7 +127,7 @@ a call nothing waits on names itself when it fails (`logFailure`), and a net tha
 before anything else loads reports uncaught errors and unhandled rejections in place of Chromium's
 own line. Electron main copies each shell window's warnings and errors into the log as
 `[renderer] <surface>` lines (`electron/renderer-console.ts`), cut at 4,000 characters and at most 30
-a minute per window. Pages that are not Herald's are left out: web windows, Studio previews, file
+a minute per window. Pages that are not MadX's are left out: web windows, Studio previews, file
 viewers and plugin frames.
 
 ## OS control
@@ -174,7 +174,7 @@ The Overview leads with up to three threads of work the user may want to resume.
 The feature stays off until the user turns it on, because the names of files, projects,
 conversations and events go to the model provider.
 
-## Herald Canvas
+## MadX Canvas
 
 The image editor (decision record: ADR-020; using it: [the manual](manual/canvas.md)) lives in
 `src/features/canvas`, with the project format in `shared/canvas` and file access in
@@ -199,9 +199,9 @@ The image editor (decision record: ADR-020; using it: [the manual](manual/canvas
   tool maps its actions to them. In panels mode the commands run in the Hermes window and the Canvas
   window, its own process, reloads the project when it changes.
 
-## Herald Office
+## MadX Office
 
-Herald Docs, Sheets and Slides (decision record: ADR-021; using them:
+MadX Docs, Sheets and Slides (decision record: ADR-021; using them:
 [the manual](manual/office.md)) live in `src/features/office`, with the formats in `shared/office`
 and file access in `electron/office`.
 
@@ -211,10 +211,10 @@ and file access in `electron/office`.
   saves, watches, prints and closes its documents through an adapter that reads, writes and prints
   its formats (`docs/adapter.ts` and so on); `shared/office/files.ts` says which formats each app
   opens and saves, and main builds its dialogs from it.
-- **The save policy.** Before the first save over a file, the fidelity report lists what Herald
+- **The save policy.** Before the first save over a file, the fidelity report lists what MadX
   showed differently and what the format will not keep; main copies the original into
-  `office-backups` under the Herald OS data folder the first time Herald writes over it in a session
-  (`electron/office/backups.ts`). Herald saves a document by itself only once the person has saved
+  `office-backups` under the MadX Agent OS data folder the first time MadX writes over it in a session
+  (`electron/office/backups.ts`). MadX saves a document by itself only once the person has saved
   it, and stops when a save would lose something new. A change on disk loads by itself when there
   are no unsaved edits and is a question when there are.
 - **Docs** is TipTap 3 (`docs/`): one schema (`docs/schema.ts`) for the editor, the converters, the
@@ -223,20 +223,20 @@ and file access in `electron/office`.
   notes edited in place on them (`parts.ts`, `PartEditor.tsx`) and sections that each have a page
   setup. Comments (`comments.ts`, `CommentsPanel.tsx`) and live tables of contents (`toc.ts`,
   `toc-view.ts`) are operations of the same API, and templates (`docs/templates/`) and statistics
-  (`statistics.ts`) build and read documents of the same shape. Word files go through Herald's own
+  (`statistics.ts`) build and read documents of the same shape. Word files go through MadX's own
   reader and the docx package (`shared/office/docx`), Markdown and plain text through
   `shared/office/doc-text.ts`, and the page spell-checks with suggestions on right-click
   (`electron/office/spelling.ts`).
 - **Sheets** is Univer's open-source packages (`univer/`), one instance per open workbook, in
-  Herald's palette (`palette.ts`, `theme.ts`, `univer.css`); formulas are worked out in a worker,
+  MadX's palette (`palette.ts`, `theme.ts`, `univer.css`); formulas are worked out in a worker,
   `.xlsx` is read and written in another (`sheets/xlsx-worker.ts`), and `sheets/headless.ts` runs
-  Univer without a window for the workbook API (`sheets/model.ts`). Herald's own features attach to
+  Univer without a window for the workbook API (`sheets/model.ts`). MadX's own features attach to
   each workbook's Univer (`sheets/features.ts`): charts drawn by ECharts in Univer's floating
   objects (`sheets/charts/`), comments and notes, named ranges and validation, each in a folder of
   its own, and the data tools and the summaries built of formulas (`sheets/tools/`).
   `shared/office/xlsx` writes charts, comments and notes into the package after ExcelJS
-  (`finish.ts`), carries the parts of the opened file that Herald does not model, such as pivot
-  tables, pictures and slicers (`keep/`), and keeps what only Herald reads back in a part of its own
+  (`finish.ts`), carries the parts of the opened file that MadX does not model, such as pivot
+  tables, pictures and slicers (`keep/`), and keeps what only MadX reads back in a part of its own
   (`herald-part.ts`).
 - **Slides** is a DOM slide editor: a deck in points with PowerPoint's model (`slides/deck.ts`),
   one view that draws a slide for the editor, the slide list, presenting and PDF export
@@ -249,14 +249,14 @@ and file access in `electron/office`.
   audience window, which main lets open full screen on another display
   (`electron/office/presenter.ts`). `from-document.ts` and `from-sheet.ts` lay out slides from a
   Docs document and tables from a Sheets range by rule. PowerPoint files are written by PptxGenJS
-  with a finishing pass and read by Herald's own DrawingML reader (`slides/pptx/`), and each file
-  Herald saves carries its deck for exact reopening (`slides/pptx/herald-part.ts`).
+  with a finishing pass and read by MadX's own DrawingML reader (`slides/pptx/`), and each file
+  MadX saves carries its deck for exact reopening (`slides/pptx/herald-part.ts`).
 - **Hermes** works through the `docs.*`, `sheets.*`, `slides.*` and `office.list` commands
   (`src/commands/docs.ts`, `docs-depth.ts`, `sheets.ts`, `sheets-depth.ts`, `slides.ts`,
   `office.ts`), which find their document in `agent.ts`: open in this window, the change is one
   transaction (Docs), one Univer undo group (Sheets) or one step of the deck's history (Slides), so
   it is one step to undo and saves the way the person's edits do; a file that is not open is
-  changed and written back only when Herald keeps everything in it. In panels mode each Office app
+  changed and written back only when MadX keeps everything in it. In panels mode each Office app
   is its own window, and main relays a command from the Hermes window to the window that has the
   document open (`officeRun`). Each window's report carries its documents' selections, which
   `office.list`, the `os_ui` state and spoken requests pass on to Hermes. The Ask Hermes bar and the
@@ -271,18 +271,18 @@ and file access in `electron/office`.
   safety net, and `watches.ts` ends each watch with its window. `print.ts` gives Export as PDF and
   Print one path: the window's print view is loaded, scripts off, in a hidden window that prints it
   to PDF bytes or through the system's print dialog, so paper shows what the PDF does.
-  `templates.ts` keeps the templates the person saves, in `office-templates` under the Herald OS
+  `templates.ts` keeps the templates the person saves, in `office-templates` under the MadX Agent OS
   data folder. `convert.ts` can convert OpenDocument files through headless LibreOffice when it is
   installed; no window converts through it yet, so `.odt`, `.ods` and `.odp` stay off in
   `shared/office/files.ts`.
 
-## Herald desktop pet
+## MadX desktop pet
 
 Hermes's petdex pet on the desktop (decision record: ADR-022; using it:
 [the manual](manual/pet.md)) lives in `src/features/pet`, with its contract in `shared/pet.ts` and
 main's side in `electron/pet`. Which pet, its size and on or off are Hermes's `display.pet`, changed
 only through Hermes's gateway (`pet.select`, `pet.scale`, `pet.disable`); where the pet stands and
-what it reacts to are Herald's prefs.
+what it reacts to are MadX's prefs.
 
 - **Main** (`electron/pet/`): `config.ts` reads `display.pet` from Hermes's `config.yaml` and the
   pets in its `pets` folder the way Hermes resolves them, and logs nothing it read. `ipc.ts` checks
@@ -298,7 +298,7 @@ what it reacts to are Herald's prefs.
   carries both ways: an atom in desktop mode, main's relay in panels mode. `chat.ts` runs the
   pet's own background session.
 - **The pet** is drawn by `PetOverlay.tsx` over the desktop in desktop mode, or by `PetSurface.tsx`
-  in a window of its own (`Herald OS · Pet`, with a window rule in the repository's
+  in a window of its own (`MadX Agent OS · Pet`, with a window rule in the repository's
   `linux/niri/config.kdl`) in panels mode. Both render `PetView.tsx` (the sprite on a canvas, the
   approval card from `src/shell/RequestHost.tsx`, the chat bubble, the drop choices) and share the
   pure modules: `sprite.ts` (the spritesheet's rows), `state.ts` (what it shows), `stage.ts` and
@@ -306,7 +306,7 @@ what it reacts to are Herald's prefs.
   `chat-model.ts`.
 - **Commands and settings.** The `pet.*` commands (`src/commands/pet.ts`), Settings > Pet
   (`PetSection.tsx`) and the menu bar's paw (`PetMenuBarToggle.tsx`) change the pet through
-  `actions.ts`: Hermes's settings through its gateway, Herald's own in prefs.
+  `actions.ts`: Hermes's settings through its gateway, MadX's own in prefs.
 
 ## System bridge
 
@@ -320,10 +320,10 @@ See [`SYSTEM-BRIDGE.md`](SYSTEM-BRIDGE.md).
 ## Upstream compatibility
 
 - The Python runtime is never forked: it is whatever `hermes update` installs.
-- Only `apps/shared/src` is compiled into Herald OS, from a pinned snapshot
+- Only `apps/shared/src` is compiled into MadX Agent OS, from a pinned snapshot
   (`upstream/UPSTREAM.lock`, fetched by `scripts/sync-upstream.sh`).
 - The plugin uses only public plugin APIs (`register`, `ctx.register_tool`, `ctx.register_skill`,
   `tools.approval.request_tool_approval`), and reads each turn's session source the way Hermes's own
-  tools do (`gateway.session_context.get_session_env`) to keep its tools to Herald OS sessions.
-- Anything Herald OS needs from core that does not exist yet (for example a generic plugin
+  tools do (`gateway.session_context.get_session_env`) to keep its tools to MadX Agent OS sessions.
+- Anything MadX Agent OS needs from core that does not exist yet (for example a generic plugin
   server-request hook for client-side execution) is proposed upstream rather than patched locally.

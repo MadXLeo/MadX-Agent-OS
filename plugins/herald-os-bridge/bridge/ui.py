@@ -1,4 +1,4 @@
-"""Client for the Herald OS control socket: the agent's way to run commands in the shell's UI.
+"""Client for the MadX Agent OS control socket: the agent's way to run commands in the shell's UI.
 
 The Electron shell (both macOS desktop and Linux panels modes) serves a JSON-lines Unix socket and
 hands the backend its path and a per-launch token through ``HERALD_OS_CONTROL_SOCKET`` and
@@ -49,9 +49,9 @@ def control_endpoint() -> tuple[str, str]:
     if not path or not token:
         path, token = shared_endpoint()
     if not path or not token:
-        raise ShellUnavailable("Herald OS is not running this session (no control socket); UI commands need the shell.")
+        raise ShellUnavailable("MadX Agent OS is not running this session (no control socket); UI commands need the shell.")
     if not os.path.exists(path):
-        raise ShellUnavailable(f"The Herald OS shell is not listening ({path}); is it running?")
+        raise ShellUnavailable(f"The MadX Agent OS shell is not listening ({path}); is it running?")
     return path, token
 
 
@@ -71,17 +71,17 @@ def request(payload: dict[str, Any], *, timeout: float = DEFAULT_TIMEOUT) -> dic
                 break
             chunks += part
     except (OSError, socket.timeout) as exc:
-        raise RuntimeError(f"Herald OS did not answer: {exc}") from exc
+        raise RuntimeError(f"MadX Agent OS did not answer: {exc}") from exc
     finally:
         sock.close()
     if not chunks.strip():
-        raise RuntimeError("Herald OS returned an empty reply")
+        raise RuntimeError("MadX Agent OS returned an empty reply")
     try:
         reply = json.loads(chunks.decode("utf-8"))
     except json.JSONDecodeError as exc:
-        raise RuntimeError(f"Herald OS returned malformed JSON: {exc}") from exc
+        raise RuntimeError(f"MadX Agent OS returned malformed JSON: {exc}") from exc
     if not isinstance(reply, dict):
-        raise RuntimeError("Herald OS returned an unexpected reply")
+        raise RuntimeError("MadX Agent OS returned an unexpected reply")
     return reply
 
 

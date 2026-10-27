@@ -1,3 +1,4 @@
+import { PRODUCT } from './product.ts'
 /*
  * ~/.config/herald-os/menu.json: the person's own control-menu entries. Each runs a `herald-os`
  * command, a program, a Herald OS command or opens a web address. Parsed by main (which runs the
@@ -113,7 +114,7 @@ export function parseMenuExtensions(value: unknown): MenuExtensions {
       action = COMMAND.test(command) ? { kind: 'command', command, args } : null
 
       if (!action) {
-        errors.push(`"${label}": "command" is a Herald OS command id, like "page.open"`)
+        errors.push(`"${label}": "command" is a ${PRODUCT.name} command id, like "page.open"`)
       }
     }
 

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { type DocJSON, IMAGE_TYPES } from '../../../../shared/office/document.ts'
 import { baseName, extensionOf, officeAppFor } from '../../../../shared/office/files.ts'
 import type { CommandContext, CommandResult } from '../../../store/os-commands.ts'
@@ -72,7 +73,7 @@ export async function located(ref: unknown): Promise<Local<Deck>> {
   const found = await locate('slides', session, ref)
 
   if (found.kind === 'remote') {
-    throw new Error(`${found.entry.name} is open in another Herald Slides window: ask there`)
+    throw new Error(`${found.entry.name} is open in another ${PRODUCT.apps.slides} window: ask there`)
   }
 
   return found
@@ -173,14 +174,14 @@ async function picture(source: string): Promise<Picture> {
   }
 
   if (/^https?:/i.test(source)) {
-    throw new Error(`Herald Slides puts in pictures from files: save ${source} first and give its path`)
+    throw new Error(`${PRODUCT.apps.slides} puts in pictures from files: save ${source} first and give its path`)
   }
 
   const file = resolve(source.replace(/^file:\/\//, ''))
   const type = IMAGE_TYPES[extensionOf(file).slice(1)] ?? ''
 
   if (!['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/bmp'].includes(type)) {
-    throw new Error(`${fileName(file)} is not a picture Herald Slides shows (PNG, JPEG, GIF, WebP or BMP)`)
+    throw new Error(`${fileName(file)} is not a picture ${PRODUCT.apps.slides} shows (PNG, JPEG, GIF, WebP or BMP)`)
   }
 
   if (!(await exists(file))) {
@@ -190,7 +191,7 @@ async function picture(source: string): Promise<Picture> {
   try {
     return await readPicture(new Blob([(await window.heraldOS.office.read(file)).bytes as Uint8Array<ArrayBuffer>], { type }))
   } catch {
-    throw new Error(`Herald Slides could not read the picture in ${fileName(file)}`)
+    throw new Error(`${PRODUCT.apps.slides} could not read the picture in ${fileName(file)}`)
   }
 }
 
@@ -221,7 +222,7 @@ async function sheetSource(ref: unknown): Promise<SheetSource> {
   }
 
   if (found.kind === 'remote' && (!found.entry.path || found.entry.modified)) {
-    throw new Error(`${found.entry.name} is open in Herald Sheets' own window with ${found.entry.path ? 'unsaved changes' : 'nothing saved yet'}: save it there first (sheets.save), then ask again`)
+    throw new Error(`${found.entry.name} is open in ${PRODUCT.apps.sheets}' own window with ${found.entry.path ? 'unsaved changes' : 'nothing saved yet'}: save it there first (sheets.save), then ask again`)
   }
 
   const file = found.kind === 'remote' ? found.entry.path! : found.path
@@ -289,14 +290,14 @@ async function inSlidesWindow(command: string, args: Args, context: CommandConte
       const result = (await window.heraldOS.office.run({ app: 'slides', key: entry.key }, command, args, context.source)) as CommandResult | undefined
 
       if (!result?.ok) {
-        throw new Error(result?.error ?? result?.summary ?? `Herald Slides did not run ${command}`)
+        throw new Error(result?.error ?? result?.summary ?? `${PRODUCT.apps.slides} did not run ${command}`)
       }
 
       return { summary: result.summary, data: result.data }
     }
   }
 
-  throw new Error('Herald Slides did not open in time; try again')
+  throw new Error(`${PRODUCT.apps.slides} did not open in time; try again`)
 }
 
 // Commands.
@@ -305,7 +306,7 @@ export async function open(args: Args): Promise<Outcome> {
   if (!text(args.path)) {
     openInOffice('slides')
 
-    return { summary: 'Opened Herald Slides' }
+    return { summary: `Opened ${PRODUCT.apps.slides}` }
   }
 
   const file = resolve(text(args.path))
@@ -315,13 +316,13 @@ export async function open(args: Args): Promise<Outcome> {
   }
 
   if (officeAppFor(file, { libreOffice: false }) !== 'slides') {
-    throw new Error(`Herald Slides opens PowerPoint presentations (.pptx), not ${fileName(file)}`)
+    throw new Error(`${PRODUCT.apps.slides} opens PowerPoint presentations (.pptx), not ${fileName(file)}`)
   }
 
   if (isPanels) {
     openInOffice('slides', { file })
 
-    return { summary: `Opened ${fileName(file)} in Herald Slides`, data: { path: file } }
+    return { summary: `Opened ${fileName(file)} in ${PRODUCT.apps.slides}`, data: { path: file } }
   }
 
   openApp('slides')
@@ -330,7 +331,7 @@ export async function open(args: Args): Promise<Outcome> {
   const deck = decks.get(doc.key)?.history.present ?? doc.initial
 
   return {
-    summary: `Opened ${doc.name} in Herald Slides: ${count(deck.slides.length, 'slide')}${doc.notes.length ? ` (shown differently: ${doc.notes.join('; ')})` : ''}`,
+    summary: `Opened ${doc.name} in ${PRODUCT.apps.slides}: ${count(deck.slides.length, 'slide')}${doc.notes.length ? ` (shown differently: ${doc.notes.join('; ')})` : ''}`,
     data: { name: doc.name, path: doc.path, slides: model.outline(deck).split('\n'), ...(doc.notes.length ? { approximated: doc.notes } : {}) }
   }
 }
@@ -372,7 +373,7 @@ export async function list(): Promise<Outcome> {
   const current = presentations.find((entry) => entry.active) ?? presentations[0]
 
   return {
-    summary: presentations.length ? `${count(presentations.length, 'presentation')} open${current ? `; in front: ${current.name}${current.selection ? ` (${current.selection})` : ''}` : ''}` : 'Nothing is open in Herald Slides',
+    summary: presentations.length ? `${count(presentations.length, 'presentation')} open${current ? `; in front: ${current.name}${current.selection ? ` (${current.selection})` : ''}` : ''}` : `Nothing is open in ${PRODUCT.apps.slides}`,
     data: { presentations: presentations.map(({ key: _key, app: _app, front: _front, ...entry }) => entry), current: current ? (current.path ?? current.name) : null }
   }
 }
@@ -521,7 +522,7 @@ export async function save(args: Args): Promise<Outcome> {
   to = to && !extensionOf(to) ? `${to}.pptx` : to
 
   if (to && extensionOf(to) !== '.pptx') {
-    throw new Error(`Herald Slides saves presentations as .pptx, not ${extensionOf(to)}`)
+    throw new Error(`${PRODUCT.apps.slides} saves presentations as .pptx, not ${extensionOf(to)}`)
   }
 
   if (to && (await exists(to)) && args.overwrite !== true) {
@@ -538,7 +539,7 @@ export async function save(args: Args): Promise<Outcome> {
     const written = await slidesAdapter.write(on.deck, '.pptx', undefined)
     await window.heraldOS.office.write(to, written.bytes)
 
-    return { summary: `Saved ${fileName(found.path)} as ${fileName(to)}${on.notes.length ? ` (as Herald shows it: ${on.notes.join('; ')})` : ''}`, data: { path: to, ...(on.notes.length ? { approximated: on.notes } : {}) } }
+    return { summary: `Saved ${fileName(found.path)} as ${fileName(to)}${on.notes.length ? ` (as ${PRODUCT.shortName} shows it: ${on.notes.join('; ')})` : ''}`, data: { path: to, ...(on.notes.length ? { approximated: on.notes } : {}) } }
   }
 
   const { doc } = found
@@ -583,7 +584,7 @@ export async function step(direction: 'undo' | 'redo', args: Args): Promise<Outc
   const found = await located(args.presentation)
 
   if (found.kind === 'file') {
-    throw new Error(`Undo works in the open Herald Slides window: ${fileName(found.path)} is not open`)
+    throw new Error(`Undo works in the open ${PRODUCT.apps.slides} window: ${fileName(found.path)} is not open`)
   }
 
   const { doc } = found
@@ -591,7 +592,7 @@ export async function step(direction: 'undo' | 'redo', args: Args): Promise<Outc
   const live = decks.get(doc.key)
 
   if (!live) {
-    throw new Error(`${doc.name} is not showing in Herald Slides`)
+    throw new Error(`${doc.name} is not showing in ${PRODUCT.apps.slides}`)
   }
 
   flushTyping(live)

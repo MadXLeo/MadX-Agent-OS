@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconArrowBackUp, IconNotes, IconPlus, IconX } from '@tabler/icons-react'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
@@ -350,7 +351,7 @@ export function Notepad({ active, width }: { active: boolean; width: number }) {
       <EmptyGlass
         icon={<IconNotes />}
         title="Could not read your notes"
-        description="Herald keeps them in its data folder; it may be busy for a moment."
+        description={`${PRODUCT.shortName} keeps them in its data folder; it may be busy for a moment.`}
         action={
           <GlassButton size="sm" onClick={retry}>
             Try again

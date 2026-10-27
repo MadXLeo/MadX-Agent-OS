@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 /*
  * Photoshop documents to Herald Canvas layers and back, through ag-psd's document model. Pixel
  * layers, folders, masks, clipping, blend modes, opacity, text, the adjustments Herald has and the
@@ -588,7 +589,7 @@ export function effectsFrom(fx: LayerEffectsInfo, globalAngle: number, notes: No
   const dropped = [fx.bevel && 'bevel and emboss', fx.satin && 'satin', fx.gradientOverlay?.length && 'gradient overlay', fx.patternOverlay && 'pattern overlay'].filter(Boolean)
 
   if (dropped.length) {
-    notes.add(`Layer effects Herald Canvas does not draw (${dropped.join(', ')}) were left out`, name)
+    notes.add(`Layer effects ${PRODUCT.apps.canvas} does not draw (${dropped.join(', ')}) were left out`, name)
   }
 
   return Object.keys(effects).length ? effects : undefined
@@ -612,7 +613,7 @@ export function textFrom(layer: Layer, notes: Notes, name: string): { text: Text
   }
 
   if (source.orientation === 'vertical') {
-    return keep('Herald Canvas sets text horizontally')
+    return keep(`${PRODUCT.apps.canvas} sets text horizontally`)
   }
 
   if (source.warp && source.warp.style && source.warp.style !== 'none') {
@@ -665,7 +666,7 @@ export function textFrom(layer: Layer, notes: Notes, name: string): { text: Text
   const styleNotes = [base.fauxBold && 'faux bold', base.fauxItalic && 'faux italic', base.underline && 'underline', base.strikethrough && 'strikethrough', (base.horizontalScale ?? 1) !== 1 && 'horizontal scale', (base.verticalScale ?? 1) !== 1 && 'vertical scale', base.baselineShift && 'baseline shift'].filter(Boolean)
 
   if (styleNotes.length) {
-    notes.add(`Text styling Herald Canvas lacks (${styleNotes.join(', ')}) goes when the text is edited`, name)
+    notes.add(`Text styling ${PRODUCT.apps.canvas} lacks (${styleNotes.join(', ')}) goes when the text is edited`, name)
   }
 
   const text: TextStyle = {
@@ -837,7 +838,7 @@ export function fromPsd(psd: Psd): ImportedPsd {
 
       if (isGroup) {
         if (blend !== 'pass through' && blend !== 'normal') {
-          notes.add(`Folders are pass-through in Herald Canvas, so a folder’s own blend mode (${blendLabel(blend)}) became Pass Through`, name)
+          notes.add(`Folders are pass-through in ${PRODUCT.apps.canvas}, so a folder’s own blend mode (${blendLabel(blend)}) became Pass Through`, name)
         }
       } else if (FROM_PSD_BLEND[blend]) {
         record.blendMode = FROM_PSD_BLEND[blend]
@@ -1050,7 +1051,7 @@ export function adjustmentTo(adjustment: Adjustment): AdjustmentLayer | null {
 
       return {
         type: 'gradient map',
-        name: 'Herald Canvas',
+        name: PRODUCT.apps.canvas,
         gradientType: 'solid',
         reverse: settings.reversed,
         smoothness: 1,

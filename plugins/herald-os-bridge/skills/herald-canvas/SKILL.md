@@ -1,14 +1,14 @@
 ---
 name: herald-canvas
-description: Make and edit pictures in Herald Canvas, the layered image editor in Herald OS - posters, banners, thumbnails, collages and photo fixes through the canvas tool, with editable text and shape layers, layer effects (shadows, strokes, glows) copied between layers, masks, alignment and guides, auto tone and colour, filters (sharpen, denoise, blur), colour lookup tables, on-device background removal and content-aware fill, generated pictures placed where asked, Photoshop files opened and exported with their layers, how to plan an edit from a description, plus the .comp project format and every adjustment setting
+description: Make and edit pictures in MadX Canvas, the layered image editor in MadX Agent OS - posters, banners, thumbnails, collages and photo fixes through the canvas tool, with editable text and shape layers, layer effects (shadows, strokes, glows) copied between layers, masks, alignment and guides, auto tone and colour, filters (sharpen, denoise, blur), colour lookup tables, on-device background removal and content-aware fill, generated pictures placed where asked, Photoshop files opened and exported with their layers, how to plan an edit from a description, plus the .comp project format and every adjustment setting
 metadata:
   hermes:
     tags: [herald-os, canvas, images, design, photo, poster, layers, text, typography, effects, masks, alignment, guides, filters, sharpen, lut, background removal, content-aware fill, generative fill, photoshop, psd]
 ---
 
-# Herald Canvas
+# MadX Canvas
 
-Herald Canvas is the image editor built into Herald OS: layers, folders, masks, blend modes,
+MadX Canvas is the image editor built into MadX Agent OS: layers, folders, masks, blend modes,
 adjustment layers, editable text and shapes, drawn on the GPU. The person has the usual tools too
 (selections, brush, fill, gradient, transform, crop). Use it whenever the person wants a picture
 made or changed:
@@ -19,11 +19,11 @@ step they can undo there (⌘Z, or `canvas action=undo`).
 ## The workflow
 
 1. **Start.** `canvas action=new name="Gig poster" width=1080 height=1350 background="#101014"`
-   makes a project in `~/Pictures/Herald Canvas/` and opens it; it answers with the `path`. To
+   makes a project in `~/Pictures/MadX Canvas/` and opens it; it answers with the `path`. To
    work on something that exists, `canvas action=open path="~/Pictures/photo.jpg"`: an image
    becomes a new project there (the original file is never changed) and the answer gives its
    `path`; a `.comp` project opens as it is. A Photoshop document (`.psd`, `.psb`) keeps its layers,
-   folders, masks, text and the adjustments Herald has, and the answer lists anything approximated
+   folders, masks, text and the adjustments MadX has, and the answer lists anything approximated
    (tell the person what changed). HEIC, TIFF and camera RAW open where the system can convert
    them; on Linux an error names the packages to install. A canvas is at most 30,000 pixels a side
    and 100 million in all. Without `project`, actions work on the image in front.
@@ -97,7 +97,7 @@ step they can undo there (⌘Z, or `canvas action=undo`).
 10. **Deliver.** `canvas action=export to="~/Desktop/gig-poster.png"` (or `.jpg` with
    `quality=0.9`, `.webp` up to 16,383 pixels a side; `scale=0.5` for half size). For a printer
    or a designer, `.psd` (or `format=psd`) keeps the layers, folders, masks, clipping, blend modes,
-   text and the adjustments Photoshop has (Herald's own eight among them), at full size; Grain, the
+   text and the adjustments Photoshop has (MadX's own eight among them), at full size; Grain, the
    blurs and Add Noise show only in its flattened image, and shapes become pixels; the answer lists
    what was approximated. Replacing
    a file needs `overwrite=true`, and the person is asked first. Projects save themselves after
@@ -155,7 +155,7 @@ Normal, and their opacity and mask apply to everything inside.
 ## Adjustment settings
 
 Pass only what you change; the rest keeps its default. These are the exact ranges the format
-allows (Compositor refuses a whole project over one value outside them, so Herald Canvas refuses
+allows (Compositor refuses a whole project over one value outside them, so MadX Canvas refuses
 the change and says which field and range): when a command answers with a range error, fix that
 value and try again.
 
@@ -185,7 +185,7 @@ value and try again.
 - **Add Noise**: `noiseAmount` 0.1…400 (percent), `noiseGaussian`, `noiseMonochromatic`,
   `noiseSeed`.
 
-Eight more are Herald Canvas's own; their settings are flat (no nested record of their own):
+Eight more are MadX Canvas's own; their settings are flat (no nested record of their own):
 
 - **Brightness/Contrast**: `brightness` −150…150 (lifts or lowers the midtones; black and white
   stay), `contrast` −50…100.
@@ -292,7 +292,7 @@ centre; a two-tone grade is two adjustments, each masked to its half.
 
 These run on the person's computer (nothing is uploaded) with models they download once, when
 they first use the tool in the Canvas window. A command never downloads a model: when one is
-missing, the answer says which, and you ask the person to allow it in Herald Canvas (Layer >
+missing, the answer says which, and you ask the person to allow it in MadX Canvas (Layer >
 Remove Background, or the Object Select tool), then try again.
 
 - **Remove a background**: `canvas action=remove_background layer="Photo"` hides everything but the
@@ -316,7 +316,7 @@ hand on the picture.
 
 ## Generated pictures
 
-When the person asks the Canvas window for Generative Fill or a New Generated Layer, Herald sends
+When the person asks the Canvas window for Generative Fill or a New Generated Layer, MadX sends
 you a request naming the project, the box, the files it saved (a picture of the area and its mask)
 and the file to save your picture to. Make the picture with your image generation tool (pick its
 aspect ratio from the box; if it can edit an image, give it the area's picture), save it there,
@@ -345,7 +345,7 @@ dramatic" come from the window's Ask Hermes field with the project, its layers a
 
 ## The .comp format (for writing projects directly)
 
-For many layers at once it can be faster to write a project yourself; Herald Canvas reloads an
+For many layers at once it can be faster to write a project yourself; MadX Canvas reloads an
 open project the moment its files change. A project is a folder `Name.comp` holding
 `manifest.json` and `images/`:
 
@@ -404,10 +404,10 @@ Rules that matter (break one and the whole file is refused):
   PNG must match the record, so prefer `add_text` and `add_shape`, which draw it; painting on such
   a layer turns it into plain pixels.
 - `guides` is a list of `{"id": "<UUID>", "axis": "vertical" or "horizontal", "position": <px>}`.
-- Herald's own adjustments (Brightness/Contrast and the others above) go in `heraldAdjustment`,
+- MadX's own adjustments (Brightness/Contrast and the others above) go in `heraldAdjustment`,
   never in `adjustment.kind`: `{"kind": "Vibrance", "vibrance": 30, "saturation": 0}`, with the
   fields listed under Adjustment settings. The layer still needs a complete `adjustment` record
-  (Compositor reads that one); Herald makes it again from `heraldAdjustment` when it opens the
+  (Compositor reads that one); MadX makes it again from `heraldAdjustment` when it opens the
   project, so a Levels record with its defaults will do. A Color Lookup's table is the file
   `images/<ID>.cube`, with `"name"` and `"size"` (its LUT_3D_SIZE) in the record. Prefer
   `add_adjustment`, which writes all of it.

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { JSON_RPC_METHOD_NOT_FOUND } from '@herald-os/client'
 
 /*
@@ -40,6 +41,6 @@ export function attachmentFailure(file: string, error: unknown): string {
  * are out of reach: whose "Desktop" a message means, and to ask for an attachment rather than search.
  */
 export const ELSEWHERE_NOTE =
-  'Herald OS note: I am using Herald OS on a different computer from the one you run on, and the two do not share files. ' +
+  `${PRODUCT.name} note: I am using ${PRODUCT.name} on a different computer from the one you run on, and the two do not share files. ` +
   'Paths, folders and places such as my Desktop or my Downloads in my messages are on my computer, which your tools cannot reach, so do not search for them on yours. ' +
   'A file I attach is uploaded to you, and my message names the copy. When I refer to a file of mine that is not attached, ask me to attach it.'

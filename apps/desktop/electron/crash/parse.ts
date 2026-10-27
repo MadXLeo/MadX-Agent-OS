@@ -10,7 +10,7 @@ const CRASH_BUG_TYPES = new Set(['309', '109'])
 const NOT_CRASHES = /^(JetsamEvent|Analytics|ExcUserFault|stacks|WakeupsResource|CPUResource|DiskWrites|shutdown_stall)/i
 
 /** Our own processes: a crashed Herald window reloads by itself, and reporting it inside Herald is noise. */
-const OURSELVES = /^(Herald OS|Electron)\b/i
+const OURSELVES = /^(MadX Agent OS|Herald OS|Electron)\b/i
 
 interface IpsHeader {
   app_name?: string

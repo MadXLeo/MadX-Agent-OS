@@ -1,6 +1,6 @@
 # Games
 
-Herald OS Linux installs the usual Linux game stores and launchers in one step, from Settings >
+MadX Agent OS Linux installs the usual Linux game stores and launchers in one step, from Settings >
 Software > Gaming, Install in the `Super+M` menu, or "install Steam".
 
 | App | What it is for | Needs |
@@ -28,7 +28,7 @@ x86_64-only ones are marked unavailable and say why.
   it for any window.
 - **Stay awake** (`Super+Ctrl+I`) stops the screen from locking during a long cutscene or a game you
   play with a controller.
-- **Graphics drivers:** Herald OS Linux comes with Fedora's open-source drivers, which cover AMD and
+- **Graphics drivers:** MadX Agent OS Linux comes with Fedora's open-source drivers, which cover AMD and
   Intel graphics. For an NVIDIA card from the GTX 16 and RTX 20 series on, switch to the NVIDIA
   image, which has NVIDIA's own driver ([NVIDIA graphics](install-pc.md#nvidia-graphics)).
 - Games that need anti-cheat software made only for Windows may not run on Linux at all, and the

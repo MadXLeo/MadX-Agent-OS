@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import fs from 'node:fs'
 import { ipcMain, nativeImage } from 'electron'
 import { type HeraldOSPrefs, IPC } from '../../shared/ipc.ts'
@@ -37,7 +38,7 @@ export async function selectHermesSkin(backend: BackendManager): Promise<void> {
 /** Dress Hermes in a theme that was just applied (best effort: the theme stands either way). */
 export function syncHermesSkin(spec: ThemeSpec, backend: BackendManager): void {
   writeHermesSkin(spec)
-  selectHermesSkin(backend).catch(error => log('theme', `could not select the Herald skin: ${(error as Error).message}`))
+  selectHermesSkin(backend).catch(error => log('theme', `could not select the ${PRODUCT.shortName} skin: ${(error as Error).message}`))
 }
 
 /** Apply an installed theme everywhere it reaches. */

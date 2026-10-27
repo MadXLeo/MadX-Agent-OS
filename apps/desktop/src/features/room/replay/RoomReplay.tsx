@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconArrowBackUp, IconClockPause, IconHistory, IconPaw, IconRefresh } from '@tabler/icons-react'
 import { type KeyboardEvent, memo, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -322,7 +323,7 @@ export function RoomReplay({ onExit, active = true }: { onExit: () => void; acti
           onOpen={ignore}
           onAnswer={ignore}
         />
-        {gap ? <Notice icon={<IconClockPause size={20} />} title={gapText(gap)} /> : !ownWork && <Notice icon={<IconPaw size={20} />} title="No Hermes work in Herald at this time" />}
+        {gap ? <Notice icon={<IconClockPause size={20} />} title={gapText(gap)} /> : !ownWork && <Notice icon={<IconPaw size={20} />} title={`No Hermes work in ${PRODUCT.shortName} at this time`} />}
       </>
     )
   }

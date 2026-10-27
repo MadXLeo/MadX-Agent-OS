@@ -1,3 +1,5 @@
+> Historical upstream design record, preserved for provenance. Current MadX work is tracked in [docs/madx](../madx/).
+
 # Herald OS Alpha 0.1 Implementation Plan
 
 Working copy of the plan that drives Alpha 0.1. `DECISIONS.md` holds the rationale.

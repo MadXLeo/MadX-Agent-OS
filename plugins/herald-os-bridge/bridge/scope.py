@@ -1,10 +1,10 @@
-"""Where the bridge's tools are offered and where they run: Herald OS's own sessions.
+"""Where the bridge's tools are offered and where they run: MadX Agent OS's own sessions.
 
 Hermes turns a plugin toolset on for every platform that has not saved a list without it, and the
-Herald OS backend shares the ``cli`` platform's list with the ``hermes`` CLI, so configuration cannot
+MadX Agent OS backend shares the ``cli`` platform's list with the ``hermes`` CLI, so configuration cannot
 keep these tools out of a person's Telegram, Discord, cron or terminal sessions. The bridge asks the
 session instead: Hermes binds each turn's source for the tools it runs (``HERMES_SESSION_SOURCE``),
-and Herald OS creates its sessions with ``source: "herald_os"`` (ADR-003).
+and MadX Agent OS creates its sessions with ``source: "herald_os"`` (ADR-003).
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ def ui_session() -> str:
 
 
 def _hermes_binds_sessions() -> bool:
-    """Whether Hermes binds sessions in this process, as the gateway Herald OS talks to, a messaging
+    """Whether Hermes binds sessions in this process, as the gateway MadX Agent OS talks to, a messaging
     gateway and cron do for every turn. The ``hermes`` CLI never does: its HERMES_SESSION_* come from
     its environment, which holds whatever its parent had, since Hermes passes a turn's variables on to
     every command the turn runs. A Hermes without this latch counts as binding."""
@@ -53,19 +53,19 @@ def _hermes_binds_sessions() -> bool:
 
 
 def in_herald_session() -> bool:
-    """A Herald OS turn: Hermes bound the source for it, or the process descends from the backend
-    Herald OS started (HERALD_OS=1), as a command run by a Herald OS turn does. A source in the
+    """A MadX Agent OS turn: Hermes bound the source for it, or the process descends from the backend
+    MadX Agent OS started (HERALD_OS=1), as a command run by a MadX Agent OS turn does. A source in the
     environment of anything else, such as ``hermes chat --source herald_os``, does not count."""
     return session_source() in HERALD_SOURCES and (_hermes_binds_sessions() or herald_backend())
 
 
 def herald_backend() -> bool:
-    """This process is the ``hermes serve`` Herald OS started, or a process it started."""
+    """This process is the ``hermes serve`` MadX Agent OS started, or a process it started."""
     return os.environ.get("HERALD_OS") == "1"
 
 
 def other_surface() -> str | None:
-    """What the current turn belongs to when that is plainly not Herald OS, else ``None``."""
+    """What the current turn belongs to when that is plainly not MadX Agent OS, else ``None``."""
     if _session_env("HERMES_CRON_SESSION") == "1":
         return "a scheduled job"
     if os.environ.get("HERMES_KANBAN_TASK"):
@@ -88,7 +88,7 @@ def offered() -> bool:
 
 
 def herald_only(tool: str, handler: Callable[..., str], enabled: Callable[[], bool]) -> Callable[..., str]:
-    """``handler``, refusing every call outside a Herald OS session and while the bridge is off.
+    """``handler``, refusing every call outside a MadX Agent OS session and while the bridge is off.
 
     Hermes uses a tool's ``check_fn`` only to decide what the model sees, never to gate a call, so
     this check is the one that holds."""
@@ -96,12 +96,12 @@ def herald_only(tool: str, handler: Callable[..., str], enabled: Callable[[], bo
     @functools.wraps(handler)
     def gated(args: dict[str, Any], **kwargs: Any) -> str:
         if not enabled():
-            decision, message = "disabled", "The Herald OS system bridge is switched off (herald_os.bridge.enabled: false, or HERALD_OS_BRIDGE_DISABLED=1)."
+            decision, message = "disabled", "The MadX Agent OS system bridge is switched off (herald_os.bridge.enabled: false, or HERALD_OS_BRIDGE_DISABLED=1)."
         elif not in_herald_session():
-            where = other_surface() or "a session Herald OS did not start"
-            decision, message = "outside_herald", f"{tool} is a Herald OS system tool and runs only in sessions Herald OS starts; this call came from {where}."
+            where = other_surface() or "a session MadX Agent OS did not start"
+            decision, message = "outside_herald", f"{tool} is a MadX Agent OS system tool and runs only in sessions MadX Agent OS starts; this call came from {where}."
             if herald_backend() and not session_source():
-                message += " If it came from Herald OS, update Hermes (hermes update): this version does not tell tools which session they run in."
+                message += " If it came from MadX Agent OS, update Hermes (hermes update): this version does not tell tools which session they run in."
         else:
             return handler(args, **kwargs)
         audit.record(tool=tool, tier="none", action=None, args=args if isinstance(args, dict) else {}, decision=decision, ok=False, error=message)

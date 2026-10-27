@@ -1,14 +1,14 @@
 ---
 name: herald-docs
-description: Write and edit documents in Herald Docs, the word processor in Herald OS - letters, cover letters, CVs, reports, memos, meeting notes, proposals, essays and newsletters drafted from a brief or a template, rewrites of the text Herald marked for a request (shorter, longer, another tone, another language, spelling and grammar), reviews that comment on clarity, grammar and tone, summaries, formatting and paragraph styles, find and replace, tables, pictures, a Herald Sheets range as a table in a report, headers and footers with page numbers and dates, fields, footnotes and endnotes, page setup and sections, comments and replies, tables of contents, templates, statistics such as word count and reading time, saving Word, Markdown and text files and exporting PDFs, all through the docs tool
+description: Write and edit documents in MadX Docs, the word processor in MadX Agent OS - letters, cover letters, CVs, reports, memos, meeting notes, proposals, essays and newsletters drafted from a brief or a template, rewrites of the text MadX marked for a request (shorter, longer, another tone, another language, spelling and grammar), reviews that comment on clarity, grammar and tone, summaries, formatting and paragraph styles, find and replace, tables, pictures, a MadX Sheets range as a table in a report, headers and footers with page numbers and dates, fields, footnotes and endnotes, page setup and sections, comments and replies, tables of contents, templates, statistics such as word count and reading time, saving Word, Markdown and text files and exporting PDFs, all through the docs tool
 metadata:
   hermes:
     tags: [herald-os, docs, documents, writing, word, docx, markdown, letter, cover letter, report, memo, resume, cv, proposal, essay, newsletter, rewrite, translate, formatting, tables, headers, footers, page numbers, fields, footnotes, endnotes, sections, page setup, comments, review, proofreading, grammar, tone, table of contents, templates, statistics, word count, readability, pdf]
 ---
 
-# Herald Docs
+# MadX Docs
 
-Herald Docs is the word processor built into Herald OS. It opens and saves Word documents
+MadX Docs is the word processor built into MadX Agent OS. It opens and saves Word documents
 (`.docx`), Markdown (`.md`) and text files (`.txt`), and the person watches every change land in
 the Docs window. Use the `docs` tool whenever they want a document written or changed: "write a
 cover letter for this job", "make this paragraph friendlier", "turn my notes into a report", "put
@@ -18,9 +18,9 @@ a PDF". Code, configuration and other plain files are for your file tools; readi
 
 ## The workflow
 
-1. **Find the document.** `docs action=list` shows what is open in Herald Docs: each document's
+1. **Find the document.** `docs action=list` shows what is open in MadX Docs: each document's
    name, path, unsaved edits, the one in front (`active`) and the text selected in it.
-   `docs action=list_all` adds what is open in Herald Sheets and Slides, and `os_ui action=state`
+   `docs action=list_all` adds what is open in MadX Sheets and Slides, and `os_ui action=state`
    carries the same list as `office`. "This document" is the one in front. Name a document by its
    file (`document="~/Documents/Report.docx"`) or by its tab (`document="Untitled 2"`); left out,
    a call works on the one in front.
@@ -49,10 +49,10 @@ a PDF". Code, configuration and other plain files are for your file tools; readi
    heading="Summary"`) before you say it is done, and say what changed, not how.
 
 An open document changes in its window, where the person sees it. A file that is not open is
-read, changed and written straight back to disk: the person is asked first every time, Herald
+read, changed and written straight back to disk: the person is asked first every time, MadX
 backs the original up the first time it writes over it, and it refuses when the file holds
 something it cannot keep (see the end). Then open it (`docs action=open
-path="~/Documents/Report.docx"`; the answer gives its outline and lists what Herald shows
+path="~/Documents/Report.docx"`; the answer gives its outline and lists what MadX shows
 differently from the file) and work in the window, where the person saves when they are happy.
 
 ## Drafting from a brief
@@ -73,7 +73,7 @@ docs action=new name="Cover letter - Product designer" content="Dear Hiring Mana
 ```
 
 - Templates give a document its look: a page, styles, headers and footers, and sample text to
-  replace. `docs action=list_templates` lists Herald Docs' own, each with what it holds (`blank`,
+  replace. `docs action=list_templates` lists MadX Docs' own, each with what it holds (`blank`,
   `letter`, `cover-letter`, `cv`, `report`, `memo`, `meeting-notes`, `essay`,
   `project-proposal`, `newsletter`, `invoice`, `thank-you-note` and `recipe`), and the ones the
   person saved. `docs action=new template=report name="Q3 report"` starts one with its sample
@@ -92,7 +92,7 @@ docs action=new name="Cover letter - Product designer" content="Dear Hiring Mana
 
 ## Marked and selected text
 
-When the person asks Hermes about text they selected in Herald Docs, Herald marks that text (it
+When the person asks Hermes about text they selected in MadX Docs, MadX marks that text (it
 stays tinted while you work) and the request says text is marked for it. `docs action=read
 part=selection` gives it as `marked`, and what is selected now as `selection`. When nothing was
 selected, the caret's place is marked instead, and `at=marked` writes there.
@@ -132,7 +132,7 @@ what it applies to: `selection` (the default), `marked`, `all`, `heading` (the h
   and page setup.
 
 ```
-docs action=format at=text text="Herald OS" bold=true color="#1f6feb"
+docs action=format at=text text="MadX Agent OS" bold=true color="#1f6feb"
 docs action=format at=section heading="Appendix" size="10"
 docs action=format at=all font="Georgia" lineSpacing=1.15
 ```
@@ -149,7 +149,7 @@ and leaving `replacement` out deletes the matches.
 - A picture from a file (PNG, JPEG, GIF, WebP, BMP or SVG): `docs action=image
   source="~/Pictures/team.jpg" alt="The team at the offsite" width=480 at=after`, or
   `![alt](~/path.png)` in Markdown. It is never wider than the text.
-- Figures from Herald Sheets: `docs action=insert_range workbook="~/Documents/Budget.xlsx"
+- Figures from MadX Sheets: `docs action=insert_range workbook="~/Documents/Budget.xlsx"
   range="A1:D12" at=heading heading="Costs"` puts the range in as a table, as its cells show
   (formatted numbers and dates). Without `range` it takes the workbook's selection, or else the
   cells that hold something.
@@ -335,15 +335,15 @@ so each one is a single step to undo.
 - Never save unless the person asks. An open document keeps its unsaved edits (its tab says so),
   and they save with Ctrl+S (⌘S on a Mac) or ask you to.
 - "Save it": `docs action=save`. Saving over the document's own file asks the person every time;
-  the first time Herald writes over a file it shows what it cannot keep, and the original goes to
-  Herald's Office backups. If they keep the file as it was, say so and leave it there.
+  the first time MadX writes over a file it shows what it cannot keep, and the original goes to
+  MadX's Office backups. If they keep the file as it was, say so and leave it there.
 - A document never saved ("Untitled 2") needs a place: `docs action=save to="~/Documents/Cover
   letter.docx"`. The extension picks the format: `.docx`, `.md` or `.txt`. A file that exists is
   replaced only with `overwrite=true`, which asks the person first.
 - A PDF: `docs action=export_pdf` writes a new PDF in ~/Documents, laid out as it prints, or
   `to="~/Desktop/Report.pdf"`. Say where it went.
 
-## What Herald Docs cannot do yet
+## What MadX Docs cannot do yet
 
 Tracked changes (shown accepted, and saved accepted), text in columns (shown and saved in one
 column), headers and footers of their own in later sections (the first section's show on every

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { $env, $prefs, updatePrefs } from '../store/backend.ts'
 import { fail, ok, type OsCommand } from '../store/os-commands.ts'
 import { $themes, applyTheme, findTheme, generateTheme, installThemes, loadThemes } from '../store/themes.ts'
@@ -30,7 +31,7 @@ export const themeCommands: readonly OsCommand[] = [
   {
     id: 'theme.set',
     title: 'Set the theme',
-    description: 'Switch to an installed theme by name; it restyles the shell, Hermes and, on Herald OS Linux, the whole session.',
+    description: `Switch to an installed theme by name; it restyles the shell, Hermes and, on ${PRODUCT.name} Linux, the whole session.`,
     tier: 'mutate',
     args: [{ name: 'theme', type: 'string', description: 'Theme name (see theme.list)', required: true }],
     phrases: ['set the theme to {theme}', 'switch to the {theme} theme', 'use the {theme} theme', 'change the theme to {theme}'],
@@ -61,7 +62,7 @@ export const themeCommands: readonly OsCommand[] = [
       const source = image ? String(image) : $prefs.get().wallpaper
 
       if (!source) {
-        return fail('Name an image to make the theme from (the drawn Herald wallpaper is not an image file).')
+        return fail(`Name an image to make the theme from (the drawn ${PRODUCT.shortName} wallpaper is not an image file).`)
       }
 
       const theme = await generateTheme({ image: source, name: name ? String(name) : undefined, scheme: scheme as 'auto' | 'dark' | 'light' | undefined })
@@ -85,7 +86,7 @@ export const themeCommands: readonly OsCommand[] = [
   {
     id: 'theme.followHermes',
     title: 'Follow Hermes skins',
-    description: "Restyle Herald OS whenever Hermes's skin changes (/skin in a chat).",
+    description: `Restyle ${PRODUCT.name} whenever Hermes's skin changes (/skin in a chat).`,
     tier: 'mutate',
     args: [{ name: 'enabled', type: 'boolean', description: 'true to follow the skin', required: true }],
     phrases: [
@@ -101,7 +102,7 @@ export const themeCommands: readonly OsCommand[] = [
   {
     id: 'wallpaper.set',
     title: 'Set the wallpaper',
-    description: 'Use an image as the wallpaper, or "default" for the drawn Herald wallpaper.',
+    description: `Use an image as the wallpaper, or "default" for the drawn ${PRODUCT.shortName} wallpaper.`,
     tier: 'mutate',
     args: [{ name: 'image', type: 'string', description: 'Image path, or "default"', required: true }],
     phrases: [{ phrase: 'use the default wallpaper', args: { image: 'default' } }],
@@ -110,7 +111,7 @@ export const themeCommands: readonly OsCommand[] = [
       const reset = /^(default|none|herald)$/i.test(value)
       await updatePrefs({ wallpaper: reset ? undefined : value.replace(/^~(?=\/)/, $env.get()?.homeDir ?? '~') })
 
-      return ok(reset ? 'Back to the Herald wallpaper' : 'Wallpaper updated', { highlight: { kind: 'setting', id: 'appearance' } })
+      return ok(reset ? `Back to the ${PRODUCT.shortName} wallpaper` : 'Wallpaper updated', { highlight: { kind: 'setting', id: 'appearance' } })
     }
   },
   {

@@ -138,7 +138,7 @@ describe('hover-only guard', () => {
   })
 
   it('recognises the components that use reveal', () => {
-    const users = sources(SRC).filter(usesReveal).map(file => path.relative(SRC, file))
+    const users = sources(SRC).filter(usesReveal).map(file => path.relative(SRC, file).split(path.sep).join('/'))
 
     expect(users).toEqual(expect.arrayContaining(['features/chat/SessionList.tsx', 'features/office/docs/CommentsPanel.tsx', 'features/office/docs/TemplateGallery.tsx']))
     expect(users.length).toBeGreaterThanOrEqual(13)

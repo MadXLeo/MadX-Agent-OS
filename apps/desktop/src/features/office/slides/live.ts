@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { baseName, extensionOf } from '../../../../shared/office/files.ts'
 import type { OfficeAdapter, OfficeDocument } from '../types.ts'
 import type { Deck } from './deck.ts'
@@ -65,7 +66,7 @@ export function makeTargets(io: TargetIO) {
     const active = io.active()
 
     if (!active) {
-      throw new Error('No presentation is open in Herald Slides: open one or start one')
+      throw new Error(`No presentation is open in ${PRODUCT.apps.slides}: open one or start one`)
     }
 
     return fromOpen(active)
@@ -98,7 +99,7 @@ export function makeTargets(io: TargetIO) {
     }
 
     if (on.notes.length && !options.accept) {
-      throw new Error(`Writing ${baseName(on.path)} back would lose what Herald could not keep of it (${on.notes[0]}); open it in Herald Slides to decide`)
+      throw new Error(`Writing ${baseName(on.path)} back would lose what ${PRODUCT.shortName} could not keep of it (${on.notes[0]}); open it in ${PRODUCT.apps.slides} to decide`)
     }
 
     const { bytes } = await io.adapter.write(change.deck, extensionOf(on.path), undefined)

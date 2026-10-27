@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { factsOf } from './facts.ts'
 import { busyOutside } from './outside.ts'
 import type { RoomAgent, RoomPhase, RoomState } from './types.ts'
@@ -26,7 +27,7 @@ const capitalized = (text: string): string => text.charAt(0).toUpperCase() + tex
 
 function kindWords(agent: RoomAgent, state: RoomState): string {
   if (agent.kind === 'elsewhere') {
-    return agent.parentId ? 'a helper outside Herald' : 'outside Herald'
+    return agent.parentId ? `a helper outside ${PRODUCT.shortName}` : `outside ${PRODUCT.shortName}`
   }
 
   if (agent.kind !== 'helper') {

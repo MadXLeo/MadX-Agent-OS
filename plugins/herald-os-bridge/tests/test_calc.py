@@ -17,7 +17,7 @@ CATALOGUE = [
     {"id": "calc.eval", "title": "Calculate", "tier": "read", "args": []},
     {"id": "calc.convert", "title": "Convert units or currencies", "tier": "read", "args": []},
     {"id": "calc.plot", "title": "Plot a graph", "tier": "act", "args": []},
-    {"id": "calc.open", "title": "Open Herald Calc", "tier": "act", "args": []},
+    {"id": "calc.open", "title": "Open MadX Calc", "tier": "act", "args": []},
     {"id": "calc.history", "title": "Find a past calculation", "tier": "read", "args": []},
 ]
 
@@ -149,9 +149,9 @@ def test_the_audit_log_records_a_read(plugin, monkeypatch, isolated_home):
 def test_the_engines_refusal_comes_back_as_its_words(plugin, shell, monkeypatch):
     tools = _mod(plugin, "tools")
     ui = _mod(plugin, "ui")
-    monkeypatch.setattr(ui, "run_command", lambda command, args=None, **_: {"ok": False, "summary": 'Herald Calc does not know "banana"', "error": 'Herald Calc does not know "banana"'})
+    monkeypatch.setattr(ui, "run_command", lambda command, args=None, **_: {"ok": False, "summary": 'MadX Calc does not know "banana"', "error": 'MadX Calc does not know "banana"'})
     reply = json.loads(tools.handle_calc({"action": "eval", "text": "banana + 2"}))
-    assert reply["success"] is False and reply["error"] == 'Herald Calc does not know "banana"'
+    assert reply["success"] is False and reply["error"] == 'MadX Calc does not know "banana"'
 
 
 def test_without_the_shell_the_tool_explains(plugin, monkeypatch):
@@ -170,7 +170,7 @@ def test_an_older_shell_without_herald_calc_says_to_update(plugin, shell, monkey
     monkeypatch.setattr(ui, "list_commands", lambda: [{"id": "page.open", "tier": "read"}])
     tools._UI_CATALOGUE.clear()
     reply = json.loads(tools.handle_calc({"action": "eval", "text": "2 + 2"}))
-    assert reply["success"] is False and "Herald Calc" in reply["error"] and "update Herald OS" in reply["error"]
+    assert reply["success"] is False and "MadX Calc" in reply["error"] and "update MadX Agent OS" in reply["error"]
     assert calls == []
 
 

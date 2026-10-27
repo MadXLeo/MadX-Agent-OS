@@ -85,7 +85,7 @@ async function wordFile(parts: Parts): Promise<Uint8Array> {
   return zip.generateAsync({ type: 'uint8array' })
 }
 
-/** Reads a file and checks the document against Herald Docs' schema. */
+/** Reads a file and checks the document against MadX Docs' schema. */
 async function read(file: Parts | Uint8Array) {
   const result = await documentFromDocx(file instanceof Uint8Array ? file : await wordFile(file))
   docsSchema().nodeFromJSON(result.doc).check()
@@ -170,7 +170,7 @@ describe('documentFromDocx: styles', () => {
     expect(notes).toEqual([])
   })
 
-  it('keeps styles Herald Docs does not have as the formatting they give, and names them once', async () => {
+  it('keeps styles MadX Docs does not have as the formatting they give, and names them once', async () => {
     const { doc, notes } = await read({
       theme: THEME,
       styles: [
@@ -192,7 +192,7 @@ describe('documentFromDocx: styles', () => {
       paragraph('By the way'),
       boxed('Again')
     ])
-    expect(notes).toEqual(['Styles Herald Docs does not have (Quote Box, Caption, No Spacing and others) are kept as the formatting they give the text.'])
+    expect(notes).toEqual(['Styles MadX Docs does not have (Quote Box, Caption, No Spacing and others) are kept as the formatting they give the text.'])
   })
 
   it('applies character styles, which turn off what the paragraph style turns on, as in Word', async () => {
@@ -208,7 +208,7 @@ describe('documentFromDocx: styles', () => {
       { type: 'paragraph', content: [text('Lead in ', [bold]), text('strong')] },
       { type: 'paragraph', content: [text('Bold', [bold]), text(' and '), text('npm test', [{ type: 'code' }])] }
     ])
-    expect(notes).toEqual(['Styles Herald Docs does not have (Lead, Strong) are kept as the formatting they give the text.'])
+    expect(notes).toEqual(['Styles MadX Docs does not have (Lead, Strong) are kept as the formatting they give the text.'])
   })
 
   it('finds titles and headings by name, id and outline level, and shows deeper headings as level 6', async () => {
@@ -557,7 +557,7 @@ describe('documentFromDocx: pictures, links and fields', () => {
     ])
     expect(notes).toEqual([
       'Pictures placed beside the text are shown in line with it.',
-      'Pictures in formats Herald Docs cannot show (EMF, WMF or TIFF) are left out.',
+      'Pictures in formats MadX Docs cannot show (EMF, WMF or TIFF) are left out.',
       'Pictures linked from outside the file are left out.'
     ])
   })
@@ -679,7 +679,7 @@ describe('documentFromDocx: what it cannot show', () => {
       'Tracked changes are shown accepted, and saving keeps them accepted.',
       'Content controls (form fields, checkboxes) are shown as their text.',
       'Text in columns is shown in one column, and saving keeps it in one column.',
-      'Macros are not kept: Herald Docs saves Word documents without them.'
+      'Macros are not kept: MadX Docs saves Word documents without them.'
     ])
   })
 
@@ -826,6 +826,6 @@ describe('documentFromDocx: files made with the docx package', () => {
       paragraph('The end')
     ])
     expect(doc.attrs?.page).toEqual({ width: 595.3, height: 841.9, margins: { top: 56.7, right: 56.7, bottom: 56.7, left: 56.7, header: 35.4, footer: 35.4 } })
-    expect(notes).toEqual(['Styles Herald Docs does not have (Aside) are kept as the formatting they give the text.'])
+    expect(notes).toEqual(['Styles MadX Docs does not have (Aside) are kept as the formatting they give the text.'])
   })
 })

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import type JSZip from 'jszip'
 import type {
   Anchor,
@@ -75,7 +76,7 @@ const WHY = {
   hidden: 'hidden objects left out',
   unreadable: 'objects that could not be read left out',
   nested: 'groups nested too deeply left out',
-  nearestShape: 'shapes Herald does not draw shown as the nearest shape it does',
+  nearestShape: `shapes ${PRODUCT.shortName} does not draw shown as the nearest shape it does`,
   customShape: 'custom shapes drawn as rectangles',
   gradient: 'gradient lines and text shown in one colour',
   pattern: 'pattern fills shown as a solid colour',
@@ -84,7 +85,7 @@ const WHY = {
   effects: 'shadows and other effects left out',
   objectLinks: 'links on objects left out',
   lineText: 'text on lines left out',
-  straight: 'connectors Herald does not draw shown straight',
+  straight: `connectors ${PRODUCT.shortName} does not draw shown straight`,
   customDash: 'custom dashes shown as plain dashes',
   links: 'links kept as plain text',
   scripts: 'superscript and subscript shown as ordinary text',
@@ -95,7 +96,7 @@ const WHY = {
   turnedText: 'text turned inside its shape shown upright',
   wordArt: 'WordArt shown as plain text',
   exactSpacing: 'exact line spacing shown as a multiple',
-  numbering: 'list numbers shown in the nearest style Herald has',
+  numbering: `list numbers shown in the nearest style ${PRODUCT.shortName} has`,
   pictureBullets: 'picture bullets shown as dots',
   pictureCut: 'pictures cut to shapes shown as rectangles',
   tiled: 'tiled pictures shown stretched',
@@ -107,7 +108,7 @@ const WHY = {
   oleBox: 'embedded objects without a picture shown as a box (kept in the file as they were)',
   chartBox: 'charts shown as a box (kept in the file as they were)',
   diagramBox: 'SmartArt without a drawing shown as a box (kept in the file as it was)',
-  format: 'pictures in formats Herald cannot show',
+  format: `pictures in formats ${PRODUCT.shortName} cannot show`,
   missing: 'pictures missing from the file left out',
   linked: 'pictures linked from outside the file left out',
   emptyTables: 'tables without cells left out',
@@ -117,7 +118,7 @@ const WHY = {
   turnedTables: 'turned tables shown upright',
   backgroundStretch: 'background pictures fill the slide without stretching',
   backgroundTiles: 'tiled backgrounds shown as one picture',
-  transitions: 'transitions shown as the nearest one Herald plays',
+  transitions: `transitions shown as the nearest one ${PRODUCT.shortName} plays`,
   footers: 'dates, footers and slide numbers shown as most slides have them',
   graphics: 'background graphics shown on slides that did not show them'
 } as const
@@ -2605,7 +2606,7 @@ export async function importPresentation(zip: JSZip, title: string): Promise<{ d
     ['sections', attempt(() => descendants(child(presentation, 'p:extLst'), 'p14:section').length, 0)],
     ['custom shows', childrenNamed(child(presentation, 'p:custShowLst'), 'p:custShow').length],
     ['slide masters besides the one most slides use', master ? masterPaths.filter((entry) => entry !== ctx.main.path).length : 0],
-    ['slide layouts Herald has no place for', master?.others ?? 0]
+    [`slide layouts ${PRODUCT.shortName} has no place for`, master?.others ?? 0]
   ]
 
   if (nearest) {

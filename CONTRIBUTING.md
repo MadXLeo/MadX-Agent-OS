@@ -1,17 +1,17 @@
-# Contributing to Herald OS
+# Contributing to MadX Agent OS
 
 Thanks for helping. This page covers getting a working setup, the checks a change must pass, and
 the conventions the code follows.
 
 ## Set up
 
-You need macOS 13 or later on Apple Silicon (or Herald OS Linux, see
+You need macOS 13 or later on Apple Silicon (or MadX Agent OS Linux, see
 [linux/README.md](linux/README.md)), Node 22.12 or later, and Hermes Agent installed and signed in.
 Then:
 
 ```bash
-git clone https://github.com/iamlukethedev/Herald-OS.git
-cd Herald-OS
+git clone https://github.com/MadXLeo/MadX-Agent-OS.git
+cd MadX-Agent-OS
 npm run bootstrap
 npm run dev
 ```
@@ -25,7 +25,7 @@ The [README](README.md) walks through each step and the usual problems.
 | `apps/desktop` | The shell: Electron main, preload, and the React renderer |
 | `packages/hermes-client` | Typed client for the Hermes gateway (JSON-RPC over WebSocket, REST) |
 | `plugins/herald-os-bridge` | Hermes plugin with the desktop tools, permission tiers and audit log |
-| `linux` | Herald OS Linux: session, compositor config, provisioning, VM tooling |
+| `linux` | MadX Agent OS Linux: session, compositor config, provisioning, VM tooling |
 | `scripts` | Bootstrap, upstream sync, bridge tests, secret scan |
 | `upstream` | The pinned Hermes Agent version the shell is built against |
 | `docs` | Architecture, decisions, the bridge, voice, Linux |
@@ -60,11 +60,11 @@ secrets. For UI changes, run the shell and add a screenshot to the pull request.
 - Every user-visible action registers an `OsCommand`, so the command bar, voice and Hermes can all
   reach it.
 - Text people read comes from the translation catalogs in `apps/desktop/shared/locales/`, English
-  first. [docs/TRANSLATING.md](docs/TRANSLATING.md) says how, and how to translate Herald OS into
+  first. [docs/TRANSLATING.md](docs/TRANSLATING.md) says how, and how to translate MadX Agent OS into
   your language.
 - The renderer never touches Node or spawns processes. Native work goes through a `HostPlatform`
   method, an IPC handler and the preload bridge.
-- Herald OS does not patch Hermes Agent. When the shell needs something upstream lacks, use its
+- MadX Agent OS does not patch Hermes Agent. When the shell needs something upstream lacks, use its
   public surfaces (gateway, REST, plugins, config) or propose the change upstream.
 - Decisions with lasting consequences get an entry in [docs/DECISIONS.md](docs/DECISIONS.md).
 

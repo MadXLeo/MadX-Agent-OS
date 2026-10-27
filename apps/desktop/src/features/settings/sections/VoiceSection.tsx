@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconBellRinging, IconBolt, IconClockPause, IconCoin, IconEar, IconEye, IconHourglass, IconKeyboard, IconLanguage, IconListDetails, IconMicrophone, IconPlayerPlay, IconSpeakerphone, IconVolume, IconWaveSine } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
@@ -123,7 +124,7 @@ export function VoiceSection() {
     setTested(null)
 
     try {
-      setTested(await speakWithFreeFallback('Hello. This is Hermes, speaking from Herald OS.', undefined, { notice: false }))
+      setTested(await speakWithFreeFallback(`Hello. This is Hermes, speaking from ${PRODUCT.name}.`, undefined, { notice: false }))
       config.reload()
       markSaved()
     } catch (error) {
@@ -188,7 +189,7 @@ export function VoiceSection() {
         <SettingsRow
           icon={<IconMicrophone />}
           label="Microphone access"
-          description={mic === 'granted' ? 'Granted.' : mic === 'denied' || mic === 'restricted' ? 'Denied. Allow Herald OS under System Settings > Privacy & Security > Microphone.' : 'Not asked yet; the first conversation asks.'}
+          description={mic === 'granted' ? 'Granted.' : mic === 'denied' || mic === 'restricted' ? `Denied. Allow ${PRODUCT.name} under System Settings > Privacy & Security > Microphone.` : 'Not asked yet; the first conversation asks.'}
           keywords="permission privacy"
         >
           {(mic === 'denied' || mic === 'restricted') && canOpenPrivacyPanes() && (

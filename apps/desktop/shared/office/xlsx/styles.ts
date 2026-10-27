@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../product.ts'
 import type { Alignment, Borders, Fill, Font, Style } from 'exceljs'
 import { argbOf, type ExcelColor, hexOf, mixed, type Palette, resolveColor } from './colors.ts'
 
@@ -92,7 +93,7 @@ export interface StyleNotes {
 export const NOTES = {
   pattern: 'Patterned cell fills are shown as solid colours.',
   gradient: 'Gradient cell fills are shown as solid colours.',
-  alignment: 'Some alignments (fill, centre across selection, justify down) are shown as the nearest one Herald Sheets has.'
+  alignment: `Some alignments (fill, centre across selection, justify down) are shown as the nearest one ${PRODUCT.apps.sheets} has.`
 } as const
 
 /** A font's own settings, those that differ from `base`, as Univer text style fields (cells and rich text runs both use these). */

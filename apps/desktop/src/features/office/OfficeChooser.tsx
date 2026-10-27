@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useEffect, useRef } from 'react'
 import { OFFICE_APP_NAMES, OFFICE_APPS, type OfficeApp } from '../../../shared/office/files.ts'
 import { AppTile } from '../../components/app-icon.tsx'
@@ -38,7 +39,7 @@ export function OfficeChooser({ x, running, onChoose, onClose }: { x: number; ru
     <div
       ref={panel}
       role="menu"
-      aria-label="Herald Office"
+      aria-label={PRODUCT.apps.office}
       className="float menu-surface pointer-events-auto absolute bottom-[calc(var(--dock-h)+4px)] z-(--z-overlay) w-64 -translate-x-1/2 rounded-xl p-1.5 animate-pop"
       style={{ left: Math.min(Math.max(x, 140), window.innerWidth - 140) }}
     >

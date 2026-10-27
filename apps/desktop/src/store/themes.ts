@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { atom } from 'nanostores'
 import type { HeraldOSPrefs } from '../../shared/ipc.ts'
 import { type ColorScheme, HERALD_SKIN, schemeOf, themeColorsFromSkin, themeFromPixels, themeSlug, type ThemeSummary } from '../../shared/theme.ts'
@@ -41,7 +42,7 @@ async function imagePixels(imagePath: string): Promise<Uint8ClampedArray> {
   const dataUrl = await window.heraldOS.theme.sample(imagePath)
 
   if (!dataUrl) {
-    throw new Error(`${imagePath.split('/').pop() || imagePath} is not an image Herald OS can read (PNG or JPEG).`)
+    throw new Error(`${imagePath.split('/').pop() || imagePath} is not an image ${PRODUCT.name} can read (PNG or JPEG).`)
   }
 
   const image = new Image()

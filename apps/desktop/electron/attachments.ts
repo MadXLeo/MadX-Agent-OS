@@ -1,3 +1,4 @@
+import { PRODUCT } from '../shared/product.ts'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import type { AttachmentFile } from '../shared/ipc.ts'
@@ -44,7 +45,7 @@ export async function readAttachment(target: string, maxBytes: number = ATTACHME
   const file = path.normalize(String(target))
 
   if (!allowed.has(file)) {
-    throw new Error('Herald OS only uploads files you chose to attach')
+    throw new Error(`${PRODUCT.name} only uploads files you chose to attach`)
   }
 
   const stat = await fs.stat(file)

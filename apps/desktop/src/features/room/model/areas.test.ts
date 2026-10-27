@@ -92,7 +92,7 @@ describe('the area table', () => {
     expect(step('sheets', { action: 'list_charts', workbook: 'Budget.xlsx' }).step).toBe('reading Budget.xlsx')
     expect(step('sheets', { action: 'fill' }).step).toBe('working on the workbook in front')
     expect(step('slides', { action: 'add_slide', presentation: 'Pitch.pptx' })).toMatchObject({ area: 'slides', step: 'working on Pitch.pptx' })
-    expect(step('docs', { action: 'list' })).toEqual({ area: 'docs', target: null, step: 'looking at Herald Docs' })
+    expect(step('docs', { action: 'list' })).toEqual({ area: 'docs', target: null, step: 'looking at MadX Docs' })
   })
 
   it('puts images in the canvas area', () => {
@@ -124,14 +124,14 @@ describe('the area table', () => {
     expect(step('tool_call', { name: 'read_file', arguments: { path: '/x/y.txt' } }, [{ kind: 'tool', app: '', action: '', emoji: '', text: 'Read y.txt', name: 'read_file' }])).toEqual({ area: 'files', target: null, step: 'reading a file' })
   })
 
-  it("maps Herald's own commands by their app", () => {
-    expect(step('os_ui', { action: 'run', command: 'docs.open' })).toEqual({ area: 'docs', target: null, step: 'opening Herald Docs' })
-    expect(step('os_ui', { action: 'run', command: 'sheets.set_cell' })).toEqual({ area: 'sheets', target: null, step: 'using Herald' })
+  it("maps MadX OS's own commands by their app", () => {
+    expect(step('os_ui', { action: 'run', command: 'docs.open' })).toEqual({ area: 'docs', target: null, step: 'opening MadX Docs' })
+    expect(step('os_ui', { action: 'run', command: 'sheets.set_cell' })).toEqual({ area: 'sheets', target: null, step: 'using MadX OS' })
     expect(step('os_ui', { action: 'run', command: 'web.open' })).toMatchObject({ area: 'browser', step: 'opening the browser' })
-    expect(step('os_ui', { action: 'run', command: 'connections.list' })).toMatchObject({ area: 'messages', step: 'using Herald' })
-    expect(step('os_ui', { action: 'run', command: 'page.open' })).toEqual({ area: null, target: null, step: 'using Herald' })
-    expect(step('os_ui', { action: 'list' })).toEqual({ area: null, target: null, step: 'looking at Herald' })
-    expect(step('os_ui', { action: 'state' })).toEqual({ area: null, target: null, step: 'looking at Herald' })
+    expect(step('os_ui', { action: 'run', command: 'connections.list' })).toMatchObject({ area: 'messages', step: 'using MadX OS' })
+    expect(step('os_ui', { action: 'run', command: 'page.open' })).toEqual({ area: null, target: null, step: 'using MadX OS' })
+    expect(step('os_ui', { action: 'list' })).toEqual({ area: null, target: null, step: 'looking at MadX OS' })
+    expect(step('os_ui', { action: 'state' })).toEqual({ area: null, target: null, step: 'looking at MadX OS' })
   })
 
   it('leaves the area alone for planning, delegating, scheduling and unknown tools', () => {

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import type { DocJSON } from '../../../../../shared/office/document.ts'
 import { baseName, extensionOf } from '../../../../../shared/office/files.ts'
 import type { SheetSnapshot, WorkbookSnapshot } from '../../../../../shared/office/workbook.ts'
@@ -43,7 +44,7 @@ export async function documentFromFile(file: string, bytes: Uint8Array): Promise
     return (extension === '.txt' ? documentFromText(text) : documentFromMarkdown(text)).document
   }
 
-  throw new Error(`Herald Slides cannot make slides from ${extension || 'these'} files`)
+  throw new Error(`${PRODUCT.apps.slides} cannot make slides from ${extension || 'these'} files`)
 }
 
 /** A spreadsheet file as Herald Sheets reads it: Excel workbooks and CSV. */
@@ -63,7 +64,7 @@ export async function workbookFromFile(file: string, bytes: Uint8Array): Promise
     return workbookFromCsv(decodeCsv(bytes).text, { id: unitId('book'), name }).workbook
   }
 
-  throw new Error(`Herald Slides cannot take tables from ${extension || 'these'} files`)
+  throw new Error(`${PRODUCT.apps.slides} cannot take tables from ${extension || 'these'} files`)
 }
 
 export interface PickedDocument {

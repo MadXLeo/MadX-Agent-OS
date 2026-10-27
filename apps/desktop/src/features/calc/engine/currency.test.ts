@@ -205,7 +205,7 @@ describe('without the rates it needs', () => {
   it('says the rates have not come yet', async () => {
     const result = await evaluate('100 USD in BRL', context('en-US', null))
 
-    expect(result).toMatchObject({ ok: false, error: "No currency rates yet: Herald fetches the European Central Bank's once a day when it can" })
+    expect(result).toMatchObject({ ok: false, error: "No currency rates yet: MadX OS fetches the European Central Bank's once a day when it can" })
   })
 
   it('names a currency the ECB has no rate for', async () => {

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 /*
  * Photoshop documents off the window's thread: reading one (its structure first, checked against
  * Herald Canvas's limits, then each layer's pixels in turn) and mapping it to layers, or writing
@@ -31,18 +32,18 @@ function read(buffer: ArrayBuffer): ImportedPsd {
   const psd = readPsd(buffer, { useRawData: true, useRawThumbnail: true, skipThumbnail: true, skipLinkedFilesData: true })
 
   if (psd.colorMode !== undefined && COLOUR_MODES[psd.colorMode]) {
-    throw new Error(`This document uses ${COLOUR_MODES[psd.colorMode]} colour, which Herald Canvas does not open: convert it to RGB first`)
+    throw new Error(`This document uses ${COLOUR_MODES[psd.colorMode]} colour, which ${PRODUCT.apps.canvas} does not open: convert it to RGB first`)
   }
 
   if (psd.width > LIMITS.side || psd.height > LIMITS.side || psd.width * psd.height > LIMITS.sourcePixels) {
-    throw new Error(`This document is ${psd.width.toLocaleString('en')}×${psd.height.toLocaleString('en')}; Herald Canvas opens up to ${LIMITS.side.toLocaleString('en')} pixels a side, ${(LIMITS.sourcePixels / 1e6).toLocaleString('en')} million in all`)
+    throw new Error(`This document is ${psd.width.toLocaleString('en')}×${psd.height.toLocaleString('en')}; ${PRODUCT.apps.canvas} opens up to ${LIMITS.side.toLocaleString('en')} pixels a side, ${(LIMITS.sourcePixels / 1e6).toLocaleString('en')} million in all`)
   }
 
   let count = 0
   const decode = (layers: Layer[] | undefined) => {
     for (const layer of layers ?? []) {
       if (++count > LIMITS.layers) {
-        throw new Error(`This document has more than ${LIMITS.layers.toLocaleString('en')} layers, more than Herald Canvas holds`)
+        throw new Error(`This document has more than ${LIMITS.layers.toLocaleString('en')} layers, more than ${PRODUCT.apps.canvas} holds`)
       }
 
       const width = Math.max(0, (layer.right ?? 0) - (layer.left ?? 0))

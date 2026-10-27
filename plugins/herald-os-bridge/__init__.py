@@ -1,19 +1,19 @@
-"""Herald OS system bridge.
+"""MadX Agent OS system bridge.
 
 Registers the ``herald_os`` toolset: a narrow set of explicit, permission-tiered tools that let
 Hermes act on the computer it is running on. Execution goes through a per-platform
 ``HostAdapter`` (macOS and Linux implemented; Windows is a typed stub), permissions through
 ``bridge.permissions`` (tiers, protected paths, the upstream approval gate), and every call is
 recorded by ``bridge.audit``. ``system_os`` (registered from the same ``TOOL_SPECS`` table) drives
-Herald OS Linux's ``herald-os`` CLI and answers with a clear failure on other platforms. The tools
-are offered and run only in Herald OS's own sessions (``bridge.scope``). ``bridge.observe`` adds
-observer hooks that tell the Pet Room about Hermes's work outside Herald OS, only while a running
-Herald OS asks for it.
+MadX Agent OS Linux's ``herald-os`` CLI and answers with a clear failure on other platforms. The tools
+are offered and run only in MadX Agent OS's own sessions (``bridge.scope``). ``bridge.observe`` adds
+observer hooks that tell the Pet Room about Hermes's work outside MadX Agent OS, only while a running
+MadX Agent OS asks for it.
 
 Out-of-tree by design: the plugin uses only public plugin APIs (``register``,
 ``ctx.register_tool``, ``ctx.register_skill``, ``ctx.register_hook``,
 ``tools.approval.request_tool_approval``) and the session variables Hermes binds for tools
-(``gateway.session_context.get_session_env``) so Herald OS never patches the Hermes core.
+(``gateway.session_context.get_session_env``) so MadX Agent OS never patches the Hermes core.
 """
 
 from __future__ import annotations
@@ -31,18 +31,18 @@ SKILLS: dict[str, str] = {
     "herald-os": "How Hermes acts as the operating environment on this computer.",
     "diagnose-crash": "Explain why a program crashed from its crash report or core dump, and whether it is worth reporting.",
     "file-documents": "Find documents such as invoices and receipts among badly named files, read them (OCR for scans), name them clearly and file them where the person keeps them, with a plan they approve and an undo.",
-    "herald-os-tailor": "Change Herald OS itself: Herald OS widgets (menu bar, Overview, their own window), themes, fonts, the wallpaper, the menu bar, control-menu entries, branding, keybindings, settings and routines.",
-    "herald-canvas": "Make and edit pictures in Herald Canvas: posters, banners, collages, photo fixes; the canvas tool, design habits, the .comp format and every adjustment setting.",
-    "herald-docs": "Write and edit documents in Herald Docs: drafts from a brief, templates, rewriting marked text, formatting, tables, pictures, headers and footers, page numbers, notes, sections, comments and reviews, tables of contents, statistics, a sheet's figures in a report, saving and PDFs.",
-    "herald-sheets": "Work in Herald Sheets: formulas from a description, explaining formulas, filling a column from examples, cleaning data, charts, summaries of tables, named ranges, validation and dropdown lists, comments and notes, what stands out, building a workbook, sorting, filtering, saving.",
-    "herald-slides": "Make and change presentations in Herald Slides: a deck from a topic, a document or a sheet, layouts, the slide master (a logo, slide numbers, footers, placeholders, backgrounds), themes and custom themes, transitions, gradients, flowcharts with connectors and groups, table borders, speaker notes, pictures, tables, reordering, saving and PDFs.",
-    "herald-calc": "Exact math with Herald Calc: arithmetic, percentages, units, currencies, dates and time zones through the calc tool with the working shown, notes with names and totals, what a graph or a sheet's column shows, and the calculation history.",
+    "herald-os-tailor": "Change MadX Agent OS itself: MadX Agent OS widgets (menu bar, Overview, their own window), themes, fonts, the wallpaper, the menu bar, control-menu entries, branding, keybindings, settings and routines.",
+    "herald-canvas": "Make and edit pictures in MadX Canvas: posters, banners, collages, photo fixes; the canvas tool, design habits, the .comp format and every adjustment setting.",
+    "herald-docs": "Write and edit documents in MadX Docs: drafts from a brief, templates, rewriting marked text, formatting, tables, pictures, headers and footers, page numbers, notes, sections, comments and reviews, tables of contents, statistics, a sheet's figures in a report, saving and PDFs.",
+    "herald-sheets": "Work in MadX Sheets: formulas from a description, explaining formulas, filling a column from examples, cleaning data, charts, summaries of tables, named ranges, validation and dropdown lists, comments and notes, what stands out, building a workbook, sorting, filtering, saving.",
+    "herald-slides": "Make and change presentations in MadX Slides: a deck from a topic, a document or a sheet, layouts, the slide master (a logo, slide numbers, footers, placeholders, backgrounds), themes and custom themes, transitions, gradients, flowcharts with connectors and groups, table borders, speaker notes, pictures, tables, reordering, saving and PDFs.",
+    "herald-calc": "Exact math with MadX Calc: arithmetic, percentages, units, currencies, dates and time zones through the calc tool with the working shown, notes with names and totals, what a graph or a sheet's column shows, and the calculation history.",
 }
 
 
 def _check_available() -> bool:
     """What the model sees: the host adapter must exist for this platform, the bridge must not be
-    disabled in config, and the session must be Herald OS's own."""
+    disabled in config, and the session must be MadX Agent OS's own."""
     return host_available() and _tools.bridge_enabled() and _scope.offered()
 
 

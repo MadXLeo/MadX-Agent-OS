@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { atom, computed } from 'nanostores'
 import { isExcluded } from '../../shared/continuity.ts'
 import type { ContinuityItem, ContinuityPrefs, ContinuityThread } from '../../shared/ipc.ts'
@@ -99,7 +100,7 @@ async function catchUp(awayMs?: number): Promise<ContinuityThread[]> {
       const parsed = parseThreads(answer.text, request.refs)
 
       if (!parsed) {
-        throw new Error('Hermes answered in a form Herald OS could not read. Try again.')
+        throw new Error(`Hermes answered in a form ${PRODUCT.name} could not read. Try again.`)
       }
 
       threads = parsed

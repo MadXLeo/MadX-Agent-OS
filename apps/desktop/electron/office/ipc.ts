@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { BrowserWindow, dialog, ipcMain, type WebContents, webContents } from 'electron'
 import crypto from 'node:crypto'
 import fs from 'node:fs/promises'
@@ -105,7 +106,7 @@ export function registerOfficeIpc(getWindow: () => BrowserWindow | null): void {
 
   ipcMain.handle(IPC.officePickOpen, async (event, app: OfficeApp): Promise<string[]> => {
     if (!isApp(app)) {
-      throw new Error(`${String(app)} is not a Herald Office app`)
+      throw new Error(`${String(app)} is not a ${PRODUCT.apps.office} app`)
     }
 
     const formats = openFormats(app, await abilities())
@@ -123,14 +124,14 @@ export function registerOfficeIpc(getWindow: () => BrowserWindow | null): void {
 
   ipcMain.handle(IPC.officePickSave, async (event, app: OfficeApp, suggestedName: string, preferred?: string): Promise<OfficeSaveTarget | null> => {
     if (!isApp(app)) {
-      throw new Error(`${String(app)} is not a Herald Office app`)
+      throw new Error(`${String(app)} is not a ${PRODUCT.apps.office} app`)
     }
 
     const formats = saveFormats(app, await abilities())
     const first = formats.find((format) => format.extension === preferred) ?? formats[0]
 
     if (!first) {
-      throw new Error(`Herald Office cannot save ${OFFICE_NOUNS[app]}s yet`)
+      throw new Error(`${PRODUCT.apps.office} cannot save ${OFFICE_NOUNS[app]}s yet`)
     }
 
     const ordered = [first, ...formats.filter((format) => format !== first)]
@@ -157,7 +158,7 @@ export function registerOfficeIpc(getWindow: () => BrowserWindow | null): void {
     }
 
     if (stat.size > MAX_OFFICE_BYTES) {
-      throw new Error(`${path.basename(file)} is larger than ${MAX_OFFICE_BYTES / 1024 / 1024} MB, more than Herald Office opens`)
+      throw new Error(`${path.basename(file)} is larger than ${MAX_OFFICE_BYTES / 1024 / 1024} MB, more than ${PRODUCT.apps.office} opens`)
     }
 
     const bytes = new Uint8Array(await fs.readFile(file))
@@ -268,7 +269,7 @@ export function registerOfficeIpc(getWindow: () => BrowserWindow | null): void {
     const owner = isApp(target?.app) ? ownerOf(target.app, String(target.key)) : null
 
     if (!owner || owner === event.sender) {
-      throw new Error('That document is no longer open in a Herald Office window')
+      throw new Error(`That document is no longer open in a ${PRODUCT.apps.office} window`)
     }
 
     const requestId = `office-run-${++runCounter}`

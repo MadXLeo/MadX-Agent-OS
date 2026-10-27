@@ -29,21 +29,21 @@ describe('dropSuggestions', () => {
       { id: 'ask', label: 'Ask about it' }
     ])
     expect(dropSuggestions([PHOTO])).toEqual([
-      { id: 'canvas', label: 'Edit in Herald Canvas' },
+      { id: 'canvas', label: 'Edit in MadX Canvas' },
       { id: 'describe', label: 'What is in it?' },
       { id: 'fileInvoice', label: 'File it as an invoice' },
       { id: 'ask', label: 'Ask about it' }
     ])
-    expect(dropSuggestions([DOC]).map(suggestion => suggestion.label)).toEqual(['Summarise it', 'Turn it into slides', 'Open in Herald Docs', 'Ask about it'])
+    expect(dropSuggestions([DOC]).map(suggestion => suggestion.label)).toEqual(['Summarise it', 'Turn it into slides', 'Open in MadX Docs', 'Ask about it'])
     expect(ids(['/tmp/notes.md'])).toEqual(['summarize', 'slides', 'openDocs', 'ask'])
     expect(ids(['/tmp/notes.txt'])).toEqual(['summarize', 'slides', 'openDocs', 'ask'])
     expect(ids(['/tmp/Budget.xlsx'])).toEqual(['summarize', 'openSheets', 'ask'])
     expect(ids(['/tmp/data.csv'])).toEqual(['summarize', 'openSheets', 'ask'])
-    expect(dropSuggestions(['/tmp/Pitch.pptx']).map(suggestion => suggestion.label)).toEqual(['Summarise it', 'Open in Herald Slides', 'Ask about it'])
+    expect(dropSuggestions(['/tmp/Pitch.pptx']).map(suggestion => suggestion.label)).toEqual(['Summarise it', 'Open in MadX Slides', 'Ask about it'])
     expect(ids(['/tmp/archive.zip'])).toEqual(['ask'])
   })
 
-  it('offers Herald Docs, Sheets and Slides only for the formats they open', () => {
+  it('offers MadX Docs, Sheets and Slides only for the formats they open', () => {
     expect(ids(['/tmp/Letter.rtf'])).toEqual(['summarize', 'ask'])
     expect(ids(['/tmp/Essay.pages'])).toEqual(['summarize', 'ask'])
     expect(ids(['/tmp/Old.xls'])).toEqual(['summarize', 'ask'])
@@ -70,7 +70,7 @@ describe('dropSuggestions', () => {
 })
 
 describe('dropAction', () => {
-  it('opens files in Herald’s apps through their commands', () => {
+  it('opens files in MadX OS’s apps through their commands', () => {
     expect(dropAction('canvas', [PHOTO])).toEqual({ kind: 'command', command: 'canvas.open', args: { path: PHOTO } })
     expect(dropAction('openDocs', [DOC])).toEqual({ kind: 'command', command: 'docs.open', args: { path: DOC } })
     expect(dropAction('openSheets', ['/tmp/Budget.xlsx'])).toEqual({ kind: 'command', command: 'sheets.open', args: { path: '/tmp/Budget.xlsx' } })
@@ -83,7 +83,7 @@ describe('dropAction', () => {
     const pdf = dropAction('slides', [PDF])
 
     expect(pdf?.kind).toBe('prompt')
-    expect(pdf?.kind === 'prompt' && pdf.prompt).toMatch(/presentation in Herald Slides/)
+    expect(pdf?.kind === 'prompt' && pdf.prompt).toMatch(/presentation in MadX Slides/)
     expect(pdf?.kind === 'prompt' && pdf.prompt.split('\n').at(-1)).toBe(PDF)
   })
 

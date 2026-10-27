@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import {
   IconAlarm,
   IconAlertTriangle,
@@ -242,13 +243,13 @@ function buildMenu(actions: { applications: () => void; close: () => void }, lin
     {
       id: 'update',
       label: 'Update',
-      hint: 'Herald OS',
+      hint: PRODUCT.name,
       icon: IconRefresh,
       children: [
-        { id: 'update-herald-os', label: 'Herald OS', hint: 'The shell, system packages, apps and Hermes', icon: IconRefresh, leaf: { kind: 'cli', argv: ['update'] } },
+        { id: 'update-herald-os', label: PRODUCT.name, hint: 'The shell, system packages, apps and Hermes', icon: IconRefresh, leaf: { kind: 'cli', argv: ['update'] } },
         { id: 'update-firmware-check', label: 'Firmware', hint: 'Check the BIOS, docks and drives (fwupd)', icon: IconCpu, leaf: { kind: 'cli', argv: ['firmware', 'check'] } },
         { id: 'update-firmware', label: 'Install firmware updates', hint: 'Some finish on the next restart', icon: IconCpu, leaf: { kind: 'cli', argv: ['firmware', 'update'] } },
-        { id: 'update-rollback', label: 'Go back to the previous version', hint: 'The Herald OS image or a release tarball; it applies when Herald OS restarts', icon: IconHistory, leaf: { kind: 'cli', argv: ['rollback'] } }
+        { id: 'update-rollback', label: 'Go back to the previous version', hint: `The ${PRODUCT.name} image or a release tarball; it applies when ${PRODUCT.name} restarts`, icon: IconHistory, leaf: { kind: 'cli', argv: ['rollback'] } }
       ]
     },
     {
@@ -724,7 +725,7 @@ export function ControlMenu({ onClose, onApplications, initialItem }: ControlMen
           <HermesAvatar size={22} rounded={6} />
         )}
         <span className="flex min-w-0 items-center gap-1.5 text-[14px] font-semibold">
-          <span className={cn(title.length > 0 && 'text-fg-3')}>Herald OS</span>
+          <span className={cn(title.length > 0 && 'text-fg-3')}>{PRODUCT.name}</span>
           {title.map(label => (
             <span key={label} className="flex items-center gap-1.5">
               <IconChevronRight size={13} className="text-fg-4" />

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { ChainedCommands, Editor } from '@tiptap/core'
 import { type CalloutKind, headerKindFor, type NoteKind, type PageHeaders, type SectionKind } from '../../../../shared/office/document.ts'
 import { messageOf } from '../../canvas/errors.ts'
@@ -229,7 +230,7 @@ export async function picturesFromFiles(files: readonly File[]): Promise<void> {
   const added = await insertPictures(editor.view, read)
 
   if (added < read.length) {
-    docsSession.notify('Herald Docs shows PNG, JPEG, GIF, WebP, BMP and SVG pictures', 'error')
+    docsSession.notify(`${PRODUCT.apps.docs} shows PNG, JPEG, GIF, WebP, BMP and SVG pictures`, 'error')
   }
 
   editor.commands.focus()
@@ -250,7 +251,7 @@ export async function pictureFromPath(file: string, at?: { left: number; top: nu
     const added = await insertPictures(editor.view, [{ bytes: data.bytes, mime }], pos === undefined ? 'selection' : { pos })
 
     if (!added) {
-      docsSession.notify(`Herald Docs does not show ${file.split('/').pop()} as a picture`, 'error')
+      docsSession.notify(`${PRODUCT.apps.docs} does not show ${file.split('/').pop()} as a picture`, 'error')
     }
   } catch (error) {
     docsSession.notify(`Could not add ${file.split('/').pop()}: ${messageOf(error)}`, 'error')

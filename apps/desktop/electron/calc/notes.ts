@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import crypto from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
@@ -186,7 +187,7 @@ export class NotesStore {
 
   private async checkRoom(): Promise<void> {
     if ((await this.ids()).length >= CALC_NOTES_MAX) {
-      throw new Error(`Herald Calc keeps at most ${CALC_NOTES_MAX} notes; delete one to make room.`)
+      throw new Error(`${PRODUCT.apps.calc} keeps at most ${CALC_NOTES_MAX} notes; delete one to make room.`)
     }
   }
 

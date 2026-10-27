@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { RoomArea } from './types.ts'
 
 /*
@@ -46,19 +47,19 @@ const IDENTIFIER = /^[a-z][a-z0-9_.:-]{0,47}$/i
 const SCHEME = /^[a-z][a-z0-9+.-]*:\/\//i
 
 const OFFICE: Record<string, { area: RoomArea; key: string; app: string; front: string }> = {
-  docs: { area: 'docs', key: 'document', app: 'Herald Docs', front: 'the document in front' },
-  sheets: { area: 'sheets', key: 'workbook', app: 'Herald Sheets', front: 'the workbook in front' },
-  slides: { area: 'slides', key: 'presentation', app: 'Herald Slides', front: 'the presentation in front' }
+  docs: { area: 'docs', key: 'document', app: PRODUCT.apps.docs, front: 'the document in front' },
+  sheets: { area: 'sheets', key: 'workbook', app: PRODUCT.apps.sheets, front: 'the workbook in front' },
+  slides: { area: 'slides', key: 'presentation', app: PRODUCT.apps.slides, front: 'the presentation in front' }
 }
 const OFFICE_LOOKS = new Set(['list', 'list_all', 'list_templates'])
 const OFFICE_READS = new Set(['read', 'find', 'statistics', 'read_master', 'describe_chart', 'get_validation'])
 
 /** Herald's own commands (`os_ui`), by the app their id starts with. */
 const HERALD_APPS: Record<string, { area: RoomArea; app: string }> = {
-  docs: { area: 'docs', app: 'Herald Docs' },
-  sheets: { area: 'sheets', app: 'Herald Sheets' },
-  slides: { area: 'slides', app: 'Herald Slides' },
-  canvas: { area: 'canvas', app: 'Herald Canvas' },
+  docs: { area: 'docs', app: PRODUCT.apps.docs },
+  sheets: { area: 'sheets', app: PRODUCT.apps.sheets },
+  slides: { area: 'slides', app: PRODUCT.apps.slides },
+  canvas: { area: 'canvas', app: PRODUCT.apps.canvas },
   studio: { area: 'studio', app: 'Studio' },
   web: { area: 'browser', app: 'the browser' },
   browser: { area: 'browser', app: 'the browser' },
@@ -247,17 +248,17 @@ const withTarget = (target: string | null, named: (target: string) => string, pl
 
 function heraldStep(call: RoomToolCall): RoomToolStep {
   if (call.action === 'list' || call.action === 'state') {
-    return { area: null, target: null, step: 'looking at Herald' }
+    return { area: null, target: null, step: `looking at ${PRODUCT.shortName}` }
   }
 
   const [prefix, verb] = (call.command ?? '').split('.')
   const app = HERALD_APPS[prefix]
 
   if (!app) {
-    return { area: null, target: null, step: 'using Herald' }
+    return { area: null, target: null, step: `using ${PRODUCT.shortName}` }
   }
 
-  return { area: app.area, target: null, step: verb === 'open' ? `opening ${app.app}` : 'using Herald' }
+  return { area: app.area, target: null, step: verb === 'open' ? `opening ${app.app}` : `using ${PRODUCT.shortName}` }
 }
 
 function officeStep(call: RoomToolCall, office: (typeof OFFICE)[string]): RoomToolStep {

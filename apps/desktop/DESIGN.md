@@ -1,4 +1,4 @@
-# Herald OS shell: design and engineering brief
+# MadX Agent OS shell: design and engineering brief
 
 Read this before adding or changing a page. It is the contract between pages, the shell, the
 stores and the Electron bridge. The target look is "deep-blue glass on a living wallpaper": one
@@ -11,7 +11,7 @@ secondary apps, a dock, a menu bar. For where files live, see [README.md](README
 - `src/store/windows.ts` is the window manager. `showPage(pageId)` switches the main window's page;
   `openApp(appId)` opens floating apps (`terminal`, `system`, `chat-popout`, `web`, `studio` via `openStudio(sessionId)`). Never navigate any
   other way. `$page` is the current page id.
-- Web pages open inside Herald OS, never in the system browser: `openWebWindow(url, { title })` in
+- Web pages open inside MadX Agent OS, never in the system browser: `openWebWindow(url, { title })` in
   `src/store/web-windows.ts` opens a `web` floating window (`src/features/web/WebWindow.tsx`: title bar,
   read-only address bar) and main layers a locked-down `WebContentsView` over its content rect. The
   view paints above every DOM layer, so it hides while the command bar, launcher, notifications panel
@@ -19,10 +19,10 @@ secondary apps, a dock, a menu bar. For where files live, see [README.md](README
   `shell.openExternal` for links that genuinely belong to another app. Any component that hosts a
   native view (web windows, the Studio preview) places it with `useNativeView` in
   `src/features/web/native-view.ts`, which also trims it around the voice pill and action captions.
-- In panels mode (Herald OS on niri) each surface is a compositor window of its own, and nothing is
+- In panels mode (MadX Agent OS on niri) each surface is a compositor window of its own, and nothing is
   drawn past a window's edge: a popover taller than its surface's window needs a window of its own.
   The Dock's menu for a running app (`src/shell/surfaces/DockMenu.tsx`) is one the Dock opens on an
-  empty page and draws into through a portal, as Herald Slides draws its audience window; main sizes
+  empty page and draws into through a portal, as MadX Slides draws its audience window; main sizes
   it and moves it over the icon through niri first (`electron/shell/dock-menu.ts`).
 - `src/shell/apps.ts` is the registry: `PAGES` (sidebar), `FLOATING_APPS`, `HERMES_APPS`,
   `FEATURED_NATIVE` (macOS apps by name). Icons are ids rendered by `AppGlyph` / `AppTile`
@@ -71,12 +71,12 @@ REST via `src/lib/rest.ts` (`rest.get/post/put/del`, paths under `/api/`). Loade
 Stores (nanostores; subscribe with `useStore`):
 
 - `store/chat.ts`: `$chats`, `$activeChat`, `createChat`, `openStoredSession`, `sendPrompt` (with `attachments`), `runSlash`, `interruptChat`.
-- `store/attachments.ts`: `attachFiles` (a prompt's files, uploaded into the session with `file.attach` when `$backend.localFiles` is false: an attached Hermes that did not read back a file Herald wrote, see `electron/backend/local-files.ts`), `$uploading`, `hermesReadsLocalFiles`; main reads only files the person picked or Herald made for a prompt (`electron/attachments.ts`). The composers' chips are `features/hermes/ComposerFiles.tsx`.
+- `store/attachments.ts`: `attachFiles` (a prompt's files, uploaded into the session with `file.attach` when `$backend.localFiles` is false: an attached Hermes that did not read back a file MadX wrote, see `electron/backend/local-files.ts`), `$uploading`, `hermesReadsLocalFiles`; main reads only files the person picked or MadX made for a prompt (`electron/attachments.ts`). The composers' chips are `features/hermes/ComposerFiles.tsx`.
 - `store/sessions.ts`: `$sessions` (rows), `$runtimeIds` (stored -> runtime id), `refreshSessions`, `deleteSession`.
 - `store/bots.ts`: the bots a conversation runs as, every Hermes profile with its Bot Mode name and picture (`lib/bots.ts`): `$bots` (Hermes first), `$botAvatars` (`loadAvatar` fills it when `components/bot-avatar.tsx` first shows a bot), `$newChatBot` (the one chosen last, in `prefs.conversationBot`), `$conversationBot` (the Hermes window's), `startConversation`, `refreshBots`, `focusBots`. A bot's sessions live in its own profile, so `createChat`, `openStoredSession`, `refreshSessions` and `deleteSession` take its `profile` (Hermes's go without one), its list is `$botSessions[profile]` and `ChatState.profile` says whose a chat is. The pickers are `features/hermes/BotPicker.tsx`; chats that features start for themselves stay with Hermes.
 - `store/missions.ts`: `$missions`, `$activeMissions`, `$reviewMissions`, `$completedMissions`, `$todos`, `$artifacts`, `$allArtifacts`, `$activity`, `markReviewed`. A Mission is a derived view of a session (goal, todo steps, progress %, agents, artifacts, status active|review|queued|completed).
 - `store/agents.ts`: `$agents` (live subagents).
-- `store/requests.ts`: `$pendingRequests`, `resolveRequest` (approval / clarify / sudo / secret). `shell/RequestHost.tsx` draws them: a card never takes the focus from a field being typed in nor gives it to an answer (`lib/request-focus.ts`), a polite live region announces each arrival once, and the `requests.focus` command (Cmd+Option+A, Super+Shift+A on Linux; `lib/request-keys.ts`) moves the focus to the oldest request's card: from keys, the command bar and voice, from the CLI only in panels mode (niri's bind), once a second at most. Approval answers are drawn Deny first, so Tab and Enter from a card deny. On Herald OS Linux any program running as the same user can call `herald-os os requests.focus`, and such a program can also type keys into any window with `wtype`, so the card guards against stray keys, not against a same-user program.
+- `store/requests.ts`: `$pendingRequests`, `resolveRequest` (approval / clarify / sudo / secret). `shell/RequestHost.tsx` draws them: a card never takes the focus from a field being typed in nor gives it to an answer (`lib/request-focus.ts`), a polite live region announces each arrival once, and the `requests.focus` command (Cmd+Option+A, Super+Shift+A on Linux; `lib/request-keys.ts`) moves the focus to the oldest request's card: from keys, the command bar and voice, from the CLI only in panels mode (niri's bind), once a second at most. Approval answers are drawn Deny first, so Tab and Enter from a card deny. On MadX Agent OS Linux any program running as the same user can call `herald-os os requests.focus`, and such a program can also type keys into any window with `wtype`, so the card guards against stray keys, not against a same-user program.
 - `store/notifications.ts`: `notify()`, `$notifications`.
 - `store/spaces.ts`: `$spaces`, `$activeSpace`, `setActiveSpace`, `addSpace`.
 - `store/backend.ts`: `$backend`, `$prefs`, `updatePrefs`, `$env`.
@@ -89,7 +89,7 @@ Stores (nanostores; subscribe with `useStore`):
 - `store/continuity.ts`: `$threads`, `$catchUp`, `refreshThreads`, `continueThread`, `startNextStep`, `dismissThread`, `setExclusions` (Pick up where you left off; pure evidence and parsing in `lib/continuity.ts`, see `docs/ARCHITECTURE.md`).
 - `store/voice.ts`: `$voice` (state, engine, captions, live meter), `$voiceActive`, `startVoice`, `endConversation`, `toggleVoice`, `toggleMute`; `store/wake.ts`: `$wake`, `setWakeWordEnabled`. Voice UI lives in `src/features/voice/` (`VoiceOrb`, `MicButton`, `VoiceIndicator`); see `docs/VOICE.md`.
 - `store/i18n.ts`: `$language` (what every window shows: the Language setting, or the system's languages from `$env`), `t` and `useT()` for strings from the catalogs in `shared/locales/`, `$locale` for dates and numbers, `setLanguage`. Main builds its menus with `translate(menuLanguage(), key)` (`electron/i18n.ts`); see `docs/TRANSLATING.md`.
-- `features/pet/`: `$petInfo` (Hermes's pet, as main reads it), `$petSnapshot` (what the pet shows), `$petPrefs` (Herald's own pet preferences), `$petChat`, `showPet`, `hidePet`, `selectPet`, `setPetScale`, `setPetEnabled`. The brain (`brain.ts`) runs in the Hermes window and publishes the snapshot; the pet commands are in `src/commands/pet.ts`; see `docs/ARCHITECTURE.md`.
+- `features/pet/`: `$petInfo` (Hermes's pet, as main reads it), `$petSnapshot` (what the pet shows), `$petPrefs` (MadX's own pet preferences), `$petChat`, `showPet`, `hidePet`, `selectPet`, `setPetScale`, `setPetEnabled`. The brain (`brain.ts`) runs in the Hermes window and publishes the snapshot; the pet commands are in `src/commands/pet.ts`; see `docs/ARCHITECTURE.md`.
 
 Electron bridge `window.heraldOS` (typed in `preload/index.ts`):
 `backend.{getState,onState,restart,rest,logTail}`, `system.{info,stats,processes,network,subscribeStats}`,

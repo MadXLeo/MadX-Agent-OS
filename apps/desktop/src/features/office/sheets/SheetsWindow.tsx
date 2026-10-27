@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import '../univer/univer.css'
 import './fonts.css'
 import { useEffect, useMemo, useState } from 'react'
@@ -150,7 +151,7 @@ export function SheetsWindow({ payload }: { payload?: Record<string, unknown> })
       if (officeAppFor(file, abilities) === 'sheets') {
         sheetsSession.open(file).catch((error: unknown) => sheetsSession.notify(`Could not open ${file.split('/').pop()}: ${messageOf(error)}`, 'error'))
       } else {
-        sheetsSession.notify(`Herald Sheets does not open ${file.split('/').pop()}`, 'error')
+        sheetsSession.notify(`${PRODUCT.apps.sheets} does not open ${file.split('/').pop()}`, 'error')
       }
     })
   }

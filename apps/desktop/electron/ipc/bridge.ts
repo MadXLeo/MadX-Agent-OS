@@ -1,10 +1,11 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { ipcMain } from 'electron'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { type AuditEntry, IPC } from '../../shared/ipc.ts'
 import { heraldOsDataDir } from '../paths.ts'
 
-const DEFAULT_POLICY = `# Herald OS system bridge policy. See docs/SYSTEM-BRIDGE.md.
+const DEFAULT_POLICY = `# ${PRODUCT.name} system bridge policy. See docs/SYSTEM-BRIDGE.md.
 version: 1
 tiers:
   read: allow

@@ -10,7 +10,7 @@ import { chartDrawing, chartWorkbook, EITHER_WAY, EVERY_KIND, range, SALES_SERIE
 import { HERALD_SECTION, shownAnchors, withSheets } from './index.ts'
 import { NOTES } from './read.ts'
 
-/* Charts made in Herald written into .xlsx files and read back: from the chart parts alone, and exactly through Herald's part. */
+/* Charts made in MadX OS written into .xlsx files and read back: from the chart parts alone, and exactly through MadX OS's part. */
 
 type Drawings = Record<string, { data: Record<string, ChartDrawing>; order: string[] }>
 
@@ -88,12 +88,12 @@ describe('charts written into a file and read back', () => {
     ])
   })
 
-  it('gives back the exact spec through Herald’s part: its palette, label mode, fields Excel has no place for, and the drawing’s id', async () => {
+  it('gives back the exact spec through MadX OS’s part: its palette, label mode, fields Excel has no place for, and the drawing’s id', async () => {
     const spec = { kind: 'column', series: [{ values: north.values, categories: months }, { values: south.values }], legend: 'right', labels: 'percent', palette: ['#111111', '#222222'], axes: { y: { max: 200 } }, later: { field: [1, 2] } } as ChartSpec
     const { bytes, losses } = await xlsxFromWorkbook(chartWorkbook([chartDrawing('mine', 's1', spec)]))
     const { charts, workbook } = await readBack(bytes)
 
-    expect(losses).toEqual(['Excel labels columns, bars, lines and areas with their values where Herald Sheets shows each one’s share of its category.'])
+    expect(losses).toEqual(['Excel labels columns, bars, lines and areas with their values where MadX Sheets shows each one’s share of its category.'])
     expect(charts).toHaveLength(1)
     expect(charts[0].drawingId).toBe('mine')
     expect(charts[0].data.spec).toEqual(asRead(spec))
@@ -101,7 +101,7 @@ describe('charts written into a file and read back', () => {
     expect(readResource<Drawings>(workbook.resources, DRAWING_RESOURCE)!['sheet-1'].order).toEqual(['mine'])
   })
 
-  it('shows in Excel what Herald draws: the palette in turn, the first categories for every series, values for percentages', async () => {
+  it('shows in Excel what MadX OS draws: the palette in turn, the first categories for every series, values for percentages', async () => {
     const spec: ChartSpec = { kind: 'column', series: [{ values: north.values, categories: months }, { values: south.values }], legend: 'right', labels: 'percent', palette: ['#111111', '#222222'] }
     const { bytes } = await xlsxFromWorkbook(chartWorkbook([chartDrawing('mine', 's1', spec)]))
     const { charts } = await readBack(await withoutHeraldPart(bytes))
@@ -120,7 +120,7 @@ describe('charts written into a file and read back', () => {
     )
   })
 
-  it('writes what a spec leaves to Herald’s defaults: Office colours, columns then lines in a combo, markers up to 40 points, a half hole', async () => {
+  it('writes what a spec leaves to MadX OS’s defaults: Office colours, columns then lines in a combo, markers up to 40 points, a half hole', async () => {
     const combo: ChartSpec = { kind: 'combo', series: [north, south], legend: 'bottom', labels: 'none' }
     const doughnut: ChartSpec = { kind: 'doughnut', series: [north], legend: 'none', labels: 'none' }
     const { bytes } = await xlsxFromWorkbook(chartWorkbook([chartDrawing('combo', 's1', combo), chartDrawing('ring', 's1', doughnut, { at: 1 })]))
@@ -138,7 +138,7 @@ describe('charts written into a file and read back', () => {
     expect(charts[1].data.spec).toMatchObject({ hole: 50, palette: ['#4472c4', '#ed7d31', '#a5a5a5', '#ffc000'] })
   })
 
-  it('reads a chart another app changed since from its XML, not from Herald’s part', async () => {
+  it('reads a chart another app changed since from its XML, not from MadX OS’s part', async () => {
     const spec: ChartSpec = { kind: 'column', title: 'Before', series: [north], legend: 'right', labels: 'none', palette: ['#111111'] }
     const { bytes } = await xlsxFromWorkbook(chartWorkbook([chartDrawing('mine', 's1', spec)]))
     const zip = await JSZip.loadAsync(bytes)

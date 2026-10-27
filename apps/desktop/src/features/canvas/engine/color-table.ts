@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 /*
  * Colour lookup tables for the Color Lookup adjustment: 3D tables read from `.cube` files (the
  * text format most grading tools write), and a colour looked up in one between its eight nearest
@@ -147,7 +148,7 @@ export function lookUp(c: RGB3, table: ColorTable): RGB3 {
 }
 
 /** A table written out as a `.cube` file (for tables made here, such as tests and an identity table). */
-export function cubeText(size: number, colour: (r: number, g: number, b: number) => RGB3, title = 'Herald Canvas'): string {
+export function cubeText(size: number, colour: (r: number, g: number, b: number) => RGB3, title: string = PRODUCT.apps.canvas): string {
   const rows = [`TITLE "${title}"`, `LUT_3D_SIZE ${size}`]
 
   for (let b = 0; b < size; b++) {

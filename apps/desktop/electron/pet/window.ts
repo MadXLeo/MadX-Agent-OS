@@ -1,7 +1,9 @@
+import { PRODUCT } from '../../shared/product.ts'
+import { isSlidesPresentation } from '../../shared/product-windows.ts'
 import { app, BrowserWindow, screen, type WebContents } from 'electron'
 import { IPC, type WmState } from '../../shared/ipc.ts'
 import { type PetCover, type PetInfo, type PetRect, petShown, type PetWindowPlacement } from '../../shared/pet.ts'
-import { FLOATING_APPS, SURFACE_TITLE } from '../shell/mode.ts'
+import { SURFACE_TITLE } from '../shell/mode.ts'
 import type { PanelShell } from '../shell/panels.ts'
 
 /*
@@ -12,9 +14,8 @@ import type { PanelShell } from '../shell/panels.ts'
  */
 
 export const PET_TITLE = SURFACE_TITLE.pet
-const SLIDES_TITLE = FLOATING_APPS.slides.title
 /** Herald Slides' audience window, as electron/office/presenter.ts titles it. */
-export const AUDIENCE_TITLE = 'Herald Slides Audience'
+export const AUDIENCE_TITLE = `${PRODUCT.apps.slides} Audience`
 /** The longest side the pet window may have: Hermes's largest pet with its bubble beside it fits. */
 const MAX_SIDE = 2000
 
@@ -39,7 +40,7 @@ export function coverOf(windows: ReadonlyArray<{ title: string; fullscreen: bool
 
   return {
     fullscreen: others.some(win => win.fullscreen),
-    presenting: others.some(win => win.title === AUDIENCE_TITLE || (win.title === SLIDES_TITLE && win.fullscreen))
+    presenting: others.some(isSlidesPresentation)
   }
 }
 

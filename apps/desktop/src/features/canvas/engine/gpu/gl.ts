@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 /*
  * Small WebGL2 helpers for Herald Canvas: programs with cached uniforms, render targets, and a
  * texture cache that uploads a raster once and afterwards only the part that changed. A raster
@@ -139,7 +140,7 @@ function compile(gl: WebGL2RenderingContext, type: number, source: string): WebG
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS) && !gl.isContextLost()) {
     const message = gl.getShaderInfoLog(shader)
     gl.deleteShader(shader)
-    throw new Error(`Herald Canvas shader did not compile: ${message}`)
+    throw new Error(`${PRODUCT.apps.canvas} shader did not compile: ${message}`)
   }
 
   return shader
@@ -191,7 +192,7 @@ export class Gpu {
       gl.linkProgram(handle)
 
       if (!gl.getProgramParameter(handle, gl.LINK_STATUS) && !gl.isContextLost()) {
-        throw new Error(`Herald Canvas shaders did not link: ${gl.getProgramInfoLog(handle)}`)
+        throw new Error(`${PRODUCT.apps.canvas} shaders did not link: ${gl.getProgramInfoLog(handle)}`)
       }
 
       program = new Program(gl, handle)

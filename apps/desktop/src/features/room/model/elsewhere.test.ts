@@ -48,7 +48,7 @@ describe('a session row from the session database', () => {
 })
 
 describe('the rows the lane shows', () => {
-  it('leaves out Herald’s own sessions, helpers, runs of automations the room shows and stale ones', () => {
+  it('leaves out MadX OS’s own sessions, helpers, runs of automations the room shows and stale ones', () => {
     const rows = [
       row({ id: 'own', source: 'herald_os' }),
       row({ id: 'renamed', source: 'hermes_os' }),
@@ -109,6 +109,6 @@ describe('the elsewhere lane in the room', () => {
     const summary = summarizeRoom(state, T0 + 1)
 
     expect(summary).toMatchObject({ total: 0, working: 0, elsewhere: 1 })
-    expect(summary.lines).toEqual(['Support bot (outside Herald): Telegram · active now'])
+    expect(summary.lines).toEqual(['Support bot (outside MadX OS): Telegram · active now'])
   })
 })

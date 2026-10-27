@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { focusRequestCard } from '../lib/request-focus.ts'
 import { $windowState } from '../store/backend.ts'
 import { type CommandSource, fail, ok, type OsCommand } from '../store/os-commands.ts'
@@ -37,7 +38,7 @@ export const requestCommands: readonly OsCommand[] = [
     id: 'requests.focus',
     title: 'Go to the waiting request',
     description:
-      'Move the keyboard focus to the card of the oldest approval, question or password Hermes is waiting on: the card itself, with Deny as its first answer (Cmd+Option+A on macOS, Super+Shift+A on Herald OS Linux). Runs from keys, the command bar and voice; Hermes, plugins and the CLI are refused, except the CLI in the Herald OS Linux session, which its key binding uses and which any program of the same user can therefore call. At most once a second; raises the Hermes window once per request.',
+      `Move the keyboard focus to the card of the oldest approval, question or password Hermes is waiting on: the card itself, with Deny as its first answer (Cmd+Option+A on macOS, Super+Shift+A on ${PRODUCT.name} Linux). Runs from keys, the command bar and voice; Hermes, plugins and the CLI are refused, except the CLI in the ${PRODUCT.name} Linux session, which its key binding uses and which any program of the same user can therefore call. At most once a second; raises the Hermes window once per request.`,
     tier: 'read',
     args: [],
     phrases: ['go to the waiting request', 'go to the approval', 'show the approval', 'go to the question'],

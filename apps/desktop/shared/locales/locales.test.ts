@@ -11,7 +11,7 @@ const TRANSLATIONS: Record<Exclude<Language, 'en'>, Translation> = { 'pt-BR': pt
 const OPTIONAL_SLOTS = new Set(['device'])
 
 // Names that read the same in every language (docs/TRANSLATING.md).
-const PRODUCTS = ['Herald Canvas', 'Herald Office', 'Herald Sheets', 'Herald Slides', 'Herald Calc', 'Herald Docs', 'Herald OS', 'Hermes']
+const PRODUCTS = ['MadX Canvas', 'MadX Office', 'MadX Sheets', 'MadX Slides', 'MadX Calc', 'MadX Docs', 'MadX Agent OS', 'Hermes']
 
 // Words a language writes as English does: loanwords, and Studio, the name of an app. Anything
 // else left in a message equal to English means it was copied rather than translated.
@@ -65,7 +65,7 @@ describe('the pt-BR catalog', () => {
 
   it('keeps product names and the English words voice and dictation listen for', () => {
     for (const key of Object.keys(en) as (keyof typeof en)[]) {
-      for (const product of ['Herald OS', 'Hermes', 'Herald Canvas', 'Herald Docs', 'Herald Sheets', 'Herald Slides', 'Herald Office']) {
+      for (const product of ['MadX Agent OS', 'Hermes', 'MadX Canvas', 'MadX Docs', 'MadX Sheets', 'MadX Slides', 'MadX Office']) {
         if (typeof en[key] === 'string' && en[key].includes(product)) {
           expect(ptBR[key], key).toContain(product)
         }
@@ -158,7 +158,7 @@ describe.each(Object.entries(TRANSLATIONS))('the %s catalog', (language, catalog
 describe('the copied-English check', () => {
   it('lets product names, slots and allowed words through, and nothing else', () => {
     expect(wordsLeft('Hermes', [])).toBe('')
-    expect(wordsLeft('Herald Canvas', [])).toBe('')
+    expect(wordsLeft('MadX Canvas', [])).toBe('')
     expect(wordsLeft('{action} ({shortcut})', [])).toBe('')
     expect(wordsLeft('Wi-Fi {network}', ['Wi-Fi'])).toBe('')
     expect(wordsLeft('Hermes offline', [])).toBe('offline')

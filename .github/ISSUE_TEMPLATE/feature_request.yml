@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest something Herald OS should do.
+description: Suggest something MadX Agent OS should do.
 labels: [enhancement]
 body:
   - type: textarea

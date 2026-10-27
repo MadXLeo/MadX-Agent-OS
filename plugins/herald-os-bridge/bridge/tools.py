@@ -309,7 +309,7 @@ AUTO_EDITORS = ("Visual Studio Code", "Cursor", "Zed")
 
 SYSTEM_OPEN_SCHEMA = _schema(
     "system_open",
-    "Open things for the user. Inside Herald OS, target=url opens the page in a Herald OS window, target=path opens files in the Herald OS viewer (PDFs, images, text, media) or shows them in Files, and target=reveal shows the item in the Files page; pass app=... only when the user names a Mac app to use. target=app launches an application by name ('Open Safari'); target=url opens a URL (optionally in a specific browser); target=path opens a file or folder with its default app or a named app; target=reveal shows a file in Finder; target=editor opens a folder/file in a code editor (editor=auto, the default, picks the first installed of VS Code, Cursor and Zed; pass vscode|cursor|xcode|zed|terminal when the user names one), e.g. 'open this repo in my editor'; target=settings opens a System Settings pane (pane=privacy_and_security, wifi, bluetooth, sound, displays, notifications, screen_recording, accessibility_privacy, automation, microphone, camera, calendars, ...). Runs immediately; every call is audited.",
+    "Open things for the user. Inside MadX Agent OS, target=url opens the page in a MadX Agent OS window, target=path opens files in the MadX Agent OS viewer (PDFs, images, text, media) or shows them in Files, and target=reveal shows the item in the Files page; pass app=... only when the user names a Mac app to use. target=app launches an application by name ('Open Safari'); target=url opens a URL (optionally in a specific browser); target=path opens a file or folder with its default app or a named app; target=reveal shows a file in Finder; target=editor opens a folder/file in a code editor (editor=auto, the default, picks the first installed of VS Code, Cursor and Zed; pass vscode|cursor|xcode|zed|terminal when the user names one), e.g. 'open this repo in my editor'; target=settings opens a System Settings pane (pane=privacy_and_security, wifi, bluetooth, sound, displays, notifications, screen_recording, accessibility_privacy, automation, microphone, camera, calendars, ...). Runs immediately; every call is audited.",
     {
         "target": _enum("app", "url", "path", "reveal", "editor", "settings"),
         "app": _desc(_STR, "Application name (for target=app, or the app to open a url/path with)."),
@@ -324,7 +324,7 @@ SYSTEM_OPEN_SCHEMA = _schema(
 
 
 def _open_in_shell(target: str, args: dict[str, Any]) -> str | None:
-    """Inside Herald OS, pages, files and folders open in the OS itself, not in macOS apps.
+    """Inside MadX Agent OS, pages, files and folders open in the OS itself, not in macOS apps.
 
     Returns the tool result, or ``None`` when the shell is not running (or the request is one only
     the host can serve: a named app, an editor, System Settings), so the caller falls back to the host.
@@ -907,7 +907,7 @@ def handle_system_network(args: dict[str, Any], **_: Any) -> str:
 SYSTEM_CONTROL_SCHEMA = _schema(
     "system_control",
     "Read or change device settings. Reads: audio (output/input/alert volume, mute), appearance (dark mode, displays). Actions: set_volume (percent and/or muted), set_dark_mode (enabled), notify (title, body: a system notification), open_settings (pane, e.g. privacy_and_security, screen_recording, wifi, bluetooth, sound, displays, notifications), sleep_display, lock_screen, set_wifi (enabled). "
-    "Herald OS Linux also has: wifi_networks (networks in range), wifi_connect (ssid, password for a new secured network), bluetooth_power (enabled), bluetooth_connect / bluetooth_disconnect (device: a name), audio_devices (outputs and inputs), set_audio_output (device: part of its name, e.g. headphones, HDMI), set_brightness (percent), power_profile (read the power mode), set_power_profile (profile: performance, balanced or power-saver). "
+    "MadX Agent OS Linux also has: wifi_networks (networks in range), wifi_connect (ssid, password for a new secured network), bluetooth_power (enabled), bluetooth_connect / bluetooth_disconnect (device: a name), audio_devices (outputs and inputs), set_audio_output (device: part of its name, e.g. headphones, HDMI), set_brightness (percent), power_profile (read the power mode), set_power_profile (profile: performance, balanced or power-saver). "
     "Actions run immediately and are audited; set_wifi, wifi_connect and bluetooth_power ask first.",
     {
         "action": _enum(
@@ -1057,7 +1057,7 @@ RESTART_SUMMARIES = {
 
 SYSTEM_OS_SCHEMA = _schema(
     "system_os",
-    "Herald OS Linux's control surface: the same `herald-os` commands the user's hotkeys and menu run. "
+    "MadX Agent OS Linux's control surface: the same `herald-os` commands the user's hotkeys and menu run. "
     "Software: install_app (name: a dnf package or Flatpak id), install_webapp (name, url, icon_url?: pins a website as an app), remove_app, remove_webapp. "
     "The install catalog (curated, works on Fedora, Arch and the image): catalog_list (JSON of groups: AI coding agents and local models, languages through mise, editors, terminals, games, the Windows VM, media, services, web apps; each entry says installed / available / why not), "
     "catalog_install (id), catalog_remove (id). Prefer the catalog over install_app when the software is in it. "
@@ -1066,10 +1066,10 @@ SYSTEM_OS_SCHEMA = _schema(
     "Reminders: reminder (duration like 20m or 1h30m, message), reminders_list, reminders_clear. "
     "notice (kind=time|battery|weather) shows a status notice. screenshot captures the screen and hands it to Hermes; ocr reads the text on screen. "
     "lock locks the session; suspend puts the computer to sleep. "
-    "restart (device=wifi|bluetooth|sound|touchpad) restarts one that stopped working, before suggesting a reboot: Wi-Fi that will not connect, a Bluetooth headset that will not reconnect, sound that vanished, a touchpad dead after waking; the touchpad asks the user for their password. Themes: theme_list, theme_set (name), theme_current. update updates Herald OS. "
+    "restart (device=wifi|bluetooth|sound|touchpad) restarts one that stopped working, before suggesting a reboot: Wi-Fi that will not connect, a Bluetooth headset that will not reconnect, sound that vanished, a touchpad dead after waking; the touchpad asks the user for their password. Themes: theme_list, theme_set (name), theme_current. update updates MadX Agent OS. "
     "Hermes shell: show_page (page: overview, hermes, missions, memory, files, automations, connections, settings), open_window (window=terminal|system|chat-popout), launch (name: an installed app), notify (title, body?). "
     "Spaces: focus_workspace (name), close_focused_window. install/remove/update, restart and suspend ask the user to confirm. "
-    "Only available on Herald OS Linux; on macOS this tool is unavailable (use system_open / system_control instead).",
+    "Only available on MadX Agent OS Linux; on macOS this tool is unavailable (use system_open / system_control instead).",
     {
         "action": _enum(
             "install_app", "install_webapp", "remove_app", "remove_webapp",
@@ -1248,7 +1248,7 @@ def plan_system_os(args: dict[str, Any]) -> tuple[list[str], str]:
     if action == "theme_current":
         return ["theme", "current"], "show the current theme"
     if action == "update":
-        return ["update"], "update Herald OS"
+        return ["update"], "update MadX Agent OS"
     if action == "show_page":
         page = _os_arg(args, "page")
         return ["page", page], f"show the {page} page"
@@ -1274,7 +1274,7 @@ def plan_system_os(args: dict[str, Any]) -> tuple[list[str], str]:
 
 def system_os_handler(args: dict[str, Any], **_: Any) -> str:
     if host().platform != "linux":
-        return fail("system_os is only available on Herald OS Linux")
+        return fail("system_os is only available on MadX Agent OS Linux")
     action = str(args.get("action") or "")
     try:
         cli_args, summary = plan_system_os(args)
@@ -1287,7 +1287,7 @@ def system_os_handler(args: dict[str, Any], **_: Any) -> str:
     def execute() -> dict[str, Any]:
         result = run(argv, timeout=timeout)
         if result.code == 127:
-            raise HostNotSupported("The herald-os command is not installed (it ships with Herald OS Linux as /usr/local/bin/herald-os).")
+            raise HostNotSupported("The herald-os command is not installed (it ships with MadX Agent OS Linux as /usr/local/bin/herald-os).")
         if not result.ok:
             raise RuntimeError(result.stderr.strip() or result.stdout.strip() or f"herald-os exited {result.code}")
         if action == "catalog_list":
@@ -1303,18 +1303,18 @@ handle_system_os = system_os_handler
 
 
 # ---------------------------------------------------------------------------------------------
-# os_ui: drive the Herald OS shell (both macOS and Linux) through its command registry
+# os_ui: drive the MadX Agent OS shell (both macOS and Linux) through its command registry
 # ---------------------------------------------------------------------------------------------
 
 OS_UI_SCHEMA = _schema(
     "os_ui",
-    "Operate the Herald OS user interface the user is looking at: open pages (missions, memory, files, automations, connections, settings) and apps (terminal, system), focus/close windows, show or add memories, list/run/pause automations, start missions, open web pages inside the OS, change appearance and voice settings. "
-    "Use action=list once to see every command with its arguments, then action=run with command=<id> and args. action=state tells you which page and windows are on screen, on the Files page the folder it shows and the selected file (what \"this folder\" and \"this file\" mean), and in `office` the documents open in Herald Docs, Sheets and Slides, the one in front and what is selected in each (what \"this document\", \"these cells\" and \"this slide\" mean; the docs, sheets and slides tools work on them). "
-    "Prefer this over describing where things are: when the user asks to open, show, add, find or change something in Herald OS, do it and then say what you did. "
+    "Operate the MadX Agent OS user interface the user is looking at: open pages (missions, memory, files, automations, connections, settings) and apps (terminal, system), focus/close windows, show or add memories, list/run/pause automations, start missions, open web pages inside the OS, change appearance and voice settings. "
+    "Use action=list once to see every command with its arguments, then action=run with command=<id> and args. action=state tells you which page and windows are on screen, on the Files page the folder it shows and the selected file (what \"this folder\" and \"this file\" mean), and in `office` the documents open in MadX Docs, Sheets and Slides, the one in front and what is selected in each (what \"this document\", \"these cells\" and \"this slide\" mean; the docs, sheets and slides tools work on them). "
+    "Prefer this over describing where things are: when the user asks to open, show, add, find or change something in MadX Agent OS, do it and then say what you did. "
     "After using other tools whose result lives on a page (memory, cronjob, files), run page.open so the user sees it. Destructive commands (forget, delete, trash) ask the user for approval. "
     "When the user asks you to build, create or make something new (a website, app, landing page, store, game), do not write it yourself in a scratch or temporary folder: run command=build.start with args={\"goal\": \"<what they asked for>\"}. It creates a project folder, starts a session that builds it there and opens the Studio so they watch it happen; then just tell them it has started. "
-    "Changing Herald OS itself is different: for widgets, themes, fonts, the menu bar, control-menu entries, branding or keybindings, first read skill_view name=\"herald-os-bridge:herald-os-tailor\", which has the formats. "
-    "A Herald OS widget is a folder in ~/.config/herald-os/plugins/<id> with a manifest.json; it is not a Hermes Desktop plugin or a build.start project, and the user turns it on in Settings > Plugins. "
+    "Changing MadX Agent OS itself is different: for widgets, themes, fonts, the menu bar, control-menu entries, branding or keybindings, first read skill_view name=\"herald-os-bridge:herald-os-tailor\", which has the formats. "
+    "A MadX Agent OS widget is a folder in ~/.config/herald-os/plugins/<id> with a manifest.json; it is not a Hermes Desktop plugin or a build.start project, and the user turns it on in Settings > Plugins. "
     "How to act as this computer's operating environment: skill_view name=\"herald-os-bridge:herald-os\".",
     {
         "action": {"type": "string", "enum": ["run", "list", "state"], "description": "run a command, list the catalogue, or read the screen state"},
@@ -1394,7 +1394,7 @@ def handle_os_ui(args: dict[str, Any], **_: Any) -> str:
 
 
 # ---------------------------------------------------------------------------------------------
-# canvas: Herald Canvas, the layered image editor, through the shell's canvas.* commands
+# canvas: MadX Canvas, the layered image editor, through the shell's canvas.* commands
 # ---------------------------------------------------------------------------------------------
 
 _NUM = {"type": "number"}
@@ -1473,7 +1473,7 @@ CANVAS_TIMEOUT = 100.0
 
 CANVAS_SCHEMA = _schema(
     "canvas",
-    "Herald Canvas, the layered image editor built into Herald OS (layers, folders, masks, blend modes, adjustment layers, like Photoshop). "
+    "MadX Canvas, the layered image editor built into MadX Agent OS (layers, folders, masks, blend modes, adjustment layers, like Photoshop). "
     "Use it to make or change pictures: posters, banners, thumbnails, collages, photo fixes. The person watches every change land in the Canvas window, and each one is a step they can undo. "
     "Start with action=new (a new project; it answers with the path) or action=open (an image or a .comp project), then add_layer, add_text, add_shape, set_layer, set_text, set_shape, add_adjustment, set_adjustment, group and remove_layer; align lines layers up (or distributes them) exactly; auto_adjust fixes a photo's tone or colour cast as an editable Levels layer; guides lays out margins, columns and centre lines; set_effects adds drop shadows, strokes, glows and overlays (or copies them from another layer); mask shows or hides parts of a layer; resize and crop change the canvas. "
     "Look at your work with action=preview: it answers with a PNG file you can view. action=layers lists the layers with ids and placement; action=history lists every step (undo or redo with steps to move through them); action=export writes PNG, JPEG, WebP or a layered PSD; action=open takes .psd files with their layers. "
@@ -1522,7 +1522,7 @@ CANVAS_SCHEMA = _schema(
         "above": _desc(_STR, "Put the new layer right above this one"),
         "folder": _desc(_STR, "new: where the project goes; add_layer, add_adjustment: put it in this folder; set_layer: move into it (\"none\" takes it out)"),
         "clip": _desc(_BOOL, "Clip to the layer below (shows only where it has pixels); false lets go"),
-        "kind": _desc(_STR, "add_adjustment: Hue/Saturation, Levels, Curves, Exposure, Gradient Map, Grain, Invert, Black & White, Color Balance, Gaussian Blur, Motion Blur or Add Noise, or Herald's own Brightness/Contrast, Vibrance, Photo Filter, Channel Mixer, Selective Color, Posterize, Threshold or Color Lookup (settings {\"table\": \"~/LUTs/Film.cube\"}); add_shape, set_shape: rectangle, rounded, ellipse or line; auto_adjust: tone (the default), contrast or color; filter: unsharp mask (sharpen), smart sharpen, reduce noise, gaussian blur, motion blur, high pass, add noise or median"),
+        "kind": _desc(_STR, "add_adjustment: Hue/Saturation, Levels, Curves, Exposure, Gradient Map, Grain, Invert, Black & White, Color Balance, Gaussian Blur, Motion Blur or Add Noise, or MadX's own Brightness/Contrast, Vibrance, Photo Filter, Channel Mixer, Selective Color, Posterize, Threshold or Color Lookup (settings {\"table\": \"~/LUTs/Film.cube\"}); add_shape, set_shape: rectangle, rounded, ellipse or line; auto_adjust: tone (the default), contrast or color; filter: unsharp mask (sharpen), smart sharpen, reduce noise, gaussian blur, motion blur, high pass, add noise or median"),
         "inSelection": _desc(_BOOL, "filter: only inside what the person selected in the open window"),
         "cutoff": _desc(_NUM, "auto_adjust: percentage of the darkest and of the lightest pixels to ignore, 0 to 10 (0.1)"),
         "settings": {"type": "object", "description": "add_adjustment: settings over the defaults, e.g. {\"saturation\": 25} or {\"brightness\": 20, \"contrast\": 15}; set_adjustment: settings merged over the layer's own; Color Lookup: {\"table\": \"a .cube file\"}; filter: the filter's settings, e.g. {\"amount\": 120, \"radius\": 1.2}", "additionalProperties": True},
@@ -1540,7 +1540,7 @@ CANVAS_SCHEMA = _schema(
         "scale": _desc(_NUM, "export: size relative to the canvas; resize: scale the whole image by this much (0.5 is half)"),
         "overwrite": _desc(_BOOL, "export, save: replace an existing file (asks the person first)"),
         "size": _desc(_NUM, "preview: longest side in pixels (1024); add_text, set_text: font size in pixels (72)"),
-        "mask_image": _desc(_STR, "place_image: a grayscale image over the same box (white shows the picture, black hides it), such as the mask Herald saved for generative fill"),
+        "mask_image": _desc(_STR, "place_image: a grayscale image over the same box (white shows the picture, black hides it), such as the mask MadX saved for generative fill"),
         "mode": _enum("mask", "cutout", description="remove_background: hide the background with a layer mask (mask, the default) or put just the subject on a new layer (cutout)"),
         "threshold": _desc(_NUM, "remove_background: where the edge sits, 0 to 1 (0.5); lower keeps more"),
         "feather": _desc(_NUM, "remove_background: softens the edge, in pixels"),
@@ -1603,14 +1603,14 @@ def handle_canvas(args: dict[str, Any], **_: Any) -> str:
     try:
         catalogue = _ui_catalogue()
         if catalogue and command not in catalogue:
-            return fail("Herald Canvas is not in this version of Herald OS; update Herald OS first")
+            return fail("MadX Canvas is not in this version of MadX Agent OS; update MadX Agent OS first")
         tier = canvas_tier(action, command, command_args, catalogue)
         summary = ui_summary(command, command_args, catalogue)
 
         def execute() -> dict[str, Any]:
             reply = ui.run_command(command, command_args, timeout=CANVAS_TIMEOUT)
             if not reply.get("ok"):
-                raise RuntimeError(str(reply.get("error") or reply.get("summary") or "Herald Canvas refused that"))
+                raise RuntimeError(str(reply.get("error") or reply.get("summary") or "MadX Canvas refused that"))
             payload = {k: v for k, v in reply.items() if k not in ("ok", "summary")}
             payload["result"] = reply.get("summary")
             return payload
@@ -1621,7 +1621,7 @@ def handle_canvas(args: dict[str, Any], **_: Any) -> str:
 
 
 # ---------------------------------------------------------------------------------------------
-# docs and sheets: Herald Docs and Herald Sheets through the shell's docs.* and sheets.* commands
+# docs and sheets: MadX Docs and MadX Sheets through the shell's docs.* and sheets.* commands
 # ---------------------------------------------------------------------------------------------
 
 DOCS_ACTIONS: dict[str, str] = {
@@ -1953,17 +1953,17 @@ _OBJECTS = {"type": "array", "items": {"type": "object", "additionalProperties":
 
 DOCS_SCHEMA = _schema(
     "docs",
-    "Herald Docs, the word processor built into Herald OS: letters, reports, essays, resumes, notes and any other document, in the Docs window the person watches or in Word (.docx), Markdown (.md) and text files. "
-    "Look before you change anything: action=list shows the documents open in Herald Docs (list_all: everything open in Herald Docs, Sheets and Slides, with what is selected in each), read gives a document's outline and its content as Markdown (part=selection: the selected and the marked text; part=comments, notes, headers, sections or tocs: those), find finds text; open shows a file, and new starts a document (blank, from a template, or with the content you write from the person's brief). "
-    "Change it with write (Markdown: headings, bold and italic, lists, tables, links, pictures from files), replace, format (paragraph styles, bold, colour, highlight, size, alignment, links), table, image, page (paper, orientation, margins) and insert_range (a Herald Sheets range as a table: work across documents, such as a budget's figures in a report). "
+    "MadX Docs, the word processor built into MadX Agent OS: letters, reports, essays, resumes, notes and any other document, in the Docs window the person watches or in Word (.docx), Markdown (.md) and text files. "
+    "Look before you change anything: action=list shows the documents open in MadX Docs (list_all: everything open in MadX Docs, Sheets and Slides, with what is selected in each), read gives a document's outline and its content as Markdown (part=selection: the selected and the marked text; part=comments, notes, headers, sections or tocs: those), find finds text; open shows a file, and new starts a document (blank, from a template, or with the content you write from the person's brief). "
+    "Change it with write (Markdown: headings, bold and italic, lists, tables, links, pictures from files), replace, format (paragraph styles, bold, colour, highlight, size, alignment, links), table, image, page (paper, orientation, margins) and insert_range (a MadX Sheets range as a table: work across documents, such as a budget's figures in a report). "
     "It lays out real pages and reviews them too: headers and footers (set_header, set_footer: \"Page {page} of {pages}\", dates), page numbers and fields (insert_field), footnotes and endnotes (insert_note), sections and page setup (insert_section_break; page section= sets one section's paper, orientation and margins), comments and reviews (read part=comments, add_comment, reply_to_comment, resolve_comment, delete_comment; review a document with ONE add_comments call; yours are signed Hermes), tables of contents (insert_toc, update_tocs), templates (list_templates, then new template=) and statistics (words, reading time, reading ease). "
     "Every call is one step the person can undo, so land a whole change in one call; action=edit makes several changes as ONE step. When the request says text is marked for it, read part=selection and write the answer with at=marked, which replaces the marked text. "
     "document is a file (~/... or /...) or an open document's name as its tab shows it (\"Untitled 2\", \"Report.docx\"); left out, the one in front. An open document changes in its window; a file that is not open is changed on disk, which asks the person first. "
-    "Never save unless the person asks: saving over a file asks them, and the first time shows what Herald cannot keep. "
+    "Never save unless the person asks: saving over a file asks them, and the first time shows what MadX cannot keep. "
     "Before drafting, editing or reviewing a real document read skill_view name=\"herald-os-bridge:herald-docs\": the workflow, templates, rewriting marked text, formatting, headers and footers, notes, sections, comments and reviews, tables of contents and saving.",
     {
         "action": _enum(*DOCS_ACTIONS, description="What to do"),
-        "document": _desc(_STR, "The document: a file (full path or ~/...) or an open document's name as its tab shows it; the one in front in Herald Docs when left out. insert_range: the document the table goes in"),
+        "document": _desc(_STR, "The document: a file (full path or ~/...) or an open document's name as its tab shows it; the one in front in MadX Docs when left out. insert_range: the document the table goes in"),
         "path": _desc(_STR, "open: a .docx, .md or .txt file to show; new: save the new document here at once (a new .docx, .md or .txt file, never one that exists)"),
         "name": _desc(_STR, "new: the tab's name, and the file name it is offered when saved"),
         "content": _desc(_STR, "Markdown (or plain text with format=text). new: what the document starts with (with a template, in place of its sample text); write: what to write: # headings, **bold**, *italic*, lists, - [ ] tasks, tables, [links](https://...), > quotes, `code`, pictures from files as ![what it shows](~/path.png); set_header, set_footer: what the header or footer says, a line or a few, where {page} is the page number, {pages} the page count, and {date} and {time} today's ({date:d MMMM yyyy} for a picture of your own), e.g. \"Page {page} of {pages}\"; insert_note: what the footnote or endnote says; set_note: what the note says now"),
@@ -1976,7 +1976,7 @@ DOCS_SCHEMA = _schema(
         "wholeWord": _desc(_BOOL, "find, replace, format at=text: whole words only"),
         "regex": _desc(_BOOL, "find, replace, format at=text: the text is a regular expression"),
         "format": _desc(_STR, "write, set_header, set_footer, insert_note, set_note: markdown (the default) or text; insert_field: for a date or time, a picture in Word's terms: \"d MMMM yyyy\", \"dd/MM/yyyy\", \"HH:mm\" (the locale's when left out)"),
-        "at": _desc(_STR, "write, table, image, insert_range, insert_section_break, insert_toc: where it goes: end (the default; start for insert_toc), start, selection (in place of what is selected, or at the caret), marked (in place of the text Herald marked for this request), after (under the paragraph the marked text is in, or the selection when nothing is marked) or heading; insert_field, insert_note without quote: the same places, where a field or a note's number goes into the line of text at selection and marked, and elsewhere a field takes a line of its own and a note's number ends the text before it; add_comment: selection or marked, in an open document; format: what to format: selection (the default), marked, all, heading (the heading line), section (the heading and its section) or text"),
+        "at": _desc(_STR, "write, table, image, insert_range, insert_section_break, insert_toc: where it goes: end (the default; start for insert_toc), start, selection (in place of what is selected, or at the caret), marked (in place of the text MadX marked for this request), after (under the paragraph the marked text is in, or the selection when nothing is marked) or heading; insert_field, insert_note without quote: the same places, where a field or a note's number goes into the line of text at selection and marked, and elsewhere a field takes a line of its own and a note's number ends the text before it; add_comment: selection or marked, in an open document; format: what to format: selection (the default), marked, all, heading (the heading line), section (the heading and its section) or text"),
         "mode": _desc(_STR, "With heading: append (at the end of its section, the default), prepend (right under the heading) or replace (in place of the section, keeping the heading); insert_field, insert_note, insert_section_break and insert_toc take before (right before the heading) in place of replace"),
         "find": _desc(_STR, "replace: the text to replace"),
         "replacement": _desc(_STR, "replace: what goes in its place (left out deletes the matches); each replacement keeps the formatting where its match starts"),
@@ -2024,7 +2024,7 @@ DOCS_SCHEMA = _schema(
         "toc": _desc(_STR, "set_toc, remove_toc: which table of contents, from 1 in the order they come (read part=tocs lists them); left out, set_toc changes the first and remove_toc the only one"),
         "selection": _desc(_BOOL, "statistics: only the selected text of an open document"),
         "edits": _desc(_OBJECTS, "edit: the changes, made in order as ONE step to undo, each seeing the document as the ones before left it; each has an op and that op's arguments: write (content, format, at, heading, mode), replace (find, replacement, all, caseSensitive, wholeWord, regex), format (the format arguments), table (cells or rows and cols, header, at, heading, mode), image (source, alt, at, heading, mode), pageBreak (at, heading, mode) and page (the page arguments: size, orientation, margins, top, right, bottom, left, headerDistance, footerDistance, section); and, each with the arguments of the action of the same words: setHeader, setFooter, clearHeader, clearFooter, setHeaderOptions, insertField, insertNote, setNote, removeNote, insertSectionBreak, removeSectionBreak, addComment, addComments, replyToComment, editComment, resolveComment, deleteComment, insertToc, setToc, updateTocs and removeToc. E.g. [{\"op\": \"write\", \"content\": \"## Summary\\n...\", \"at\": \"start\"}, {\"op\": \"replace\", \"find\": \"draft\", \"replacement\": \"final\"}, {\"op\": \"setFooter\", \"content\": \"Page {page} of {pages}\", \"align\": \"center\"}]"),
-        "workbook": _desc(_STR, "insert_range: the Herald Sheets workbook, a file or an open workbook's name (the one in front in Herald Sheets when left out)"),
+        "workbook": _desc(_STR, "insert_range: the MadX Sheets workbook, a file or an open workbook's name (the one in front in MadX Sheets when left out)"),
         "range": _desc(_STR, "insert_range: the cells, like A1:D12 or 'Q1 sales'!B2:F9, or selection; the workbook's selection, or else its cells that hold something, when left out"),
         "sheet": _desc(_STR, "insert_range: the sheet, when the range does not name it"),
         "to": _desc(_STR, "save: save as this new file instead (.docx, .md or .txt; full path or ~/...); export_pdf: the PDF to write (a new file in ~/Documents when left out)"),
@@ -2036,17 +2036,17 @@ DOCS_SCHEMA = _schema(
 
 SHEETS_SCHEMA = _schema(
     "sheets",
-    "Herald Sheets, the spreadsheet built into Herald OS: Excel workbooks (.xlsx) and CSV files, in the Sheets window the person watches or on disk. "
-    "Read before you change anything: action=list shows the workbooks open in Herald Sheets (list_all: everything open in Herald Docs, Sheets and Slides, with what is selected in each), read gives the sheets and a range's values, formulas and what the cells show (without range, the cells that hold something; range=selection, what is selected), find finds text; open shows a file, and new starts a workbook (blank, from a template, or with rows of values and formulas). "
+    "MadX Sheets, the spreadsheet built into MadX Agent OS: Excel workbooks (.xlsx) and CSV files, in the Sheets window the person watches or on disk. "
+    "Read before you change anything: action=list shows the workbooks open in MadX Sheets (list_all: everything open in MadX Docs, Sheets and Slides, with what is selected in each), read gives the sheets and a range's values, formulas and what the cells show (without range, the cells that hold something; range=selection, what is selected), find finds text; open shows a file, and new starts a workbook (blank, from a template, or with rows of values and formulas). "
     "write puts rows of values from a cell (text starting with = is a formula, English function names and commas between arguments; plain numbers become numbers), fill copies a formula down or across, format sets number formats, fonts, colours and borders; sort, filter, freeze, replace, clean (dedupe, trim, numbers, dates, split, case), add_sheet, rename_sheet and remove_sheet do what they say. "
     "It also makes charts (recommend_charts first, then insert_chart; the others take the chart's id), pivot-style summaries in live formulas (summarize), named ranges, validation (dropdown lists, input messages, error alerts), and comments and notes on cells (yours are signed Hermes); its data tools remove duplicates, split, trim, recase and convert text, fill down, highlight duplicates and sort by several columns, and preview=true shows a big change before it lands. "
     "Every call is one step the person can undo (comment threads aside), so land a whole change in one call; action=edit makes several changes as ONE step. "
     "workbook is a file (~/... or /...) or an open workbook's name as its tab shows it; left out, the one in front. An open workbook changes in its window; a file that is not open is changed on disk, which asks the person first. "
-    "Never save unless the person asks: saving over a file asks them, and the first time shows what Herald cannot keep; a CSV file keeps only values. A range goes into a document with the docs tool's insert_range. "
+    "Never save unless the person asks: saving over a file asks them, and the first time shows what MadX cannot keep; a CSV file keeps only values. A range goes into a document with the docs tool's insert_range. "
     "Before building, cleaning or analysing a real spreadsheet read skill_view name=\"herald-os-bridge:herald-sheets\": the workflow, formulas, filling from examples, cleaning data, charts, summaries, names, validation, comments and building a workbook.",
     {
         "action": _enum(*SHEETS_ACTIONS, description="What to do"),
-        "workbook": _desc(_STR, "The workbook: a file (full path or ~/...) or an open workbook's name as its tab shows it; the one in front in Herald Sheets when left out"),
+        "workbook": _desc(_STR, "The workbook: a file (full path or ~/...) or an open workbook's name as its tab shows it; the one in front in MadX Sheets when left out"),
         "path": _desc(_STR, "open: an .xlsx or .csv file to show; new: save the new workbook here at once (a new .xlsx or .csv file, never one that exists)"),
         "name": _desc(_STR, "new: the tab's name, and the file name it is offered when saved; add_sheet: the new sheet's name (at most 31 characters, none of [ ] : * ? / \\); rename_sheet: the sheet's new name; create_name, update_name, delete_name, go_to_name: the named range, like TaxRate (update_name: as it is now)"),
         "template": _desc(_STR, "new: budget, expenses, todo, schedule or invoice"),
@@ -2145,20 +2145,20 @@ SHEETS_SCHEMA = _schema(
 
 SLIDES_SCHEMA = _schema(
     "slides",
-    "Herald Slides, the presentation editor built into Herald OS: decks for talks, reviews, pitches and lessons, in the Slides window the person watches or in PowerPoint (.pptx) files. "
-    "Read before you change anything: action=list shows the presentations open in Herald Slides (list_all: everything open in Herald Docs, Sheets and Slides, with what is selected in each), read gives every slide's number, layout, title, text, speaker notes and elements (slide= for one), find finds text; open shows a file. "
-    "Make a whole deck in one call: action=new with slides (you write the titles, short bullets and speaker notes from the person's brief), or from_document to turn a Herald Docs document into slides; insert_range puts a Herald Sheets range on a slide as a table. "
+    "MadX Slides, the presentation editor built into MadX Agent OS: decks for talks, reviews, pitches and lessons, in the Slides window the person watches or in PowerPoint (.pptx) files. "
+    "Read before you change anything: action=list shows the presentations open in MadX Slides (list_all: everything open in MadX Docs, Sheets and Slides, with what is selected in each), read gives every slide's number, layout, title, text, speaker notes and elements (slide= for one), find finds text; open shows a file. "
+    "Make a whole deck in one call: action=new with slides (you write the titles, short bullets and speaker notes from the person's brief), or from_document to turn a MadX Docs document into slides; insert_range puts a MadX Sheets range on a slide as a table. "
     "Change it with add_slide, set_slide (title, text, speaker notes, layout, hidden, background), duplicate_slide, move_slide, remove_slide, add_text, add_shape, add_image, add_table, set_theme and replace. "
-    "Its depth: the slide master and its layouts (read_master; set_background, add_master_text, add_master_shape, add_master_image, add_logo, set_placeholder; set_header_footer for slide numbers, a footer and the date): change the master or a layout rather than every slide. Themes (list_themes; make_theme for a custom one, a brand's colours and fonts), transitions (set_transition), groups (group, ungroup, rotate), connectors between shapes (add_connector), table borders (set_cell_borders), fills and gradients (set_fill) and a slide of a Herald Sheets range (add_slide_from_sheet). "
+    "Its depth: the slide master and its layouts (read_master; set_background, add_master_text, add_master_shape, add_master_image, add_logo, set_placeholder; set_header_footer for slide numbers, a footer and the date): change the master or a layout rather than every slide. Themes (list_themes; make_theme for a custom one, a brand's colours and fonts), transitions (set_transition), groups (group, ungroup, rotate), connectors between shapes (add_connector), table borders (set_cell_borders), fills and gradients (set_fill) and a slide of a MadX Sheets range (add_slide_from_sheet). "
     "Every call is one step the person can undo, so land a whole change in one call; action=edit makes several changes as ONE step. "
     "slide is a number (1 is the first), an id or a title, the slide in front when left out; presentation is a .pptx file (~/... or /...) or an open presentation's name as its tab shows it, the one in front when left out. An open presentation changes in its window; a file that is not open is changed on disk, which asks the person first. "
-    "Never save unless the person asks: saving over a file asks them, and the first time shows what Herald cannot keep. "
+    "Never save unless the person asks: saving over a file asks them, and the first time shows what MadX cannot keep. "
     "Before making or reworking a real deck read skill_view name=\"herald-os-bridge:herald-slides\": outlines, layouts, the master and themes, transitions, diagrams, speaker notes and saving.",
     {
         "action": _enum(*SLIDES_ACTIONS, description="What to do"),
-        "presentation": _desc(_STR, "The presentation: a .pptx file (full path or ~/...) or an open presentation's name as its tab shows it; the one in front in Herald Slides when left out. from_document: add the slides to the end of this one (a new presentation named after the document when left out); make_theme with apply: the one the new theme goes on"),
+        "presentation": _desc(_STR, "The presentation: a .pptx file (full path or ~/...) or an open presentation's name as its tab shows it; the one in front in MadX Slides when left out. from_document: add the slides to the end of this one (a new presentation named after the document when left out); make_theme with apply: the one the new theme goes on"),
         "path": _desc(_STR, "open: a .pptx file to show; new: save the new presentation here at once (a new .pptx file, never one that exists)"),
-        "name": _desc(_STR, "new: the tab's name, and the file name it is offered when saved; rename_layout: the layout's new name (default gives Herald's back); make_theme: the new theme's name, one no theme has yet"),
+        "name": _desc(_STR, "new: the tab's name, and the file name it is offered when saved; rename_layout: the layout's new name (default gives MadX's back); make_theme: the new theme's name, one no theme has yet"),
         "slides": _desc(_OBJECTS, "new: the whole deck, one object a slide with layout, title, body and notes: [{\"layout\": \"title\", \"title\": \"Q3 review\", \"body\": \"Finance team\"}, {\"title\": \"Results\", \"body\": \"Revenue up 12%\\nCosts flat\", \"notes\": \"Lead with revenue\"}]; the first is a title slide unless its layout says otherwise, the rest title-content"),
         "theme": _desc(_STR, "new, set_theme: herald (white with navy text and blue accents; the default), midnight (dark navy with light text), paper (warm cream with serif type), graphite (dark grey with yellow accents), forest (pale with green accents), coral (warm peach and coral), mono (black and white with a red accent), ocean (pale blue and teal), aurora (deep blue with a soft glow and bright accents), dune (a cream-to-sand gradient with serif headings and rust accents), slate (cool off-white with blue accents and serif headings), blossom (a pale pink gradient with pink and violet accents) or ember (dark warm brown with orange and amber accents); or a custom theme's id or name (list_themes). delete_theme: the custom theme to delete"),
         "size": _desc(_STR, "new: wide (16:9, the default) or standard (4:3); add_text, add_master_text, set_placeholder: the font size in points, e.g. \"28\" (24)"),
@@ -2195,9 +2195,9 @@ SLIDES_SCHEMA = _schema(
         "replacement": _desc(_STR, "replace: what goes in its place (left out deletes the matches); each replacement keeps the formatting where its match starts"),
         "all": _desc(_BOOL, "replace: every match (true, the default) or only the first (false)"),
         "edits": _desc(_OBJECTS, "edit: the changes, made in order as ONE step to undo (if one fails, none is made); each has an op and that op's arguments: addSlide (layout, title, body, notes, after), setSlide (slide, title, body, notes, layout, hidden, background), duplicateSlide (slide), moveSlide (slide, to), removeSlide (slide), addText (slide, text, x, y, width, height, size, color, bold, align), addShape (slide, kind, x, y, width, height, fill, gradient, angle, radial, text), addImage (slide, source, x, y, width, height, fit), addTable (slide, cells, x, y, width), setTheme (theme, slide) and replace (find, replacement, all, caseSensitive); and, each with the arguments of the action of the same words: setBackground, addMasterText, addMasterShape, addMasterImage, addLogo, removeFromMaster, setPlaceholder, showMasterGraphics, renameLayout, resetMaster, setHeaderFooter, setTransition, group, ungroup, rotate, convertToShapes, addConnector, setCellBorders, setFill and addSlideFromSheet. A slide one edit adds can be named by its title in the next, and an edit without a slide lands where the one before went. E.g. [{\"op\": \"addSlide\", \"title\": \"Risks\", \"body\": \"Supply\\nHiring\"}, {\"op\": \"addShape\", \"slide\": \"Risks\", \"kind\": \"star\", \"x\": 820, \"y\": 40, \"width\": 80, \"height\": 80}, {\"op\": \"setHeaderFooter\", \"number\": true, \"skipTitle\": true}, {\"op\": \"setTheme\", \"theme\": \"paper\"}]"),
-        "document": _desc(_STR, "from_document: the document to make slides from, a .docx, .md or .txt file or an open document's name (the one in front in Herald Docs when left out); it is only read"),
+        "document": _desc(_STR, "from_document: the document to make slides from, a .docx, .md or .txt file or an open document's name (the one in front in MadX Docs when left out); it is only read"),
         "level": _desc(_NUM, "from_document: the heading level that starts a slide, 1 to 6: deeper headings become its bullets and higher ones section headers (every heading starts slides when left out)"),
-        "workbook": _desc(_STR, "insert_range, add_slide_from_sheet: the Herald Sheets workbook, a file or an open workbook's name (the one in front in Herald Sheets when left out); it is only read"),
+        "workbook": _desc(_STR, "insert_range, add_slide_from_sheet: the MadX Sheets workbook, a file or an open workbook's name (the one in front in MadX Sheets when left out); it is only read"),
         "range": _desc(_STR, "insert_range, add_slide_from_sheet: the cells, like A1:D12 or 'Q1 sales'!B2:F9, or selection for what is selected in an open workbook; the cells that hold something on the sheet when left out. set_cell_borders: the table's cells, A1:C3 or B2 (columns lettered from A, rows numbered from 1), row 1, rows 2-4 or column 3; every cell when left out"),
         "sheet": _desc(_STR, "insert_range, add_slide_from_sheet: the sheet, when the range does not name it"),
         "header": _desc(_BOOL, "add_slide_from_sheet: the first row is a header row (true, the default)"),
@@ -2327,7 +2327,7 @@ def office_tier(action: str, command: str, command_args: dict[str, Any], catalog
 
 
 def _open_office_paths() -> set[str]:
-    """The files open in Herald Docs, Sheets and Slides; none when the shell cannot say, so every file counts as closed."""
+    """The files open in MadX Docs, Sheets and Slides; none when the shell cannot say, so every file counts as closed."""
     try:
         reply = ui.run_command("office.list", {}, timeout=OFFICE_TIMEOUT)
     except Exception:  # noqa: BLE001 - not knowing what is open guards the call as if nothing were.
@@ -2345,7 +2345,7 @@ def _handle_office(tool: str, app: str, plan: Callable[[dict[str, Any]], tuple[s
     try:
         catalogue = _ui_catalogue()
         if catalogue and command not in catalogue:
-            return fail(f"{app} is not in this version of Herald OS; update Herald OS first")
+            return fail(f"{app} is not in this version of MadX Agent OS; update MadX Agent OS first")
         open_paths = _open_office_paths() if _file_on_disk(action, command, command_args, catalogue) else set()
         tier = office_tier(action, command, command_args, catalogue, open_paths)
         summary = ui_summary(command, command_args, catalogue)
@@ -2364,19 +2364,19 @@ def _handle_office(tool: str, app: str, plan: Callable[[dict[str, Any]], tuple[s
 
 
 def handle_docs(args: dict[str, Any], **_: Any) -> str:
-    return _handle_office("docs", "Herald Docs", docs_command, args)
+    return _handle_office("docs", "MadX Docs", docs_command, args)
 
 
 def handle_sheets(args: dict[str, Any], **_: Any) -> str:
-    return _handle_office("sheets", "Herald Sheets", sheets_command, args)
+    return _handle_office("sheets", "MadX Sheets", sheets_command, args)
 
 
 def handle_slides(args: dict[str, Any], **_: Any) -> str:
-    return _handle_office("slides", "Herald Slides", slides_command, args)
+    return _handle_office("slides", "MadX Slides", slides_command, args)
 
 
 # ---------------------------------------------------------------------------------------------
-# calc: Herald Calc's exact engine through the shell's calc.* commands; it only computes and reads.
+# calc: MadX Calc's exact engine through the shell's calc.* commands; it only computes and reads.
 # ---------------------------------------------------------------------------------------------
 
 CALC_ACTIONS: dict[str, str] = {
@@ -2401,9 +2401,9 @@ CALC_TIMEOUT = 100.0
 
 CALC_SCHEMA = _schema(
     "calc",
-    "Herald Calc, the exact math engine in Herald OS. Use it for ANY arithmetic, percentage, unit, currency, date or time-zone math instead of working it out yourself, even sums that look easy, and show the person the working: every answer comes with its steps. "
+    "MadX Calc, the exact math engine in MadX Agent OS. Use it for ANY arithmetic, percentage, unit, currency, date or time-zone math instead of working it out yourself, even sums that look easy, and show the person the working: every answer comes with its steps. "
     "action=eval reads a sentence or an expression: \"20% of 84.50\", \"84.50 + 15%\", \"2,400 + 180 split 3 ways\", \"5 km in miles\", \"350°F in C\", \"100 USD in BRL\" (the European Central Bank's reference rates; the answer says which day's), \"days until Dec 25\", \"9am Sydney in New York\"; several lines are read as a note with names and totals (\"rent = 1,200\\nfood = 450\\nrent + food\"). action=convert converts value from one unit or currency to another, or a time of day from one place to another (value=9am from=Sydney to=London). "
-    "action=plot says what a graph shows without opening anything: for functions of x (\"sin(x) * x; x^2\") where each crosses zero, its local maxima and minima, its asymptotes and the range of y between x_min and x_max (-10 to 10); for a sheet's cells (workbook and range, or \"column B of Budget.xlsx\") how many numbers, the smallest, the largest, the sum and the mean. To show the person a graph run os_ui command=calc.plot, and command=calc.open to open Herald Calc. "
+    "action=plot says what a graph shows without opening anything: for functions of x (\"sin(x) * x; x^2\") where each crosses zero, its local maxima and minima, its asymptotes and the range of y between x_min and x_max (-10 to 10); for a sheet's cells (workbook and range, or \"column B of Budget.xlsx\") how many numbers, the smallest, the largest, the sum and the mean. To show the person a graph run os_ui command=calc.plot, and command=calc.open to open MadX Calc. "
     "action=history searches the person's past calculations, read only (clearing it is theirs). "
     "Before notes with names, graphs, or explaining an answer, read skill_view name=\"herald-os-bridge:herald-calc\".",
     {
@@ -2413,7 +2413,7 @@ CALC_SCHEMA = _schema(
         "from": _desc(_STR, "convert: the unit, currency or place it is in: km, °F, USD, cups, Sydney"),
         "to": _desc(_STR, "convert: the unit, currency or place to convert it to"),
         "expression": _desc(_STR, "plot: functions of x, separated by ; or new lines (\"sin(x) * x; x^2\"), or a sheet's cells in words (\"column B of Budget.xlsx\")"),
-        "workbook": _desc(_STR, "plot: a Herald Sheets workbook whose numbers to describe, a file or an open workbook's name"),
+        "workbook": _desc(_STR, "plot: a MadX Sheets workbook whose numbers to describe, a file or an open workbook's name"),
         "range": _desc(_STR, "plot: the workbook's cells, like B:B or B2:B40"),
         "sheet": _desc(_STR, "plot: the sheet, when the range does not name it"),
         "x_min": _desc(_NUM, "plot: where x starts (-10)"),
@@ -2451,7 +2451,7 @@ def handle_calc(args: dict[str, Any], **_: Any) -> str:
     def execute() -> dict[str, Any]:
         reply = ui.run_command(command, command_args, timeout=CALC_TIMEOUT)
         if not reply.get("ok"):
-            raise RuntimeError(str(reply.get("error") or reply.get("summary") or "Herald Calc could not work that out"))
+            raise RuntimeError(str(reply.get("error") or reply.get("summary") or "MadX Calc could not work that out"))
         data = reply.get("data")
         payload = {k: v for k, v in data.items() if k not in ("success", "summary", "error")} if isinstance(data, dict) else {}
         if isinstance(reply.get("items"), list):
@@ -2463,7 +2463,7 @@ def handle_calc(args: dict[str, Any], **_: Any) -> str:
     try:
         catalogue = _ui_catalogue()
         if catalogue and command not in catalogue:
-            return fail("Herald Calc is not in this version of Herald OS; update Herald OS first")
+            return fail("MadX Calc is not in this version of MadX Agent OS; update MadX Agent OS first")
         return _read("calc", action, {"action": action, **command_args}, execute)
     except ui.ShellUnavailable as exc:
         return fail(str(exc))

@@ -113,7 +113,7 @@ describe('the formats a note’s rows carry', () => {
 
 describe('Copy to Sheets in desktop mode', () => {
   it('starts the workbook with the rows, then formats it, and says how many lines went', async () => {
-    expect(await copyToSheets(NOTE, 'Budget')).toBe('Copied 6 lines to a new workbook in Herald Sheets')
+    expect(await copyToSheets(NOTE, 'Budget')).toBe('Copied 6 lines to a new workbook in MadX Sheets')
 
     expect(mocks.runCommand.mock.calls).toEqual([
       ['sheets.new', { name: 'Budget', values: VALUES }, { source: 'ui' }],
@@ -138,7 +138,7 @@ describe('Copy to Sheets in desktop mode', () => {
     ])
   })
 
-  it('formats the workbook by the name Herald Sheets gave it', async () => {
+  it('formats the workbook by the name MadX Sheets gave it', async () => {
     mocks.runCommand.mockImplementation(async (id: string) => (id === 'sheets.new' ? { ok: true, summary: 'Started', data: { name: 'Trip/Japan' } } : { ok: true, summary: 'Done' }))
     mocks.rows = [{ value: 1, label: 'One', format: '0' }]
     await copyToSheets(NOTE, 'Trip/Japan')
@@ -176,21 +176,21 @@ describe('Copy to Sheets in desktop mode', () => {
     await expect(copyToSheets(NOTE, 'Empty')).rejects.toThrow('This note has nothing to copy yet')
 
     mocks.rows = Array.from({ length: 5001 }, (_, index) => ({ value: index, label: '' }))
-    await expect(copyToSheets(NOTE, 'Long')).rejects.toThrow('This note is too long for one workbook: Herald Sheets takes 5,000 lines at a time')
+    await expect(copyToSheets(NOTE, 'Long')).rejects.toThrow('This note is too long for one workbook: MadX Sheets takes 5,000 lines at a time')
 
     expect(mocks.runCommand).not.toHaveBeenCalled()
   })
 
-  it('throws what went wrong when Herald Sheets cannot start the workbook', async () => {
+  it('throws what went wrong when MadX Sheets cannot start the workbook', async () => {
     mocks.runCommand.mockResolvedValue({ ok: false, summary: 'sheets.new: "values" must be rows', error: 'sheets.new: "values" must be rows' })
 
-    await expect(copyToSheets(NOTE, 'Budget')).rejects.toThrow('Herald Sheets could not make the workbook: sheets.new: "values" must be rows')
+    await expect(copyToSheets(NOTE, 'Budget')).rejects.toThrow('MadX Sheets could not make the workbook: sheets.new: "values" must be rows')
   })
 
   it('keeps the copy when a format fails, logging it and trying no more', async () => {
     mocks.runCommand.mockImplementation(async (id: string, args: Record<string, unknown>) => (id === 'sheets.new' ? { ok: true, summary: 'Started', data: { name: args.name } } : { ok: false, summary: 'Bad format', error: 'Bad format' }))
 
-    expect(await copyToSheets(NOTE, 'Budget')).toBe('Copied 6 lines to a new workbook in Herald Sheets')
+    expect(await copyToSheets(NOTE, 'Budget')).toBe('Copied 6 lines to a new workbook in MadX Sheets')
     expect(mocks.runCommand).toHaveBeenCalledTimes(2)
     expect(errors).toHaveBeenCalledWith(expect.stringContaining('[herald-os] sheets.format failed: Error: Bad format'))
   })
@@ -205,7 +205,7 @@ describe('Copy to Sheets in panels mode', () => {
   it('opens a blank workbook in the Sheets window and has that window write and format it', async () => {
     opensBlank('sheets', doc('sheets-2', 'Untitled 2'))
 
-    expect(await copyToSheets(NOTE, 'Budget')).toBe('Copied 6 lines to a new workbook in Herald Sheets')
+    expect(await copyToSheets(NOTE, 'Budget')).toBe('Copied 6 lines to a new workbook in MadX Sheets')
 
     const target = { app: 'sheets', key: 'sheets-2' }
     expect(mocks.openInOffice).toHaveBeenCalledWith('sheets', { blank: true })
@@ -224,7 +224,7 @@ describe('Copy to Sheets in panels mode', () => {
     const copying = copyToSheets(NOTE, 'Budget')
     await vi.advanceTimersByTimeAsync(2_000)
 
-    expect(await copying).toBe('Copied 6 lines to a new workbook in Herald Sheets')
+    expect(await copying).toBe('Copied 6 lines to a new workbook in MadX Sheets')
     expect(office.run.mock.calls[0][0]).toEqual({ app: 'sheets', key: 'sheets-1' })
   })
 
@@ -240,17 +240,17 @@ describe('Copy to Sheets in panels mode', () => {
   it('gives up when no new workbook shows up in time', async () => {
     vi.useFakeTimers()
     const copying = copyToSheets(NOTE, 'Budget')
-    const failed = expect(copying).rejects.toThrow('Herald Sheets did not open a new workbook in time')
+    const failed = expect(copying).rejects.toThrow('MadX Sheets did not open a new workbook in time')
     await vi.advanceTimersByTimeAsync(OPEN_TIMEOUT_MS + 500)
     await failed
 
     expect(office.run).not.toHaveBeenCalled()
   })
 
-  it('says so when Herald Office does not answer', async () => {
+  it('says so when MadX Office does not answer', async () => {
     office.presence.mockRejectedValueOnce(new Error('gone'))
 
-    await expect(copyToSheets(NOTE, 'Budget')).rejects.toThrow('Herald Office is not answering; try again in a moment')
+    await expect(copyToSheets(NOTE, 'Budget')).rejects.toThrow('MadX Office is not answering; try again in a moment')
     expect(mocks.openInOffice).not.toHaveBeenCalled()
   })
 
@@ -258,19 +258,19 @@ describe('Copy to Sheets in panels mode', () => {
     opensBlank('sheets', doc('sheets-2', 'Untitled 2'))
     office.run.mockResolvedValueOnce({ ok: false, summary: 'No workbook called “Untitled 2” is open', error: 'No workbook called “Untitled 2” is open' })
 
-    await expect(copyToSheets(NOTE, 'Budget')).rejects.toThrow('Herald Sheets could not write the note into Untitled 2: No workbook called “Untitled 2” is open')
+    await expect(copyToSheets(NOTE, 'Budget')).rejects.toThrow('MadX Sheets could not write the note into Untitled 2: No workbook called “Untitled 2” is open')
 
     opensBlank('sheets', doc('sheets-3', 'Untitled 3'))
-    office.run.mockRejectedValueOnce(new Error("Error invoking remote method 'herald-os:office:run': Error: The Herald Sheets window did not answer in time"))
+    office.run.mockRejectedValueOnce(new Error("Error invoking remote method 'herald-os:office:run': Error: The MadX Sheets window did not answer in time"))
 
-    await expect(copyToSheets(NOTE, 'Budget')).rejects.toThrow('Herald Sheets could not write the note into Untitled 3: The Herald Sheets window did not answer in time')
+    await expect(copyToSheets(NOTE, 'Budget')).rejects.toThrow('MadX Sheets could not write the note into Untitled 3: The MadX Sheets window did not answer in time')
   })
 
   it('keeps the copy when a format fails there', async () => {
     opensBlank('sheets', doc('sheets-2', 'Untitled 2'))
     office.run.mockImplementation(async (_target, command) => (command === 'sheets.format' ? { ok: false, summary: 'Bad format', error: 'Bad format' } : { ok: true, summary: 'Wrote' }))
 
-    expect(await copyToSheets(NOTE, 'Budget')).toBe('Copied 6 lines to a new workbook in Herald Sheets')
+    expect(await copyToSheets(NOTE, 'Budget')).toBe('Copied 6 lines to a new workbook in MadX Sheets')
     expect(errors).toHaveBeenCalledWith(expect.stringContaining('[herald-os] sheets.format failed: Error: Bad format'))
   })
 })
@@ -279,7 +279,7 @@ describe('Copy to Docs', () => {
   it('starts a document with the note as a table in desktop mode', async () => {
     mocks.openEntries.mockResolvedValue([{ app: 'docs', name: 'Trip - Japan' }])
 
-    expect(await copyToDocs(NOTE, 'Trip / Japan')).toBe('Copied 2 lines to a new document in Herald Docs')
+    expect(await copyToDocs(NOTE, 'Trip / Japan')).toBe('Copied 2 lines to a new document in MadX Docs')
     expect(mocks.runCommand.mock.calls).toEqual([['docs.new', { name: 'Trip - Japan 2', content: toDocsMarkdown(NOTE, 'Trip / Japan') }, { source: 'ui' }]])
     expect(toDocsMarkdown(NOTE, 'Trip / Japan').startsWith('# Trip / Japan\n')).toBe(true)
   })
@@ -289,7 +289,7 @@ describe('Copy to Docs', () => {
     presence = [officeWindow('docs', [doc('docs-1', 'Letter.docx', { path: '/h/Letter.docx', format: '.docx' })])]
     opensBlank('docs', doc('docs-2', 'Untitled', { format: '.docx' }))
 
-    expect(await copyToDocs(NOTE, 'Trip')).toBe('Copied 2 lines to a new document in Herald Docs')
+    expect(await copyToDocs(NOTE, 'Trip')).toBe('Copied 2 lines to a new document in MadX Docs')
     expect(mocks.openInOffice).toHaveBeenCalledWith('docs', { blank: true })
     expect(office.run.mock.calls).toEqual([[{ app: 'docs', key: 'docs-2' }, 'docs.write', { document: 'Untitled', content: toDocsMarkdown(NOTE, 'Trip') }, 'ui']])
     expect(mocks.runCommand).not.toHaveBeenCalled()
@@ -299,7 +299,7 @@ describe('Copy to Docs', () => {
     mocks.panels = true
     vi.useFakeTimers()
     const copying = copyToDocs(NOTE, 'Trip')
-    const failed = expect(copying).rejects.toThrow('Herald Docs did not open a new document in time')
+    const failed = expect(copying).rejects.toThrow('MadX Docs did not open a new document in time')
     await vi.advanceTimersByTimeAsync(OPEN_TIMEOUT_MS + 500)
     await failed
   })
@@ -308,8 +308,8 @@ describe('Copy to Docs', () => {
     await expect(copyToDocs({ ...NOTE, lines: [{ index: 0, kind: 'blank', source: '' }], totalDisplay: null }, 'Empty')).rejects.toThrow('This note has nothing to copy yet')
     expect(mocks.runCommand).not.toHaveBeenCalled()
 
-    mocks.runCommand.mockResolvedValue({ ok: false, summary: 'Herald Docs is busy', error: 'Herald Docs is busy' })
+    mocks.runCommand.mockResolvedValue({ ok: false, summary: 'MadX Docs is busy', error: 'MadX Docs is busy' })
 
-    await expect(copyToDocs(NOTE, 'Trip')).rejects.toThrow('Herald Docs could not make the document: Herald Docs is busy')
+    await expect(copyToDocs(NOTE, 'Trip')).rejects.toThrow('MadX Docs could not make the document: MadX Docs is busy')
   })
 })

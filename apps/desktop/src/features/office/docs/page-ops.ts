@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { Fragment, type Mark, type Node as PMNode, type NodeType, type Schema } from '@tiptap/pm/model'
 import { type EditorState, Selection, TextSelection, type Transaction } from '@tiptap/pm/state'
 import { DEFAULT_HEADER_DISTANCE, defaultPage, type DocNode, type FieldKind, HEADER_KINDS, type HeaderKind, type NoteKind, noteLabel, type PageHeaders, type PageMargins, type PageSettings, PAGE_SIZES, type PageSizeName, type SectionKind } from '../../../../shared/office/document.ts'
@@ -313,7 +314,7 @@ const carriedMark = (mark: Mark): boolean => mark.type.name !== 'link' && mark.t
 export function insertField(choice: FieldChoice, options: FieldOptions = {}, place: Place = 'selection'): Op {
   return (state) => {
     if (!FIELD_CHOICES.includes(choice)) {
-      throw new Error(`Herald Docs has no “${choice}” field: it has ${FIELD_CHOICES.join(', ')}`)
+      throw new Error(`${PRODUCT.apps.docs} has no “${choice}” field: it has ${FIELD_CHOICES.join(', ')}`)
     }
 
     const { schema } = state
@@ -552,7 +553,7 @@ function sizeOf(current: PageSettings, change: PageChange): { width: number; hei
   const named = size ? PAGE_SIZES[size] : null
 
   if (size && !named) {
-    throw new Error(`Herald Docs has no “${size}” page size: it has ${Object.keys(PAGE_SIZES).join(', ')}, or a size of your own`)
+    throw new Error(`${PRODUCT.apps.docs} has no “${size}” page size: it has ${Object.keys(PAGE_SIZES).join(', ')}, or a size of your own`)
   }
 
   const short = named ? named.width : Math.min(current.width, current.height)

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { PET_FRAME_HEIGHT, PET_FRAME_WIDTH } from '../../../../shared/pet.ts'
 import type { RoomAgent, RoomArea, RoomDeskArea, RoomPhase } from '../model/types.ts'
 
@@ -56,7 +57,7 @@ export const AREA_DEFS: readonly AreaDef[] = [
   { id: 'bench', label: 'Waiting bench', name: 'The waiting bench', wall: 'front', span: 3.3, depth: 0.62 },
   { id: 'lounge', label: 'Lounge', name: 'The lounge', wall: 'front', span: 3.6, depth: 0.85 },
   { id: 'automations', label: 'Automations', name: 'The Automations corner', wall: 'front', span: 2.4, depth: 0.7 },
-  { id: 'elsewhere', label: 'Outside Herald', name: 'Hermes work outside Herald', wall: 'lane', span: 1 }
+  { id: 'elsewhere', label: `Outside ${PRODUCT.shortName}`, name: `Hermes work outside ${PRODUCT.shortName}`, wall: 'lane', span: 1 }
 ]
 
 /** A desk to lay out: an open document in an area that has desks. */

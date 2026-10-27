@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { type BrowserWindow, BrowserWindow as Window, globalShortcut, ipcMain, screen } from 'electron'
@@ -32,7 +33,7 @@ export class EmojiPanel {
     })
 
     if (!globalShortcut.register(ACCELERATOR, () => this.toggle())) {
-      log('emoji', `${ACCELERATOR} is taken by another app; the picker still opens inside Herald OS`)
+      log('emoji', `${ACCELERATOR} is taken by another app; the picker still opens inside ${PRODUCT.name}`)
     }
   }
 

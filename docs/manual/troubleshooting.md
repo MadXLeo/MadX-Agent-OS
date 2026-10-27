@@ -1,23 +1,23 @@
 # Troubleshooting
 
 The [README](../../README.md#troubleshooting) covers installation problems. This page is for when
-Herald OS is running but something misbehaves.
+MadX Agent OS is running but something misbehaves.
 
 ## Hermes
 
 - **Hermes does not answer.** The menu bar shows a badge while Hermes is unreachable. Run
   `hermes doctor` in a terminal; if it asks you to sign in, sign in or change provider under
-  Settings > Hermes & agents > Model provider, or run `hermes setup`. Herald OS's own log is
+  Settings > Hermes & agents > Model provider, or run `hermes setup`. MadX Agent OS's own log is
   `~/.hermes/logs/herald-os.log`.
 - **Hermes cannot reach a model server on your network.** A Mac lets an app reach devices on your
-  local network only once you allow it, and Hermes counts as part of Herald OS, which starts it.
-  Allow Herald OS when macOS asks, or turn it on in System Settings > Privacy & Security > Local
+  local network only once you allow it, and Hermes counts as part of MadX Agent OS, which starts it.
+  Allow MadX Agent OS when macOS asks, or turn it on in System Settings > Privacy & Security > Local
   Network. Mac builds up to 0.1.0 alpha 4 never ask, and every request to the server fails with "No
   route to host" (Errno 65, in `~/.hermes/logs/agent.log`). Hermes Desktop uses a Hermes that is
-  already running, so if you open it while Herald OS runs, it uses Herald OS's and fails the same way.
+  already running, so if you open it while MadX Agent OS runs, it uses MadX Agent OS's and fails the same way.
 - **Hermes runs shell commands instead of its system tools.** The system bridge is not loaded:
-  run `npm run bootstrap` in your Herald OS checkout (or `herald-os setup` from a package), then
-  restart Herald OS. `hermes plugins list` should show `herald-os-bridge` as enabled.
+  run `npm run bootstrap` in your MadX Agent OS checkout (or `herald-os setup` from a package), then
+  restart MadX Agent OS. `hermes plugins list` should show `herald-os-bridge` as enabled.
 - **An action was refused.** Protected folders (`~/.ssh`, keychains, Hermes's credentials) are
   always refused, and destructive actions ask every time. Settings > Privacy shows the rules and the
   audit log of what happened.
@@ -29,15 +29,15 @@ Herald OS is running but something misbehaves.
   press Try again:
 
   ```bash
-  chmod +x "/Applications/Herald OS.app/Contents/Resources/app.asar.unpacked/node_modules/node-pty/prebuilds/darwin-arm64/spawn-helper"
+  chmod +x "/Applications/MadX Agent OS.app/Contents/Resources/app.asar.unpacked/node_modules/node-pty/prebuilds/darwin-arm64/spawn-helper"
   ```
 
 ## Themes and the look
 
-- **A theme does not change everything.** On a Mac, Herald OS recolours itself and Hermes's skin;
-  macOS apps keep their own look. On Herald OS Linux, GTK apps pick up a new theme when they next
+- **A theme does not change everything.** On a Mac, MadX Agent OS recolours itself and Hermes's skin;
+  macOS apps keep their own look. On MadX Agent OS Linux, GTK apps pick up a new theme when they next
   start, and Obsidian needs its own theme setting.
-- **Hermes's command line stopped following the theme.** Herald OS only selects its `herald-os`
+- **Hermes's command line stopped following the theme.** MadX Agent OS only selects its `herald-os`
   skin when you have not picked another one. Run `/skin herald-os` in Hermes to go back to it.
 - **Something is unreadable in a light theme.** Switch back with "use the ocean theme" and tell us
   which screen it was.
@@ -47,10 +47,10 @@ Herald OS is running but something misbehaves.
 - **I never get crash offers.** Settings > Notifications > Crash help must be on, and the program
   must not be muted there. On Linux, crashes are read from systemd-coredump through `journalctl`;
   `herald-os crash list` shows what it sees.
-- **The same program keeps crashing.** Herald OS offers help once every ten minutes per program;
+- **The same program keeps crashing.** MadX Agent OS offers help once every ten minutes per program;
   mute it from the notification if you do not need the offers.
-- **macOS shows no notifications from Herald OS.** macOS only delivers notifications from signed
-  builds; inside Herald OS they still appear in the bell.
+- **macOS shows no notifications from MadX Agent OS.** macOS only delivers notifications from signed
+  builds; inside MadX Agent OS they still appear in the bell.
 
 ## Hooks and event automations
 
@@ -63,18 +63,18 @@ Herald OS is running but something misbehaves.
 
 - **A window stays blank, or part of a page never fills in.** The window's errors are in
   `~/.hermes/logs/herald-os.log`, on lines starting with `[renderer]` and the window's name:
-  `desktop` when the shell is one window, as on a Mac, and on Herald OS Linux the part it draws
+  `desktop` when the shell is one window, as on a Mac, and on MadX Agent OS Linux the part it draws
   (`main`, `menubar`, `dock` and so on).
 
-## Herald OS Linux
+## MadX Agent OS Linux
 
 ### An update went wrong
 
 The version before stays in the boot menu. If the computer still starts, choose Update > Go back to
-the previous version in the Herald OS menu (`Super+M`), or run `herald-os rollback`, and restart. If
+the previous version in the MadX Agent OS menu (`Super+M`), or run `herald-os rollback`, and restart. If
 it does not start, or the desktop never appears, pick the previous entry in the boot menu at
 power-on; once it is running, `herald-os rollback` makes it the default. Your files are not touched
-either way. Then [tell us](https://github.com/iamlukethedev/Herald-OS/issues) what broke, with the
+either way. Then [tell us](https://github.com/MadXLeo/MadX-Agent-OS/issues) what broke, with the
 output of `herald-os debug`. On the tarball, `herald-os rollback` swaps back to
 `/opt/herald-os.previous` at the next login.
 
@@ -99,7 +99,7 @@ output of `herald-os debug`. On the tarball, `herald-os rollback` swaps back to
 
 ### Wi-Fi, Bluetooth, sound or the touchpad stopped working
 
-Before you restart the computer, restart only the part that stopped: System > Fix in the Herald OS
+Before you restart the computer, restart only the part that stopped: System > Fix in the MadX Agent OS
 menu (`Super+M`), Restart at the bottom of the Wi-Fi, Bluetooth or Sound panel, or in a terminal:
 
 - `herald-os restart wifi` lifts an airplane-mode block (`rfkill`), turns networking and the Wi-Fi
@@ -122,7 +122,7 @@ further.
 2. Check that no airplane-mode key or switch is on: `rfkill list` shows what is blocked, and
    `rfkill unblock wifi` lifts a software block.
 3. `nmcli device status` should list the Wi-Fi device. If it is missing, the computer may need
-   firmware Herald OS does not have yet (`sudo dmesg | grep -i firmware` names the file it looked
+   firmware MadX Agent OS does not have yet (`sudo dmesg | grep -i firmware` names the file it looked
    for); `herald-os debug` and the output of `lspci -nn` (or `lsusb` for a USB adapter) help a bug
    report.
 4. `sudo systemctl restart NetworkManager` restarts the network service.
@@ -163,7 +163,7 @@ there: it needs a 2 GiB `/boot` ([Space in /boot](../LINUX.md#the-nvidia-image))
 - **The whole screen:** the Displays panel (`Super+Ctrl+D`) sets each display's scale, from 100% to
   200%; it is kept in `~/.config/niri/outputs.kdl`. On a laptop with a sharp screen, 150% or 200%
   is usual.
-- **In a virtual machine on a Retina or HiDPI screen,** where Herald OS runs inside a window of its
+- **In a virtual machine on a Retina or HiDPI screen,** where MadX Agent OS runs inside a window of its
   own: set `HERALD_OS_SCALE=2` (or `1.5`) in `~/.config/herald-os/session.env`, and put
   `output "winit" { scale 2; }` in `~/.config/niri/local.kdl`, then restart the session with
   `sudo systemctl restart greetd`. The first start writes `local.kdl` from `HERALD_OS_SCALE` when it
@@ -172,6 +172,6 @@ there: it needs a 2 GiB `/boot` ([Space in /boot](../LINUX.md#the-nvidia-image))
 
 ## Collecting details for a bug report
 
-On Herald OS Linux, `herald-os debug` prints the versions and the last lines of the logs. On a Mac,
+On MadX Agent OS Linux, `herald-os debug` prints the versions and the last lines of the logs. On a Mac,
 attach the end of `~/.hermes/logs/herald-os.log`. Report security problems privately, as described
 in [SECURITY.md](../../SECURITY.md).

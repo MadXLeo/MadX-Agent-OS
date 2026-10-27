@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconCheck, IconCopy, IconExternalLink, IconKey, IconRefresh, IconWorld, IconX } from '@tabler/icons-react'
 import { useEffect, useRef, useState } from 'react'
@@ -309,7 +310,7 @@ export function HermesLoginCard() {
                 <IconKey />
                 Sign in with {target.name}
               </GlassButton>
-              <p className="mt-2 text-center text-[11.5px] text-fg-3">Opens {target.name} right here in Herald OS with a one-time code. Nothing to type in a terminal.</p>
+              <p className="mt-2 text-center text-[11.5px] text-fg-3">Opens {target.name} right here in {PRODUCT.name} with a one-time code. Nothing to type in a terminal.</p>
             </>
           ) : phase.kind === 'starting' ? (
             <div className="flex h-11 items-center justify-center text-[12.5px] text-fg-2">Requesting a sign-in code…</div>
@@ -412,7 +413,7 @@ function CodePanel({
         {copied ? <IconCheck size={18} className="text-ok" /> : <IconCopy size={18} className="text-fg-3" />}
       </button>
       <div className="flex items-center justify-center gap-2">
-        <GlassButton size="sm" onClick={onOpenPage} aria-label={beside ? 'Show the sign-in page' : 'Open the sign-in page in Herald OS'}>
+        <GlassButton size="sm" onClick={onOpenPage} aria-label={beside ? 'Show the sign-in page' : `Open the sign-in page in ${PRODUCT.name}`}>
           <IconWorld />
           {beside ? 'Show sign-in page' : 'Open sign-in page'}
         </GlassButton>

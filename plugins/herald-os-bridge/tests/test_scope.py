@@ -1,4 +1,4 @@
-"""The tools are offered and run only in Herald OS's own sessions, whatever the configuration says."""
+"""The tools are offered and run only in MadX Agent OS's own sessions, whatever the configuration says."""
 
 from __future__ import annotations
 
@@ -67,23 +67,23 @@ HERALD_BACKEND = {"HERALD_OS": "1"}
 
 # name -> (process environment, variables bound for the turn or None, tools offered, calls run)
 CONTEXTS = {
-    "a Herald OS turn": ({}, {"HERMES_SESSION_SOURCE": "herald_os"}, True, True),
+    "a MadX Agent OS turn": ({}, {"HERMES_SESSION_SOURCE": "herald_os"}, True, True),
     "a session saved before the rename": ({}, {"HERMES_SESSION_SOURCE": "hermes_os"}, True, True),
     "Telegram in the person's gateway": ({}, {"HERMES_SESSION_PLATFORM": "telegram"}, False, False),
     # A gateway the backend starts inherits HERALD_OS=1; a leaked source in its environment is hidden by the bound turn.
-    "Telegram in a gateway Herald OS's backend started": ({**HERALD_BACKEND, "HERMES_SESSION_SOURCE": "herald_os"}, {"HERMES_SESSION_PLATFORM": "telegram"}, False, False),
-    "cron in Herald OS's backend": (HERALD_BACKEND, {"HERMES_CRON_SESSION": "1"}, False, False),
+    "Telegram in a gateway MadX Agent OS's backend started": ({**HERALD_BACKEND, "HERMES_SESSION_SOURCE": "herald_os"}, {"HERMES_SESSION_PLATFORM": "telegram"}, False, False),
+    "cron in MadX Agent OS's backend": (HERALD_BACKEND, {"HERMES_CRON_SESSION": "1"}, False, False),
     "the API server": (HERALD_BACKEND, {"HERMES_SESSION_PLATFORM": "api_server"}, False, False),
     "the hermes CLI": ({}, None, False, False),
     "the Hermes TUI": ({}, {"HERMES_SESSION_SOURCE": "tui"}, False, False),
     "Hermes Desktop": ({}, {"HERMES_SESSION_SOURCE": "desktop"}, False, False),
     "a kanban worker the backend started": ({**HERALD_BACKEND, "HERMES_KANBAN_TASK": "t_1"}, None, False, False),
-    "Herald OS's backend between turns": (HERALD_BACKEND, None, True, False),
-    "an eager resume in Herald OS's backend": (HERALD_BACKEND, {"HERMES_SESSION_SOURCE": "desktop"}, True, False),
-    "a process a Herald OS session started": ({**HERALD_BACKEND, "HERMES_SESSION_SOURCE": "herald_os"}, None, True, True),
-    # The hermes CLI takes its source from the environment: one Herald OS's backend did not start
-    # must not pass for a Herald OS turn, whatever it inherited or was told.
-    "the hermes CLI with an inherited Herald OS source": ({"HERMES_SESSION_SOURCE": "herald_os"}, None, False, False),
+    "MadX Agent OS's backend between turns": (HERALD_BACKEND, None, True, False),
+    "an eager resume in MadX Agent OS's backend": (HERALD_BACKEND, {"HERMES_SESSION_SOURCE": "desktop"}, True, False),
+    "a process a MadX Agent OS session started": ({**HERALD_BACKEND, "HERMES_SESSION_SOURCE": "herald_os"}, None, True, True),
+    # The hermes CLI takes its source from the environment: one MadX Agent OS's backend did not start
+    # must not pass for a MadX Agent OS turn, whatever it inherited or was told.
+    "the hermes CLI with an inherited MadX Agent OS source": ({"HERMES_SESSION_SOURCE": "herald_os"}, None, False, False),
     "hermes chat --source herald_os": ({"HERMES_SESSION_SOURCE": "herald_os", "HERMES_SESSION_SOURCE_EXPLICIT": "1"}, None, False, False),
 }
 
@@ -97,7 +97,7 @@ def test_tools_are_offered_and_run_only_for_herald_os(name, plugin, registered, 
     result = json.loads(registered["system_files"]["handler"]({"action": "mkdir", "path": str(tmp_path / "plan"), "dry_run": True}))
     assert result["success"] is runs, result
     if not runs:
-        assert result["decision"] == "outside_herald" and "Herald OS" in result["error"]
+        assert result["decision"] == "outside_herald" and "MadX Agent OS" in result["error"]
 
 
 def test_every_tool_is_registered_gated(plugin, registered):

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import type { CaptureTool, ScreenshotMode } from '../../shared/ipc.ts'
 import { parseQrReading, QR_COPIED, type QrReading } from '../../shared/qr.ts'
 import { CLI_UNAVAILABLE_MESSAGE, runHeraldOs } from '../lib/herald-os-cli.ts'
@@ -129,7 +130,7 @@ export const captureCommands: readonly OsCommand[] = [
     tier: 'act',
     args: [
       { name: 'action', type: 'string', description: 'toggle, start or stop', enum: ['toggle', 'start', 'stop'] },
-      { name: 'region', type: 'boolean', description: 'Select a region to record (Herald OS Linux)' },
+      { name: 'region', type: 'boolean', description: `Select a region to record (${PRODUCT.name} Linux)` },
       { name: 'audio', type: 'boolean', description: 'Record the microphone too' }
     ],
     phrases: [{ phrase: 'start recording the screen', args: { action: 'start' } }, { phrase: 'stop recording', args: { action: 'stop' } }, { phrase: 'record my screen', args: { action: 'start' } }],
@@ -211,7 +212,7 @@ export const captureCommands: readonly OsCommand[] = [
   {
     id: 'capture.transcode',
     title: 'Convert a recording',
-    description: 'Turn a recording into a GIF, a smaller MP4 or a WebM (Herald OS Linux, with ffmpeg).',
+    description: `Turn a recording into a GIF, a smaller MP4 or a WebM (${PRODUCT.name} Linux, with ffmpeg).`,
     tier: 'act',
     args: [
       { name: 'file', type: 'string', description: 'The recording', required: true },
@@ -222,7 +223,7 @@ export const captureCommands: readonly OsCommand[] = [
   {
     id: 'capture.share',
     title: 'Share a file',
-    description: 'Copy a file to the clipboard and open LocalSend when it is installed (Herald OS Linux).',
+    description: `Copy a file to the clipboard and open LocalSend when it is installed (${PRODUCT.name} Linux).`,
     tier: 'act',
     args: [{ name: 'file', type: 'string', description: 'The file', required: true }],
     run: ({ file }) => linuxTool(['capture', 'share', String(file)], 'Share')

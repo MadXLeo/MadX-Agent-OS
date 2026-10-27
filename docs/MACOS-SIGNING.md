@@ -106,7 +106,7 @@ secret in the environment.
 
 1. Sign in at [account.apple.com](https://account.apple.com) with the Apple Account you will use for
    `APPLE_ID` (it must be a member of the developer team and have two-factor authentication on).
-2. Go to Sign-In and Security > App-Specific Passwords, add one named `Herald OS notarization`, and
+2. Go to Sign-In and Security > App-Specific Passwords, add one named `MadX Agent OS notarization`, and
    copy the password it shows (`xxxx-xxxx-xxxx-xxxx`). Apple shows it only once.
 3. Add the secrets:
 
@@ -137,9 +137,9 @@ two notarization submissions, and its zip has no ticket of its own:
 
 | Artifact, per architecture | Signed | Notarized | Ticket stapled |
 | --- | --- | --- | --- |
-| `Herald OS.app` (`release/mac-arm64/`, `release/mac/`) | Developer ID, hardened runtime, `build/entitlements.mac.plist` | Yes: electron-builder submits it through `@electron/notarize` | Yes, to the app, before the DMG and zip are made |
-| `HeraldOS-<version>-mac-<arch>.dmg` | Developer ID (`-c.dmg.sign=true`) | Yes: a second `xcrun notarytool submit` of the DMG itself | Yes, to the DMG (`xcrun stapler staple`) |
-| `HeraldOS-<version>-mac-<arch>.zip` | No (a zip cannot be signed) | Not on its own; it holds the notarized app | No (a zip cannot carry a ticket); the app inside carries its own |
+| `MadX Agent OS.app` (`release/mac-arm64/`, `release/mac/`) | Developer ID, hardened runtime, `build/entitlements.mac.plist` | Yes: electron-builder submits it through `@electron/notarize` | Yes, to the app, before the DMG and zip are made |
+| `madx-agent-os-<version>-mac-<arch>.dmg` | Developer ID (`-c.dmg.sign=true`) | Yes: a second `xcrun notarytool submit` of the DMG itself | Yes, to the DMG (`xcrun stapler staple`) |
+| `madx-agent-os-<version>-mac-<arch>.zip` | No (a zip cannot be signed) | Not on its own; it holds the notarized app | No (a zip cannot carry a ticket); the app inside carries its own |
 
 So Gatekeeper accepts the DMG when it is opened, even offline, and accepts the app from either
 download. Stapling changes the DMG's bytes after electron-builder has written it. That is fine
@@ -184,7 +184,7 @@ because the workflow uploads only the `.dmg` and `.zip`, not the `.blockmap` or 
    `release/` has exactly one app per architecture, and every Mach-O in each app (frameworks,
    helper apps, every `.node` and `spawn-helper`) is thin and built for that architecture. Files in
    node-pty's `prebuilds/darwin-<arch>/` must match `<arch>`. Each architecture also needs
-   `HeraldOS-<version>-mac-<arch>.dmg` and `.zip` with `package.json`'s version, and no other DMG
+   `madx-agent-os-<version>-mac-<arch>.dmg` and `.zip` with `package.json`'s version, and no other DMG
    or zip may be there.
 5. **Check the code signatures.** Runs on unsigned builds too.
    `apps/desktop/scripts/check-mac-signatures.mjs` checks each app as packed, inside each zip
@@ -218,11 +218,11 @@ because the workflow uploads only the `.dmg` and `.zip`, not the `.blockmap` or 
 After downloading a release:
 
 ```bash
-dmg=~/Downloads/HeraldOS-<version>-mac-arm64.dmg  # or -mac-x64.dmg on an Intel Mac
+dmg=~/Downloads/madx-agent-os-<version>-mac-arm64.dmg  # or -mac-x64.dmg on an Intel Mac
 xcrun stapler validate "$dmg"
 spctl --assess --type open --context context:primary-signature -vv "$dmg"
 
-app="/Applications/Herald OS.app"
+app="/Applications/MadX Agent OS.app"
 codesign --verify --deep --strict --verbose=2 "$app"
 codesign --display --verbose=4 "$app" 2>&1 | grep -E '^(Authority|TeamIdentifier|CodeDirectory)'
 xcrun stapler validate "$app"

@@ -1,18 +1,18 @@
 # Coming from Windows
 
-Herald OS Linux replaces Windows on a PC, or sits next to it. Most of what you reach for has a home
+MadX Agent OS Linux replaces Windows on a PC, or sits next to it. Most of what you reach for has a home
 here, often on the same `Super` key (the Windows key), and Hermes can do most of it for you if you
 just ask. In the virtual machine, `Super` is `Alt` instead (see [Hotkeys](hotkeys.md)).
 
 ## Where things went
 
-| You reach for | In Herald OS |
+| You reach for | In MadX Agent OS |
 | --- | --- |
 | The Start menu | All applications: `Super+A`. Or the command bar, `Super+Shift+Space`: type an app, a file, a command or a question |
 | Copilot | Hermes: the command bar, or the voice key `Super+V` |
 | File Explorer (`Win+E`) | Files: `Super+E`, or ask "show me the PDFs I downloaded this week" |
 | Task Manager (`Ctrl+Shift+Esc`) | The System monitor: `Super+I`, or ask "what is using the most memory?" |
-| Settings (`Win+I`) | Settings: `Super+,`; the Herald OS menu (`Super+M`) installs, updates and changes the theme |
+| Settings (`Win+I`) | Settings: `Super+,`; the MadX Agent OS menu (`Super+M`) installs, updates and changes the theme |
 | Action Center and quick settings (`Win+A`) | The menu bar's Wi-Fi, Bluetooth, sound and battery icons, and the bell for notifications |
 | Snipping Tool (`Win+Shift+S`) | `Print` takes a screenshot of a selection; `Super+Shift+S` selects a region and asks Hermes about it |
 | Clipboard history (`Win+V`) | `Super+Ctrl+V` |

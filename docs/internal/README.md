@@ -1,3 +1,5 @@
+> Historical upstream design record, preserved for provenance. Current MadX work is tracked in [docs/madx](../madx/).
+
 # Working notes
 
 Plans and research written while building Herald OS. They record intent at the time and are not

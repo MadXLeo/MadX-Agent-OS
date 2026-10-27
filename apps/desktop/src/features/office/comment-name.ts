@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { atom } from 'nanostores'
 import type { SystemInfo } from '../../../shared/ipc.ts'
 import { normalizeCommentName } from '../../../shared/office/comment-name.ts'
@@ -16,7 +17,7 @@ import { $systemInfo } from '../../store/system.ts'
  */
 
 /** The name on comments a command adds before the person confirmed theirs. */
-export const NEUTRAL_NAME = 'Herald user'
+export const NEUTRAL_NAME = `${PRODUCT.shortName} user`
 
 export const HERMES_NAME = 'Hermes'
 

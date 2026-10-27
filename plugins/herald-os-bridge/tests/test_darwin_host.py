@@ -98,7 +98,7 @@ def mac(plugin, monkeypatch):
         AppInfo(name="Notes", path="/System/Applications/Notes.app", bundle_id="com.apple.Notes"),
         AppInfo(name="Safari", path="/Applications/Safari.app", bundle_id="com.apple.Safari"),
         AppInfo(name="Docker", path="/Applications/Docker.app", bundle_id="com.docker.docker"),
-        AppInfo(name="Herald OS", path="/Applications/Herald OS.app", bundle_id="dev.iamluke.heraldos"),
+        AppInfo(name="MadX Agent OS", path="/Applications/MadX Agent OS.app", bundle_id="dev.iamluke.heraldos"),
     ]
     monkeypatch.setattr(adapter, "installed_apps", lambda: apps)
     clock = [0.0]
@@ -158,7 +158,7 @@ def test_quit_refused_is_not_reported_as_quit(mac):
     machine = fake({"osascript": (1, "", REFUSED.format(target="TextEdit"))})
     result = quit_app(tools, "TextEdit")
     assert not result["success"]
-    assert "turn on TextEdit under Herald OS" in result["error"]
+    assert "turn on TextEdit under MadX Agent OS" in result["error"]
     assert "Automation" in result["error"]
     assert machine.ran("osascript") == [["osascript", "-e", 'tell application "TextEdit" to quit']]
 
@@ -228,27 +228,27 @@ def test_session_processes_are_never_quit_by_name_or_bundle_id(mac, name, force)
     machine.procs[89] = (ME, "/System/Library/CoreServices/Dock.app/Contents/MacOS/Dock")
     result = quit_app(tools, name, force)
     assert not result["success"]
-    assert result["error"] == f"{name} is part of macOS and is never quit by Herald OS"
+    assert result["error"] == f"{name} is part of macOS and is never quit by MadX Agent OS"
     assert 88 in machine.procs and 89 in machine.procs
     assert not machine.signals and not machine.ran("osascript") and not machine.ran("ps")
 
 
 @pytest.mark.parametrize("force", [False, True])
-@pytest.mark.parametrize("name", ["Herald OS", "herald os", "Herald OS.app", "dev.iamluke.heraldos"])
+@pytest.mark.parametrize("name", ["MadX Agent OS", "herald os", "MadX Agent OS.app", "dev.iamluke.heraldos"])
 def test_herald_os_never_quits_itself(mac, name, force):
     _, tools, fake = mac
     machine = fake({"osascript": (0, "quit\n", "")})
-    machine.procs[900] = (ME, "/Applications/Herald OS.app/Contents/MacOS/Herald OS")
+    machine.procs[900] = (ME, "/Applications/MadX Agent OS.app/Contents/MacOS/MadX Agent OS")
     result = quit_app(tools, name, force)
-    assert result["error"] == "Herald OS does not quit itself"
+    assert result["error"] == "MadX Agent OS does not quit itself"
     assert 900 in machine.procs and not machine.signals and not machine.ran("osascript")
 
 
 def test_a_partial_match_that_lands_on_herald_os_is_refused(mac):
     _, tools, fake = mac
     machine = fake({"osascript": (0, "not running\n", "")})
-    machine.procs[900] = (ME, "/Applications/Herald OS.app/Contents/MacOS/Herald OS")
-    assert quit_app(tools, "Herald")["error"] == "Herald OS does not quit itself"
+    machine.procs[900] = (ME, "/Applications/MadX Agent OS.app/Contents/MacOS/MadX Agent OS")
+    assert quit_app(tools, "Herald")["error"] == "MadX Agent OS does not quit itself"
     assert machine.ran("osascript") == [by_name("Herald")]
     assert 900 in machine.procs
 
@@ -258,7 +258,7 @@ def test_dock_never_reaches_docker(mac, force):
     _, tools, fake = mac
     machine = fake({"osascript": (0, "quit\n", "")})
     machine.procs[950] = (ME, "/Applications/Docker.app/Contents/MacOS/Docker")
-    assert quit_app(tools, "Dock", force)["error"] == "Dock is part of macOS and is never quit by Herald OS"
+    assert quit_app(tools, "Dock", force)["error"] == "Dock is part of macOS and is never quit by MadX Agent OS"
     assert 950 in machine.procs and not machine.signals and not machine.ran("osascript")
 
 
@@ -316,7 +316,7 @@ def test_polite_quit_by_name_names_the_automation_switch(mac):
     _, tools, fake = mac
     fake({"osascript": (1, "", REFUSED.format(target="Finder"))})
     error = quit_app(tools, "Finder")["error"]
-    assert "turn on Finder under Herald OS" in error and "Automation" in error
+    assert "turn on Finder under MadX Agent OS" in error and "Automation" in error
 
 
 def test_polite_quit_by_name_reports_other_applescript_errors(mac):
@@ -371,7 +371,7 @@ def test_force_quit_reports_a_process_macos_will_not_let_it_stop(mac):
     machine.protected.add(501)
     result = quit_app(tools, "TextEdit", force=True)
     assert not result["success"]
-    assert result["error"] == "macOS did not let Herald OS stop TextEdit (process 501)"
+    assert result["error"] == "macOS did not let MadX Agent OS stop TextEdit (process 501)"
 
 
 def test_bundle_executables_only_inside_applications_folders(mac):

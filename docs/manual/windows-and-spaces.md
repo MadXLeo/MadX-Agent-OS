@@ -1,11 +1,11 @@
 # Windows and Spaces
 
-On Herald OS Linux, windows place themselves. niri, the window manager, lines them up side by side in
+On MadX Agent OS Linux, windows place themselves. niri, the window manager, lines them up side by side in
 columns on a strip that scrolls left and right, instead of piling them on top of each other. A new
 window opens as a new column next to the one you are in, and the strip scrolls to show it. Nothing
 gets lost behind anything else.
 
-These keys are for Herald OS Linux; in the virtual machine, `Super` is `Alt`. `Super+K` shows them
+These keys are for MadX Agent OS Linux; in the virtual machine, `Super` is `Alt`. `Super+K` shows them
 all.
 
 ## Moving around
@@ -35,7 +35,7 @@ Right-click an app in the Dock to see its windows, pick one, or close them.
 | Float the window above the others, or tile it again | `Super+T` |
 | Close the window | `Super+Q` |
 
-Herald's own panels (the menu bar, the Dock, the command bar) always float, and the Hermes window
+MadX's own panels (the menu bar, the Dock, the command bar) always float, and the Hermes window
 opens at half the screen's width.
 
 ## Spaces
@@ -58,5 +58,5 @@ mouse or press a key.
 
 ## Your own keys
 
-Add binds in `~/.config/niri/local.kdl`, which Herald OS never overwrites; a bind there replaces
-Herald's for the same key. [Make it yours](make-it-yours.md#keyboard-shortcuts) has examples.
+Add binds in `~/.config/niri/local.kdl`, which MadX Agent OS never overwrites; a bind there replaces
+MadX's for the same key. [Make it yours](make-it-yours.md#keyboard-shortcuts) has examples.

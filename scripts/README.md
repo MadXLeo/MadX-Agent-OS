@@ -8,5 +8,5 @@ Run these from the repository root; the common ones have npm aliases.
 | `sync-upstream.sh` | `npm run sync-upstream` | Downloads the Hermes Agent commit pinned in `upstream/UPSTREAM.lock` into `upstream/hermes-agent/` |
 | `test-bridge.sh` | `npm run test:bridge` | Runs the bridge plugin's pytest suite |
 | `check-secrets.sh` | | Scans the working tree and the whole git history for committed credentials with gitleaks |
-| `migrate-hermes-config.py` | | Renames the plugin, toolset and saved approvals in `~/.hermes/config.yaml` from Hermes OS to Herald OS (bootstrap runs it) |
-| `make-icons.py` | | Regenerates the app, favicon and boot-splash icons from the master Herald mark (needs Pillow; macOS for the `.icns`) |
+| `migrate-hermes-config.py` | | Renames the plugin, toolset and saved approvals in `~/.hermes/config.yaml` from Hermes OS to MadX Agent OS (bootstrap runs it) |
+| `make-icons.py` | | Regenerates the app, favicon and boot-splash icons from the master MadX mark (needs Pillow; macOS for the `.icns`) |

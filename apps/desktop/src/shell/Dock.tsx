@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { InstalledApp } from '../../shared/ipc.ts'
@@ -155,11 +156,11 @@ export function Dock() {
 
     // Shortcuts beside the ones in Applications.
     list.push({ id: 'room', label: 'Pet Room', render: () => <span className="icon-tile size-11 rounded-[11px]"><AppGlyph id="room" size={22} /></span>, onClick: () => openApp('room'), running: roomOpen })
-    list.push({ id: 'canvas', label: 'Herald Canvas', render: () => <span className="icon-tile size-11 rounded-[11px]"><AppGlyph id="canvas" size={22} /></span>, onClick: () => openInCanvas(), running: canvasOpen })
+    list.push({ id: 'canvas', label: PRODUCT.apps.canvas, render: () => <span className="icon-tile size-11 rounded-[11px]"><AppGlyph id="canvas" size={22} /></span>, onClick: () => openInCanvas(), running: canvasOpen })
     // Docs, Sheets and Slides share one entry, so three icons do not crowd the Dock.
     list.push({
       id: 'office',
-      label: 'Herald Office',
+      label: PRODUCT.apps.office,
       render: () => <span className="icon-tile size-11 rounded-[11px]"><AppGlyph id="office" size={22} /></span>,
       onClick: event => {
         const rect = event.currentTarget.getBoundingClientRect()
@@ -167,7 +168,7 @@ export function Dock() {
       },
       running: officeKey !== ''
     })
-    list.push({ id: 'calc', label: 'Herald Calc', render: () => <span className="icon-tile size-11 rounded-[11px]"><AppGlyph id="calc" size={22} /></span>, onClick: () => openApp('calc'), running: calcOpen })
+    list.push({ id: 'calc', label: PRODUCT.apps.calc, render: () => <span className="icon-tile size-11 rounded-[11px]"><AppGlyph id="calc" size={22} /></span>, onClick: () => openApp('calc'), running: calcOpen })
     list.push({ id: 'applications', label: 'Applications', render: () => <span className="icon-tile size-11 rounded-[11px]"><AppGlyph id="grid" size={22} /></span>, onClick: () => $applicationsOpen.set(true) })
     list.push({ id: 'trash', label: 'Trash', render: () => <span className="flex size-11 items-center justify-center rounded-[11px] bg-white/6 text-fg-2"><AppGlyph id="trash" size={22} /></span>, onClick: () => void window.heraldOS.fs.openPath(trashPath).catch(logFailure('fs.openPath')) })
 

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 /*
  * The document on screen: the part of it in view composited at the screen's resolution (never past
  * full size), drawn with the view's zoom and pan over the workspace, with a checkerboard under
@@ -130,7 +131,7 @@ export class ScreenRenderer {
     const gl = canvas.getContext('webgl2', { alpha: true, antialias: false, premultipliedAlpha: true, preserveDrawingBuffer: false, powerPreference: 'high-performance' })
 
     if (!gl) {
-      throw new Error('Herald Canvas needs WebGL2, which this system does not provide')
+      throw new Error(`${PRODUCT.apps.canvas} needs WebGL2, which this system does not provide`)
     }
 
     this.gpu = new Gpu(gl)

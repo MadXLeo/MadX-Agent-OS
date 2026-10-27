@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import type { SessionListRow } from '@herald-os/client'
 import { atom } from 'nanostores'
 import type { DirEntry } from '../../../shared/ipc.ts'
@@ -321,7 +322,7 @@ export const lockPath = (hermesHome: string, file: MemoryFile) => `${memoryPath(
 /** Thrown when Hermes (or another Herald) held a memory file's lock for longer than `LOCK_TIMEOUT_MS`. */
 export class MemoryLockTimeoutError extends Error {
   constructor(file: MemoryFile) {
-    super(`${file} stayed locked by another writer (Hermes's memory tool or another Herald window) for ${LOCK_TIMEOUT_MS / 1000} s, so nothing was written. Try again in a moment.`)
+    super(`${file} stayed locked by another writer (Hermes's memory tool or another ${PRODUCT.shortName} window) for ${LOCK_TIMEOUT_MS / 1000} s, so nothing was written. Try again in a moment.`)
     this.name = 'MemoryLockTimeoutError'
   }
 }
@@ -403,7 +404,7 @@ function commitFile<T>(hermesHome: string, file: MemoryFile, change: (texts: str
           }
 
           if (attempt >= WRITE_ATTEMPTS) {
-            throw new Error(`${file} kept changing while Herald was saving it, so nothing was written. Try again in a moment.`)
+            throw new Error(`${file} kept changing while ${PRODUCT.shortName} was saving it, so nothing was written. Try again in a moment.`)
           }
 
           // Random, so two writers that just collided don't collide again on the next try.

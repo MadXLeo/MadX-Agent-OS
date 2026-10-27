@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { type ChildProcess, execFileSync, spawn } from 'node:child_process'
 import crypto from 'node:crypto'
 import fs from 'node:fs'
@@ -28,15 +29,15 @@ export const WAIT_POLL_MS = 3_000
 export function waitingReason(install: string | null): string {
   switch (install) {
     case null:
-      return 'No Hermes runtime found. Install Hermes Agent (curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash) or set HERALD_OS_HERMES_ROOT; Herald OS starts it as soon as it is installed.'
+      return `No Hermes runtime found. Install Hermes Agent (curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash) or set HERALD_OS_HERMES_ROOT; ${PRODUCT.name} starts it as soon as it is installed.`
     case 'offline':
-      return 'Hermes Agent comes from the internet, and this computer was offline when it first started. Join a network and it installs by itself, which takes a few minutes; Herald OS starts it then.'
+      return `Hermes Agent comes from the internet, and this computer was offline when it first started. Join a network and it installs by itself, which takes a few minutes; ${PRODUCT.name} starts it then.`
     case 'installing':
-      return 'Installing Hermes Agent. It takes a few minutes; Herald OS starts it when it is ready.'
+      return `Installing Hermes Agent. It takes a few minutes; ${PRODUCT.name} starts it when it is ready.`
     case 'retrying':
-      return 'Hermes Agent did not install, so it tries again in a few minutes (journalctl -u herald-os-hermes says why). Herald OS starts it when it is ready.'
+      return `Hermes Agent did not install, so it tries again in a few minutes (journalctl -u herald-os-hermes says why). ${PRODUCT.name} starts it when it is ready.`
     default:
-      return 'Hermes Agent is not installed yet. It installs by itself once this computer is online; Herald OS starts it then.'
+      return `Hermes Agent is not installed yet. It installs by itself once this computer is online; ${PRODUCT.name} starts it then.`
   }
 }
 

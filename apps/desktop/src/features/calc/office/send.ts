@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { OfficeDocSummary, OfficePresence } from '../../../../shared/ipc.ts'
 import { OFFICE_APP_NAMES } from '../../../../shared/office/files.ts'
 import { logFailure } from '../../../lib/report.ts'
@@ -158,7 +159,7 @@ async function openBlank(app: Target): Promise<OfficeDocSummary> {
   const known = await office.presence().catch(() => null)
 
   if (!known) {
-    throw new Error('Herald Office is not answering; try again in a moment')
+    throw new Error(`${PRODUCT.apps.office} is not answering; try again in a moment`)
   }
 
   const before = new Set(known.filter(entry => entry.app === app).flatMap(entry => entry.documents.map(doc => doc.key)))
@@ -205,7 +206,7 @@ export async function copyToSheets(document: DocumentResult, name: string): Prom
   }
 
   if (rows.length > MAX_ROWS) {
-    throw new Error(`This note is too long for one workbook: Herald Sheets takes ${plural(MAX_ROWS, 'line')} at a time`)
+    throw new Error(`This note is too long for one workbook: ${PRODUCT.apps.sheets} takes ${plural(MAX_ROWS, 'line')} at a time`)
   }
 
   const values = JSON.stringify(rows.map(row => [row.value, labelCell(row.label)]))
@@ -213,16 +214,16 @@ export async function copyToSheets(document: DocumentResult, name: string): Prom
 
   if (isPanels) {
     const workbook = await openBlank('sheets')
-    await told(inWindow('sheets', workbook, 'sheets.write', { workbook: workbook.name, range: 'A1', values }), `Herald Sheets could not write the note into ${workbook.name}`)
+    await told(inWindow('sheets', workbook, 'sheets.write', { workbook: workbook.name, range: 'A1', values }), `${PRODUCT.apps.sheets} could not write the note into ${workbook.name}`)
     await applyFormats(formats, args => inWindow('sheets', workbook, 'sheets.format', { workbook: workbook.name, ...args }))
   } else {
     const wanted = await freeName('sheets', tabName(name))
-    const created = await told(command('sheets.new', { name: wanted, values }), 'Herald Sheets could not make the workbook')
+    const created = await told(command('sheets.new', { name: wanted, values }), `${PRODUCT.apps.sheets} could not make the workbook`)
     const workbook = typeof created.data?.name === 'string' && created.data.name ? created.data.name : wanted
     await applyFormats(formats, args => command('sheets.format', { workbook, ...args }))
   }
 
-  return `Copied ${plural(lines, 'line')} to a new workbook in Herald Sheets`
+  return `Copied ${plural(lines, 'line')} to a new workbook in ${PRODUCT.apps.sheets}`
 }
 
 /** A new document in Herald Docs with a note as a neat table. Resolves to a line for a toast. */
@@ -235,11 +236,11 @@ export async function copyToDocs(document: DocumentResult, name: string): Promis
 
   if (isPanels) {
     const doc = await openBlank('docs')
-    await told(inWindow('docs', doc, 'docs.write', { document: doc.name, content: markdown }), `Herald Docs could not write the note into ${doc.name}`)
+    await told(inWindow('docs', doc, 'docs.write', { document: doc.name, content: markdown }), `${PRODUCT.apps.docs} could not write the note into ${doc.name}`)
   } else {
     const wanted = await freeName('docs', tabName(name))
-    await told(command('docs.new', { name: wanted, content: markdown }), 'Herald Docs could not make the document')
+    await told(command('docs.new', { name: wanted, content: markdown }), `${PRODUCT.apps.docs} could not make the document`)
   }
 
-  return `Copied ${plural(lines, 'line')} to a new document in Herald Docs`
+  return `Copied ${plural(lines, 'line')} to a new document in ${PRODUCT.apps.docs}`
 }

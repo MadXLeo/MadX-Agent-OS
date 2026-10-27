@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import type { ControlAction, StatusPanelId, StatusPanelState } from '../../shared/ipc.ts'
 import { findAudioDevice, isAutomaticDeviceName } from '../lib/audio-devices.ts'
 import { ownsSystemAudio } from '../lib/platform-labels.ts'
@@ -74,7 +75,7 @@ export const controlCommands: readonly OsCommand[] = [
   {
     id: 'wifi.connect',
     title: 'Join a Wi-Fi network',
-    description: 'Connect to a Wi-Fi network by name (Herald OS Linux); a password is needed the first time for a secured network.',
+    description: `Connect to a Wi-Fi network by name (${PRODUCT.name} Linux); a password is needed the first time for a secured network.`,
     tier: 'mutate',
     args: [
       { name: 'network', type: 'string', description: 'Network name', required: true },
@@ -106,7 +107,7 @@ export const controlCommands: readonly OsCommand[] = [
   {
     id: 'wifi.power',
     title: 'Wi-Fi on or off',
-    description: 'Turn Wi-Fi on or off (Herald OS Linux).',
+    description: `Turn Wi-Fi on or off (${PRODUCT.name} Linux).`,
     tier: 'mutate',
     args: [{ name: 'enabled', type: 'boolean', description: 'true for on', required: true }],
     phrases: [
@@ -141,7 +142,7 @@ export const controlCommands: readonly OsCommand[] = [
   {
     id: 'bluetooth.power',
     title: 'Bluetooth on or off',
-    description: 'Turn Bluetooth on or off (Herald OS Linux).',
+    description: `Turn Bluetooth on or off (${PRODUCT.name} Linux).`,
     tier: 'mutate',
     args: [{ name: 'enabled', type: 'boolean', description: 'true for on', required: true }],
     phrases: [
@@ -201,7 +202,7 @@ export const controlCommands: readonly OsCommand[] = [
   {
     id: 'audio.input',
     title: 'Choose the microphone',
-    description: 'Pick the microphone the voice listens through, by name. On Herald OS Linux this sets the machine default; elsewhere it applies to Herald only.',
+    description: `Pick the microphone the voice listens through, by name. On ${PRODUCT.name} Linux this sets the machine default; elsewhere it applies to ${PRODUCT.shortName} only.`,
     tier: 'act',
     args: [{ name: 'device', type: 'string', description: 'Part of the device name, or automatic', required: true }],
     phrases: ['use the {device} microphone', 'switch the microphone to {device}', 'listen through the {device}', { phrase: 'use the automatic microphone', args: { device: 'automatic' } }],
@@ -284,7 +285,7 @@ export const controlCommands: readonly OsCommand[] = [
   {
     id: 'display.brightness',
     title: 'Set the brightness',
-    description: "Set the built-in screen's brightness (1-100, Herald OS Linux).",
+    description: `Set the built-in screen's brightness (1-100, ${PRODUCT.name} Linux).`,
     tier: 'act',
     args: [{ name: 'percent', type: 'number', description: '1 to 100', required: true }],
     phrases: ['set the brightness to {percent}', 'brightness {percent}'],
@@ -297,7 +298,7 @@ export const controlCommands: readonly OsCommand[] = [
   {
     id: 'display.scale',
     title: 'Set the display scale',
-    description: 'Make everything on a display bigger or smaller (scale 1 to 3, e.g. 1.25; Herald OS Linux).',
+    description: `Make everything on a display bigger or smaller (scale 1 to 3, e.g. 1.25; ${PRODUCT.name} Linux).`,
     tier: 'mutate',
     args: [
       { name: 'scale', type: 'number', description: '1 to 3', required: true },
@@ -326,7 +327,7 @@ export const controlCommands: readonly OsCommand[] = [
   {
     id: 'power.profile',
     title: 'Set the power mode',
-    description: 'Choose performance, balanced or power-saver (Herald OS Linux, with power-profiles-daemon).',
+    description: `Choose performance, balanced or power-saver (${PRODUCT.name} Linux, with power-profiles-daemon).`,
     tier: 'act',
     args: [{ name: 'profile', type: 'string', description: 'performance, balanced or power-saver', required: true, enum: ['performance', 'balanced', 'power-saver'] }],
     phrases: [{ phrase: 'save power', args: { profile: 'power-saver' } }, { phrase: 'performance mode', args: { profile: 'performance' } }, { phrase: 'balanced power mode', args: { profile: 'balanced' } }],

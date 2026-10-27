@@ -60,7 +60,7 @@ const MEMORY = `${HOME}/memories/MEMORY.md`
 const onDisk = () => parse(disk.files.get(MEMORY) ?? '')
 const entry = (text: string) => $memory.get().entries.find(e => e.text === text)!
 
-/** Herald loads the file, then Hermes's memory tool rewrites it before Herald's next write. */
+/** MadX OS loads the file, then Hermes's memory tool rewrites it before MadX OS's next write. */
 async function loadThenHermesWrites(loaded: string[], hermes: string[]) {
   disk.files.set(MEMORY, serialize(loaded))
   await loadMemory(HOME)
@@ -91,16 +91,16 @@ describe('parse', () => {
 })
 
 describe('memory writes', () => {
-  it('keeps an entry Hermes saved after Herald loaded the file when Herald adds one', async () => {
+  it('keeps an entry Hermes saved after MadX OS loaded the file when MadX OS adds one', async () => {
     await loadThenHermesWrites(['A', 'B'], ['A', 'B', 'saved by Hermes'])
-    const id = await addEntry(HOME, 'MEMORY.md', 'added by Herald')
+    const id = await addEntry(HOME, 'MEMORY.md', 'added by MadX OS')
 
-    expect(onDisk()).toEqual(['A', 'B', 'saved by Hermes', 'added by Herald'])
+    expect(onDisk()).toEqual(['A', 'B', 'saved by Hermes', 'added by MadX OS'])
     expect(id).toBe('MEMORY.md:3')
-    expect($memory.get().entries.find(e => e.id === id)?.text).toBe('added by Herald')
+    expect($memory.get().entries.find(e => e.id === id)?.text).toBe('added by MadX OS')
   })
 
-  it('does not bring back an entry Hermes removed when Herald forgets another', async () => {
+  it('does not bring back an entry Hermes removed when MadX OS forgets another', async () => {
     await loadThenHermesWrites(['A', 'B', 'C'], ['B', 'C'])
     await forgetEntry(HOME, entry('C'))
 
@@ -125,7 +125,7 @@ describe('memory writes', () => {
     expect($memory.get().entries.map(e => e.text)).toEqual(['B', 'saved by Hermes'])
   })
 
-  it('keeps both entries when two adds from Herald overlap', async () => {
+  it('keeps both entries when two adds from MadX OS overlap', async () => {
     disk.files.set(MEMORY, serialize(['A']))
     await loadMemory(HOME)
     const ids = await Promise.all([addEntry(HOME, 'MEMORY.md', 'first'), addEntry(HOME, 'MEMORY.md', 'second')])
@@ -198,9 +198,9 @@ describe("Hermes's lock", () => {
         disk.files.set(path, serialize([...parse(disk.files.get(path) ?? ''), `saved by Hermes ${hermesWrites--}`]))
       }
     }
-    const id = await addEntry(HOME, 'MEMORY.md', 'added by Herald')
+    const id = await addEntry(HOME, 'MEMORY.md', 'added by MadX OS')
 
-    expect(onDisk()).toEqual(['A', 'saved by Hermes 2', 'saved by Hermes 1', 'added by Herald'])
+    expect(onDisk()).toEqual(['A', 'saved by Hermes 2', 'saved by Hermes 1', 'added by MadX OS'])
     expect(id).toBe('MEMORY.md:3')
     expect(disk.calls.filter(call => call.startsWith('unlock'))).toEqual([])
   })
@@ -210,7 +210,7 @@ describe("Hermes's lock", () => {
     let n = 0
     disk.hooks.beforeWrite = path => disk.files.set(path, `changed ${++n}`)
 
-    await expect(addEntry(HOME, 'MEMORY.md', 'B')).rejects.toThrow('MEMORY.md kept changing while Herald was saving it')
+    await expect(addEntry(HOME, 'MEMORY.md', 'B')).rejects.toThrow('MEMORY.md kept changing while MadX OS was saving it')
     expect(n).toBe(WRITE_ATTEMPTS)
     expect(disk.writes).toEqual([])
   })

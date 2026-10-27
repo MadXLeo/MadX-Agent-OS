@@ -238,4 +238,4 @@ def test_a_shell_without_canvas_says_so(plugin, shell, monkeypatch):
     monkeypatch.setattr(ui, "list_commands", lambda: [{"id": "page.open", "tier": "read"}])
     tools._UI_CATALOGUE.clear()
     reply = json.loads(tools.handle_canvas({"action": "status"}))
-    assert reply["success"] is False and "update Herald OS" in reply["error"]
+    assert reply["success"] is False and "update MadX Agent OS" in reply["error"]

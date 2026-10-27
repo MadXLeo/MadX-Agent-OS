@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { type ChildProcess, spawn } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
@@ -299,7 +300,7 @@ class Recorder {
     let file: string
 
     if (process.platform === 'darwin') {
-      file = path.join(dir, `Herald OS Recording ${stamp()}.mov`)
+      file = path.join(dir, `${PRODUCT.name} Recording ${stamp()}.mov`)
       command = 'screencapture'
       args = ['-v', ...(options.audio ? ['-g'] : []), file]
     } else if (process.platform === 'linux') {
@@ -415,7 +416,7 @@ export function registerCaptureIpc(onRecording: (state: RecordingState) => void)
   // macOS: the colour picker, QR codes and text from the screen (Herald OS Linux runs them through its CLI).
   ipcMain.handle(IPC.captureTool, async (_event, tool: CaptureTool): Promise<CaptureToolResult> => {
     if (process.platform !== 'darwin') {
-      throw new Error('On Herald OS Linux the herald-os CLI runs these tools')
+      throw new Error(`On ${PRODUCT.name} Linux the herald-os CLI runs these tools`)
     }
 
     if (tool === 'colour') {

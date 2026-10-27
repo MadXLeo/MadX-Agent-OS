@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { atom } from 'nanostores'
 import type { FilePreview } from '../../../../shared/ipc.ts'
 import { $env } from '../../../store/backend.ts'
@@ -94,11 +95,11 @@ async function readThemes(home: string): Promise<Theme[]> {
   const file = typeof data === 'object' && data !== null ? (data as Partial<Record<keyof ThemesFile, unknown>>) : {}
 
   if (file.format !== THEMES_FORMAT || typeof file.version !== 'number') {
-    throw new Error('The custom slide themes file is not a Herald slide themes file')
+    throw new Error(`The custom slide themes file is not a ${PRODUCT.shortName} slide themes file`)
   }
 
   if (file.version > THEMES_VERSION) {
-    throw new Error('The custom slide themes file was written by a newer Herald')
+    throw new Error(`The custom slide themes file was written by a newer ${PRODUCT.shortName}`)
   }
 
   const themes: Theme[] = []

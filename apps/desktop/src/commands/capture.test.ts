@@ -89,7 +89,7 @@ describe('capture.qr on a Mac', () => {
   })
 })
 
-describe('capture.qr on Herald OS Linux', () => {
+describe('capture.qr on MadX Agent OS Linux', () => {
   beforeEach(() => $env.set({ ...ENV, platform: 'linux' }))
 
   it('asks the CLI for a description rather than the contents', async () => {
@@ -118,7 +118,7 @@ describe('capture.qr on Herald OS Linux', () => {
   it('reports a failed scan', async () => {
     bridge.heraldOs.mockResolvedValue({ code: 127, stdout: '', stderr: 'herald-os: zbarimg is not installed (dnf install zbar)' })
 
-    expect(await readQr()).toMatchObject({ ok: false, error: 'QR code: available on herald os linux.' })
+    expect(await readQr()).toMatchObject({ ok: false, error: 'QR code: available on madx agent os linux.' })
     bridge.heraldOs.mockResolvedValue({ code: 1, stdout: '', stderr: 'herald-os: zbarimg is not installed (dnf install zbar)' })
     expect(await readQr()).toMatchObject({ ok: false, error: 'herald-os: zbarimg is not installed (dnf install zbar)' })
   })

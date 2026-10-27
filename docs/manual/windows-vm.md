@@ -1,6 +1,6 @@
 # The Windows VM
 
-For the Windows app you cannot do without, Herald OS Linux can install Windows 11 in a virtual
+For the Windows app you cannot do without, MadX Agent OS Linux can install Windows 11 in a virtual
 machine: a Windows PC in a window, sharing a folder with you.
 
 ## What you need

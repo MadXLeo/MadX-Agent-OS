@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import {
   IconBattery,
@@ -443,7 +444,7 @@ function HeraldVoiceRows() {
 
   return (
     <>
-      <div className="px-2 pt-3 pb-1 text-[11.5px] text-fg-4">Herald voice</div>
+      <div className="px-2 pt-3 pb-1 text-[11.5px] text-fg-4">{PRODUCT.shortName} voice</div>
       {!prefs.voice.enabled ? (
         <Note>Voice is off, so the microphone is never opened. Turn it on in Settings &gt; Voice.</Note>
       ) : !devices.labelsAvailable ? (

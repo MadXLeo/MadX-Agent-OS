@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { Node as PMNode } from '@tiptap/pm/model'
 import type { EditorState, Transaction } from '@tiptap/pm/state'
 import { blankDocument, commentsOf, DEFAULT_HEADER_DISTANCE, type DocJSON, type DocNode, type HeaderKind, type NoteKind, pageOf, type PageSettings, pageSizeName, PAGE_SIZES, type PageSizeName, type SectionKind, tocEntries } from '../../../../shared/office/document.ts'
@@ -1366,7 +1367,7 @@ export function templateChoice(value: unknown, saved: readonly SavedTemplate[]):
   const own = saved.find((entry) => entry.id === text(value)) ?? saved.find((entry) => templateKey(entry.name) === key)
 
   if (!own) {
-    throw new Error(`Herald Docs has no template “${text(value)}”: its own are ${TEMPLATES.map((entry) => entry.id).join(', ')}${saved.length ? `, and the person’s ${saved.map((entry) => `“${entry.name}”`).join(', ')}` : ''} (docs.listTemplates says what each holds)`)
+    throw new Error(`${PRODUCT.apps.docs} has no template “${text(value)}”: its own are ${TEMPLATES.map((entry) => entry.id).join(', ')}${saved.length ? `, and the person’s ${saved.map((entry) => `“${entry.name}”`).join(', ')}` : ''} (docs.listTemplates says what each holds)`)
   }
 
   return { saved: true, id: own.id, name: own.name, doc: own.doc }
@@ -1404,7 +1405,7 @@ export function withBody(model: DocJSON, blocks: readonly DocNode[]): DocJSON {
 /** Herald Docs' templates and the person's, as Hermes reads them. */
 export function templatesOutcome(saved: readonly SavedTemplate[]): Outcome {
   return {
-    summary: `Herald Docs has ${many(TEMPLATES.length, 'template')} (${TEMPLATES.map((entry) => entry.id).join(', ')})${saved.length ? `, and the person saved ${many(saved.length, 'more', 'more')}: ${saved.map((entry) => `“${entry.name}”`).join(', ')}` : ''}`,
+    summary: `${PRODUCT.apps.docs} has ${many(TEMPLATES.length, 'template')} (${TEMPLATES.map((entry) => entry.id).join(', ')})${saved.length ? `, and the person saved ${many(saved.length, 'more', 'more')}: ${saved.map((entry) => `“${entry.name}”`).join(', ')}` : ''}`,
     data: { builtIn: TEMPLATES.map(({ id, name, description }) => ({ id, name, description })), saved: saved.map(({ id, name, savedAt }) => ({ id, name, savedAt })) }
   }
 }
@@ -1419,7 +1420,7 @@ export function statisticsOutcome(state: EditorState, args: Args, live: boolean,
 
   if (flag(args.selection, false)) {
     if (!live) {
-      throw new Error('Only a document open in Herald Docs has a selection: open it first (docs.open)')
+      throw new Error(`Only a document open in ${PRODUCT.apps.docs} has a selection: open it first (docs.open)`)
     }
 
     if (state.selection.empty) {

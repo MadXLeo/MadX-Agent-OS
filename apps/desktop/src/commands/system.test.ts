@@ -46,24 +46,24 @@ describe('the language command', () => {
     $prefs.set({ ...$prefs.get(), language: undefined })
   })
 
-  it('switches every string Herald translates, and goes back to following the system', async () => {
+  it('switches every string MadX OS translates, and goes back to following the system', async () => {
     expect($language.get()).toBe('zh-CN')
 
-    expect(await command('language.set').run({ language: 'en' }, UI)).toMatchObject({ ok: true, summary: 'Herald OS is in English' })
+    expect(await command('language.set').run({ language: 'en' }, UI)).toMatchObject({ ok: true, summary: 'MadX Agent OS is in English' })
     expect($prefs.get().language).toBe('en')
     expect($language.get()).toBe('en')
 
-    expect(await command('language.set').run({ language: 'system' }, UI)).toMatchObject({ ok: true, summary: 'Herald OS follows the system language: 简体中文' })
+    expect(await command('language.set').run({ language: 'system' }, UI)).toMatchObject({ ok: true, summary: 'MadX Agent OS follows the system language: 简体中文' })
     expect($language.get()).toBe('zh-CN')
   })
 
   it('switches to Brazilian Portuguese, and follows a Portuguese system', async () => {
-    expect(await command('language.set').run({ language: 'pt-BR' }, UI)).toMatchObject({ ok: true, summary: 'Herald OS is in Português (Brasil)' })
+    expect(await command('language.set').run({ language: 'pt-BR' }, UI)).toMatchObject({ ok: true, summary: 'MadX Agent OS is in Português (Brasil)' })
     expect($prefs.get().language).toBe('pt-BR')
     expect($language.get()).toBe('pt-BR')
 
     $env.set({ ...ENV, languages: ['pt-PT', 'en-US'] })
-    expect(await command('language.set').run({ language: 'system' }, UI)).toMatchObject({ ok: true, summary: 'Herald OS follows the system language: Português (Brasil)' })
+    expect(await command('language.set').run({ language: 'system' }, UI)).toMatchObject({ ok: true, summary: 'MadX Agent OS follows the system language: Português (Brasil)' })
     expect($language.get()).toBe('pt-BR')
   })
 

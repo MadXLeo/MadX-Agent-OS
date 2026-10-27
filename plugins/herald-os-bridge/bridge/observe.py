@@ -1,9 +1,9 @@
-"""Live steps from Hermes outside Herald OS for the Pet Room: observer hooks, off unless asked for.
+"""Live steps from Hermes outside MadX Agent OS for the Pet Room: observer hooks, off unless asked for.
 
 Hermes runs a plugin's hooks in every process that loads it: messaging gateways, the CLI and TUI,
-cron, and the backend Herald OS starts (which registers none: the Room sees that work through its
-gateway). While a running Herald OS asks for live steps, each hook turns one Hermes event into a
-record of fixed fields and a daemon thread sends the records in batches over that Herald OS's
+cron, and the backend MadX Agent OS starts (which registers none: the Room sees that work through its
+gateway). While a running MadX Agent OS asks for live steps, each hook turns one Hermes event into a
+record of fixed fields and a daemon thread sends the records in batches over that MadX Agent OS's
 control socket:
 
     {"cmd": "activity", "token": "<activity token>", "events": [{"kind": "tool.start", "session": "…", "tool": "read_file", "target": "Budget.xlsx", "call": "…", "source": "telegram", "at": 1760000000.5}]}
@@ -13,7 +13,7 @@ a web host, an opaque id pairing a start with its end, a status from a fixed lis
 runs and when the hook fired. Chat and file content, the rest of a tool's arguments, commands,
 results, errors, goals, summaries and thinking never leave the hook.
 
-A Herald OS asks by writing ``$HERMES_HOME/herald-os/observe/<pid>.json`` (0600) with ``live: true``,
+A MadX Agent OS asks by writing ``$HERMES_HOME/herald-os/observe/<pid>.json`` (0600) with ``live: true``,
 its socket and a token that lets a process report activity and nothing else. Hermes waits on most of
 these hooks and blocks the tool when ``pre_tool_call`` raises or stalls, so a callback swallows every
 error, returns ``None`` and does no more than append to a bounded queue.
@@ -38,7 +38,7 @@ from . import scope as _scope
 
 REFRESH_SECONDS = 2.0
 QUEUE_MAX = 512
-# Herald OS reads at most this many events from one request (ROOM_ACTIVITY_BATCH).
+# MadX Agent OS reads at most this many events from one request (ROOM_ACTIVITY_BATCH).
 BATCH_MAX = 100
 SEND_TIMEOUT = 1.0
 WAIT_SECONDS = 0.25
@@ -78,7 +78,7 @@ _REFUSALS = frozenset({"invalid activity token", "live detail is off"})
 
 
 class _Endpoint(NamedTuple):
-    """A Herald OS that asks for live steps: its control file, that file's stamp when read, its socket and token."""
+    """A MadX Agent OS that asks for live steps: its control file, that file's stamp when read, its socket and token."""
 
     file: str
     stamp: tuple[int, ...]
@@ -159,7 +159,7 @@ def _cut(text: str) -> str:
 
 
 def _folders() -> list[str]:
-    """Where a Herald OS leaves its control file: this home's observe folder, and the root home's
+    """Where a MadX Agent OS leaves its control file: this home's observe folder, and the root home's
     too when this home is a profile (``<root>/profiles/<name>``)."""
     home = os.path.normpath(os.environ.get("HERMES_HOME") or os.path.join(os.path.expanduser("~"), ".hermes"))
     folders = [os.path.join(home, "herald-os", "observe")]
@@ -241,7 +241,7 @@ def _refresh() -> None:
 
 
 def live() -> bool:
-    """Whether a running Herald OS asks for live steps. The folders are read at most every
+    """Whether a running MadX Agent OS asks for live steps. The folders are read at most every
     REFRESH_SECONDS, when a hook fires; in between this is a clock read and a cached answer."""
     global _checked
     now = time.monotonic()
@@ -255,7 +255,7 @@ def live() -> bool:
 
 
 def _reporting() -> bool:
-    """A hook records something only outside Herald OS's own work and while a Herald OS asks for it."""
+    """A hook records something only outside MadX Agent OS's own work and while a MadX Agent OS asks for it."""
     return not _scope.herald_backend() and live() and not _scope.in_herald_session()
 
 
@@ -434,8 +434,8 @@ HOOKS: dict[str, Callable[..., None]] = {
 
 
 def register(ctx: Any) -> None:
-    """Register the hooks and read the observe folders once. The backend Herald OS starts registers
-    none: all its work is Herald OS's, and a ``pre_tool_call`` Hermes cannot run in time blocks the tool."""
+    """Register the hooks and read the observe folders once. The backend MadX Agent OS starts registers
+    none: all its work is MadX Agent OS's, and a ``pre_tool_call`` Hermes cannot run in time blocks the tool."""
     if _scope.herald_backend():
         return
     for name, callback in HOOKS.items():
@@ -482,7 +482,7 @@ def _run() -> None:
 
 
 def _flush_once() -> int:
-    """Take up to BATCH_MAX queued events and send them to every Herald OS that asks for them; with
+    """Take up to BATCH_MAX queued events and send them to every MadX Agent OS that asks for them; with
     none left to send to they are dropped. Returns how many were taken."""
     batch: list[dict[str, Any]] = []
     while len(batch) < BATCH_MAX:
@@ -499,7 +499,7 @@ def _flush_once() -> int:
 
 
 def _send(endpoint: _Endpoint, events: list[dict[str, Any]]) -> None:
-    """One request to one Herald OS. A refusal turns it off until its control file changes; no answer
+    """One request to one MadX Agent OS. A refusal turns it off until its control file changes; no answer
     backs it off for RETRY_SECONDS, and a full queue on its side for BUSY_SECONDS."""
     global _checked
     line = json.dumps({"cmd": "activity", "token": endpoint.token, "events": events}, ensure_ascii=False, separators=(",", ":")) + "\n"

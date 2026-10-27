@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { isViewable } from '../../shared/viewer.ts'
 import { fail, ok, type OsCommand } from '../store/os-commands.ts'
 import { openFileWindow } from '../store/web-windows.ts'
@@ -90,7 +91,7 @@ export const filesCommands: readonly OsCommand[] = [
   {
     id: 'file.open',
     title: 'Open a file',
-    description: 'Find a file by name (or path) and open it inside Herald OS: PDFs, images, text and media in a viewer window; other files are shown in Files.',
+    description: `Find a file by name (or path) and open it inside ${PRODUCT.name}: PDFs, images, text and media in a viewer window; other files are shown in Files.`,
     tier: 'act',
     args: [{ name: 'name', type: 'string', description: 'File name as you remember it ("hello.pdf", "the budget spreadsheet") or a path', required: true }],
     phrases: ['open the file {name}', 'open file {name}', 'show the file {name}', 'open the document {name}', 'open the pdf {name}', 'open my {name} file', 'find and open {name}'],
@@ -118,13 +119,13 @@ export const filesCommands: readonly OsCommand[] = [
       navigate({ kind: 'dir', path: parent })
       $selectedPath.set(found.path)
 
-      return ok(`Showing ${fileName} in Files`, { spoken: `Here is ${fileName.replace(/\.[^.]+$/, '')}. Say "open it in its app" to open it outside Herald OS.`, page: 'files', highlight: { kind: 'file', id: found.path }, data: { path: found.path } })
+      return ok(`Showing ${fileName} in Files`, { spoken: `Here is ${fileName.replace(/\.[^.]+$/, '')}. Say "open it in its app" to open it outside ${PRODUCT.name}.`, page: 'files', highlight: { kind: 'file', id: found.path }, data: { path: found.path } })
     }
   },
   {
     id: 'file.openExternal',
     title: 'Open a file in its app',
-    description: 'Open the selected (or given) file with the Mac app that owns it (Pages, Excel, …). This leaves Herald OS.',
+    description: `Open the selected (or given) file with the Mac app that owns it (Pages, Excel, …). This leaves ${PRODUCT.name}.`,
     tier: 'act',
     args: [{ name: 'path', type: 'string', description: 'Path; omit for the selected file' }],
     phrases: ['open it in its app', 'open it outside', 'open it in the default app', 'open it externally'],

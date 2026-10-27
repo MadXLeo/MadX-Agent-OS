@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconBackground, IconForms, IconLayersSubtract, IconPalette, IconPencil, IconPhotoPlus, IconRestore, IconTemplate, IconX } from '@tabler/icons-react'
 import { type ReactNode, useRef, useState } from 'react'
@@ -83,7 +84,7 @@ function LogoPanel({ doc, onDone }: { doc: SlidesDocument; onDone: () => void })
           event.target.value = ''
 
           if (picked) {
-            insertLogo(picked, { corner, ...(layout && layoutOnly ? { layoutId: layout } : {}) }, doc).then(onDone, () => commands.notify('Herald Slides could not read that picture'))
+            insertLogo(picked, { corner, ...(layout && layoutOnly ? { layoutId: layout } : {}) }, doc).then(onDone, () => commands.notify(`${PRODUCT.apps.slides} could not read that picture`))
           }
         }}
       />
@@ -115,7 +116,7 @@ function RenamePanel({ doc, onDone }: { doc: SlidesDocument; onDone: () => void 
 function ResetPanel({ doc, onDone }: { doc: SlidesDocument; onDone: () => void }) {
   return (
     <div className="flex w-[260px] flex-col gap-2.5 text-[12px] text-fg-2">
-      <p>Put Herald’s master and layouts back in place of this deck’s? Slides keep what they say; what was added to the master and layouts goes.</p>
+      <p>Put {PRODUCT.shortName}’s master and layouts back in place of this deck’s? Slides keep what they say; what was added to the master and layouts goes.</p>
       <div className="flex justify-end gap-1.5">
         <button type="button" onClick={onDone} className="h-7 rounded-md px-2.5 hover:bg-white/8 hover:text-fg">
           Cancel

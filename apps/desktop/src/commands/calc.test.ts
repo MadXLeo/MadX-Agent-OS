@@ -142,10 +142,10 @@ describe('the calc commands', () => {
   })
 
   it('fail with the engine\'s words, so voice hands the question to Hermes, and record nothing', async () => {
-    engine.evaluate.mockResolvedValue({ ok: false, input: 'banana + 2', steps: [], error: 'Herald Calc does not know "banana"' })
+    engine.evaluate.mockResolvedValue({ ok: false, input: 'banana + 2', steps: [], error: 'MadX Calc does not know "banana"' })
     const result = await run('calc.eval', { text: 'banana + 2' }, VOICE)
 
-    expect(result).toMatchObject({ ok: false, error: 'Herald Calc does not know "banana"', summary: 'Herald Calc does not know "banana"' })
+    expect(result).toMatchObject({ ok: false, error: 'MadX Calc does not know "banana"', summary: 'MadX Calc does not know "banana"' })
     expect(app.recordCalc).not.toHaveBeenCalled()
   })
 
@@ -228,7 +228,7 @@ describe('calc.plot', () => {
 
     expect(engine.compileFunction).toHaveBeenCalledWith('x^2 - 4', { variable: 'x' })
     expect(graph.summarizeFunction).toHaveBeenCalledWith(square, -10, 10)
-    expect(result.summary).toBe('x^2 - 4, x from -10 to 10: y runs from -4 to 96; it crosses zero at x = -2 and 2; a local minimum at (0, -4). Showing it in Herald Calc')
+    expect(result.summary).toBe('x^2 - 4, x from -10 to 10: y runs from -4 to 96; it crosses zero at x = -2 and 2; a local minimum at (0, -4). Showing it in MadX Calc')
     expect(result.data).toEqual({ functions: [{ expression: 'x^2 - 4', ...curve() }], series: [], shown: true })
     expect(app.openCalc).toHaveBeenCalledWith({ view: 'graph', plot: { entries: ['x^2 - 4'], xMin: -10, xMax: 10 } })
   })
@@ -270,7 +270,7 @@ describe('calc.plot', () => {
     const result = await run('calc.plot', { workbook: 'Budget.xlsx', range: 'B:B' })
 
     expect(app.readSheetSeries).toHaveBeenCalledWith({ workbook: 'Budget.xlsx', range: 'B:B' })
-    expect(result.summary).toBe('Budget.xlsx · column B: 3 numbers from 80.5 to 1200, sum 1580.5, mean 526.833333333, first 1200, last 300. Showing it in Herald Calc')
+    expect(result.summary).toBe('Budget.xlsx · column B: 3 numbers from 80.5 to 1200, sum 1580.5, mean 526.833333333, first 1200, last 300. Showing it in MadX Calc')
     expect(result.data).toMatchObject({ series: [{ label: 'Budget.xlsx · column B', count: 3, min: 80.5, max: 1200, sum: 1580.5, first: 1200, last: 300 }] })
     expect(app.openCalc).toHaveBeenCalledWith({ view: 'graph', plot: { series: [series] } })
     expect(engine.compileFunction).not.toHaveBeenCalled()
@@ -293,11 +293,11 @@ describe('calc.plot', () => {
 })
 
 describe('calc.open', () => {
-  it('opens Herald Calc on what was asked for', async () => {
-    expect(await run('calc.open', {}, UI)).toEqual({ ok: true, summary: 'Opened Herald Calc', spoken: 'Opening Herald Calc.' })
-    expect(await run('calc.open', { keypad: 'Scientific' }, UI)).toMatchObject({ ok: true, summary: 'Opened the scientific keypad in Herald Calc' })
-    expect(await run('calc.open', { view: 'history' }, UI)).toMatchObject({ ok: true, summary: 'Opened the calculation history in Herald Calc' })
-    expect(await run('calc.open', { text: 'rent = 1,200' }, UI)).toMatchObject({ ok: true, summary: 'Started a new note in Herald Calc' })
+  it('opens MadX Calc on what was asked for', async () => {
+    expect(await run('calc.open', {}, UI)).toEqual({ ok: true, summary: 'Opened MadX Calc', spoken: 'Opening MadX Calc.' })
+    expect(await run('calc.open', { keypad: 'Scientific' }, UI)).toMatchObject({ ok: true, summary: 'Opened the scientific keypad in MadX Calc' })
+    expect(await run('calc.open', { view: 'history' }, UI)).toMatchObject({ ok: true, summary: 'Opened the calculation history in MadX Calc' })
+    expect(await run('calc.open', { text: 'rent = 1,200' }, UI)).toMatchObject({ ok: true, summary: 'Started a new note in MadX Calc' })
 
     expect(app.openCalc.mock.calls).toEqual([[{}], [{ view: 'keypad', keypad: 'scientific' }], [{ view: 'history' }], [{ view: 'notes', text: 'rent = 1,200' }]])
   })
@@ -358,15 +358,16 @@ describe('calc.history', () => {
   })
 })
 
-describe('Herald Calc on the voice fast path', () => {
+describe('MadX Calc on the voice fast path', () => {
   beforeEach(() => {
     resetCommands()
     defineCommands(Object.values(commandGroups).flat())
   })
 
-  it('opens Herald Calc by its phrases', () => {
+  it('opens MadX Calc by its phrases', () => {
     expect(matchIntent('open the calculator')).toMatchObject({ command: 'calc.open', args: {} })
     expect(matchIntent('open calculator')).toMatchObject({ command: 'calc.open', args: {} })
+    expect(matchIntent('Hey Hermes, open MadX Calc.')).toMatchObject({ command: 'calc.open', args: {} })
     expect(matchIntent('Hey Hermes, open Herald Calc.')).toMatchObject({ command: 'calc.open', args: {} })
     expect(matchIntent('open calc')).toMatchObject({ command: 'calc.open', args: {} })
     expect(matchIntent('show the calculator')).toMatchObject({ command: 'calc.open', args: {} })

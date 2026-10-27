@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { redoDepth, undoDepth } from '@tiptap/pm/history'
 import type { EditorState } from '@tiptap/pm/state'
 import { documentFromMarkdown } from '../../../../shared/office/doc-text.ts'
@@ -38,7 +39,7 @@ export async function located(ref: unknown): Promise<Local<DocJSON>> {
   const found = await locate('docs', session, ref)
 
   if (found.kind === 'remote') {
-    throw new Error(`${found.entry.name} is open in another Herald Docs window: ask there`)
+    throw new Error(`${found.entry.name} is open in another ${PRODUCT.apps.docs} window: ask there`)
   }
 
   return found
@@ -82,7 +83,7 @@ export async function change(target: Local<DocJSON>, build: (state: EditorState,
     const read = await readFile(file)
 
     if (read.notes.length) {
-      throw new Error(`${fileName(file)} has things Herald Docs shows differently (${read.notes[0].replace(/\.$/, '')}${read.notes.length > 1 ? `, and ${read.notes.length - 1} more` : ''}): open it in Herald Docs to change it (docs.open)`)
+      throw new Error(`${fileName(file)} has things ${PRODUCT.apps.docs} shows differently (${read.notes[0].replace(/\.$/, '')}${read.notes.length > 1 ? `, and ${read.notes.length - 1} more` : ''}): open it in ${PRODUCT.apps.docs} to change it (docs.open)`)
     }
 
     const state = stateOf(read.model)
@@ -95,7 +96,7 @@ export async function change(target: Local<DocJSON>, build: (state: EditorState,
     const written = await docsAdapter.write(jsonOf(tr.doc), extensionOf(file), read.layout)
 
     if (written.losses.length) {
-      throw new Error(`Saving ${fileName(file)} would lose something (${written.losses[0].replace(/\.$/, '')}): open it in Herald Docs to change it (docs.open)`)
+      throw new Error(`Saving ${fileName(file)} would lose something (${written.losses[0].replace(/\.$/, '')}): open it in ${PRODUCT.apps.docs} to change it (docs.open)`)
     }
 
     await window.heraldOS.office.write(file, written.bytes)
@@ -139,14 +140,14 @@ async function picture(source: string, maxWidth: number): Promise<{ src: string;
     const found = pictureFrom(bytes, match?.[1] ?? '', maxWidth)
 
     if (!found) {
-      throw new Error('That picture is not one Herald Docs shows (PNG, JPEG, GIF, WebP, BMP or SVG)')
+      throw new Error(`That picture is not one ${PRODUCT.apps.docs} shows (PNG, JPEG, GIF, WebP, BMP or SVG)`)
     }
 
     return found
   }
 
   if (isRemote(source)) {
-    throw new Error(`Herald Docs puts in pictures from files: save ${source} first and give its path`)
+    throw new Error(`${PRODUCT.apps.docs} puts in pictures from files: save ${source} first and give its path`)
   }
 
   const file = resolve(source.replace(/^file:\/\//, ''))
@@ -154,7 +155,7 @@ async function picture(source: string, maxWidth: number): Promise<{ src: string;
   const found = pictureFrom((await window.heraldOS.office.read(file)).bytes, mime, maxWidth)
 
   if (!found) {
-    throw new Error(`${fileName(file)} is not a picture Herald Docs shows (PNG, JPEG, GIF, WebP, BMP or SVG)`)
+    throw new Error(`${fileName(file)} is not a picture ${PRODUCT.apps.docs} shows (PNG, JPEG, GIF, WebP, BMP or SVG)`)
   }
 
   return found
@@ -203,7 +204,7 @@ export async function open(args: Args): Promise<Outcome> {
   if (!text(args.path)) {
     openInOffice('docs')
 
-    return { summary: 'Opened Herald Docs' }
+    return { summary: `Opened ${PRODUCT.apps.docs}` }
   }
 
   const file = resolve(text(args.path))
@@ -213,13 +214,13 @@ export async function open(args: Args): Promise<Outcome> {
   }
 
   if (officeAppFor(file, { libreOffice: false }) !== 'docs') {
-    throw new Error(`Herald Docs opens Word documents (.docx), Markdown and text files, not ${fileName(file)}`)
+    throw new Error(`${PRODUCT.apps.docs} opens Word documents (.docx), Markdown and text files, not ${fileName(file)}`)
   }
 
   if (isPanels) {
     openInOffice('docs', { file })
 
-    return { summary: `Opened ${fileName(file)} in Herald Docs`, data: { path: file } }
+    return { summary: `Opened ${fileName(file)} in ${PRODUCT.apps.docs}`, data: { path: file } }
   }
 
   openApp('docs')
@@ -228,7 +229,7 @@ export async function open(args: Args): Promise<Outcome> {
   const read = readDocument((editorOf(doc.key)?.state ?? stateOf(doc.initial)).doc, { part: 'outline', maxChars: 0 })
 
   return {
-    summary: `Opened ${doc.name} in Herald Docs${doc.notes.length ? ` (shown differently: ${doc.notes.join('; ')})` : ''}`,
+    summary: `Opened ${doc.name} in ${PRODUCT.apps.docs}${doc.notes.length ? ` (shown differently: ${doc.notes.join('; ')})` : ''}`,
     data: { name: doc.name, path: doc.path, words: read.words, outline: read.outline.slice(0, 40), ...(doc.notes.length ? { notes: doc.notes } : {}) }
   }
 }
@@ -259,7 +260,7 @@ export async function create(args: Args): Promise<Outcome> {
   if (isPanels) {
     openInOffice('docs', { blank: true })
 
-    return { summary: `Started a new document in Herald Docs; write into it with docs.write${template ? ' (its window starts it blank, without the template)' : ''}`, data: { name: name ?? 'Untitled' } }
+    return { summary: `Started a new document in ${PRODUCT.apps.docs}; write into it with docs.write${template ? ' (its window starts it blank, without the template)' : ''}`, data: { name: name ?? 'Untitled' } }
   }
 
   const doc = session.create({ name, model })
@@ -282,7 +283,7 @@ export async function list(): Promise<Outcome> {
   const current = docs.find((entry) => entry.active) ?? docs[0]
 
   return {
-    summary: docs.length ? `${docs.length} document${docs.length === 1 ? '' : 's'} open${current ? `; in front: ${current.name}` : ''}` : 'Nothing is open in Herald Docs',
+    summary: docs.length ? `${docs.length} document${docs.length === 1 ? '' : 's'} open${current ? `; in front: ${current.name}` : ''}` : `Nothing is open in ${PRODUCT.apps.docs}`,
     data: { documents: docs.map(({ key: _key, app: _app, front: _front, ...entry }) => entry), current: current ? (current.path ?? current.name) : null }
   }
 }
@@ -298,7 +299,7 @@ export async function read(args: Args): Promise<Outcome> {
   const markedText = marked && marked.to > marked.from ? state.doc.textBetween(marked.from, marked.to, '\n', ' ') : null
 
   if (options.part === 'selection' && !live) {
-    throw new Error('Only a document open in Herald Docs has a selection: open it first (docs.open)')
+    throw new Error(`Only a document open in ${PRODUCT.apps.docs} has a selection: open it first (docs.open)`)
   }
 
   return {
@@ -501,7 +502,7 @@ export async function edit(args: Args, context?: CommandContext): Promise<Outcom
             case 'pageBreak':
               return insertPageBreak(placeFor(live ? state : null, { at: 'end', ...entry }, marked))
             default:
-              throw new Error(`Herald Docs has no “${entry.op}” edit`)
+              throw new Error(`${PRODUCT.apps.docs} has no “${entry.op}” edit`)
           }
         })
 
@@ -593,7 +594,7 @@ export async function step(direction: 'undo' | 'redo', args: Args): Promise<Outc
   const target = await located(args.document)
 
   if (target.kind === 'file') {
-    throw new Error(`Undo works in the open Herald Docs window: ${fileName(target.path)} is not open`)
+    throw new Error(`Undo works in the open ${PRODUCT.apps.docs} window: ${fileName(target.path)} is not open`)
   }
 
   const { doc } = target
@@ -601,7 +602,7 @@ export async function step(direction: 'undo' | 'redo', args: Args): Promise<Outc
   const editor = editorOf(doc.key)
 
   if (!editor) {
-    throw new Error(`${doc.name} is not showing in Herald Docs`)
+    throw new Error(`${doc.name} is not showing in ${PRODUCT.apps.docs}`)
   }
 
   const wanted = stepCount(args.steps)

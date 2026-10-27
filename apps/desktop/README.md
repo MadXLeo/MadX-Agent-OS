@@ -1,7 +1,7 @@
 # apps/desktop
 
-The Herald OS shell, built on Electron. Its renderer draws everything you see in Herald OS: the menu
-bar, dock, windows, launcher and Herald's own apps. Setup is in the
+The MadX Agent OS shell, built on Electron. Its renderer draws everything you see in MadX Agent OS: the menu
+bar, dock, windows, launcher and MadX's own apps. Setup is in the
 [root README](../../README.md); how the pieces talk to each other is in
 [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md); conventions for pages are in
 [DESIGN.md](DESIGN.md).
@@ -47,7 +47,7 @@ Run them here, or from the repository root (`npm run dev`, `npm run build`, `npm
 | `npm test` | Vitest over `src`, `electron`, `shared` and `scripts` |
 | `npm run dist:mac` | Apple Silicon (`-mac-arm64`) and Intel (`-mac-x64`) DMGs and zips in `release/` (unsigned); `node scripts/check-mac-builds.mjs` checks every Mach-O in each app against its architecture |
 | `npm run pack:mac` | The packaging half of `dist:mac`, on an existing `npm run build`; the release workflow signs here ([MACOS-SIGNING.md](../../docs/MACOS-SIGNING.md)) |
-| `npm run dist:linux` | `herald-os-<version>-linux-<arch>.tar.gz` in `release/` for this machine's architecture (`-- --x64` or `-- --arm64` to pick), with the Linux CLIs, session, themes, catalog and bridge plugin in `resources/` |
+| `npm run dist:linux` | `madx-agent-os-<version>-linux-<arch>.tar.gz` in `release/` for this machine's architecture (`-- --x64` or `-- --arm64` to pick), with the Linux CLIs, session, themes, catalog and bridge plugin in `resources/` |
 
 ## Common changes
 

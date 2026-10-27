@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import type { InstalledApp } from '../../shared/ipc.ts'
 
 /** The code editors `openIn('editor')` looks for, in order of preference. */
@@ -13,5 +14,5 @@ export function findCodeEditor(apps: readonly InstalledApp[]): InstalledApp {
     }
   }
 
-  throw new Error(`No code editor is installed (Herald OS looks for ${CODE_EDITORS.join(', ')})`)
+  throw new Error(`No code editor is installed (${PRODUCT.name} looks for ${CODE_EDITORS.join(', ')})`)
 }

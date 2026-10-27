@@ -1,6 +1,6 @@
 # The menu bar and quick panels
 
-The menu bar runs along the top of the screen on Herald OS Linux. On the left, a badge says when
+The menu bar runs along the top of the screen on MadX Agent OS Linux. On the left, a badge says when
 Hermes is starting or unreachable; in the middle are your Spaces; on the right are the status icons,
 each of which opens a quick panel. On a Mac, the Wi-Fi and Bluetooth panels point you to macOS's
 Control Center and the Displays panel to System Settings, which do that work there.
@@ -29,21 +29,21 @@ Settings > Appearance > Menu bar shows, hides and reorders them and sets the clo
 | Battery and power | `Super+Ctrl+P` | Charge and time left, and the power profile: Performance, Balanced or Power saver |
 | Calendar | Click the clock | A month and today's events |
 
-Each panel's footer opens the matching page of Settings. On Herald OS Linux, the Wi-Fi, Bluetooth
+Each panel's footer opens the matching page of Settings. On MadX Agent OS Linux, the Wi-Fi, Bluetooth
 and Sound panels also have Restart, for when one stopped working (see
 [Troubleshooting](troubleshooting.md#wi-fi-bluetooth-sound-or-the-touchpad-stopped-working)).
 `herald-os panel wifi` (or `bluetooth`, `audio`, `display`, `power`, `clock`) opens one from a
 script or a key of your own.
 
-## The Herald OS menu
+## The MadX Agent OS menu
 
-`Super+M` (or `Super+Alt+Space`) opens the Herald OS menu, which does the system's chores. Every item
+`Super+M` (or `Super+Alt+Space`) opens the MadX Agent OS menu, which does the system's chores. Every item
 is a `herald-os` command, so Hermes and your scripts can do the same.
 
 | Section | What is in it |
 | --- | --- |
 | Install, Remove | Apps from the catalog, any Flatpak app, and web apps |
-| Update | Herald OS, firmware, and going back to the previous version |
+| Update | MadX Agent OS, firmware, and going back to the previous version |
 | Style | The theme and the wallpaper |
 | Trigger | A reminder, asking about part of the screen, and notices of the time, battery and weather |
 | Capture | Screenshots, recording (with the microphone, or the camera bubble), picking a colour, reading a QR code, copying text |

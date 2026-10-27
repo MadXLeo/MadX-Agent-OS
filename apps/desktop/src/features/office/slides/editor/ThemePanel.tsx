@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconCheck, IconPencil, IconPlus, IconTrash } from '@tabler/icons-react'
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
@@ -175,7 +176,7 @@ export function ThemePanel({ doc, onDone }: { doc: SlidesDocument; onDone: () =>
             type="button"
             onClick={() => {
               setDoomed(null)
-              deleteCustomTheme(doomed.id).catch((error: unknown) => commands.notify(`Herald Slides could not delete the theme: ${messageOf(error)}`))
+              deleteCustomTheme(doomed.id).catch((error: unknown) => commands.notify(`${PRODUCT.apps.slides} could not delete the theme: ${messageOf(error)}`))
             }}
             className="h-7 rounded-md bg-danger/15 px-2 text-danger hover:bg-danger/25"
           >

@@ -1,7 +1,7 @@
 import type { GatewayEvent, GatewayEventHub } from '@herald-os/client'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-// A spoken request with Herald Slides in front, through the voice store, the chained engine, the
+// A spoken request with MadX Slides in front, through the voice store, the chained engine, the
 // matcher with the whole command registry, the chat store and the Office context line, all real.
 // Fake: Hermes's socket (below, a session that queues a prompt sent while a turn runs, as Hermes's
 // default busy mode does once that turn is told to stop), the microphone and the speakers.
@@ -288,7 +288,7 @@ afterEach(async () => {
   await endConversation('user')
 })
 
-describe('a spoken request with Herald Slides in front', () => {
+describe('a spoken request with MadX Slides in front', () => {
   it('reaches Hermes with the deck in its context and speaks the reply', async () => {
     await startVoice('button')
     await submitVoiceTranscript(REQUEST)
@@ -296,7 +296,7 @@ describe('a spoken request with Herald Slides in front', () => {
 
     const submit = edges.requests.find(request => request.method === 'prompt.submit')
     expect(submit?.params).toMatchObject({ text: REQUEST, surface: 'voice-live' })
-    expect(String(submit?.params.voice_context)).toContain('Office: in front is Pitch.pptx in Herald Slides')
+    expect(String(submit?.params.voice_context)).toContain('Office: in front is Pitch.pptx in MadX Slides')
     await vi.waitFor(() => expect($voice.get().state).toBe('listening'))
   })
 

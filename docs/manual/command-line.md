@@ -1,6 +1,6 @@
 # The `herald-os` command line
 
-On Herald OS Linux, everything the hotkeys and menus do is a `herald-os` command, so you, Hermes and
+On MadX Agent OS Linux, everything the hotkeys and menus do is a `herald-os` command, so you, Hermes and
 your scripts drive the system the same way. Any of them can be a key of your own (see
 [Make it yours](make-it-yours.md#keyboard-shortcuts)). `herald-os commands` lists every command,
 `herald-os --help` shows them grouped, and `herald-os debug` prints what a bug report needs.
@@ -16,9 +16,9 @@ your scripts drive the system the same way. Any of them can be a key of your own
 | `herald-os page missions` | Show a page: `overview`, `hermes`, `missions`, `memory`, `files`, `automations`, `connections`, `settings` |
 | `herald-os open terminal` | Open the Terminal, or `system` for the System monitor |
 | `herald-os launch firefox` | Start an installed app |
-| `herald-os menu` | Open the Herald OS menu |
+| `herald-os menu` | Open the MadX Agent OS menu |
 | `herald-os panel wifi` | Open a quick panel: `wifi`, `bluetooth`, `audio`, `display`, `power`, `clock` |
-| `herald-os os <command.id> [json]` | Run any Herald OS command, the same ones Hermes uses |
+| `herald-os os <command.id> [json]` | Run any MadX Agent OS command, the same ones Hermes uses |
 
 ## Software and updates
 
@@ -72,17 +72,17 @@ your scripts drive the system the same way. Any of them can be a key of your own
 | `herald-os password` | Set your password |
 | `herald-os password --disk` | Change the disk password asked for at start-up (it asks for the current one first; `--new-owner` also removes every other key) |
 | `herald-os suspend`, `herald-os power` | Sleep now, or open the power menu |
-| `herald-os setup` | Once per account on Arch or the tarball: Hermes Agent and Herald's tools (`herald-os setup --undo` takes them back) |
+| `herald-os setup` | Once per account on Arch or the tarball: Hermes Agent and MadX's tools (`herald-os setup --undo` takes them back) |
 | `herald-os setup fingerprint` | Fingerprint sign-in (`setup fido2` for a security key) |
 | `herald-os setup ssh --key '<public key>'` | Turn SSH on for keys only, rate-limited per address (`--github <user>` for your GitHub keys; `--off [--end-sessions]`, `--status`); see [Security](security.md#ssh) |
 | `herald-os reset` | Erase this computer's account and start setup again |
-| `herald-os omarchy install` | Run Herald OS inside Omarchy |
+| `herald-os omarchy install` | Run MadX Agent OS inside Omarchy |
 | `herald-os wm <action>` | A window-manager action, such as `wm toggle-overview` |
 | `herald-os state`, `herald-os debug` | Diagnostics |
 
 ## In scripts
 
-Commands that act on the desktop talk to the running Herald OS over its control socket, so they need
+Commands that act on the desktop talk to the running MadX Agent OS over its control socket, so they need
 a session to be running; system chores (install, update, reminders) work without one. The
 `herald-os os` command takes the ids Hermes uses, for example
 `herald-os os page.open '{"name": "missions"}'`.

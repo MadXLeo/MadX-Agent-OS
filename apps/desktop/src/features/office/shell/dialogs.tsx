@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { IconAlertTriangle } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
 import { byExtension, OFFICE_APP_NAMES } from '../../../../shared/office/files.ts'
@@ -84,7 +85,7 @@ export function FidelityDialog<Model>({ session, docKey, notes, losses, resolve 
           <NoteList notes={losses} />
         </div>
       )}
-      <p className="mb-5 text-[11.5px] text-fg-3">The file as it is now is copied into Herald's Office backups before it is replaced.</p>
+      <p className="mb-5 text-[11.5px] text-fg-3">The file as it is now is copied into {PRODUCT.shortName}'s Office backups before it is replaced.</p>
       <div className="flex justify-end gap-2">
         <GlassButton variant="ghost" onClick={() => choose('cancel')}>
           Cancel

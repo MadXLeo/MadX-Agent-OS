@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import {
   ARROW_HEADS,
   type Background,
@@ -562,7 +563,7 @@ function headerFooter(value: unknown): HeaderFooter | undefined {
 /** A deck from untrusted data, whole and safe; throws when it is not a deck at all. */
 export function normalizeDeck(value: unknown, title?: string): Deck {
   if (!isObject(value) || !Array.isArray(value.slides)) {
-    throw new Error('This is not a Herald Slides deck')
+    throw new Error(`This is not a ${PRODUCT.apps.slides} deck`)
   }
 
   const raw = isObject(value.size) ? value.size : {}

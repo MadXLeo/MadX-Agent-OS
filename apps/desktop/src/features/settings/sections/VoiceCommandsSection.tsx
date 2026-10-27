@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconMicrophone, IconPlayerPlay, IconRobot, IconShieldCheck } from '@tabler/icons-react'
 import { useContext, useMemo } from 'react'
@@ -45,7 +46,7 @@ const SLOT_EXAMPLES: Record<string, string> = {
   key: 'enter',
   match: 'tea',
   url: 'news.ycombinator.com',
-  title: 'the Herald project',
+  title: `the ${PRODUCT.shortName} project`,
   section: 'voice',
   theme: 'graphite',
   accent: 'violet',

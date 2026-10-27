@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import type { PetFollow, PetFollowApp, PetRect, PetWindowPlacement } from '../../../shared/pet.ts'
 import type { WmWindow } from '../../../shared/ipc.ts'
 import type { OSWindow } from '../../store/windows.ts'
@@ -88,7 +89,7 @@ export function followRectDesktop(windows: readonly OSWindow[], follow: PetFollo
 }
 
 /** The titles niri knows Herald's app windows by (electron/shell/mode.ts). */
-export const APP_TITLES: Record<PetFollowApp, string> = { docs: 'Herald OS · Docs', sheets: 'Herald OS · Sheets', slides: 'Herald OS · Slides', canvas: 'Herald OS · Canvas' }
+export const APP_TITLES: Record<PetFollowApp, string> = { docs: `${PRODUCT.name} · Docs`, sheets: `${PRODUCT.name} · Sheets`, slides: `${PRODUCT.name} · Slides`, canvas: `${PRODUCT.name} · Canvas` }
 
 /**
  * Panels mode: the app's window on the workspace in front. niri reports positions in the output's

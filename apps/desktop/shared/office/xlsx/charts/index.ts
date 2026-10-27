@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../product.ts'
 import { CHART_COMPONENT, CHART_DRAWING_TYPE, CHART_KINDS, type ChartData, type ChartDrawing, type ChartSpec, DRAWING_RESOURCE, isChartData } from '../../charts.ts'
 import type { XmlElement } from '../../docx/xml.ts'
 import type { CellSnapshot } from '../../workbook.ts'
@@ -231,7 +232,7 @@ async function unchangedChart(ctx: FinishContext, data: ChartData): Promise<{ pa
 const OFFICE_ACCENTS = OFFICE_THEME.slice(4, 10).map((hex) => `#${hex.toLowerCase()}`)
 
 const LOSSES = {
-  percent: 'Excel labels columns, bars, lines and areas with their values where Herald Sheets shows each one’s share of its category.',
+  percent: `Excel labels columns, bars, lines and areas with their values where ${PRODUCT.apps.sheets} shows each one’s share of its category.`,
   gone: 'Charts whose cells were all on sheets since deleted are left out of the file.',
   failed: (title: string | undefined, error: unknown) => `The chart ${title?.trim() ? `“${title.trim()}” ` : ''}could not be saved, so the file leaves it out (${error instanceof Error ? error.message : String(error)}).`
 }

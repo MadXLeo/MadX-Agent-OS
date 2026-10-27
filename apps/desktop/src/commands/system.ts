@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { LANGUAGES, type LanguageSetting } from '../../shared/i18n.ts'
 import type { HeraldOSPrefs, VoiceEngine } from '../../shared/ipc.ts'
 import { isPrivacyPane, PRIVACY_PANE_NAMES } from '../../shared/privacy-panes.ts'
@@ -110,7 +111,7 @@ export const systemCommands: readonly OsCommand[] = [
   {
     id: 'web.open',
     title: 'Open a web page',
-    description: 'Open a URL in a window inside Herald OS.',
+    description: `Open a URL in a window inside ${PRODUCT.name}.`,
     tier: 'act',
     args: [
       { name: 'url', type: 'string', description: 'URL or domain (https is assumed)', required: true },
@@ -164,7 +165,7 @@ export const systemCommands: readonly OsCommand[] = [
   {
     id: 'privacy.openPane',
     title: 'Open a Privacy & Security pane',
-    description: 'Open the list in macOS System Settings > Privacy & Security where Herald OS is allowed a permission (microphone, camera, calendars, screen, accessibility, automation).',
+    description: `Open the list in macOS System Settings > Privacy & Security where ${PRODUCT.name} is allowed a permission (microphone, camera, calendars, screen, accessibility, automation).`,
     tier: 'read',
     hidden: true,
     args: [{ name: 'pane', type: 'string', description: 'The permission', required: true, enum: PRIVACY_PANE_NAMES }],
@@ -185,7 +186,7 @@ export const systemCommands: readonly OsCommand[] = [
   {
     id: 'language.set',
     title: 'Set the language',
-    description: 'Show Herald OS in English, Brazilian Portuguese (Português (Brasil)) or Simplified Chinese (简体中文), or follow the system languages again (the default).',
+    description: `Show ${PRODUCT.name} in English, Brazilian Portuguese (Português (Brasil)) or Simplified Chinese (简体中文), or follow the system languages again (the default).`,
     tier: 'mutate',
     // pt-BR: its phrases stay English, like every voice phrase.
     args: [
@@ -216,7 +217,7 @@ export const systemCommands: readonly OsCommand[] = [
       await setLanguage(setting)
       const shown = LANGUAGES.find(entry => entry.id === $language.get())?.name
 
-      return ok(setting === 'system' ? `Herald OS follows the system language: ${shown}` : `Herald OS is in ${shown}`, { highlight: { kind: 'setting', id: 'general' } })
+      return ok(setting === 'system' ? `${PRODUCT.name} follows the system language: ${shown}` : `${PRODUCT.name} is in ${shown}`, { highlight: { kind: 'setting', id: 'general' } })
     }
   },
   {

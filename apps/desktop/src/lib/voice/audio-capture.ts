@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 // One microphone graph for every voice consumer (wake detector feed, utterance recorder, barge-in
 // monitor, WebRTC sender). Consumers subscribe to 16 kHz mono int16 frames; the mic is opened when
 // the first subscriber arrives and released when the last one leaves, so the privacy indicator maps
@@ -107,10 +108,10 @@ async function open(): Promise<void> {
       const granted = await window.heraldOS.voice.requestMicrophone().catch(() => 'unknown' as const)
 
       if (granted === 'denied' || granted === 'restricted') {
-        throw new MicrophoneUnavailableError('denied', 'Microphone access was denied. Allow Herald OS in System Settings > Privacy & Security > Microphone.')
+        throw new MicrophoneUnavailableError('denied', `Microphone access was denied. Allow ${PRODUCT.name} in System Settings > Privacy & Security > Microphone.`)
       }
     } else if (permission === 'denied' || permission === 'restricted') {
-      throw new MicrophoneUnavailableError('denied', 'Microphone access is denied. Allow Herald OS in System Settings > Privacy & Security > Microphone.')
+      throw new MicrophoneUnavailableError('denied', `Microphone access is denied. Allow ${PRODUCT.name} in System Settings > Privacy & Security > Microphone.`)
     }
 
     if (!navigator.mediaDevices?.getUserMedia) {
@@ -364,7 +365,7 @@ async function apply(action: CaptureAction): Promise<void> {
     $captureNotice.set(
       stream
         ? { key: 'voice.input-flapping', message: 'The microphone keeps changing device, so the current one is kept. Choose a microphone in Settings > Voice.' }
-        : { key: 'voice.input-retry-paused', message: 'The microphone still cannot be opened. Herald OS tries again when a device is connected or chosen.' }
+        : { key: 'voice.input-retry-paused', message: `The microphone still cannot be opened. ${PRODUCT.name} tries again when a device is connected or chosen.` }
     )
 
     return

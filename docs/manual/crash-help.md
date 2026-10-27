@@ -1,6 +1,6 @@
 # Crash help
 
-When a program crashes, Herald OS offers to have Hermes explain it, in plain words: what went wrong,
+When a program crashes, MadX Agent OS offers to have Hermes explain it, in plain words: what went wrong,
 whether it is likely to happen again, and whether it is worth reporting to whoever makes the
 program.
 
@@ -12,7 +12,7 @@ A notification says "*Program* quit unexpectedly", with two buttons:
 - **Mute *program*** stops the offers for that program.
 
 The offer comes at most once every ten minutes for the same program, so a program that keeps
-crashing does not bury you in notifications. Herald OS's own processes are left out.
+crashing does not bury you in notifications. MadX Agent OS's own processes are left out.
 
 ## Settings
 
@@ -33,7 +33,7 @@ Or ask Hermes: "why did Firefox crash?"
 
 ## Where crash reports come from
 
-On Herald OS Linux, crashes are read from systemd-coredump, through `journalctl`. On a Mac, they are
+On MadX Agent OS Linux, crashes are read from systemd-coredump, through `journalctl`. On a Mac, they are
 the reports macOS writes to `~/Library/Logs/DiagnosticReports`. The report goes to your model
 provider only when you press Ask Hermes.
 

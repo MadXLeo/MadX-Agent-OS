@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconBrandSlack, IconPlugConnected, IconServer, IconTerminal2, IconWifi } from '@tabler/icons-react'
 import { useState } from 'react'
@@ -56,12 +57,12 @@ export function NetworkSection() {
         {backend.sharedGateway && (
           <InlineNote tone="info">
             Another app (Hermes Desktop, say) runs a Hermes gateway on this Hermes home (pid {backend.sharedGateway}). That is fine: Hermes runs each scheduled job once and keeps one messaging gateway. To share its backend
-            too, start Herald OS with HERALD_OS_BACKEND_URL and HERALD_OS_BACKEND_TOKEN.
+            too, start {PRODUCT.name} with HERALD_OS_BACKEND_URL and HERALD_OS_BACKEND_TOKEN.
           </InlineNote>
         )}
         {backend.runtime?.kind === 'attached' && backend.localFiles === false && (
           <InlineNote tone="info">
-            This Hermes did not read a file Herald wrote on this computer, so Herald treats it as running elsewhere (another computer, through a tunnel, say): files you attach are uploaded to it, it works
+            This Hermes did not read a file {PRODUCT.shortName} wrote on this computer, so {PRODUCT.shortName} treats it as running elsewhere (another computer, through a tunnel, say): files you attach are uploaded to it, it works
             in its own folders, and it knows your other files are out of its reach. Canvas AI needs a Hermes that reads this computer's files. If this one does run here, update it with `hermes update`.
           </InlineNote>
         )}

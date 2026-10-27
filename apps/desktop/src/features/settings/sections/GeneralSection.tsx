@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconCoffee, IconDeviceDesktop, IconDeviceDesktopOff, IconFolder, IconKeyboard, IconLanguage, IconLock, IconMaximize, IconMessage, IconMicrophone, IconMoodSmile, IconMoon, IconPower, IconStack2, IconSunset2, IconTerminal2, IconZzz } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
@@ -196,10 +197,10 @@ function TypingGroup() {
         <SettingsRow icon={<IconKeyboard />} label={t('settings.general.keymap')} description={t('settings.general.keymapHint')} keywords="keyboard shortcuts omarchy copy paste super hotkeys">
           <MenuDropdown
             ariaLabel={t('settings.general.keymap')}
-            label={keymap === 'omarchy' ? 'Omarchy' : 'Herald'}
+            label={keymap === 'omarchy' ? 'Omarchy' : PRODUCT.shortName}
             value={keymap}
             items={[
-              { id: 'herald', label: 'Herald' },
+              { id: 'herald', label: PRODUCT.shortName },
               { id: 'omarchy', label: 'Omarchy' }
             ]}
             onSelect={id => void updatePrefs({ keymap: id === 'omarchy' ? 'omarchy' : 'herald' }).then(markSaved)}

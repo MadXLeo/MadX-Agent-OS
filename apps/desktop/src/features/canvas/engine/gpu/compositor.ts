@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 /*
  * The Herald Canvas compositor: a document's layers drawn bottom to top on the GPU. Folders are
  * pass-through: they draw nothing themselves, and their opacity and mask multiply into every layer
@@ -525,7 +526,7 @@ export function headlessCompositor(): Compositor {
   const gl = canvas.getContext('webgl2', { premultipliedAlpha: true, antialias: false, preserveDrawingBuffer: false })
 
   if (!gl) {
-    throw new Error('Herald Canvas needs WebGL2, which this system does not provide')
+    throw new Error(`${PRODUCT.apps.canvas} needs WebGL2, which this system does not provide`)
   }
 
   return new Compositor(new Gpu(gl))

@@ -16,24 +16,24 @@ unrestricted machine access.
 | `system_apps` | read | Installed applications and currently running applications |
 | `system_network` | read | Connectivity (interfaces, gateway, DNS, Wi-Fi link) and Bluetooth devices |
 | `system_logs` | read | Recent lines from the system log, filtered by level and process; recent crashes and one crash's facts (macOS crash reports, Linux core dumps) for the `diagnose-crash` skill |
-| `system_control` | read / act / mutate | Volume, dark mode, notifications, System Settings panes, display sleep, screen lock; switching Wi-Fi asks first. On Herald OS Linux also Wi-Fi networks and joining one (asks first), Bluetooth power (asks first) and devices, the sound output, brightness and the power mode |
+| `system_control` | read / act / mutate | Volume, dark mode, notifications, System Settings panes, display sleep, screen lock; switching Wi-Fi asks first. On MadX Agent OS Linux also Wi-Fi networks and joining one (asks first), Bluetooth power (asks first) and devices, the sound output, brightness and the power mode |
 | `system_open` | act | Open an app, URL, file or folder; reveal in Finder; open a path in an editor |
 | `system_kill_process` | destructive | Terminate a process by pid or by listening port |
 | `system_files` | mutate / destructive | Create folders, move, rename, trash (never `rm`). `dry_run` plans say where each item lands and list clashes (nothing is ever overwritten, and a batch is checked before anything moves). `action=undo` replays the exact reverse of the conversation's last applied batch (kept per session in `$HERMES_HOME/herald-os/file-undo.json`, paths only) and asks again |
 | `system_documents` | read | Read PDFs page by page (scans and photos of documents through on-device OCR) with hints for filing: kind, vendor, dates, number, total, a suggested name and a fingerprint for duplicates; `places` lists the folders documents are already filed in, with their layout and naming. Used by the `file-documents` skill |
-| `os_ui` | per command | Operate the Herald OS interface: open pages and apps, add memories, run automations, start missions and Studio builds. Each command carries its own tier; `action=state` also lists the documents open in Herald Docs, Sheets and Slides (`office`) |
-| `canvas` | read / act / mutate | Herald Canvas, the layered image editor: new and open projects (`.comp`, images, PSD), layers, text, shapes, adjustments, effects, masks, guides, aligning, resizing and cropping, filters, on-device background removal and content-aware fill, previews, exports and undo. Each action is a `canvas.*` command that lands in the open window as one undoable step; saving a project, or exporting over an existing file, asks first. Used by the `herald-canvas` skill |
-| `docs` | read / act / mutate / destructive | Herald Docs, the word processor: what is open (`list_all` across Herald Docs, Sheets and Slides), opening and starting documents (blank, from a template, or with Markdown), reading, finding, writing Markdown where it belongs (the end, a heading's section, the selection, the text marked for the request), find and replace, formatting, tables, pictures, page setup for the document or one section, headers and footers, page numbers and other fields, footnotes and endnotes, section breaks, comments (adding one or a review's worth in one step, replying, resolving, deleting), tables of contents, templates, statistics, a Herald Sheets range as a table, several edits as one step, saving, PDFs and undo. Each action is a `docs.*` command; removing a header or footer, a note, a section break, a comment or a table of contents asks, and saving over a file, or changing a file that is not open, asks every time. Used by the `herald-docs` skill |
-| `sheets` | read / act / mutate / destructive | Herald Sheets, the spreadsheet: what is open, opening and starting workbooks, reading ranges (values, formulas and what the cells show), finding, writing values and formulas, filling, formatting, sorting, filtering, freezing, adding, renaming and removing sheets, replacing, cleaning data (duplicates, spaces, numbers and dates kept as text, splitting, case, filling down, highlighting duplicates, sorting by several columns, with previews), charts (recommending, inserting, describing, changing, moving, removing), summaries of tables in live formulas, named ranges, validation and dropdown lists, comments and notes, several edits as one step, saving (`.xlsx`, `.csv`), PDFs and undo. Each action is a `sheets.*` command; removing a sheet, a chart, a name, validation rules, a comment or a note asks, and saving over a file or changing a file that is not open asks every time. Used by the `herald-sheets` skill |
-| `slides` | read / act / mutate / destructive | Herald Slides, the presentation editor: what is open, opening and starting decks (a whole deck in one call), reading, finding, adding, changing, duplicating, moving, hiding and removing slides, speaker notes, text boxes, shapes, pictures, tables, the slide master and its layouts (backgrounds, placeholders, a logo and other drawings, whether layouts and slides show them), header and footer (date, slide number, footer text), themes for the deck or chosen slides and custom themes, transitions, groups, rotating, connectors between shapes, cell borders, gradient fills, find and replace, slides from a Herald Docs document and tables or slides from a Herald Sheets range (the same rules as the editor's own), several edits as one step, saving (`.pptx`), PDFs and undo. Each action is a `slides.*` command; removing a slide, removing an element from the master or a layout, resetting the master or deleting a custom theme asks, and saving over a file or changing a file that is not open asks every time. Used by the `herald-slides` skill |
-| `calc` | read | Herald Calc's exact engine, for any arithmetic, percentage, unit, currency, date or time-zone math: `eval` works out a sentence or expression with its steps (several lines are read as a note, with names and totals), `convert` converts an amount, `plot` says what a graph of functions of x shows (zeros, local maxima and minima, asymptotes, the range of y) or what a sheet's column holds (count, smallest, largest, sum, mean) without opening a window, and `history` finds the person's past calculations. Each action is a `calc.*` command that only computes or reads; currency answers use the European Central Bank's reference rates and name their day. Showing a graph or opening Herald Calc is `os_ui` (`calc.plot`, `calc.open`). Used by the `herald-calc` skill |
-| `system_os` | act / mutate | Herald OS Linux only: install apps and anything in the install catalog (`catalog_list`, `catalog_install`, `catalog_remove`), widget plugins (`plugin_list`, `plugin_add`, `plugin_update`, `plugin_disable`, `plugin_remove`; turning one on is left to the user), reminders, themes, screenshots, lock, suspend, update, restarting Wi-Fi, Bluetooth, sound or the touchpad (`restart`) |
+| `os_ui` | per command | Operate the MadX Agent OS interface: open pages and apps, add memories, run automations, start missions and Studio builds. Each command carries its own tier; `action=state` also lists the documents open in MadX Docs, Sheets and Slides (`office`) |
+| `canvas` | read / act / mutate | MadX Canvas, the layered image editor: new and open projects (`.comp`, images, PSD), layers, text, shapes, adjustments, effects, masks, guides, aligning, resizing and cropping, filters, on-device background removal and content-aware fill, previews, exports and undo. Each action is a `canvas.*` command that lands in the open window as one undoable step; saving a project, or exporting over an existing file, asks first. Used by the `herald-canvas` skill |
+| `docs` | read / act / mutate / destructive | MadX Docs, the word processor: what is open (`list_all` across MadX Docs, Sheets and Slides), opening and starting documents (blank, from a template, or with Markdown), reading, finding, writing Markdown where it belongs (the end, a heading's section, the selection, the text marked for the request), find and replace, formatting, tables, pictures, page setup for the document or one section, headers and footers, page numbers and other fields, footnotes and endnotes, section breaks, comments (adding one or a review's worth in one step, replying, resolving, deleting), tables of contents, templates, statistics, a MadX Sheets range as a table, several edits as one step, saving, PDFs and undo. Each action is a `docs.*` command; removing a header or footer, a note, a section break, a comment or a table of contents asks, and saving over a file, or changing a file that is not open, asks every time. Used by the `herald-docs` skill |
+| `sheets` | read / act / mutate / destructive | MadX Sheets, the spreadsheet: what is open, opening and starting workbooks, reading ranges (values, formulas and what the cells show), finding, writing values and formulas, filling, formatting, sorting, filtering, freezing, adding, renaming and removing sheets, replacing, cleaning data (duplicates, spaces, numbers and dates kept as text, splitting, case, filling down, highlighting duplicates, sorting by several columns, with previews), charts (recommending, inserting, describing, changing, moving, removing), summaries of tables in live formulas, named ranges, validation and dropdown lists, comments and notes, several edits as one step, saving (`.xlsx`, `.csv`), PDFs and undo. Each action is a `sheets.*` command; removing a sheet, a chart, a name, validation rules, a comment or a note asks, and saving over a file or changing a file that is not open asks every time. Used by the `herald-sheets` skill |
+| `slides` | read / act / mutate / destructive | MadX Slides, the presentation editor: what is open, opening and starting decks (a whole deck in one call), reading, finding, adding, changing, duplicating, moving, hiding and removing slides, speaker notes, text boxes, shapes, pictures, tables, the slide master and its layouts (backgrounds, placeholders, a logo and other drawings, whether layouts and slides show them), header and footer (date, slide number, footer text), themes for the deck or chosen slides and custom themes, transitions, groups, rotating, connectors between shapes, cell borders, gradient fills, find and replace, slides from a MadX Docs document and tables or slides from a MadX Sheets range (the same rules as the editor's own), several edits as one step, saving (`.pptx`), PDFs and undo. Each action is a `slides.*` command; removing a slide, removing an element from the master or a layout, resetting the master or deleting a custom theme asks, and saving over a file or changing a file that is not open asks every time. Used by the `herald-slides` skill |
+| `calc` | read | MadX Calc's exact engine, for any arithmetic, percentage, unit, currency, date or time-zone math: `eval` works out a sentence or expression with its steps (several lines are read as a note, with names and totals), `convert` converts an amount, `plot` says what a graph of functions of x shows (zeros, local maxima and minima, asymptotes, the range of y) or what a sheet's column holds (count, smallest, largest, sum, mean) without opening a window, and `history` finds the person's past calculations. Each action is a `calc.*` command that only computes or reads; currency answers use the European Central Bank's reference rates and name their day. Showing a graph or opening MadX Calc is `os_ui` (`calc.plot`, `calc.open`). Used by the `herald-calc` skill |
+| `system_os` | act / mutate | MadX Agent OS Linux only: install apps and anything in the install catalog (`catalog_list`, `catalog_install`, `catalog_remove`), widget plugins (`plugin_list`, `plugin_add`, `plugin_update`, `plugin_disable`, `plugin_remove`; turning one on is left to the user), reminders, themes, screenshots, lock, suspend, update, restarting Wi-Fi, Bluetooth, sound or the touchpad (`restart`) |
 
 "Start my development environment" is a skill: it composes `system_open` with Hermes's existing
 `terminal` tool rather than adding another core-shaped tool.
 
 `os_ui`, `canvas`, `docs`, `sheets`, `slides` and `calc`, and `system_open` for the pages, files and
-folders it opens inside Herald OS, run commands of the shell's registry over its control socket
+folders it opens inside MadX Agent OS, run commands of the shell's registry over its control socket
 (`bridge/ui.py`): one JSON line per request, with the per-launch token the shell gives the backend.
 A `ui` request, which runs one command, also carries `session`: the live Hermes UI session id that
 Hermes binds for tools (`HERMES_UI_SESSION_ID`), so the shell can tell which conversation's agent ran
@@ -66,7 +66,7 @@ person changes their mind.
   when day and month could swap), the invoice or receipt number and the total with its currency.
 - Nothing leaves the computer: no hosted OCR is used.
 
-## Herald Docs, Sheets and Slides
+## MadX Docs, Sheets and Slides
 
 "Write a cover letter", "remove the duplicates" and "turn my report into slides" are the `docs`,
 `sheets` and `slides` tools, with the `herald-docs`, `herald-sheets` and `herald-slides` skills.
@@ -85,8 +85,8 @@ argument has one type whatever the action; the shell's commands take the bridge'
   call names is only read: the document `slides action=from_document` makes slides from, and the
   workbook `insert_range` takes a range from. A document open in a window changes there, one step
   to undo per call (`edit` makes several changes one step). A file that is not open is read,
-  changed and written back to disk: the shell refuses when Herald cannot keep everything in it,
-  and the main process backs the original up the first time Herald writes over a file.
+  changed and written back to disk: the shell refuses when MadX cannot keep everything in it,
+  and the main process backs the original up the first time MadX writes over a file.
 - **Tiers.** An action starts at its command's tier: listing, reading and finding are `read`;
   opening, starting, writing, formatting, adding charts, comments and notes, exporting and undo
   are `act`; saving and removing what the person made are `mutate`: a sheet, a chart, a name,
@@ -104,21 +104,21 @@ argument has one type whatever the action; the shell's commands take the bridge'
   lowered (`office_tier` in `bridge/tools.py`).
 - **Comments.** Comments, replies and notes Hermes adds are signed Hermes; those the person adds
   carry the one name they confirmed for every Office app (asked for at their first comment, and
-  changed in Settings > General > Herald Office), and a command run from the command bar or by
-  voice signs with that name or a neutral one ("Herald user"). Review > Review with Hermes in
-  Herald Docs asks Hermes, through the document's Ask Hermes bar, to read the document and leave
+  changed in Settings > General > MadX Office), and a command run from the command bar or by
+  voice signs with that name or a neutral one ("MadX user"). Review > Review with Hermes in
+  MadX Docs asks Hermes, through the document's Ask Hermes bar, to read the document and leave
   its clarity, grammar and tone comments on exact passages in one `docs action=add_comments` call:
-  one step to undo, and the text unchanged. In Herald Sheets, Univer keeps comment threads out of
+  one step to undo, and the text unchanged. In MadX Sheets, Univer keeps comment threads out of
   undo, so a comment added or deleted stays that way.
-- **What is open.** `office.list` (`list_all` in each tool) lists every document open in Herald
+- **What is open.** `office.list` (`list_all` in each tool) lists every document open in MadX
   Docs, Sheets and Slides: its app, name, path and unsaved edits, the one in front in each app
   (`active`) and of them all (`front`), and what is selected in each (text, a range, a slide).
   `os_ui action=state` carries the same list as `office`, so "this document", "these cells" and
   "this slide" need no other call.
 - All three run behind the same gate as the rest of the table: authorized by tier, audited, and
-  offered and run only in Herald OS sessions.
+  offered and run only in MadX Agent OS sessions.
 
-On Herald OS Linux the same commands run from a terminal, through the shell like `herald-os
+On MadX Agent OS Linux the same commands run from a terminal, through the shell like `herald-os
 canvas`: `herald-os docs read`, `herald-os docs write "## Next steps" --at end`, `herald-os docs
 write - --document ~/Documents/Report.docx < notes.md`, `herald-os docs save --to
 ~/Documents/Report.docx`, `herald-os sheets read A1:D20`, `herald-os sheets write B7 "=SUM(B2:B6)"`,
@@ -133,10 +133,10 @@ form. The depth commands have no forms of their own: `herald-os os <command.id> 
 any of them, as in `herald-os os sheets.insertChart '{"range": "A1:B13", "kind": "line"}'` or
 `herald-os os docs.insertToc '{"levels": 2}'`.
 
-## Herald Calc
+## MadX Calc
 
 "What's 15% of 84.50", "5 km in miles", "100 USD in BRL" and "days until Dec 25" are the `calc`
-tool, with the `herald-calc` skill: Hermes uses Herald Calc's engine for every sum instead of
+tool, with the `herald-calc` skill: Hermes uses MadX Calc's engine for every sum instead of
 working it out, and shows the working. Each action is one command of the shell's registry
 (`calc.eval`, `calc.convert`, `calc.plot`, `calc.history`), run over the control socket with a long
 timeout (100 seconds; the shell gives these commands 90), since a currency answer may fetch the
@@ -145,36 +145,36 @@ day's rates first and a plot may read a whole workbook. Arguments the action doe
 
 - **It changes nothing.** Every action is `read`: it runs at once, audited, and never asks. `plot`
   always passes `show: false`, so the tool never opens a window; the registry's `calc.plot` is
-  `act` because it opens Herald Calc's graph, and Hermes runs it through `os_ui` when the person
-  wants to see the graph (`calc.open` opens Herald Calc on a view, a keypad or a new note).
-  `history` reads the history and has no way to clear it; clearing it is the person's, in Herald
+  `act` because it opens MadX Calc's graph, and Hermes runs it through `os_ui` when the person
+  wants to see the graph (`calc.open` opens MadX Calc on a view, a keypad or a new note).
+  `history` reads the history and has no way to clear it; clearing it is the person's, in MadX
   Calc. Each answer Hermes gets is kept in that history, marked as from Hermes.
 - **What comes back.** `result` is the shell's line ("20% of 84.50 = 16.9"); then `display` (as
-  Herald shows it), `value` (exact, a plain decimal), `kind`, `unit` (a unit, or a currency's ISO
+  MadX shows it), `value` (exact, a plain decimal), `kind`, `unit` (a unit, or a currency's ISO
   code), `fraction` (when the value is a fraction that never ends), `zone` (for a time), `steps`,
   `ratesDate`, and for several lines `lines`, each with its `display` or its `error`. `plot`
   answers with `functions` (`zeros`, `extrema`, `asymptotes`, `gaps`, `yMin`, `yMax`, `samples`)
   and `series` (`count`, `min`, `max`, `sum`, `mean`, `first`, `last`); `history` with `items`
   (`input`, `result`, `at`, `source`, `context`).
-- **Currency rates.** Herald Calc converts currencies at the European Central Bank's daily
-  reference rates, which Herald OS's main process fetches from Frankfurter at most once a day, only
+- **Currency rates.** MadX Calc converts currencies at the European Central Bank's daily
+  reference rates, which MadX Agent OS's main process fetches from Frankfurter at most once a day, only
   when a calculation names a currency, with nothing about the person in the request. They are kept
   for when the computer is offline, and the `calc.fetchRates` preference turns the fetch off (the
   last rates keep answering). Every answer that used them carries `ratesDate`, the ECB's date for
   them, and the line says "ECB reference rates of 2026-10-15".
 
-On Herald OS Linux the same commands run from a terminal: `herald-os calc "20% of 84.50"` prints
-the answer as Herald shows it, `--steps` adds the working (and the rates' date) and `--json` prints
+On MadX Agent OS Linux the same commands run from a terminal: `herald-os calc "20% of 84.50"` prints
+the answer as MadX shows it, `--steps` adds the working (and the rates' date) and `--json` prints
 the command's data; `herald-os calc - < budget.txt` reads a note from stdin and prints each line
 with its answer, `herald-os calc convert 5 km miles` converts (and
 `herald-os calc convert 9am Sydney London` takes a time of day from one place to another),
-`herald-os calc history mortgage` finds past calculations, and `herald-os calc open` opens Herald
+`herald-os calc history mortgage` finds past calculations, and `herald-os calc open` opens MadX
 Calc. Quote a sum that holds `*` or brackets, which the shell would read itself.
 
 ## Where the tools run
 
-Only in sessions Herald OS starts. Hermes turns a plugin's toolset on for every platform that has not
-saved a list without it, and Herald OS's backend shares the `cli` platform's list with the `hermes`
+Only in sessions MadX Agent OS starts. Hermes turns a plugin's toolset on for every platform that has not
+saved a list without it, and MadX Agent OS's backend shares the `cli` platform's list with the `hermes`
 CLI, so the configuration alone would hand these tools to the person's Telegram, Discord, cron and
 terminal sessions as well. The plugin decides from the session instead (`bridge/scope.py`):
 
@@ -182,25 +182,25 @@ terminal sessions as well. The plugin decides from the session instead (`bridge/
   (`HERMES_SESSION_SOURCE`) is `herald_os`, or `hermes_os` for sessions from before the rename. Any
   other call is refused with `decision: outside_herald` and recorded in the audit log. This holds
   whatever the toolset configuration says and whichever process loaded the plugin, a messaging
-  gateway started by Herald OS's backend included.
+  gateway started by MadX Agent OS's backend included.
 - **An inherited source is not enough.** The `hermes` CLI binds no session: it takes its source from
   `HERMES_SESSION_SOURCE` in its environment, and Hermes passes a turn's variables on to every
-  command the turn runs. In a process like that, a Herald OS source counts only when the process
-  descends from Herald OS's backend (`HERALD_OS=1`), as a command run by a Herald OS turn does, so
-  `hermes chat --source herald_os` in any other terminal is refused. Herald OS also drops a
+  command the turn runs. In a process like that, a MadX Agent OS source counts only when the process
+  descends from MadX Agent OS's backend (`HERALD_OS=1`), as a command run by a MadX Agent OS turn does, so
+  `hermes chat --source herald_os` in any other terminal is refused. MadX Agent OS also drops a
   `HERMES_SESSION_*` it inherited (and the backend's own `HERALD_OS` markers) from its environment
   when it starts, so its backend, its terminals and the apps it opens never carry one.
 - **The model only sees them there.** The tools' availability check hides them from turns of every
   other surface (a messaging platform, the API server, cron, the TUI, Hermes Desktop) and, in
-  processes Herald OS did not start, from anything but a Herald OS turn. Herald OS's own backend
+  processes MadX Agent OS did not start, from anything but a MadX Agent OS turn. MadX Agent OS's own backend
   keeps them listed while it builds or refreshes an agent between turns. The check is not cached, so
   one session's answer never reaches another.
 - **Nothing to do on existing installs.** The toolset can stay enabled on every platform; outside
-  Herald OS it is inert. The bundled skills stay readable everywhere, and without the tools they
+  MadX Agent OS it is inert. The bundled skills stay readable everywhere, and without the tools they
   change nothing.
 
 `herald_os.bridge.enabled: false` in `config.yaml` (or `HERALD_OS_BRIDGE_DISABLED=1`) hides the tools
-and refuses their calls everywhere, Herald OS sessions included.
+and refuses their calls everywhere, MadX Agent OS sessions included.
 
 ## Live steps for the Pet Room
 
@@ -208,15 +208,15 @@ The plugin also registers Hermes's observer hooks (`bridge/observe.py`): `pre_to
 `post_tool_call`, `subagent_start`, `subagent_stop`, `on_session_start`, `on_session_end`,
 `pre_approval_request` and `post_approval_response`. Hermes runs them in every process that loads
 the plugin (messaging gateways, the CLI and TUI, cron), and they feed the Pet Room's lane for Hermes
-work outside Herald with each piece of work's tool, helpers and approval waits. They do nothing
-unless the person turns on Settings > Pet Room > Live steps from Hermes outside Herald, which needs
-Show Hermes work outside Herald on too.
+work outside MadX with each piece of work's tool, helpers and approval waits. They do nothing
+unless the person turns on Settings > Pet Room > Live steps from Hermes outside MadX, which needs
+Show Hermes work outside MadX on too.
 
-- **Off unless a Herald asks.** Each running Herald OS writes `$HERMES_HOME/herald-os/observe/<pid>.json`
+- **Off unless a MadX asks.** Each running MadX Agent OS writes `$HERMES_HOME/herald-os/observe/<pid>.json`
   (mode 0600 in a 0700 folder, written whole and renamed into place) when it starts and whenever its
   Room preferences change, and removes it when it quits; at start it also removes the files of
   Heralds that are gone. With live steps off the file says only `{"v": 1, "pid": …, "live": false}`.
-  With them on it adds the path of the control socket Herald serves and an activity token: 32 random
+  With them on it adds the path of the control socket MadX serves and an activity token: 32 random
   bytes, not the per-launch token of `ui` requests, that lets a process report activity and run
   nothing. Turning live steps off replaces the token, so a process that read the old one is refused
   at once. A Hermes process reads the folder when the plugin loads and again at most every two
@@ -224,8 +224,8 @@ Show Hermes work outside Herald on too.
   only when this user owns it and nobody else can read it, and its socket path is absolute. Until a
   file says `live: true`, a hook reads a cached answer and returns: nothing is queued and no thread
   starts.
-- **Never Herald's own work.** The backend Herald OS starts registers none of these hooks (the Room
-  already sees its work through the gateway), and in any other process a hook skips Herald OS's own
+- **Never MadX's own work.** The backend MadX Agent OS starts registers none of these hooks (the Room
+  already sees its work through the gateway), and in any other process a hook skips MadX Agent OS's own
   sessions as the tools do.
 - **Metadata only.** Each hook appends one record to a bounded queue (512) and returns; Hermes waits
   on most hooks and blocks a tool whose `pre_tool_call` raises or stalls, so the callbacks swallow
@@ -248,7 +248,7 @@ Show Hermes work outside Herald on too.
   against fixed patterns and lists (`roomActivityOf` in `apps/desktop/shared/room.ts`), stamps
   each with a seq of its own and a time no later than its arrival, and hands the Room's windows what
   passes; a window that starts watching first hears the last ten minutes (at most 2000 events). A
-  refused process stops sending to that Herald until its file changes, and one that cannot connect
+  refused process stops sending to that MadX until its file changes, and one that cannot connect
   tries again after 30 seconds. Both sockets also close a connection whose unfinished line passes
   1 MiB.
 
@@ -282,11 +282,11 @@ non-zero; the app shows a notification and a note under Settings > Hermes & agen
 and tries again at its next start. Settings -> Privacy edits the policy file below and shows the
 audit log.
 
-## What Herald OS changes in your Hermes
+## What MadX Agent OS changes in your Hermes
 
-Herald OS runs on the person's own Hermes, so these changes reach Hermes's other sessions too:
+MadX Agent OS runs on the person's own Hermes, so these changes reach Hermes's other sessions too:
 
-| Change | Made by | Outside Herald OS |
+| Change | Made by | Outside MadX Agent OS |
 | --- | --- | --- |
 | The link `$HERMES_HOME/plugins/herald-os-bridge` | setup | Inert until the plugin is enabled |
 | `herald-os-bridge` in `plugins.enabled` | setup | Hermes loads the plugin everywhere; its tools stay hidden and refuse to run (see Where the tools run), and its observer hooks do nothing until the person turns on live steps for the Pet Room (see Live steps for the Pet Room) |
@@ -314,7 +314,7 @@ touch ~/.hermes/herald-os/bridge-enabled
 What stays: the `cli` toolset list remains an explicit saved list, and the plugin is listed under
 `plugins.disabled`. `hermes config set display.skin default` brings back Hermes's own skin, and
 `hermes tools` or Settings > Voice picks the speech providers. To set the bridge up again, run
-`herald-os setup`, or on macOS delete `~/.hermes/herald-os/bridge-enabled` and start Herald OS.
+`herald-os setup`, or on macOS delete `~/.hermes/herald-os/bridge-enabled` and start MadX Agent OS.
 
 ## Protected paths
 

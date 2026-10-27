@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { atom } from 'nanostores'
 import type { OfficeApp } from '../../../../shared/office/files.ts'
 import { openEntries } from '../agent.ts'
@@ -155,7 +156,7 @@ export async function refreshOpenDocuments(): Promise<void> {
 function openIn(app: 'docs' | 'sheets', item: (doc: OpenDocument, index: number) => OfficeCommand): OfficeCommand[] {
   const docs = $openDocuments.get().filter((doc) => doc.app === app)
 
-  return docs.length ? docs.map(item) : [{ id: `hermes-none-${app}`, label: app === 'docs' ? 'No document is open in Herald Docs' : 'No workbook is open in Herald Sheets', enabled: () => false, run: () => {} }]
+  return docs.length ? docs.map(item) : [{ id: `hermes-none-${app}`, label: app === 'docs' ? `No document is open in ${PRODUCT.apps.docs}` : `No workbook is open in ${PRODUCT.apps.sheets}`, enabled: () => false, run: () => {} }]
 }
 
 /** Herald Slides' Hermes menu: the bar, the actions on the slide in front or the whole deck, and slides made from a topic, a document or cells. */

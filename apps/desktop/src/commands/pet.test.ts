@@ -115,7 +115,7 @@ describe('the pet commands', () => {
     expect((await command('pet.status').run({}, UI)).summary).toBe('Teknium is running a tool: Editing Q3 report, with 2 running in the background')
 
     $petSnapshot.set({ ...$petSnapshot.get(), hiddenBy: 'presenting' })
-    expect((await command('pet.status').run({}, UI)).summary).toMatch(/while Herald Slides presents/)
+    expect((await command('pet.status').run({}, UI)).summary).toMatch(/while MadX Slides presents/)
 
     await command('pet.hide').run({}, UI)
     expect((await command('pet.status').run({}, UI)).summary).toMatch(/put away/)

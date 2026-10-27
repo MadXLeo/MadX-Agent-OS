@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import type { KeyModifier } from '../../shared/ipc.ts'
 import { parseDictationText, withLeadingSpace } from '../lib/voice/dictation.ts'
 import { charBeforeCaret, NoEditTargetError, performEdit, scrollFront } from '../store/edit-target.ts'
@@ -67,7 +68,7 @@ export const editCommands: readonly OsCommand[] = [
   {
     id: 'text.type',
     title: 'Type text',
-    description: 'Type text into the focused field, the terminal or the web page; with Herald Docs, Sheets or Slides in front, at the caret, into the active cell (then down the column) or into the text box being edited or selected (else a new one). Say "comma", "question mark", "new line" for punctuation; end with "and press enter" to submit.',
+    description: `Type text into the focused field, the terminal or the web page; with ${PRODUCT.apps.docs}, Sheets or Slides in front, at the caret, into the active cell (then down the column) or into the text box being edited or selected (else a new one). Say "comma", "question mark", "new line" for punctuation; end with "and press enter" to submit.`,
     tier: 'mutate',
     args: [
       { name: 'text', type: 'string', description: 'What to type', required: true },

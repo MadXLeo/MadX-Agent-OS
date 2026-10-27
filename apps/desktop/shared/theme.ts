@@ -1,3 +1,4 @@
+import { PRODUCT } from './product.ts'
 /*
  * Themes as data. A theme is the `theme.json` the Linux theme engine already reads
  * (linux/themes/<name>/theme.json): one set of `colors` recolours the shell, the compositor, GTK,
@@ -481,7 +482,7 @@ export function hermesSkinColors(colors: ThemeColors): Record<string, string> {
 }
 
 export function hermesSkinYaml(label: string, colors: ThemeColors): string {
-  const lines = [`# Written by Herald OS from its "${label.replace(/"/g, "'")}" theme; Herald OS rewrites it when the theme changes.`, `name: ${HERALD_SKIN}`, `description: "Herald OS: ${label.replace(/"/g, "'")}"`, 'colors:']
+  const lines = [`# Written by ${PRODUCT.name} from its "${label.replace(/"/g, "'")}" theme; ${PRODUCT.name} rewrites it when the theme changes.`, `name: ${HERALD_SKIN}`, `description: "${PRODUCT.name}: ${label.replace(/"/g, "'")}"`, 'colors:']
 
   for (const [key, value] of Object.entries(hermesSkinColors(colors))) {
     lines.push(`  ${key}: "${value}"`)

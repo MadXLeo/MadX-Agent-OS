@@ -35,7 +35,7 @@ const view = (state: RoomState, id = 'e:tg1') => {
 const texts = (state: RoomState, id: string, now: number) => factsOf(state.agents[id], state, now).map(fact => fact.text)
 const bot = () => run(EMPTY_ROOM, lane([row({ id: 'tg1', title: 'Support bot' })], T0))
 
-describe('live detail from Hermes outside Herald', () => {
+describe('live detail from Hermes outside MadX OS', () => {
   it('brings in the session an event names at once, before the lane names it, traced to the event', () => {
     const state = run(EMPTY_ROOM, outside([ev('session.start', { at: T0 })], T0 + 100))
     const agent = state.agents['e:tg1']
@@ -121,7 +121,7 @@ describe('live detail from Hermes outside Herald', () => {
     expect(agent.elsewhere?.approval).toBe(true)
     expect(agent.trace.approval).toMatchObject({ source: 'activity', type: 'approval.start' })
     expect(texts(state, 'e:tg1', T0 + 10)).toEqual(['waiting for your OK in Telegram', 'Telegram · active now'])
-    expect(summarizeRoom(state, T0 + 10)).toMatchObject({ waiting: 0, elsewhere: 1, lines: ['Support bot (outside Herald): waiting for your OK in Telegram'] })
+    expect(summarizeRoom(state, T0 + 10)).toMatchObject({ waiting: 0, elsewhere: 1, lines: ['Support bot (outside MadX OS): waiting for your OK in Telegram'] })
 
     state = run(state, outside([ev('approval.end', { call: 'a1', status: 'answered' })]))
     expect(view(state)).toEqual({ phase: 'tool', area: 'terminal', target: null, step: 'running a command', tool: 'terminal' })
@@ -132,11 +132,11 @@ describe('live detail from Hermes outside Herald', () => {
     expect(state.agents['e:tg1'].approval).toBeNull()
   })
 
-  it('leaves Herald’s own sessions, helpers and automation runs to the room, and helpers it never saw start', () => {
+  it('leaves MadX OS’s own sessions, helpers and automation runs to the room, and helpers it never saw start', () => {
     const job: RoomCronJob = { key: ':job1', id: 'job1', profile: null, name: 'Morning digest', paused: false, lastRunAt: null, lastOutcome: null, nextRunAt: null, claimed: false }
     let state = run(
       EMPTY_ROOM,
-      { type: 'active_list', rows: [{ id: 'live-1', sessionKey: 'stored-1', status: 'working', title: 'Herald chat', startedAt: null }], sentAt: T0, at: T0 },
+      { type: 'active_list', rows: [{ id: 'live-1', sessionKey: 'stored-1', status: 'working', title: 'MadX OS chat', startedAt: null }], sentAt: T0, at: T0 },
       { type: 'live', epoch: 'e1', frame: roomFrame({ type: 'subagent.start', session_id: 'live-1', seq: 1, payload: { subagent_id: 'h1', child_session_id: 'child-h', goal: 'g', task_count: 1, task_index: 0 } })!, at: T0 },
       { type: 'automations', jobs: [job], runs: {}, at: T0 }
     )
@@ -218,7 +218,7 @@ describe('live detail from Hermes outside Herald', () => {
     expect(run(state, lane(null, T0 + 60)).agents['e:cli1']).toBeUndefined()
   })
 
-  it('drops all live detail and the helpers outside Herald when live detail is turned off', () => {
+  it('drops all live detail and the helpers outside MadX OS when live detail is turned off', () => {
     let state = run(bot(), outside([ev('session.start'), ev('tool.start', { tool: 'read_file', target: 'a.md', call: 'c1' }), ev('approval.start', { call: 'a1' }), ev('helper.start', { child: 'kid' })]))
 
     state = run(state, { type: 'outside_off', at: T0 + 5_000 })
@@ -233,7 +233,7 @@ describe('live detail from Hermes outside Herald', () => {
   it('says where live work runs, what it is doing and when a turn has gone quiet', () => {
     const state = run(bot(), outside([ev('session.start', { at: T0 }), ev('tool.start', { tool: 'read_file', target: 'Budget.xlsx', call: 'c1', at: T0 + 1 })], T0 + 10))
 
-    expect(summarizeRoom(state, T0 + 20)).toMatchObject({ total: 0, elsewhere: 1, lines: ['Support bot (outside Herald): reading Budget.xlsx'] })
+    expect(summarizeRoom(state, T0 + 20)).toMatchObject({ total: 0, elsewhere: 1, lines: ['Support bot (outside MadX OS): reading Budget.xlsx'] })
     expect(texts(state, 'e:tg1', T0 + 1 + 4 * MIN)).toEqual(['Telegram · active now', 'quiet for 4 minutes during a turn'])
     expect(texts(bot(), 'e:tg1', T0 + 10 * MIN)).toEqual(['Telegram · active now'])
 
@@ -241,6 +241,6 @@ describe('live detail from Hermes outside Herald', () => {
     expect(summarizeRoom(quietLane, T0 + 20).elsewhere).toBe(1)
 
     const helper = run(state, outside([ev('helper.start', { child: 'kid', at: T0 + 2 })], T0 + 10))
-    expect(summarizeRoom(helper, T0 + 20).lines).toContain('A helper outside Herald: thinking')
+    expect(summarizeRoom(helper, T0 + 20).lines).toContain('A helper outside MadX OS: thinking')
   })
 })

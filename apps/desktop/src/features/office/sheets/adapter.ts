@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { numfmt } from '@univerjs/core'
 import { type CsvLayout, decodeCsv, encodeCsv } from '../../../../shared/office/csv.ts'
 import { csvFromWorkbook, type NumberFormatter, workbookFromCsv } from '../../../../shared/office/sheet-csv.ts'
@@ -23,7 +24,7 @@ export function formatterFor(workbook: WorkbookSnapshot): NumberFormatter {
 
 export const printHtml = (workbook: WorkbookSnapshot, title: string) => printSheet(workbook, title, formatterFor(workbook))
 
-const cannot = (extension: string, doing: string) => new Error(extension === '.ods' ? `Herald Sheets cannot ${doing} OpenDocument spreadsheets yet: LibreOffice can save this one as .xlsx first.` : `Herald Sheets cannot ${doing} ${extension || 'these'} files`)
+const cannot = (extension: string, doing: string) => new Error(extension === '.ods' ? `${PRODUCT.apps.sheets} cannot ${doing} OpenDocument spreadsheets yet: LibreOffice can save this one as .xlsx first.` : `${PRODUCT.apps.sheets} cannot ${doing} ${extension || 'these'} files`)
 
 export const sheetsAdapter: OfficeAdapter<WorkbookSnapshot> = {
   app: 'sheets',

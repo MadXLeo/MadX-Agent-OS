@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { delegate, fail, type OsCommand } from '../store/os-commands.ts'
 import { looksLikeFileName, looksLikeFileNotUrl, PLACE_NAMES, resolvePlace } from './files.ts'
 import { resolveAppId } from './navigation.ts'
@@ -16,7 +17,7 @@ export const openCommands: readonly OsCommand[] = [
   {
     id: 'open.any',
     title: 'Open',
-    description: 'Open a page, Hermes app, the app launcher, a file, a folder, a web page (inside Herald OS) or an installed application by name.',
+    description: `Open a page, Hermes app, the app launcher, a file, a folder, a web page (inside ${PRODUCT.name}) or an installed application by name.`,
     tier: 'act',
     args: [{ name: 'name', type: 'string', description: 'What to open', required: true }],
     phrases: ['open {name}', 'show {name}', 'go to {name}', 'take me to {name}', 'show me {name}', 'launch {name}', 'bring up {name}', 'pull up {name}'],

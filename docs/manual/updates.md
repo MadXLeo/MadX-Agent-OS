@@ -1,8 +1,8 @@
 # Updates, channels and rollback
 
-## Herald OS Linux
+## MadX Agent OS Linux
 
-Update in the Herald OS menu (`Super+M`), or in a terminal:
+Update in the MadX Agent OS menu (`Super+M`), or in a terminal:
 
 ```bash
 herald-os update            # install everything that is waiting
@@ -11,13 +11,13 @@ herald-os update --check    # only say what is waiting
 
 One update covers the system, your Flatpak apps and Hermes Agent. A check runs every day by itself
 (ten minutes after you start the computer, then daily), and a dot in the menu bar says when updates
-are waiting; click it to update. On the Herald OS image the check needs to ask rpm-ostree or bootc
+are waiting; click it to update. On the MadX Agent OS image the check needs to ask rpm-ostree or bootc
 without a password, which takes a polkit rule or `sudo` that needs none; the image ships neither.
 When the system cannot be checked, its updates are left out: there is no dot for them, and
 `herald-os update --check` says "system updates not checked". `herald-os update` still updates it
 (with `sudo`, or in a terminal).
 
-**On the Herald OS image**, the system updates as a whole: the new version is downloaded next to the
+**On the MadX Agent OS image**, the system updates as a whole: the new version is downloaded next to the
 one you run and starts at the next restart. Nothing changes under your feet, and a failed download
 leaves the system as it was.
 
@@ -41,7 +41,7 @@ does `herald-os update` in a terminal, where sudo asks for your password once. F
 is no one to type a password, so they are skipped: the update says they need `sudo herald-os
 update`, and a skipped part is not a problem and does not make the update fail.
 
-Herald OS's one-shot migrations bring an older installation up to date, each once. Most of them work
+MadX Agent OS's one-shot migrations bring an older installation up to date, each once. Most of them work
 on your own settings, so they always run as you, even under `sudo herald-os update`, and never in
 root's home. They remember in your `~/.local/state/herald-os` that they ran, so every account on the
 computer gets them once. The few that change system files run as root, once for the computer, and
@@ -53,12 +53,12 @@ there is no one to run your migrations as, so they are skipped until you update 
 account; the same goes when your account has no home folder. A migration never reads from your
 terminal. If sudo refuses your password, the summary says so, and nothing else asks again.
 
-`herald-os update` exits with 1 when the system or Herald OS itself (its shell, release, one-shot
+`herald-os update` exits with 1 when the system or MadX Agent OS itself (its shell, release, one-shot
 migrations or rebuild) did not update. Flatpaks and Hermes Agent that did not update are reported in
 the summary and the notification, but the exit status stays 0. Parts skipped for want of root leave
 it at 0 too.
 
-An "after Herald OS updates" automation or hook gets the parts that did not update in `problems=`
+An "after MadX Agent OS updates" automation or hook gets the parts that did not update in `problems=`
 (`none` when everything did): `system`, `shell`, `herald-os`, `migration:<name>`, `build`,
 `flatpaks`, `system-flatpaks` or `hermes`. Skipped parts are not listed. A system
 that did not update used to be called `packages` there and is now `system`, so a hook that looks for
@@ -67,7 +67,7 @@ that did not update used to be called `packages` there and is now `system`, so a
 ### Going back
 
 The previous version stays in the boot menu. To make it the default again, choose Update > Go back to
-the previous version in the Herald OS menu, or run `herald-os rollback`, then restart. If the new
+the previous version in the MadX Agent OS menu, or run `herald-os rollback`, then restart. If the new
 version does not start at all, pick the previous entry in the boot menu at power-on. Your files and
 settings are not part of the system, so going back leaves them as they are.
 
@@ -90,15 +90,15 @@ the menu under Update too.
 
 ## On a Mac
 
-Download the new DMG from the [releases page](https://github.com/iamlukethedev/Herald-OS/releases)
+Download the new DMG from the [releases page](https://github.com/MadXLeo/MadX-Agent-OS/releases)
 and replace the app in Applications. Hermes updates itself with `hermes update`, whenever you like.
-Herald OS from source updates with `git pull` and `npm run bootstrap`.
+MadX Agent OS from source updates with `git pull` and `npm run bootstrap`.
 
 ## Arch, Omarchy and the tarball
 
 - **The Arch package:** `git pull` and `makepkg -si` again in `packaging/arch/herald-os-bin`.
   `herald-os update` updates the system's packages, Flatpaks and Hermes.
-- **Omarchy:** `herald-os update` updates Herald OS's parts and Hermes, and leaves the system to
+- **Omarchy:** `herald-os update` updates MadX Agent OS's parts and Hermes, and leaves the system to
   `omarchy-update`, as Omarchy requires.
 - **The tarball:** `herald-os update` downloads the newest release, checks it against its `.sha256`
   and swaps it into `/opt/herald-os`, keeping the version before in `/opt/herald-os.previous`;

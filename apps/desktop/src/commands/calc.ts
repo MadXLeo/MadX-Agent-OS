@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { CALC_HISTORY_MAX, CALC_KEYPADS, type CalcSource } from '../../shared/calc.ts'
 import { calcContext } from '../features/calc/context.ts'
 import type { CalcContext, EvalResult, LineResult } from '../features/calc/engine/index.ts'
@@ -124,7 +125,7 @@ const lineData = (line: LineResult) => defined({ index: line.index, source: line
 /** A calculation's answer for every caller: one line, the words to speak, and the value with its working for Hermes. */
 function answer(result: EvalResult, asked: string, context: CommandContext, ratesDate: string | null): CommandResult {
   if (!result.ok || !result.value || result.display === undefined) {
-    return fail(result.error || `Herald Calc could not work out "${clip(oneLine(asked))}"`)
+    return fail(result.error || `${PRODUCT.apps.calc} could not work out "${clip(oneLine(asked))}"`)
   }
 
   const input = result.input || asked
@@ -218,24 +219,24 @@ function describeSeries(stats: ReturnType<typeof seriesData>): string {
 /** What opening Herald Calc on `request` did, as a line and as words to speak. */
 function opening(request: Omit<CalcRequest, 'at'>): [string, string] {
   if (request.text) {
-    return ['Started a new note in Herald Calc', 'Starting a new note in Herald Calc.']
+    return [`Started a new note in ${PRODUCT.apps.calc}`, `Starting a new note in ${PRODUCT.apps.calc}.`]
   }
 
   if (request.keypad) {
-    return [`Opened the ${request.keypad} keypad in Herald Calc`, `Opening the ${request.keypad} calculator.`]
+    return [`Opened the ${request.keypad} keypad in ${PRODUCT.apps.calc}`, `Opening the ${request.keypad} calculator.`]
   }
 
   switch (request.view) {
     case 'graph':
-      return ['Opened the graph in Herald Calc', 'Opening the graphing calculator.']
+      return [`Opened the graph in ${PRODUCT.apps.calc}`, 'Opening the graphing calculator.']
     case 'history':
-      return ['Opened the calculation history in Herald Calc', 'Here are your calculations.']
+      return [`Opened the calculation history in ${PRODUCT.apps.calc}`, 'Here are your calculations.']
     case 'keypad':
-      return ['Opened the keypad in Herald Calc', 'Opening the calculator.']
+      return [`Opened the keypad in ${PRODUCT.apps.calc}`, 'Opening the calculator.']
     case 'notes':
-      return ['Opened the notes in Herald Calc', 'Opening Herald Calc.']
+      return [`Opened the notes in ${PRODUCT.apps.calc}`, `Opening ${PRODUCT.apps.calc}.`]
     default:
-      return ['Opened Herald Calc', 'Opening Herald Calc.']
+      return [`Opened ${PRODUCT.apps.calc}`, `Opening ${PRODUCT.apps.calc}.`]
   }
 }
 
@@ -244,7 +245,7 @@ export const calcCommands: readonly OsCommand[] = [
     id: 'calc.eval',
     title: 'Calculate',
     description:
-      'Work a sum out exactly with Herald Calc, with the working: arithmetic, percentages ("20% of 84.50", "84.50 + 15%", "2,400 + 180 split 3 ways"), units ("5 km in miles", "350°F in C"), currencies ("100 USD in BRL", at the European Central Bank\'s reference rates of the day it names), dates ("days until Dec 25") and time zones ("9am Sydney in New York"). Several lines are read as a note, where a name given a value on one line counts on the lines after it. The answer has the value, as shown and exact, its unit and the steps.',
+      `Work a sum out exactly with ${PRODUCT.apps.calc}, with the working: arithmetic, percentages ("20% of 84.50", "84.50 + 15%", "2,400 + 180 split 3 ways"), units ("5 km in miles", "350°F in C"), currencies ("100 USD in BRL", at the European Central Bank's reference rates of the day it names), dates ("days until Dec 25") and time zones ("9am Sydney in New York"). Several lines are read as a note, where a name given a value on one line counts on the lines after it. The answer has the value, as shown and exact, its unit and the steps.`,
     tier: 'read',
     args: [
       {
@@ -265,7 +266,7 @@ export const calcCommands: readonly OsCommand[] = [
     id: 'calc.convert',
     title: 'Convert units or currencies',
     description:
-      'Convert an amount exactly from one unit or currency to another with Herald Calc: lengths, areas, volumes, weights, temperatures, speeds, data sizes, times, and currencies at the European Central Bank\'s reference rates of the day it names. A time of day goes from one place\'s time to another\'s: 9am from Sydney to London.',
+      `Convert an amount exactly from one unit or currency to another with ${PRODUCT.apps.calc}: lengths, areas, volumes, weights, temperatures, speeds, data sizes, times, and currencies at the European Central Bank's reference rates of the day it names. A time of day goes from one place's time to another's: 9am from Sydney to London.`,
     tier: 'read',
     args: [
       { name: 'value', type: 'string', description: "The amount: '5', '2.5', a quantity like '5 ft 3 in', or a time of day like '9am'", required: true },
@@ -283,7 +284,7 @@ export const calcCommands: readonly OsCommand[] = [
     id: 'calc.plot',
     title: 'Plot a graph',
     description:
-      'What a graph shows, in numbers: for each function of x, where it crosses zero, its local maxima and minima, its vertical asymptotes, where it has no value and the range of y between from and to; for a sheet\'s cells, how many numbers there are, the smallest, the largest, their sum and mean. Shows the graph in Herald Calc unless show is false.',
+      `What a graph shows, in numbers: for each function of x, where it crosses zero, its local maxima and minima, its vertical asymptotes, where it has no value and the range of y between from and to; for a sheet's cells, how many numbers there are, the smallest, the largest, their sum and mean. Shows the graph in ${PRODUCT.apps.calc} unless show is false.`,
     tier: 'act',
     args: [
       { name: 'expression', type: 'string', description: 'Functions of x, separated by ; or new lines: sin(x) * x; x^2' },
@@ -292,7 +293,7 @@ export const calcCommands: readonly OsCommand[] = [
       { name: 'sheet', type: 'string', description: 'The sheet, when the range does not name it' },
       { name: 'from', type: 'number', description: `Where x starts (${PLOT_FROM})` },
       { name: 'to', type: 'number', description: `Where x ends (${PLOT_TO})` },
-      { name: 'show', type: 'boolean', description: 'Open the graph in Herald Calc (true, the default)' }
+      { name: 'show', type: 'boolean', description: `Open the graph in ${PRODUCT.apps.calc} (true, the default)` }
     ],
     run: async ({ expression, workbook, range, sheet, from, to, show }) => {
       const xMin = from === undefined ? PLOT_FROM : Number(from)
@@ -372,16 +373,16 @@ export const calcCommands: readonly OsCommand[] = [
 
       const summary = [...drawn.map(({ expression: entry, summary: numbers }) => describeFunction(entry, numbers)), ...stats.map(describeSeries)].join('. ')
 
-      return ok(shown ? `${summary}. Showing it in Herald Calc` : summary, {
-        spoken: shown ? 'Here is the graph in Herald Calc.' : summary,
+      return ok(shown ? `${summary}. Showing it in ${PRODUCT.apps.calc}` : summary, {
+        spoken: shown ? `Here is the graph in ${PRODUCT.apps.calc}.` : summary,
         data: { functions: drawn.map(({ expression: entry, summary: numbers }) => ({ expression: entry, ...numbers })), series: stats, shown }
       })
     }
   },
   {
     id: 'calc.open',
-    title: 'Open Herald Calc',
-    description: 'Open Herald Calc, the sentence calculator: on its notes, a keypad (classic, scientific or programmer), the graph or the calculation history, or with a new note holding text.',
+    title: `Open ${PRODUCT.apps.calc}`,
+    description: `Open ${PRODUCT.apps.calc}, the sentence calculator: on its notes, a keypad (classic, scientific or programmer), the graph or the calculation history, or with a new note holding text.`,
     tier: 'act',
     args: [
       { name: 'text', type: 'string', description: 'Start a new note with this' },
@@ -393,6 +394,7 @@ export const calcCommands: readonly OsCommand[] = [
       'open the calculator',
       'open a calculator',
       'open herald calc',
+      `open ${PRODUCT.apps.calc.toLowerCase()}`,
       'open calc',
       'show the calculator',
       'show calculator',
@@ -429,7 +431,7 @@ export const calcCommands: readonly OsCommand[] = [
   {
     id: 'calc.history',
     title: 'Find a past calculation',
-    description: 'Find past calculations in Herald Calc\'s history by words ("that mortgage thing"), best match first, or the latest when no words are given; each with what was asked, the answer, when, and where it came from. Only reads it: clearing the history is the person\'s, in Herald Calc.',
+    description: `Find past calculations in ${PRODUCT.apps.calc}'s history by words ("that mortgage thing"), best match first, or the latest when no words are given; each with what was asked, the answer, when, and where it came from. Only reads it: clearing the history is the person's, in ${PRODUCT.apps.calc}.`,
     tier: 'read',
     args: [
       { name: 'query', type: 'string', description: 'Words to find it by: that mortgage thing' },

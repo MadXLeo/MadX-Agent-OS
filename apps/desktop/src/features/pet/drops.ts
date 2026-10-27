@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { extensionOf, type OfficeApp, officeAppFor } from '../../../shared/office/files.ts'
 import type { PetDropSuggestionId } from '../../../shared/pet.ts'
 
@@ -69,11 +70,11 @@ const LABELS: Record<PetDropSuggestionId, string> = {
   summarize: 'Summarise it',
   fileInvoice: 'File it as an invoice',
   slides: 'Turn it into slides',
-  canvas: 'Edit in Herald Canvas',
+  canvas: `Edit in ${PRODUCT.apps.canvas}`,
   describe: 'What is in it?',
-  openDocs: 'Open in Herald Docs',
-  openSheets: 'Open in Herald Sheets',
-  openSlides: 'Open in Herald Slides',
+  openDocs: `Open in ${PRODUCT.apps.docs}`,
+  openSheets: `Open in ${PRODUCT.apps.sheets}`,
+  openSlides: `Open in ${PRODUCT.apps.slides}`,
   ask: 'Ask about it'
 }
 
@@ -111,7 +112,7 @@ export function dropAction(id: PetDropSuggestionId, paths: readonly string[], te
     case 'openSlides':
       return command('slides.open', { path: file })
     case 'slides':
-      return dropKind(file) === 'pdf' ? prompt(`Make a short presentation in Herald Slides from this PDF: a few slides with its key points.\n${file}`) : command('slides.fromDocument', { document: file })
+      return dropKind(file) === 'pdf' ? prompt(`Make a short presentation in ${PRODUCT.apps.slides} from this PDF: a few slides with its key points.\n${file}`) : command('slides.fromDocument', { document: file })
     case 'summarize':
       return prompt(several ? `Summarise these files for me, a few short lines each:\n${list}` : `Summarise this file for me in a few short lines:\n${list}`)
     case 'fileInvoice':

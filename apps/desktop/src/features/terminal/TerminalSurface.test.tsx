@@ -503,7 +503,7 @@ describe('a spoken or Hermes "paste" into the Terminal', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     const result = await runCommand('edit.paste', {}, { source: 'voice' })
 
-    expect(result).toMatchObject({ ok: false, error: 'Herald OS could not reach the system clipboard. Try again in a moment.' })
+    expect(result).toMatchObject({ ok: false, error: 'MadX Agent OS could not reach the system clipboard. Try again in a moment.' })
   })
 })
 

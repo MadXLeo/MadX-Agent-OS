@@ -1,6 +1,6 @@
 # Notifications and do not disturb
 
-Herald OS shows its own notifications and, on Herald OS Linux, those of every other app: a message
+MadX Agent OS shows its own notifications and, on MadX Agent OS Linux, those of every other app: a message
 from Signal, a finished download, a reminder. Each appears briefly in the corner of the screen and
 then waits in the bell.
 
@@ -10,8 +10,8 @@ The bell at the right of the menu bar opens the list of notifications; a dot on 
 new. Notifications with a button (such as "Ask Hermes" on a crash) can be answered from the list.
 **Clear all** empties it. The list keeps the latest 200.
 
-On a Mac, Herald OS's notifications also reach macOS's Notification Center while you are in another
-app, but only from a code-signed build, which the current release is not yet; inside Herald OS they
+On a Mac, MadX Agent OS's notifications also reach macOS's Notification Center while you are in another
+app, but only from a code-signed build, which the current release is not yet; inside MadX Agent OS they
 always appear in the bell.
 
 ## Do not disturb
@@ -19,9 +19,9 @@ always appear in the bell.
 Do not disturb collects notifications in the bell without showing them, playing a sound or reading
 them aloud. A light in the menu bar shows that it is on; click the light to turn it off.
 
-- `Super+Ctrl+,` on Herald OS Linux, or `herald-os toggle dnd`.
+- `Super+Ctrl+,` on MadX Agent OS Linux, or `herald-os toggle dnd`.
 - Settings > General > Switches > Do not disturb, on either platform.
-- Toggle > Do not disturb in the Herald OS menu (`Super+M`).
+- Toggle > Do not disturb in the MadX Agent OS menu (`Super+M`).
 - Or ask: "turn on do not disturb".
 
 ## Notifications read aloud

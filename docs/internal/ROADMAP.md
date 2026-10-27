@@ -1,3 +1,5 @@
+> Historical upstream design record, preserved for provenance. Current MadX work is tracked in [docs/madx](../madx/).
+
 # Roadmap
 
 ## Alpha 0.1 (macOS, Apple Silicon)

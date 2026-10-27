@@ -1,10 +1,10 @@
 # Reminders, notices and weather
 
-Small things Herald OS Linux tells you when you ask, as a notification.
+Small things MadX Agent OS Linux tells you when you ask, as a notification.
 
 ## Reminders
 
-Say or type "remind me in 20 minutes to stretch", or use Trigger > Reminder… in the Herald OS menu
+Say or type "remind me in 20 minutes to stretch", or use Trigger > Reminder… in the MadX Agent OS menu
 (`Super+M`). From a terminal:
 
 ```bash
@@ -19,7 +19,7 @@ log out or restart; for something every day or at a set time, make an
 
 ## Notices
 
-The Trigger section of the Herald OS menu shows a notice of the time and date, the battery (charge
+The Trigger section of the MadX Agent OS menu shows a notice of the time and date, the battery (charge
 and whether it is charging), or the weather, for when the menu bar is hidden or you would rather
 hear it: with Settings > Voice > Speak notifications on, Hermes reads it out. `herald-os notice time`,
 `herald-os notice battery` and `herald-os notice weather` do the same.
@@ -39,5 +39,5 @@ Or ask Hermes: "what's the weather like?"
 
 ## On a Mac
 
-These commands are part of Herald OS Linux. On a Mac, ask Hermes, or make an automation for anything
+These commands are part of MadX Agent OS Linux. On a Mac, ask Hermes, or make an automation for anything
 that repeats.

@@ -178,7 +178,7 @@ describe('adding comments', () => {
     const after = applyToJSON(reviewed(), addComment({ text: 'Costs' }, 'Which costs?'))
     const byHermes = applyToJSON(reviewed(), addComments(costs, 'Hermes'))
 
-    expect(threadsOf(before)[3]).toMatchObject({ author: NEUTRAL_NAME, initials: 'HU' })
+    expect(threadsOf(before)[3]).toMatchObject({ author: NEUTRAL_NAME, initials: 'MU' })
     expect(threadsOf(replyBefore)[1].replies?.[0]).toMatchObject({ author: NEUTRAL_NAME })
     expect(threadsOf(after)[3]).toMatchObject({ author: 'Cy Example', initials: 'CE' })
     expect(threadsOf(applyToJSON(reviewed(), replyToComment('2', 'Agreed')))[1].replies?.[0]).toMatchObject({ author: 'Cy Example', initials: 'CE' })

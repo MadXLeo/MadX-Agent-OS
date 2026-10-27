@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 /* Print views: self-contained HTML pages main prints to PDF with scripts off. */
 
 export const escapeHtml = (text: string): string => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -11,7 +12,7 @@ export function decodeText(bytes: Uint8Array): { text: string; notes: string[] }
   try {
     return { text: new TextDecoder('utf-8', { fatal: true }).decode(bytes), notes: [] }
   } catch {
-    return { text: new TextDecoder('windows-1252').decode(bytes), notes: ['The file is not in UTF-8; Herald reads it as Windows-1252 and saves it as UTF-8.'] }
+    return { text: new TextDecoder('windows-1252').decode(bytes), notes: [`The file is not in UTF-8; ${PRODUCT.shortName} reads it as Windows-1252 and saves it as UTF-8.`] }
   }
 }
 

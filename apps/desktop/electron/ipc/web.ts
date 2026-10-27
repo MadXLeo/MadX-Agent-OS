@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { BrowserWindow, ipcMain, session, type WebContents, WebContentsView } from 'electron'
 import fs from 'node:fs'
 import os from 'node:os'
@@ -218,7 +219,7 @@ export class WebViews {
 
   open(owner: WebContents, url: string, options: WebOpenOptions): string {
     if (typeof url !== 'string' || !isHttp(url)) {
-      throw new Error('only http(s) URLs may be opened in a Herald OS web window')
+      throw new Error(`only http(s) URLs may be opened in a ${PRODUCT.name} web window`)
     }
 
     lockDownPartition(WEB_PARTITION)
@@ -246,7 +247,7 @@ export class WebViews {
     }
 
     if (!isViewable(resolved)) {
-      throw new Error(`Herald OS cannot display ${path.extname(resolved) || 'this kind of'} files yet`)
+      throw new Error(`${PRODUCT.name} cannot display ${path.extname(resolved) || 'this kind of'} files yet`)
     }
 
     this.hookOwner(owner)
@@ -365,7 +366,7 @@ export class WebViews {
     const win = new BrowserWindow({
       ...DETACHED_SIZE,
       frame: false,
-      title: title ?? 'Herald OS · Web',
+      title: title ?? `${PRODUCT.name} · Web`,
       backgroundColor: '#ffffff',
       webPreferences: { ...preferences }
     })

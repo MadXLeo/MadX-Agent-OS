@@ -53,7 +53,7 @@ describe('OfficeTemplates', () => {
     await expect(templates.remove('docs', '../../outside')).rejects.toThrow(/no such template/)
     await expect(templates.save('docs', 'Letter', doc, '../letter')).rejects.toThrow(/no such template/)
     await expect(templates.rename('docs', 'letter.json', 'x')).rejects.toThrow(/no such template/)
-    await expect(templates.list('../docs' as never)).rejects.toThrow(/not a Herald Office app/)
+    await expect(templates.list('../docs' as never)).rejects.toThrow(/not a MadX Office app/)
     await expect(templates.rename('docs', crypto.randomUUID(), 'x')).rejects.toThrow(/no such template/)
   })
 

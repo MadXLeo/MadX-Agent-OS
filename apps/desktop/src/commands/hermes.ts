@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { focusSettings } from '../features/settings/sections/shared.tsx'
 import { botByProfile } from '../lib/bots.ts'
 import { matchProvider } from '../lib/model-provider.ts'
@@ -270,7 +271,7 @@ export const hermesCommands: readonly OsCommand[] = [
   {
     id: 'agents.toolSearch.set',
     title: 'Tool search',
-    description: "Hermes's Tool Search for every session: on looks plugin and MCP tools up when needed (fewer prompt tokens), off keeps Herald OS's system tools directly callable. New conversations use it.",
+    description: `Hermes's Tool Search for every session: on looks plugin and MCP tools up when needed (fewer prompt tokens), off keeps ${PRODUCT.name}'s system tools directly callable. New conversations use it.`,
     tier: 'mutate',
     args: [{ name: 'enabled', type: 'boolean', description: 'true to turn Tool Search on, false to turn it off; leave it out to flip it' }],
     phrases: [

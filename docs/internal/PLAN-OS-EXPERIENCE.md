@@ -1,3 +1,5 @@
+> Historical upstream design record, preserved for provenance. Current MadX work is tracked in [docs/madx](../madx/).
+
 # Plan: from "Linux with a nice shell" to an OS
 
 Status: Phases 1-3 implemented and verified in the VM (see `docs/LINUX.md` for how to use the

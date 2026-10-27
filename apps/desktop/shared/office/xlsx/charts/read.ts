@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../product.ts'
 import type { ChartAxis, ChartKind, ChartRange, ChartSeries, ChartSpec } from '../../charts.ts'
 import { child, children, textOf, type XmlElement } from '../../docx/xml.ts'
 import { columnIndex, MAX_COLUMNS, MAX_ROWS, parseRange, splitSheet } from '../address.ts'
@@ -56,7 +57,7 @@ const EXTRAS = ['c:trendline', 'c:errBars', 'c:dropLines', 'c:hiLowLines', 'c:up
 class Unreadable extends Error {}
 
 const unreadable = (): never => {
-  throw new Unreadable('This chart uses what Herald Sheets does not read.')
+  throw new Unreadable(`This chart uses what ${PRODUCT.apps.sheets} does not read.`)
 }
 
 /** Every line of a rich text body (c:rich), its runs joined. */

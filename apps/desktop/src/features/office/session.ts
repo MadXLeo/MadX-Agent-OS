@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 /*
  * One Office app's open documents in this window: opening, saving, watching and closing them. An
  * Office file is never replaced silently with less than it had. Before the first save over a file,
@@ -74,7 +75,7 @@ export function createSession<Model>(adapter: OfficeAdapter<Model>) {
     try {
       entry.watchId = await window.heraldOS.office.watch(doc.path, doc.digest)
     } catch (error) {
-      notify(`Herald will not see outside changes to ${doc.name}: ${messageOf(error)}`, 'error')
+      notify(`${PRODUCT.shortName} will not see outside changes to ${doc.name}: ${messageOf(error)}`, 'error')
     }
   }
 
@@ -127,7 +128,7 @@ export function createSession<Model>(adapter: OfficeAdapter<Model>) {
     doc.layout = result.layout
 
     if (result.notes.length) {
-      notify(`Opened ${name}: ${result.notes.length === 1 ? 'one thing is' : `${result.notes.length} things are`} shown differently. See File > What Herald changed.`)
+      notify(`Opened ${name}: ${result.notes.length === 1 ? 'one thing is' : `${result.notes.length} things are`} shown differently. See File > What ${PRODUCT.shortName} changed.`)
     }
 
     return add(doc)
@@ -276,7 +277,7 @@ export function createSession<Model>(adapter: OfficeAdapter<Model>) {
         if (options.auto) {
           doc.autosave = false
           touch(doc)
-          notify(`Herald stopped saving ${doc.name} by itself: ${fresh[0] ?? notes[0]} Save it to go on.`, 'error')
+          notify(`${PRODUCT.shortName} stopped saving ${doc.name} by itself: ${fresh[0] ?? notes[0]} Save it to go on.`, 'error')
 
           return false
         }
@@ -320,7 +321,7 @@ export function createSession<Model>(adapter: OfficeAdapter<Model>) {
     if (!sameFile && losses.length && !options.auto) {
       $dialog.set({ kind: 'notes', title: `Saved ${doc.name}`, notes: losses })
     } else if (result.backup) {
-      notify(`Saved ${doc.name}. The file as it was is in Herald's Office backups.`)
+      notify(`Saved ${doc.name}. The file as it was is in ${PRODUCT.shortName}'s Office backups.`)
     } else if (!options.auto) {
       notify(`Saved ${doc.name}`)
     }

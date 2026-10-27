@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import JSZip from 'jszip'
 import type { Deck } from '../deck.ts'
 import { readEmbeddedDeck } from './herald-part.ts'
@@ -19,7 +20,7 @@ export async function readPresentation(bytes: Uint8Array, title: string): Promis
   }
 
   if ((await zip.file('mimetype')?.async('string'))?.startsWith('application/vnd.oasis.opendocument')) {
-    throw new Error('This is an OpenDocument presentation; Herald Slides opens those through LibreOffice in a coming update')
+    throw new Error(`This is an OpenDocument presentation; ${PRODUCT.apps.slides} opens those through LibreOffice in a coming update`)
   }
 
   const embedded = await readEmbeddedDeck(zip, title)
@@ -33,7 +34,7 @@ export async function readPresentation(bytes: Uint8Array, title: string): Promis
   const notes = reportNotes(report)
 
   if (embedded) {
-    notes.unshift('This file was changed in another app after Herald saved it, so Herald read its slides rather than its own copy of the deck.')
+    notes.unshift(`This file was changed in another app after ${PRODUCT.shortName} saved it, so ${PRODUCT.shortName} read its slides rather than its own copy of the deck.`)
   }
 
   return { model: deck, notes }

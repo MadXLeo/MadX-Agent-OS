@@ -219,7 +219,7 @@ const LONG_REPLY = Array.from({ length: 12 }, (_, i) => `This is sentence number
 const replies = new Map<string, string>()
 const replyTo = (text: string) => replies.get(text) ?? REPLY
 const toasts = () => $notifications.get().map(notification => `${notification.title}: ${notification.body ?? ''}`)
-const STANDING_IN = "Voice: Microsoft's free voice isn't working right now, so Herald OS is using your Mac's voice. Updating Hermes usually fixes it."
+const STANDING_IN = "Voice: Microsoft's free voice isn't working right now, so MadX Agent OS is using your Mac's voice. Updating Hermes usually fixes it."
 const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
 bindChatEvents()
@@ -361,7 +361,7 @@ describe('spoken notifications and Say hello', () => {
   })
 
   it('report what Say hello heard in plain words, without a toast', async () => {
-    const outcome = await speakWithFreeFallback('Hello. This is Hermes, speaking from Herald OS.', undefined, { notice: false })
+    const outcome = await speakWithFreeFallback('Hello. This is Hermes, speaking from MadX Agent OS.', undefined, { notice: false })
 
     expect(outcome).toEqual({ spokenBy: 'system', failed: 'edge' })
     expect(helloReport(outcome)?.text).toBe("Microsoft's free voice failed, so your Mac's voice said hello instead. Updating Hermes usually fixes it.")

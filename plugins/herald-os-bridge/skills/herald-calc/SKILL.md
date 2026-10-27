@@ -1,14 +1,14 @@
 ---
 name: herald-calc
-description: Exact math with Herald Calc, the sentence calculator in Herald OS - every arithmetic, percentage, unit, currency, date and time-zone answer through the calc tool instead of mental math, with the working shown, notes of several lines with names and totals, the date of the currency rates, what the graph of a function or a sheet's column shows, opening graphs and keypads for the person, and finding their past calculations (read only)
+description: Exact math with MadX Calc, the sentence calculator in MadX Agent OS - every arithmetic, percentage, unit, currency, date and time-zone answer through the calc tool instead of mental math, with the working shown, notes of several lines with names and totals, the date of the currency rates, what the graph of a function or a sheet's column shows, opening graphs and keypads for the person, and finding their past calculations (read only)
 metadata:
   hermes:
     tags: [herald-os, calc, calculator, math, arithmetic, percentages, tips, units, conversion, currency, exchange rates, dates, time zones, graphs, plots, history]
 ---
 
-# Herald Calc
+# MadX Calc
 
-Herald Calc is the calculator built into Herald OS: a notepad that reads sentences ("20% of
+MadX Calc is the calculator built into MadX Agent OS: a notepad that reads sentences ("20% of
 84.50", "5 km in miles", "days until Dec 25"), keypads (classic, scientific, programmer), graphs
 and a history. Its engine is exact: decimals stay decimals (0.1 + 0.2 is 0.3), big numbers keep
 every digit, and a fraction that never ends comes with the fraction itself. The `calc` tool is that
@@ -25,14 +25,14 @@ units are where answers go wrong; the engine does not make those mistakes.
 - One question with parts is one call with several lines (see Notes below), not several guesses.
 - When calc cannot read a sentence, rewrite it as one of the forms below. When it is math the
   engine does not do (solving an equation, a formula you have to reason out), work it out step by
-  step, check each arithmetic step with calc, and say which part Herald Calc checked.
+  step, check each arithmetic step with calc, and say which part MadX Calc checked.
 
 ## Show the working
 
 Every answer has `steps`, one line each ("20% of 84.50 = 84.50 × 0.20", "= 16.90"). Show them
 briefly with the answer: a line or two, never a wall. The answer itself:
 
-- `display`: the answer as Herald shows it ("16.9", "3.1069 mi", "R$564.81"); quote this one.
+- `display`: the answer as MadX shows it ("16.9", "3.1069 mi", "R$564.81"); quote this one.
 - `value`: the exact value as a plain decimal; `fraction` the exact fraction when there is one.
 - `kind` (number, percent, unit, currency, date, time, duration), `unit` (a unit, a currency's
   ISO code, a duration's unit) and `zone` for a time.
@@ -63,12 +63,12 @@ Currency answers use the European Central Bank's reference rates, fetched at mos
 only when a sum names a currency), and kept for when the computer is offline. The answer carries
 `ratesDate`: say which day's rates you used ("at the ECB's rate of 15 October"). They are reference
 rates, not what a bank or a card charges; say so when it matters, such as a large transfer. When
-Herald has no rates, calc says so: never make a rate up.
+MadX has no rates, calc says so: never make a rate up.
 
 ## Notes: several lines
 
 Send several lines in one `text` (separated by `\n`) when a question builds on itself. The engine
-reads them as Herald Calc's notepad does:
+reads them as MadX Calc's notepad does:
 
 ```
 rent = 1,850
@@ -93,11 +93,11 @@ rent + food + transport
   Budget.xlsx"`) gives the count, the smallest, the largest, the sum, the mean, the first and the
   last.
 - To show the person a graph, run `os_ui action=run command=calc.plot args={"expression": "sin(x) *
-  x; x^2", "from": -5, "to": 5}` (or with workbook and range): it opens Herald Calc's graph and
+  x; x^2", "from": -5, "to": 5}` (or with workbook and range): it opens MadX Calc's graph and
   answers with the same numbers. Describe a graph from those numbers, never from what a curve
   usually looks like.
 
-## Herald Calc itself
+## MadX Calc itself
 
 - `os_ui action=run command=calc.open` opens it, with args `view` (notes, keypad, graph or
   history), `keypad` (classic, scientific or programmer) or `text` to start a new note with lines
@@ -106,12 +106,12 @@ rent + food + transport
   or the latest without a query: what was asked, the answer, when, and where it came from (notes,
   keypad, voice, hermes, command). Your own calls are kept there too, from Hermes.
 - The history and the notes belong to the person: read the history, never clear it and never
-  delete a note. If they want it cleared, they do it in Herald Calc's history.
+  delete a note. If they want it cleared, they do it in MadX Calc's history.
 
 ## Voice
 
 When the person says a simple sum ("what's 15% of 340", "how many miles is 10 km", "what time is
-it in Tokyo"), Herald answers it before you hear it. What reaches you needs thought: their own
+it in Tokyo"), MadX answers it before you hear it. What reaches you needs thought: their own
 numbers ("15% of my rent"), advice ("how much should I tip"), a why. Find their numbers (ask, or
 read what they point to), then do the math with calc and answer in a sentence or two.
 

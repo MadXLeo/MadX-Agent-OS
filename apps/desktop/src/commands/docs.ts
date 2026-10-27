@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import type { OsCommand } from '../store/os-commands.ts'
 import { docsDepthCommands } from './docs-depth.ts'
 import { document, office, placement, run, search } from './docs-shared.ts'
@@ -14,8 +15,8 @@ const agent = () => import('../features/office/docs/agent.ts')
 export const docsCommands: readonly OsCommand[] = [
   {
     id: 'docs.open',
-    title: 'Open Herald Docs',
-    description: 'Open Herald Docs, or open a document in it (.docx, .md or .txt) so the person sees it. The answer gives its outline, and lists anything Herald shows differently from the file.',
+    title: `Open ${PRODUCT.apps.docs}`,
+    description: `Open ${PRODUCT.apps.docs}, or open a document in it (.docx, .md or .txt) so the person sees it. The answer gives its outline, and lists anything ${PRODUCT.shortName} shows differently from the file.`,
     tier: 'act',
     args: [{ name: 'path', type: 'string', description: 'A Word document, Markdown or text file (full path or ~/…)' }],
     phrases: ['open herald docs', 'open docs', 'open the word processor'],
@@ -25,7 +26,7 @@ export const docsCommands: readonly OsCommand[] = [
     id: 'docs.new',
     title: 'Start a new document',
     description:
-      'Start a new document in Herald Docs and show it: blank, from a template (Herald Docs’ own, with its page, styles, headers and footers and sample text to replace, or one the person saved: docs.listTemplates), or with content (Markdown: headings, lists, tables, pictures from files), which with a template takes the place of its sample text. With path it is saved there at once (never over a file that exists). Draft from a brief by writing the content yourself.',
+      `Start a new document in ${PRODUCT.apps.docs} and show it: blank, from a template (${PRODUCT.apps.docs}’ own, with its page, styles, headers and footers and sample text to replace, or one the person saved: docs.listTemplates), or with content (Markdown: headings, lists, tables, pictures from files), which with a template takes the place of its sample text. With path it is saved there at once (never over a file that exists). Draft from a brief by writing the content yourself.`,
     tier: 'act',
     args: [
       { name: 'name', type: 'string', description: 'The tab’s name, and the file name it is offered when saved' },
@@ -39,8 +40,8 @@ export const docsCommands: readonly OsCommand[] = [
   },
   {
     id: 'docs.list',
-    title: 'What is open in Herald Docs',
-    description: 'The documents open in Herald Docs (name, path, unsaved edits), which one is in front, and the text selected in each.',
+    title: `What is open in ${PRODUCT.apps.docs}`,
+    description: `The documents open in ${PRODUCT.apps.docs} (name, path, unsaved edits), which one is in front, and the text selected in each.`,
     tier: 'read',
     args: [],
     run: async () => (await office()).done((await agent()).list())
@@ -168,11 +169,11 @@ export const docsCommands: readonly OsCommand[] = [
   {
     id: 'docs.insertRange',
     title: 'Put a sheet range in a document',
-    description: 'Put a range of a Herald Sheets workbook (open, or a file) in a document as a table, as its cells show (formatted numbers and dates), as one step to undo. Without a range, the workbook’s selection, or else its sheet’s cells that hold something.',
+    description: `Put a range of a ${PRODUCT.apps.sheets} workbook (open, or a file) in a document as a table, as its cells show (formatted numbers and dates), as one step to undo. Without a range, the workbook’s selection, or else its sheet’s cells that hold something.`,
     tier: 'act',
     args: [
       document,
-      { name: 'workbook', type: 'string', description: 'The workbook: a file (full path or ~/…) or an open workbook’s name; the one in front in Herald Sheets when left out' },
+      { name: 'workbook', type: 'string', description: `The workbook: a file (full path or ~/…) or an open workbook’s name; the one in front in ${PRODUCT.apps.sheets} when left out` },
       { name: 'range', type: 'string', description: 'The cells, like A1:D12 or \'Q1 sales\'!B2:F9; selection for what is selected' },
       { name: 'sheet', type: 'string', description: 'The sheet, when the range does not name it' },
       { name: 'header', type: 'boolean', description: 'The first row is a header row (true, the default)' },
@@ -184,7 +185,7 @@ export const docsCommands: readonly OsCommand[] = [
     id: 'docs.save',
     title: 'Save a document',
     description:
-      'Save a document open in Herald Docs: over its own file, or as a new one with to (.docx, .md or .txt; an existing file is replaced only with overwrite=true). Saving over a file follows Herald’s policy: the first time, the person sees what Herald cannot keep, and the original goes to Herald’s Office backups. A file that is not open is saved as another format with to.',
+      `Save a document open in ${PRODUCT.apps.docs}: over its own file, or as a new one with to (.docx, .md or .txt; an existing file is replaced only with overwrite=true). Saving over a file follows ${PRODUCT.shortName}’s policy: the first time, the person sees what ${PRODUCT.shortName} cannot keep, and the original goes to ${PRODUCT.shortName}’s Office backups. A file that is not open is saved as another format with to.`,
     tier: 'mutate',
     args: [document, { name: 'to', type: 'string', description: 'Save as this file instead (full path or ~/…)' }, { name: 'overwrite', type: 'boolean', description: 'Replace a file at to' }],
     phrases: ['save the document'],
@@ -200,16 +201,16 @@ export const docsCommands: readonly OsCommand[] = [
   },
   {
     id: 'docs.undo',
-    title: 'Undo in Herald Docs',
-    description: 'Undo the last change to a document open in Herald Docs, whoever made it (each Hermes change is one step); steps undoes several.',
+    title: `Undo in ${PRODUCT.apps.docs}`,
+    description: `Undo the last change to a document open in ${PRODUCT.apps.docs}, whoever made it (each Hermes change is one step); steps undoes several.`,
     tier: 'act',
     args: [document, { name: 'steps', type: 'number', description: 'How many steps (1)' }],
     run: run('docs.undo', async (args) => (await agent()).step('undo', args))
   },
   {
     id: 'docs.redo',
-    title: 'Redo in Herald Docs',
-    description: 'Redo what was last undone in a document open in Herald Docs; steps redoes several.',
+    title: `Redo in ${PRODUCT.apps.docs}`,
+    description: `Redo what was last undone in a document open in ${PRODUCT.apps.docs}; steps redoes several.`,
     tier: 'act',
     args: [document, { name: 'steps', type: 'number', description: 'How many steps (1)' }],
     run: run('docs.redo', async (args) => (await agent()).step('redo', args))

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 /*
  * Which on-device models this computer has, and getting one: the window asks the person first
  * (name, size, licence), shows the download and lets them cancel it. Commands never download:
@@ -62,7 +63,7 @@ export async function modelReady(id: ModelId): Promise<boolean> {
 export function missingModelMessage(id: ModelId, feature: string): string {
   const model = modelInfo(id)
 
-  return `${feature} needs the ${model.name} model (${sizeLabel(modelBytes(model))}, ${model.licence} licence), which is not downloaded yet. Ask the person to allow the download in Herald Canvas (${ASKED_IN[id]}), then try again; it is never downloaded without them.`
+  return `${feature} needs the ${model.name} model (${sizeLabel(modelBytes(model))}, ${model.licence} licence), which is not downloaded yet. Ask the person to allow the download in ${PRODUCT.apps.canvas} (${ASKED_IN[id]}), then try again; it is never downloaded without them.`
 }
 
 /** For commands: an error naming the model when it is missing. */

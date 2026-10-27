@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconFolderOpen, IconPhotoPlus, IconX } from '@tabler/icons-react'
 import { useEffect, useRef, useState } from 'react'
@@ -305,7 +306,7 @@ function StartScreen() {
   return (
     <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-5 p-8 text-center">
       <div>
-        <div className="text-[18px] font-medium text-fg">Herald Canvas</div>
+        <div className="text-[18px] font-medium text-fg">{PRODUCT.apps.canvas}</div>
         <div className="mt-1 text-[12.5px] text-fg-3">Layers, masks and blend modes, on the GPU. Hermes can edit along with you.</div>
       </div>
       <div className="flex gap-2">
@@ -510,7 +511,7 @@ export function CanvasWindow({ payload }: { payload?: Record<string, unknown> })
       } else if (project || canOpenInCanvas(file)) {
         openPath(file).catch((error: unknown) => notify(`Could not open ${file.split('/').pop()}: ${describe(error)}`, 'error'))
       } else {
-        notify(`Herald Canvas does not open ${file.split('/').pop()}`, 'error')
+        notify(`${PRODUCT.apps.canvas} does not open ${file.split('/').pop()}`, 'error')
       }
     }
   }

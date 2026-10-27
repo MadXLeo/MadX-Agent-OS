@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import type { DepthCommand } from '../features/office/sheets/agent-depth.ts'
 import type { CommandArg, OsCommand } from '../store/os-commands.ts'
 import { range, run, sheet, workbook } from './sheets-shared.ts'
@@ -298,7 +299,7 @@ export const sheetsDepthCommands: readonly OsCommand[] = [
   {
     id: 'sheets.goToName',
     title: 'Go to a named range',
-    description: 'Select the cells a name stands for in a workbook open in Herald Sheets, bringing their sheet to the front, so the person sees them.',
+    description: `Select the cells a name stands for in a workbook open in ${PRODUCT.apps.sheets}, bringing their sheet to the front, so the person sees them.`,
     tier: 'act',
     args: [workbook, name('The name'), scope],
     run: depth('goToName')

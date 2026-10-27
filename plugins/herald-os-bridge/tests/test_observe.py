@@ -1,5 +1,5 @@
-"""Observer hooks: Hermes's work outside Herald OS reaches the Pet Room by name only, and only while a
-running Herald OS asks for it.
+"""Observer hooks: Hermes's work outside MadX Agent OS reaches the Pet Room by name only, and only while a
+running MadX Agent OS asks for it.
 
 A control file in the observe folder opens the gate and a fake control server stands in for Herald
 OS. The sender thread is counted instead of started and tests send with ``_flush_once()``, except the
@@ -53,7 +53,7 @@ class Clock:
 
 
 class FakeHerald:
-    """A JSON-lines Unix socket server answering ``activity`` requests like Herald OS's main: with
+    """A JSON-lines Unix socket server answering ``activity`` requests like MadX Agent OS's main: with
     ``reply`` when set, else accepting the right token and refusing any other."""
 
     def __init__(self, path: str, token: str):
@@ -150,7 +150,7 @@ def herald():
 
 
 def control(home, pid=4242, *, live=True, path="/tmp/hos-none/c.sock", token="activity-token", mode=0o600):
-    """Write a Herald OS's control file the way Herald OS does: atomically, 0600 in a 0700 folder."""
+    """Write a MadX Agent OS's control file the way MadX Agent OS does: atomically, 0600 in a 0700 folder."""
     folder = home / "herald-os" / "observe"
     folder.mkdir(parents=True, exist_ok=True)
     folder.chmod(0o700)
@@ -301,7 +301,7 @@ def test_a_control_file_is_read_again_only_when_it_changes(observe, isolated_hom
 
 @pytest.mark.parametrize("case", [
     "group-readable", "world-readable", "relative socket", "no socket", "empty token", "live as text",
-    "not JSON", "a JSON list", "a link to a private file", "a name Herald OS does not use", "the folder is a file",
+    "not JSON", "a JSON list", "a link to a private file", "a name MadX Agent OS does not use", "the folder is a file",
 ])
 def test_a_control_file_that_is_not_private_or_not_well_formed_is_ignored(case, observe, starts, isolated_home, tmp_path):
     folder = isolated_home / "herald-os" / "observe"
@@ -323,7 +323,7 @@ def test_a_control_file_that_is_not_private_or_not_well_formed_is_ignored(case, 
         target = control(tmp_path)
         folder.mkdir(parents=True)
         (folder / "4242.json").symlink_to(target)
-    elif case == "a name Herald OS does not use":
+    elif case == "a name MadX Agent OS does not use":
         control(isolated_home).rename(folder / "herald.json")
     else:
         folder.parent.mkdir(parents=True)

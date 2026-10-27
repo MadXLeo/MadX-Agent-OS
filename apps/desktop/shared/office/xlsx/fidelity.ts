@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../product.ts'
 import { keepsPivotCache, pivotCacheIdOf } from './keep/pivots.ts'
 import { readTable } from './keep/tables.ts'
 import { parseRelationships, relsPathOf } from './opc.ts'
@@ -76,7 +77,7 @@ export async function inspectPackage(pkg: XlsxPackage, extension = '.xlsx'): Pro
   const macros = files.some((file) => /(^|\/)vbaProject\.bin$/i.test(file)) || extension === '.xlsm'
 
   if (macros) {
-    notes.push('Macros (VBA) are not kept: Herald Sheets does not run them, and a copy it saves has none.')
+    notes.push(`Macros (VBA) are not kept: ${PRODUCT.apps.sheets} does not run them, and a copy it saves has none.`)
   }
 
   const otherSheets = pkg.sheets.filter((sheet) => sheet.kind === 'dialogsheet' || sheet.kind === 'macrosheet' || sheet.kind === 'other').length

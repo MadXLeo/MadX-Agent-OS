@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { OFFICE_APP_NAMES, type OfficeApp } from '../../../../shared/office/files.ts'
 import { columnName, parseCell, parseRange, quoteSheet, splitSheet } from '../../../../shared/office/xlsx/address.ts'
 import { tildePath } from '../agent-model.ts'
@@ -180,7 +181,7 @@ function othersLine(others: readonly OpenDocument[], home: string): string | nul
   const shown = others.slice(0, MAX_OTHERS).map((doc) => `“${doc.name}” (${OFFICE_APP_NAMES[doc.app]}, ${doc.path ? tildePath(doc.path, home) : 'not saved yet'}${doc.selection ? `, selection ${doc.selection}` : ''})`)
   const more = others.length > MAX_OTHERS ? `, and ${others.length - MAX_OTHERS} more` : ''
 
-  return `Also open in Herald Office: ${shown.join('; ')}${more}.`
+  return `Also open in ${PRODUCT.apps.office}: ${shown.join('; ')}${more}.`
 }
 
 const REPLY = 'Reply in one or two short sentences saying what changed (or the answer, for a question).'

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { atom } from 'nanostores'
 import type { CatalogEntryView, CatalogGroupView } from '../../shared/ipc.ts'
 import { localModelConfig, localModelSwitch } from '../lib/local-models.ts'
@@ -70,7 +71,7 @@ export async function runCatalog(id: string, action: 'install' | 'remove'): Prom
 
     if (result.ok) {
       const opened = entry?.method === 'link' && action === 'install'
-      notify({ title: opened ? `${label}: download page open` : `${label} ${action === 'install' ? 'installed' : 'removed'}`, body: opened ? 'Install it from there; Herald OS sees it when it is done.' : result.output.split('\n').pop() || undefined, level: 'success' })
+      notify({ title: opened ? `${label}: download page open` : `${label} ${action === 'install' ? 'installed' : 'removed'}`, body: opened ? `Install it from there; ${PRODUCT.name} sees it when it is done.` : result.output.split('\n').pop() || undefined, level: 'success' })
     } else {
       notify({ title: `Could not ${action} ${label}`, body: result.output || undefined, level: 'error' })
     }

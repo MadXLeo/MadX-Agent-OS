@@ -1,3 +1,4 @@
+import { PRODUCT } from '../shared/product.ts'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -19,7 +20,7 @@ export function renderIdleConf(prefs: Pick<HeraldOSPrefs, 'idle' | 'screensaver'
   const seconds = (minutes: number) => Math.max(0, Math.round(minutes * 60))
   const screensaver = prefs.screensaver?.enabled ? seconds(prefs.screensaver.afterMinutes || SCREENSAVER_DEFAULT_MINUTES) : 0
 
-  return ['# Written by Herald OS from Settings; seconds of inactivity, 0 for never.', `screensaver=${screensaver}`, `lock=${seconds(idle.lockAfter)}`, `screen_off=${seconds(idle.screenOffAfter)}`, `suspend=${seconds(idle.suspendAfter)}`, ''].join('\n')
+  return [`# Written by ${PRODUCT.name} from Settings; seconds of inactivity, 0 for never.`, `screensaver=${screensaver}`, `lock=${seconds(idle.lockAfter)}`, `screen_off=${seconds(idle.screenOffAfter)}`, `suspend=${seconds(idle.suspendAfter)}`, ''].join('\n')
 }
 
 /**

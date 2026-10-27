@@ -31,7 +31,7 @@ wipe a disk without asking.
   asked for one at install time);
 - sets English, a US keyboard and UTC, which you can change in the `lang`, `keyboard` and
   `timezone` lines;
-- installs the `stable` Herald OS image and locks the root account;
+- installs the `stable` MadX Agent OS image and locks the root account;
 - restarts when it is done.
 
 It creates no account: the first start does that, and the first-start setup asks who the computer is
@@ -79,7 +79,7 @@ with an account named `hermes` and SSH off.
    `inst.ks=http://192.168.1.10/herald.ks` to the end of the line that starts with `linux`, and press
    `Ctrl+X`.
 
-The installer then runs without stopping, and the PC restarts into Herald OS's first start.
+The installer then runs without stopping, and the PC restarts into MadX Agent OS's first start.
 
 ## Before you rely on it
 

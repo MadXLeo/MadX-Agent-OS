@@ -249,10 +249,10 @@ describe('RoomScene', () => {
     render({ desks, deskNames: false })
 
     expect(host.textContent).not.toContain('Launch plan.docx')
-    expect(host.querySelector('[title="A document open in Herald Docs"]')).not.toBeNull()
+    expect(host.querySelector('[title="A document open in MadX Docs"]')).not.toBeNull()
   })
 
-  it('shows work outside Herald in its lane only when the lane is on, and never opens it', () => {
+  it('shows work outside MadX OS in its lane only when the lane is on, and never opens it', () => {
     const outside = agent('e:bot', { kind: 'elsewhere', title: 'Support bot', phase: 'thinking', area: 'elsewhere', sessionId: '', elsewhere: { where: 'Telegram', active: true, lastActiveAt: 1, approval: false, liveAt: null } })
     render({ agents: [outside] })
 
@@ -262,16 +262,16 @@ describe('RoomScene', () => {
 
     expect(host.textContent).toContain('Support bot')
     expect(host.textContent).toContain('Telegram · active now')
-    expect(host.textContent).toContain('Outside Herald')
+    expect(host.textContent).toContain('Outside MadX OS')
     expect(host.textContent).toContain('Coarse: titles and activity, read once a minute')
     expect(button('Open Support bot in Hermes')).toBeNull()
 
     render({ agents: [], lane: true })
 
-    expect(host.textContent).toContain('No Hermes work outside Herald in the last hour.')
+    expect(host.textContent).toContain('No Hermes work outside MadX OS in the last hour.')
   })
 
-  it('never opens work outside Herald at a station, and shows its approval as a sign that answers nothing', () => {
+  it('never opens work outside MadX OS at a station, and shows its approval as a sign that answers nothing', () => {
     const waiting = agent('e:bot', { kind: 'elsewhere', title: 'Support bot', phase: 'waiting', area: 'bench', step: 'waiting for your OK in Telegram', sessionId: '', elsewhere: { where: 'Telegram', active: true, lastActiveAt: 1, approval: true, liveAt: 1 } })
     const working = agent('e:cli', { kind: 'elsewhere', title: 'Refactor', phase: 'tool', area: 'files', step: 'editing main.py', sessionId: '', elsewhere: { where: 'the Hermes CLI', active: true, lastActiveAt: 1, approval: false, liveAt: 1 } })
     render({ agents: [waiting, working], lane: true, facts: { 'e:bot': [{ kind: 'waiting', text: 'waiting for your OK in Telegram', trace: null }, { kind: 'activity', text: 'Telegram · active now', trace: null }] } })
@@ -347,16 +347,16 @@ describe('RoomScene', () => {
     expect(host.textContent).not.toContain('Coarse')
   })
 
-  it('calls the lane empty only when no work outside Herald is anywhere in the room, and takes its words from a replay', () => {
+  it('calls the lane empty only when no work outside MadX OS is anywhere in the room, and takes its words from a replay', () => {
     const atWork = agent('e:bot', { kind: 'elsewhere', phase: 'tool', area: 'terminal', step: 'running a command', sessionId: '', elsewhere: { where: 'Telegram', active: true, lastActiveAt: 1, approval: false, liveAt: 1 } })
     render({ agents: [atWork], lane: true, laneLive: true })
 
-    expect(host.textContent).not.toContain('No Hermes work outside Herald')
+    expect(host.textContent).not.toContain('No Hermes work outside MadX OS')
 
-    render({ agents: [], lane: true, laneText: { note: 'As the Room showed it then', about: 'From the log.', empty: 'No Hermes work outside Herald at this time.' } })
+    render({ agents: [], lane: true, laneText: { note: 'As the Room showed it then', about: 'From the log.', empty: 'No Hermes work outside MadX OS at this time.' } })
 
     expect(host.textContent).toContain('As the Room showed it then')
-    expect(host.textContent).toContain('No Hermes work outside Herald at this time.')
+    expect(host.textContent).toContain('No Hermes work outside MadX OS at this time.')
     expect(host.textContent).not.toContain('in the last hour')
   })
 })

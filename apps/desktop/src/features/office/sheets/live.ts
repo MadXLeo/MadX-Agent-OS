@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { IUniverInstanceService } from '@univerjs/core'
 import { baseName, extensionOf } from '../../../../shared/office/files.ts'
 import type { WorkbookSnapshot } from '../../../../shared/office/workbook.ts'
@@ -65,14 +66,14 @@ export async function changeFile<T>(path: string, change: (target: SheetsTarget)
   const read = await adapter.read((await io.read(path)).bytes, extension, name)
 
   if (read.notes.length) {
-    throw new Error(`${name}${extension} has things Herald Sheets cannot keep (${read.notes[0].replace(/\.$/, '')}${read.notes.length > 1 ? `, and ${read.notes.length - 1} more` : ''}): open it in Herald Sheets to change it`)
+    throw new Error(`${name}${extension} has things ${PRODUCT.apps.sheets} cannot keep (${read.notes[0].replace(/\.$/, '')}${read.notes.length > 1 ? `, and ${read.notes.length - 1} more` : ''}): open it in ${PRODUCT.apps.sheets} to change it`)
   }
 
   const { result, snapshot } = await withHeadlessSheets(read.model, ({ univer, workbook }) => change({ univer, workbook }))
   const written = await adapter.write(snapshot, extension, read.layout)
 
   if (written.losses.length) {
-    throw new Error(`Saving ${name}${extension} would lose something (${written.losses[0].replace(/\.$/, '')}): open it in Herald Sheets to change it`)
+    throw new Error(`Saving ${name}${extension} would lose something (${written.losses[0].replace(/\.$/, '')}): open it in ${PRODUCT.apps.sheets} to change it`)
   }
 
   await io.write(path, written.bytes)

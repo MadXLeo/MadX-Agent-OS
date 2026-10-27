@@ -14,7 +14,7 @@ def _mod(plugin, name):
 
 
 CATALOGUE = [
-    {"id": "office.list", "title": "What is open in Herald Office", "tier": "read", "args": []},
+    {"id": "office.list", "title": "What is open in MadX Office", "tier": "read", "args": []},
     {"id": "sheets.read", "title": "Read a workbook", "tier": "read", "args": []},
     {"id": "sheets.write", "title": "Write cells", "tier": "act", "args": []},
     {"id": "sheets.clean", "title": "Clean data", "tier": "act", "args": []},
@@ -254,7 +254,7 @@ def test_a_shell_without_herald_sheets_says_to_update(plugin, shell, monkeypatch
     monkeypatch.setattr(ui, "list_commands", lambda: [{"id": "page.open", "tier": "read"}])
     tools._UI_CATALOGUE.clear()
     reply = json.loads(tools.handle_sheets({"action": "read"}))
-    assert reply["success"] is False and "Herald Sheets" in reply["error"] and "update Herald OS" in reply["error"]
+    assert reply["success"] is False and "MadX Sheets" in reply["error"] and "update MadX Agent OS" in reply["error"]
 
 
 def test_charts_summaries_tools_names_validation_comments_and_notes_map_to_their_commands(plugin):
@@ -405,7 +405,7 @@ def test_an_older_shell_without_the_new_commands_says_to_update_and_keeps_the_re
     tools._UI_CATALOGUE.clear()
     for action in ("insert_chart", "summarize", "add_comment", "remove_chart"):
         reply = json.loads(tools.handle_sheets({"action": action, "range": "A1:B9", "cell": "B2", "text": "x", "chart": "1"}))
-        assert reply["success"] is False and "update Herald OS" in reply["error"], action
+        assert reply["success"] is False and "update MadX Agent OS" in reply["error"], action
     assert not [command for command, _, _ in calls if command != "office.list"]
     reply = json.loads(tools.handle_sheets({"action": "read", "range": "A1:B3"}))
     assert reply["success"] is True and calls[-1][0] == "sheets.read"

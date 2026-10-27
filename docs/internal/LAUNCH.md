@@ -1,3 +1,5 @@
+> Historical upstream design record, preserved for provenance. Current MadX work is tracked in [docs/madx](../madx/).
+
 # Launch checklist
 
 What has to happen, in order, to take Herald OS public. Nothing in this list is automated: every

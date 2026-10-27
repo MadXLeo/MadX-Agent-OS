@@ -1,10 +1,10 @@
-# Translating Herald OS
+# Translating MadX Agent OS
 
-Herald OS can show itself in English, in Brazilian Portuguese (Português (Brasil)) or in Simplified
+MadX Agent OS can show itself in English, in Brazilian Portuguese (Português (Brasil)) or in Simplified
 Chinese (简体中文). So far that covers the
-menus Herald builds, the menu bar, the main window's sidebar, the Overview, the command bar, the
+menus MadX builds, the menu bar, the main window's sidebar, the Overview, the command bar, the
 notifications panel, Settings' navigation, section titles, General section and Hermes & agents, and
-first-run setup on the Herald OS image; the rest of the shell is English until its strings move into
+first-run setup on the MadX Agent OS image; the rest of the shell is English until its strings move into
 the catalogs. This page says how the strings work, how to translate them, and how
 to add a language.
 
@@ -35,7 +35,7 @@ Each message has a key and English text, sometimes with slots or plural forms:
 - A comment above a message in `en.ts` says what a slot holds or what must stay English (the words
   the voice and dictation listen for, a Hermes command such as `/model`, a file or setting name).
   A slot shown in monospace, such as `{variable}` in the API key form, holds that name.
-- Product names stay as they are: Herald OS, Hermes, Herald Canvas, Docs, Sheets and Slides.
+- Product names stay as they are: MadX Agent OS, Hermes, MadX Canvas, Docs, Sheets and Slides.
   Hermes's own terms follow Hermes Desktop's catalogs (`upstream/hermes-agent/apps/desktop/src/i18n/`),
   so Hermes reads the same in both apps.
 
@@ -69,7 +69,7 @@ overflows are welcome in the pull request.
 - Dates and numbers: pass `$locale` to `toLocaleDateString` and the like, as `src/lib/format.ts`
   does.
 - In main, `translate(menuLanguage(), 'area.key')` (`electron/i18n.ts`) as the menu is built.
-- Text Herald sends Hermes on the person's behalf, such as a quick action's prompt, is a message
+- Text MadX sends Hermes on the person's behalf, such as a quick action's prompt, is a message
   too, so Hermes answers in their language.
 - Identifiers stay English: command ids and titles (Hermes reads them), voice phrases, and the app
   registry's `name`, which the Dock and commands match on (show `appName(app)`).
@@ -83,9 +83,9 @@ overflows are welcome in the pull request.
 3. Add it to the `language.set` command (`src/commands/system.ts`) and to the search words of the
    Language setting (`LANGUAGE_KEYWORDS` in `GeneralSection.tsx`).
 
-## What Herald does not translate itself
+## What MadX does not translate itself
 
-- The macOS app menu (Herald OS, Edit, Window) is Electron's default, whose items Electron names in
+- The macOS app menu (MadX Agent OS, Edit, Window) is Electron's default, whose items Electron names in
   English. The items macOS adds to it, such as Services and the window list, follow the system's
   language, as does Chromium's own text (a form's "Please fill out this field").
 - What Hermes writes is in whatever language it writes: it answers in the language you use.

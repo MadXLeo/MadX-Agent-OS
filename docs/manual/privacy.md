@@ -1,6 +1,6 @@
 # Privacy and the audit log
 
-Hermes can see and change a lot on your computer, so Herald OS puts you in charge of what it may do,
+Hermes can see and change a lot on your computer, so MadX Agent OS puts you in charge of what it may do,
 and writes down what it did. Settings > Privacy has all of it.
 
 ## What reaches the model
@@ -12,7 +12,7 @@ scans and on screen is read on this computer.
 
 ## Permission tiers
 
-Herald OS's system tools each belong to a tier:
+MadX Agent OS's system tools each belong to a tier:
 
 | Tier | Examples | What happens |
 | --- | --- | --- |
@@ -21,7 +21,7 @@ Herald OS's system tools each belong to a tier:
 | mutate | Creating, moving or renaming files | Asks first; you can allow it for the session or always |
 | destructive | Moving files to the Trash, stopping a program | Asks every time |
 
-Herald OS never deletes anything permanently; the Trash is as far as it goes. Some places are always
+MadX Agent OS never deletes anything permanently; the Trash is as far as it goes. Some places are always
 refused, whatever you allow: `~/.ssh`, your keychains and Hermes's own credentials.
 
 **Permission policy** in Settings > Privacy shows the policy as text, which you can change and
@@ -56,6 +56,6 @@ speech-to-text provider.
 
 ## Your data
 
-Herald OS's settings, the policy and the audit log are in `~/.hermes/herald-os/`; Hermes's
+MadX Agent OS's settings, the policy and the audit log are in `~/.hermes/herald-os/`; Hermes's
 conversations, memories and credentials are in `~/.hermes/`, managed by Hermes. Clipboard history
 on Linux stays on the computer ([Clipboard history](clipboard.md)).

@@ -71,7 +71,7 @@ function fakeDocument(text: string): DocumentResult {
       return { index, kind: 'value', source, display: String(result), value: { kind: 'number', exact: String(result), number: result }, steps: [`${sum[1]} + ${sum[2]}`, `= ${result}`], tokens: [{ from: 0, to: sum[1].length, type: 'number' }] }
     }
 
-    return { index, kind: 'error', source, error: 'Herald cannot read this line yet' }
+    return { index, kind: 'error', source, error: 'MadX OS cannot read this line yet' }
   })
   const values = lines.filter(line => line.kind === 'value')
   const total = values.reduce((sum, line) => sum + (line.value?.number ?? 0), 0)
@@ -151,7 +151,7 @@ describe('Notepad', () => {
     expect(calc.bridge.saveNote).toHaveBeenCalledWith({ text: WELCOME_NOTE })
     expect(textarea().value).toBe(WELCOME_NOTE)
     expect(host.querySelector('[data-testid="graph"]')?.textContent).toBe('sin(x) * x')
-    expect(host.querySelector('[data-os-target="calc-note:note-1"]')?.textContent).toContain('# Welcome to Herald Calc')
+    expect(host.querySelector('[data-os-target="calc-note:note-1"]')?.textContent).toContain('# Welcome to MadX Calc')
     expect(localStorage.getItem('herald-calc:welcomed')).toBe('1')
   })
 
@@ -183,11 +183,11 @@ describe('Notepad', () => {
     await type('1 + 1\n5 km in')
     await settle(100)
 
-    expect(button('Herald cannot read this line yet')).toBeNull()
+    expect(button('MadX OS cannot read this line yet')).toBeNull()
 
     await settle(2600)
 
-    expect(button('Herald cannot read this line yet')).not.toBeNull()
+    expect(button('MadX OS cannot read this line yet')).not.toBeNull()
   })
 
   it('saves at once when the editor is left, and records the finished line in the history', async () => {

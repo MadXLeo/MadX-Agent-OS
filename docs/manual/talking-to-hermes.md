@@ -1,11 +1,11 @@
 # Talking to Hermes
 
-Hermes is the agent at the centre of Herald OS. Type or say what you want, and it answers, opens
+Hermes is the agent at the centre of MadX Agent OS. Type or say what you want, and it answers, opens
 things, looks things up on the computer and, when something would change, asks you first.
 
 ## Three ways in
 
-- **The command bar:** `Cmd+K` on a Mac, `Super+Shift+Space` (or `Ctrl+K`) on Herald OS Linux. Type
+- **The command bar:** `Cmd+K` on a Mac, `Super+Shift+Space` (or `Ctrl+K`) on MadX Agent OS Linux. Type
   the name of an app, a page or a setting to go there, or a question or a request for Hermes. Type
   `/` for Hermes's commands and skills. Escape closes it.
 - **The Hermes page:** `Cmd+2` on a Mac, `Ctrl+2` on Linux. A conversation on the left and what
@@ -44,14 +44,14 @@ answers without it.
 
 A card never takes the keyboard from a field you are typing in, and never puts it on one of its
 answers, so a key meant for something else cannot answer it. To reach the card from the keyboard,
-press `Cmd+Option+A` on a Mac or `Super+Shift+A` on Herald OS Linux (or run **Go to the waiting
+press `Cmd+Option+A` on a Mac or `Super+Shift+A` on MadX Agent OS Linux (or run **Go to the waiting
 request** from the command bar or by voice). The keyboard lands on the card itself, for the oldest
 request waiting; Tab reaches **Deny** first, then **Allow once** and the rest. When the card goes,
 the keyboard returns to where it was. Screen readers announce each card once as it arrives: what
 Hermes asks, how many requests are waiting, and which card the keys go to.
 
 Your keys, the command bar and voice can move the keyboard to a card; Hermes's own tools and
-plugins cannot. On Herald OS Linux the key works through `herald-os os requests.focus`, so any
+plugins cannot. On MadX Agent OS Linux the key works through `herald-os os requests.focus`, so any
 program running as you can call that too, including a command Hermes runs in a terminal (Hermes's
 approval settings decide whether it may), at most once a second. It brings the Hermes window
 forward when that window does not have the keyboard, once per request and again for the same
@@ -68,7 +68,7 @@ buttons check that it works.
   speaks Hermes's reply as it comes, at no extra cost. Live is OpenAI's realtime voice model, which
   needs an OpenAI key, costs by the minute and has a daily cap you set.
 - **Wake word:** off until you turn it on; "hey Hermes", heard on this computer.
-- **Global hotkey:** `Alt+Space` unless you change it; on Herald OS Linux, `Super+V` as well.
+- **Global hotkey:** `Alt+Space` unless you change it; on MadX Agent OS Linux, `Super+V` as well.
 - **Follow-up window:** how many seconds Hermes keeps listening after it answers, so you can carry
   on without the key.
 - **What you can say:** Show commands lists every voice command with examples, or say "what can I

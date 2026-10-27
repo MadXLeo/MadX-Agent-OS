@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { $notificationsOpen, clearNotifications } from '../store/notifications.ts'
 import { fail, ok, type OsCommand } from '../store/os-commands.ts'
 import { setSidebarCollapsed, toggleSidebar } from '../store/sidebar.ts'
@@ -52,7 +53,13 @@ const APP_ALIASES: Record<string, HermesAppId> = {
   cpu: 'system',
   popout: 'chat-popout',
   'chat window': 'chat-popout',
-  calculator: 'calc'
+  calculator: 'calc',
+  // Saved routines and spoken requests using the upstream app names keep working.
+  'herald canvas': 'canvas',
+  'herald docs': 'docs',
+  'herald sheets': 'sheets',
+  'herald slides': 'slides',
+  'herald calc': 'calc'
 }
 
 const normalise = (value: string) => value.toLowerCase().replace(/^(the|my)\s+/, '').replace(/\s+(page|tab|window|app|screen|section)$/, '').trim()
@@ -114,7 +121,7 @@ export const navigationCommands: readonly OsCommand[] = [
   {
     id: 'page.open',
     title: 'Open a page or app',
-    description: 'Show a Herald OS page (overview, hermes, missions, memory, files, automations, connections, settings) or open an app (terminal, system).',
+    description: `Show a ${PRODUCT.name} page (overview, hermes, missions, memory, files, automations, connections, settings) or open an app (terminal, system).`,
     tier: 'read',
     args: [{ name: 'name', type: 'string', description: 'Page or app name', required: true }],
     phrases: ['open the {name} page', 'switch to {name}', 'go to the {name} page'],

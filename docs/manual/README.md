@@ -1,13 +1,13 @@
-# The Herald OS manual
+# The MadX Agent OS manual
 
-Herald OS is an operating system built around an AI agent, Hermes. You talk or type to it, and it
+MadX Agent OS is an operating system built around an AI agent, Hermes. You talk or type to it, and it
 works across the whole machine: it opens apps, finds and organises files, keeps an eye on what is
 running, remembers what matters to you, runs routines, and builds software while you watch. Anything
 that changes something asks first.
 
-This manual is for installing and using Herald OS day to day.
+This manual is for installing and using MadX Agent OS day to day.
 [docs/ARCHITECTURE.md](../ARCHITECTURE.md) covers how it is built, and [docs/LINUX.md](../LINUX.md)
-how Herald OS Linux is put together.
+how MadX Agent OS Linux is put together.
 
 ## Chapters
 
@@ -30,14 +30,14 @@ how Herald OS Linux is put together.
 ### The desktop
 
 - [The menu bar and quick panels](menu-bar.md): the status icons, Wi-Fi, Bluetooth, sound and
-  display panels, the Herald OS menu and the Dock.
+  display panels, the MadX Agent OS menu and the Dock.
 - [Notifications and do not disturb](notifications.md).
 - [Clipboard history](clipboard.md).
 - [Screenshots, recording, text and QR codes](capture.md).
 - [Dictation and emoji](dictation-and-emoji.md): typing by voice, and emoji, in any app.
 - [Reminders, notices and weather](reminders.md).
 - [Lock screen, idle and the screensaver](lock-and-idle.md): locking, stay awake, night light.
-- [Hotkeys](hotkeys.md): every shortcut on macOS and on Herald OS Linux.
+- [Hotkeys](hotkeys.md): every shortcut on macOS and on MadX Agent OS Linux.
 - [Make it yours](make-it-yours.md): themes, fonts, the language, widgets, the menu bar, your own
   menu entries, branding, keyboard shortcuts, and hooks and automations that run when something
   happens.
@@ -68,11 +68,11 @@ how Herald OS Linux is put together.
 - [The Windows VM](windows-vm.md): Windows 11 in a window.
 - [Coding agents and local models](coding-agents.md): Claude Code, Codex and others, Ollama and LM
   Studio.
-- [Herald Canvas](canvas.md): the image editor, its tools and AI features, Photoshop files, and
+- [MadX Canvas](canvas.md): the image editor, its tools and AI features, Photoshop files, and
   working on pictures with Hermes.
-- [Herald Office](office.md): Herald Docs, Sheets and Slides, the files they open and save,
+- [MadX Office](office.md): MadX Docs, Sheets and Slides, the files they open and save,
   printing, and working on documents with Hermes and your voice.
-- [Herald Calc](calc.md): the sentence notepad, currencies and time zones, graphs, the keypads,
+- [MadX Calc](calc.md): the sentence notepad, currencies and time zones, graphs, the keypads,
   the history, and math with Hermes and your voice.
 
 ### The system
@@ -91,7 +91,7 @@ how Herald OS Linux is put together.
 
 ## The first five minutes
 
-1. **Say hello.** Press `Cmd+K` on a Mac or `Super+Shift+Space` on Herald OS Linux and type what
+1. **Say hello.** Press `Cmd+K` on a Mac or `Super+Shift+Space` on MadX Agent OS Linux and type what
    you want, or press the voice key (`Alt+Space` on a Mac, `Super+V` on Linux) and say it.
 2. **Let Hermes catch you up.** The Overview offers to look at the names of your recent files,
    projects and chats and suggest where to pick up. It is off until you turn it on.
@@ -118,19 +118,19 @@ have more than one, you choose who a conversation is with.
   message box says who it asks.
 - **Each bot keeps its own conversations.** Sessions… on the Hermes page lists those of the bot on
   screen, and its name at the top of the list switches to another bot's.
-- **What stays with Hermes.** The chats Herald OS starts for its own features run as Hermes: the
-  desktop pet, Ask Hermes in Herald Office, missions, Studio and crash help. Buttons elsewhere that
+- **What stays with Hermes.** The chats MadX Agent OS starts for its own features run as Hermes: the
+  desktop pet, Ask Hermes in MadX Office, missions, Studio and crash help. Buttons elsewhere that
   ask Hermes something (Plan my day, Find files, the command bar's Ask Hermes, voice) go to the
   conversation on screen, whoever it is with, and start one with Hermes when none is open.
   Missions and the command bar's recent sessions show Hermes's conversations only.
-- **Not yet.** Herald OS sets its system tools (files, apps, settings) up for Hermes, so a bot has
+- **Not yet.** MadX Agent OS sets its system tools (files, apps, settings) up for Hermes, so a bot has
   them only when its profile has the `herald-os-bridge` plugin. Voice speaks a bot's replies in
   Hermes's voice.
 
 ## Installing software
 
 Settings > Software (or Install in the `Super+M` menu on Linux, or just "install Steam") lists what
-Herald OS can install in one step: coding agents, local models, languages, editors, terminals,
+MadX Agent OS can install in one step: coding agents, local models, languages, editors, terminals,
 games, a Windows 11 virtual machine, media apps, password managers and web apps. Each one installs
 the right way for your machine, and says why when it cannot. [Installing software](installing-software.md)
 has the whole catalog; [Coding agents and local models](coding-agents.md),
@@ -149,7 +149,7 @@ open the folder in Files and say "file the invoices in this folder".
   in the folder you already use (Invoices by year, say). It asks before creating new folders.
 - You see the plan first and approve it on the card. Nothing is overwritten, duplicates are pointed
   out, and "undo that" puts everything back.
-- On Herald OS Linux, scans are read with tesseract, which is installed; `poppler-utils` makes text
+- On MadX Agent OS Linux, scans are read with tesseract, which is installed; `poppler-utils` makes text
   PDFs faster to read but is optional.
 
 ## Asking about what is on screen, and typing anywhere

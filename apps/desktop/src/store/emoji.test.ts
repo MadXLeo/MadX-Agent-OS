@@ -50,7 +50,7 @@ describe('an emoji picked over another app', () => {
     edges.type.mockResolvedValueOnce({ typed: false, copied: true, missing: 'accessibility' })
     await insertEmoji('🎉')
 
-    expect(edges.relayToMain.mock.calls[0][0].args[1]).toMatch(/^Herald OS can't type into other apps without the Accessibility permission/)
+    expect(edges.relayToMain.mock.calls[0][0].args[1]).toMatch(/^MadX Agent OS can't type into other apps without the Accessibility permission/)
   })
 
   it('stays quiet when main could not be reached', async () => {

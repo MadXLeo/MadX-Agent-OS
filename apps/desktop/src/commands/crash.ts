@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { findCrash } from '../lib/crash.ts'
 import { $prefs } from '../store/backend.ts'
 import { $crashes, diagnoseCrash, loadCrashes, setCrashHelpEnabled, setCrashMuted } from '../store/crashes.ts'
@@ -9,7 +10,7 @@ export const crashCommands: readonly OsCommand[] = [
   {
     id: 'crash.list',
     title: 'Recent crashes',
-    description: 'List the programs that crashed since Herald OS started.',
+    description: `List the programs that crashed since ${PRODUCT.name} started.`,
     tier: 'read',
     args: [],
     phrases: ['what crashed', 'show recent crashes', 'list crashes'],
@@ -17,7 +18,7 @@ export const crashCommands: readonly OsCommand[] = [
       const reports = await loadCrashes()
 
       if (reports.length === 0) {
-        return ok('Nothing has crashed since Herald OS started', { spoken: 'Nothing has crashed.' })
+        return ok(`Nothing has crashed since ${PRODUCT.name} started`, { spoken: 'Nothing has crashed.' })
       }
 
       return ok(`${reports.length} crash${reports.length === 1 ? '' : 'es'}: ${[...new Set(reports.map(report => report.app))].slice(0, 5).join(', ')}`, {
@@ -29,7 +30,7 @@ export const crashCommands: readonly OsCommand[] = [
     id: 'crash.diagnose',
     title: 'Diagnose a crash',
     description:
-      'Start a chat where Hermes reads a crash report and explains what went wrong: the newest crash, one named by id, program or pid, or one Herald OS did not see (pass pid or report, with app).',
+      `Start a chat where Hermes reads a crash report and explains what went wrong: the newest crash, one named by id, program or pid, or one ${PRODUCT.name} did not see (pass pid or report, with app).`,
     tier: 'act',
     args: [
       { name: 'crash', type: 'string', description: 'Crash id, program name or pid' },
@@ -60,7 +61,7 @@ export const crashCommands: readonly OsCommand[] = [
       const report = known ?? named
 
       if (!report) {
-        return fail(crash ? `No recent crash matches "${String(crash)}".` : 'Nothing has crashed since Herald OS started.')
+        return fail(crash ? `No recent crash matches "${String(crash)}".` : `Nothing has crashed since ${PRODUCT.name} started.`)
       }
 
       const sessionId = await diagnoseCrash(report)
@@ -83,7 +84,7 @@ export const crashCommands: readonly OsCommand[] = [
       const mute = muted !== false
       await setCrashMuted(name, mute)
 
-      return ok(mute ? `Crashes from ${name} stay quiet now` : `Herald OS offers help again when ${name} crashes`, { highlight: { kind: 'setting', id: 'notifications' } })
+      return ok(mute ? `Crashes from ${name} stay quiet now` : `${PRODUCT.name} offers help again when ${name} crashes`, { highlight: { kind: 'setting', id: 'notifications' } })
     }
   },
   {

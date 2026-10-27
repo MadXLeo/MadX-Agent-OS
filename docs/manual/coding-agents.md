@@ -2,7 +2,7 @@
 
 Hermes builds software with you in [Studio](studio.md), but you may also want the coding agents you
 already know, or a model that runs on your own computer. Both install in one step from Settings >
-Software > AI, on Herald OS Linux and on a Mac.
+Software > AI, on MadX Agent OS Linux and on a Mac.
 
 ## Coding agents
 
@@ -12,7 +12,7 @@ tab with any agent you installed. **Open** in Settings > Software does the same.
 its own account the first time.
 
 On Linux they install through npm into your home folder (`~/.local`), so they need no administrator
-password and work on the Herald OS image. `herald-os install claude-code` does it from a terminal.
+password and work on the MadX Agent OS image. `herald-os install claude-code` does it from a terminal.
 
 The languages they work with (Node, Python, Go, Rust, Ruby and Rails, PHP and Laravel and more) are
 in the Developer group, installed through [mise](https://mise.jdx.dev) where they can be.

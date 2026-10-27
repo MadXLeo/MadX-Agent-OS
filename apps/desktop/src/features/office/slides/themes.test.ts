@@ -164,7 +164,7 @@ describe('custom themes', () => {
 
   const path = '/home/me/.hermes/herald-os/office/slide-themes.json'
 
-  it('keeps custom themes in Herald’s data folder under ids of their own', async () => {
+  it('keeps custom themes in MadX OS’s data folder under ids of their own', async () => {
     expect(customThemesPath('/home/me/.hermes/')).toBe(path)
     expect(await loadCustomThemes()).toEqual([])
     expect(writes).toBe(0)
@@ -211,7 +211,7 @@ describe('custom themes', () => {
     expect(files.get(path)).toBe('{ not json')
 
     files.set(path, JSON.stringify({ format: 'herald-slide-themes', version: 2, themes: [] }))
-    await expect(loadCustomThemes()).rejects.toThrow(/newer Herald/)
+    await expect(loadCustomThemes()).rejects.toThrow(/newer MadX OS/)
 
     $env.set(null)
     await expect(loadCustomThemes()).rejects.toThrow(/Hermes home/)

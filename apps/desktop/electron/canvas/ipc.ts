@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { BrowserWindow, clipboard, ClipboardItem, dialog, ipcMain, type WebContents } from 'electron'
 import crypto from 'node:crypto'
 import fs from 'node:fs/promises'
@@ -59,7 +60,7 @@ export async function projectPath(target: string): Promise<string> {
   const dir = (await assertWritable(String(target))).replace(/[/\\]+$/, '')
 
   if (!isProjectPath(dir)) {
-    throw new Error(`A Herald Canvas project is a folder whose name ends in ${PROJECT_EXTENSION}`)
+    throw new Error(`A ${PRODUCT.apps.canvas} project is a folder whose name ends in ${PROJECT_EXTENSION}`)
   }
 
   return dir
@@ -70,7 +71,7 @@ async function imagePath(target: string): Promise<string> {
   const file = await assertWritable(String(target))
 
   if (!CANVAS_IMAGE_EXTENSIONS.has(path.extname(file).toLowerCase())) {
-    throw new Error(`Herald Canvas does not open ${path.extname(file) || 'this kind of file'}`)
+    throw new Error(`${PRODUCT.apps.canvas} does not open ${path.extname(file) || 'this kind of file'}`)
   }
 
   return file
@@ -120,7 +121,7 @@ interface Watch {
 const watches = new WindowWatches<Watch>()
 
 const SAVE_FILTERS: Record<CanvasSaveKind, Electron.FileFilter[]> = {
-  project: [{ name: 'Herald Canvas project', extensions: ['comp'] }],
+  project: [{ name: `${PRODUCT.apps.canvas} project`, extensions: ['comp'] }],
   png: [{ name: 'PNG image', extensions: ['png'] }],
   jpeg: [{ name: 'JPEG image', extensions: ['jpg', 'jpeg'] }],
   webp: [{ name: 'WebP image', extensions: ['webp'] }],
@@ -137,7 +138,7 @@ export function registerCanvasIpc(getWindow: () => BrowserWindow | null): void {
   ipcMain.handle(IPC.canvasPickOpen, async event => {
     const parent = windowFor(event.sender, getWindow)
     const options: Electron.OpenDialogOptions = {
-      title: 'Open in Herald Canvas',
+      title: `Open in ${PRODUCT.apps.canvas}`,
       defaultPath: path.join(os.homedir(), 'Pictures'),
       // On Linux a dialog picks files or folders, not both: pick a file inside a project to open it.
       properties: process.platform === 'darwin' ? ['openFile', 'openDirectory'] : ['openFile'],
@@ -226,7 +227,7 @@ export function registerCanvasIpc(getWindow: () => BrowserWindow | null): void {
       const { size } = await handle.stat()
 
       if (size > MAX_LAYERED_BYTES) {
-        throw new Error(`${path.basename(file)} is larger than ${MAX_LAYERED_BYTES / 1024 ** 3} GB, more than Herald Canvas opens`)
+        throw new Error(`${path.basename(file)} is larger than ${MAX_LAYERED_BYTES / 1024 ** 3} GB, more than ${PRODUCT.apps.canvas} opens`)
       }
 
       const start = Math.max(0, Math.min(size, Math.floor(Number(offset) || 0)))

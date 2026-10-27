@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import { atom } from 'nanostores'
 import { messageOf } from '../../../canvas/errors.ts'
 import type { Background, Deck, HeaderFooter, LayoutId, SlideTransition, Theme, Transition } from '../deck.ts'
@@ -172,7 +173,7 @@ export function readCustomThemes(report = true): void {
     customThemesRead = null
 
     if (report) {
-      commands.notify(`Herald Slides could not read the custom themes: ${messageOf(error)}`)
+      commands.notify(`${PRODUCT.apps.slides} could not read the custom themes: ${messageOf(error)}`)
     }
   })
 }

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { RoomReplayGap, RoomReplayStretch } from './model.ts'
 
 /*
@@ -78,8 +79,8 @@ export function stretchesText(stretches: readonly RoomReplayStretch[]): string {
 /** The lane in a replay shows what the log kept of work outside Herald, not what Hermes reports now. */
 export const REPLAY_LANE = {
   note: 'As the Room showed it then',
-  about: 'Hermes work outside Herald as the Room showed it at this time, from the activity log: where it ran and its steps, never titles.',
-  empty: 'No Hermes work outside Herald at this time.'
+  about: `Hermes work outside ${PRODUCT.shortName} as the Room showed it at this time, from the activity log: where it ran and its steps, never titles.`,
+  empty: `No Hermes work outside ${PRODUCT.shortName} at this time.`
 }
 
 export type ReplaySpeed = '60' | '300' | '900' | '3600'

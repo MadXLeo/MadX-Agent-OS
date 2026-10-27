@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { useEffect, useRef, useState } from 'react'
 import { cn } from '../../lib/cn.ts'
@@ -420,7 +421,7 @@ export function Viewport({ doc }: { doc: CanvasDocument }) {
       {typing?.docKey === doc.key && <TypeEditor doc={doc} session={typing} view={viewOf(doc)} />}
       {failure && (
         <div className="absolute inset-0 flex items-center justify-center p-8 text-center text-[13px] text-fg-3">
-          <div className="max-w-sm">Herald Canvas could not draw this document: {failure}</div>
+          <div className="max-w-sm">{PRODUCT.apps.canvas} could not draw this document: {failure}</div>
         </div>
       )}
     </div>

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One-shot developer bootstrap for Herald OS (macOS and Linux). Safe to re-run after every pull.
+# One-shot developer bootstrap for MadX Agent OS (macOS and Linux). Safe to re-run after every pull.
 #   1. Fetch the pinned upstream snapshot (types for the gateway wire).
 #   2. Install Node workspaces.
 #   3. Link the system-bridge plugin into the user's Hermes plugins directory.
@@ -114,7 +114,7 @@ if [[ ${#HERMES_CMD[@]} -gt 0 ]]; then
   # both must be recorded. The override prompt is answered "no" (stdin closed): the bridge never
   # replaces built-in tools.
   hermes_step "adds it to plugins.enabled in $HERMES_HOME/config.yaml" plugins enable herald-os-bridge
-  hermes_step "saves platform_toolsets.cli with herald_os in it (the tools run only in Herald OS sessions)" tools enable herald_os
+  hermes_step "saves platform_toolsets.cli with herald_os in it (the tools run only in MadX Agent OS sessions)" tools enable herald_os
   # Upstream defers plugin tools behind its tool-search bridge; with the system tools hidden the
   # agent falls back to shell commands. Keep them direct (Settings -> Hermes & agents -> Tool search
   # turns it back on), writing down the value it had the first time so it can be put back.
@@ -158,4 +158,4 @@ PY
   fi
 fi
 
-echo "==> Done. Start Herald OS with: npm run dev"
+echo "==> Done. Start MadX Agent OS with: npm run dev"

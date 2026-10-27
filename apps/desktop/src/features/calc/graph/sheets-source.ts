@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { type CommandResult, runCommand } from '../../../store/os-commands.ts'
 import { isMainSurface } from '../../../store/shell.ts'
 import { messageOf } from '../../canvas/errors.ts'
@@ -70,11 +71,11 @@ function readingOf(answer: unknown): Reading {
   const result = answer as Partial<CommandResult> | null
 
   if (!result || typeof result !== 'object') {
-    throw new Error('Herald Sheets did not answer')
+    throw new Error(`${PRODUCT.apps.sheets} did not answer`)
   }
 
   if (result.ok === false) {
-    throw new Error(messageOf(result.error ?? result.summary ?? 'Herald Sheets could not read that'))
+    throw new Error(messageOf(result.error ?? result.summary ?? `${PRODUCT.apps.sheets} could not read that`))
   }
 
   return (result.data ?? {}) as Reading

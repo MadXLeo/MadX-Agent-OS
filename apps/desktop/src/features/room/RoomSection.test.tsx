@@ -82,24 +82,24 @@ afterEach(() => {
 })
 
 describe('Settings > Pet Room', () => {
-  it('keeps live steps from Hermes outside Herald off and unavailable until the lane is on', async () => {
+  it('keeps live steps from Hermes outside MadX OS off and unavailable until the lane is on', async () => {
     await render()
 
-    expect(toggle('Live steps from Hermes outside Herald').disabled).toBe(true)
-    expect(toggle('Live steps from Hermes outside Herald').getAttribute('aria-checked')).toBe('false')
+    expect(toggle('Live steps from Hermes outside MadX OS').disabled).toBe(true)
+    expect(toggle('Live steps from Hermes outside MadX OS').getAttribute('aria-checked')).toBe('false')
     expect(host.textContent).toContain("by name only: never what anyone wrote, a command, a file's content or a result")
 
-    act(() => toggle('Show Hermes work outside Herald').click())
+    act(() => toggle('Show Hermes work outside MadX OS').click())
     await settle()
 
     expect(setRoomPrefs).toHaveBeenLastCalledWith({ elsewhere: true })
-    expect(toggle('Live steps from Hermes outside Herald').disabled).toBe(false)
+    expect(toggle('Live steps from Hermes outside MadX OS').disabled).toBe(false)
 
-    act(() => toggle('Live steps from Hermes outside Herald').click())
+    act(() => toggle('Live steps from Hermes outside MadX OS').click())
     await settle()
 
     expect(setRoomPrefs).toHaveBeenLastCalledWith({ elsewhereLive: true })
-    expect(toggle('Live steps from Hermes outside Herald').getAttribute('aria-checked')).toBe('true')
+    expect(toggle('Live steps from Hermes outside MadX OS').getAttribute('aria-checked')).toBe('true')
   })
 
   it('shows the activity log’s size and deletes it only on a second click', async () => {

@@ -1,10 +1,11 @@
+import { PRODUCT } from '../../shared/product.ts'
 import type { CommandArg, CommandContext } from '../store/os-commands.ts'
 
 /* What Herald Slides' commands share: the arguments that name a presentation, a slide and what is on it, the theme and shape words, and where they run. */
 
 export const office = () => import('../features/office/agent.ts')
 
-export const presentation: CommandArg = { name: 'presentation', type: 'string', description: 'The presentation: a .pptx file (full path or ~/…) or the name of an open presentation as its tab shows it; the one in front in Herald Slides when left out' }
+export const presentation: CommandArg = { name: 'presentation', type: 'string', description: `The presentation: a .pptx file (full path or ~/…) or the name of an open presentation as its tab shows it; the one in front in ${PRODUCT.apps.slides} when left out` }
 
 export const slide: CommandArg = { name: 'slide', type: 'string', description: 'A slide: its number (1 is the first), its id, or its title; the slide in front when left out' }
 
@@ -46,7 +47,7 @@ export const masterLayout = (what: string): CommandArg => ({ name: 'layout', typ
 
 /** The workbook, range and sheet a table comes from. */
 export const sheetArgs: readonly CommandArg[] = [
-  { name: 'workbook', type: 'string', description: 'The workbook: a file (full path or ~/…) or an open workbook’s name; the one in front in Herald Sheets when left out' },
+  { name: 'workbook', type: 'string', description: `The workbook: a file (full path or ~/…) or an open workbook’s name; the one in front in ${PRODUCT.apps.sheets} when left out` },
   { name: 'range', type: 'string', description: 'The cells, like A1:D12 or \'Q1 sales\'!B2:F9, or selection for what is selected in an open workbook; the cells that hold something on the sheet when left out' },
   { name: 'sheet', type: 'string', description: 'The sheet, when the range does not name it; the one in front when left out' }
 ]

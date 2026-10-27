@@ -35,6 +35,8 @@ jobs:
       - run: npm ci
       - name: Verify centralized MadX product identity
         run: npm run branding:check
+      - name: Audit product copy and documented compatibility exceptions
+        run: node scripts/madx/audit-branding.mjs --check
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
@@ -73,6 +75,8 @@ jobs:
             esac
           done < <(git ls-files)
           exit "$failed"
+      - name: Check MadX packaging inputs and compatibility aliases
+        run: python3 scripts/madx/check-native.py
 
   signing:
     name: Signing policy

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { columnName, parseRange } from '../../../../shared/office/xlsx/address.ts'
 import { parseJsonArg } from '../agent-model.ts'
 import {
@@ -397,7 +398,7 @@ export function renameLayoutStep(deck: Deck, args: Args): Step {
   const asked = text(args.name)
 
   if (!asked) {
-    throw new Error('Say the layout’s new name (name); default gives back Herald’s')
+    throw new Error(`Say the layout’s new name (name); default gives back ${PRODUCT.shortName}’s`)
   }
 
   const change = model.renameLayout(deck, where, /^(default|herald)$/i.test(asked) ? '' : asked)
@@ -410,8 +411,8 @@ export function resetMasterStep(deck: Deck): Step {
   const change = model.resetMaster(deck)
 
   return change.deck === deck
-    ? unchanged(deck, change.label, 'it already has Herald’s own master')
-    : { ...change, done: 'put Herald’s own master and layouts back in place of the presentation’s (their backgrounds, logos and drawings and the placeholders’ places and looks are gone)' }
+    ? unchanged(deck, change.label, `it already has ${PRODUCT.shortName}’s own master`)
+    : { ...change, done: `put ${PRODUCT.shortName}’s own master and layouts back in place of the presentation’s (their backgrounds, logos and drawings and the placeholders’ places and looks are gone)` }
 }
 
 const DATE_FORMATS: Record<string, DateFormat> = {

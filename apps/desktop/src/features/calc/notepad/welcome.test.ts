@@ -7,7 +7,7 @@ describe('the Welcome note', () => {
   const lines = splitLines(WELCOME_NOTE)
 
   it('is named for the app', () => {
-    expect(noteTitle(WELCOME_NOTE)).toBe('Welcome to Herald Calc')
+    expect(noteTitle(WELCOME_NOTE)).toBe('Welcome to MadX Calc')
   })
 
   it('shows off every kind of line', () => {

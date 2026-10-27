@@ -1,6 +1,6 @@
 # Security
 
-What Herald OS Linux does to keep the computer safe, and what you can turn on. For what Hermes may
+What MadX Agent OS Linux does to keep the computer safe, and what you can turn on. For what Hermes may
 do on the computer, see [Privacy and the audit log](privacy.md).
 
 ## The firewall
@@ -11,7 +11,7 @@ Connections you make yourself, to websites and services, are not affected.
 
 ## SSH
 
-SSH is off on Herald OS Linux, and the firewall does not let it in. To reach the computer from
+SSH is off on MadX Agent OS Linux, and the firewall does not let it in. To reach the computer from
 another one, turn it on with your public key (the contents of `~/.ssh/id_ed25519.pub` on the other
 computer), or the keys you keep on GitHub:
 
@@ -93,17 +93,17 @@ be recovered: without it, the files are gone.
 
 ## Secure Boot
 
-Secure Boot can stay on: Herald OS starts through Fedora's signed shim.
+Secure Boot can stay on: MadX Agent OS starts through Fedora's signed shim.
 
 ## Updates
 
 Updates come from the project's image on GitHub's container registry, over an encrypted connection.
-The images are signed, but Herald OS does not check those signatures yet; until it does, updates are
+The images are signed, but MadX Agent OS does not check those signatures yet; until it does, updates are
 trusted as far as GitHub is. Firmware updates come through fwupd: `herald-os firmware check`.
 
 ## Still to come
 
-**SELinux** is permissive for now: it logs what it would block instead of blocking it, until Herald
+**SELinux** is permissive for now: it logs what it would block instead of blocking it, until MadX
 OS has a policy of its own for the login screen and the window manager.
 
 ## Reporting a security problem

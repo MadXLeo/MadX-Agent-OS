@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconAdjustmentsHorizontal, IconRefresh, IconTrash } from '@tabler/icons-react'
 import type React from 'react'
@@ -54,7 +55,7 @@ function ratesStatus(state: CalcRatesState | null, locale: string | undefined): 
       return 'No rates yet, and fetching is off.'
     }
 
-    return state.error ? `No rates yet: the fetch failed (${state.error}). Herald tries again within the hour.` : 'No rates yet. They come the first time a note names a currency.'
+    return state.error ? `No rates yet: the fetch failed (${state.error}). ${PRODUCT.shortName} tries again within the hour.` : 'No rates yet. They come the first time a note names a currency.'
   }
 
   const day = `Rates from ${ratesDay(state.rates.date, locale)}`

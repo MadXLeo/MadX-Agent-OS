@@ -1,7 +1,7 @@
 # Installing software
 
 Settings > Software (or Install in the `Super+M` menu on Linux, or just "install Steam") lists what
-Herald OS can install in one step: coding agents for the terminal, local models, languages, editors,
+MadX Agent OS can install in one step: coding agents for the terminal, local models, languages, editors,
 terminals, games, a Windows 11 virtual machine, media apps, password managers and web apps. Each one
 installs the right way for your machine, and says why when it cannot (Steam needs an x86_64 PC,
 Windows needs virtualization). On a Mac the list is the coding agents and the local model apps.
@@ -26,14 +26,14 @@ terminal, `herald-os catalog list` shows the catalog (`--group gaming` for one g
 
 ## Any other app
 
-Anything on [Flathub](https://flathub.org) installs too: Install > App… in the Herald OS menu, or
+Anything on [Flathub](https://flathub.org) installs too: Install > App… in the MadX Agent OS menu, or
 `herald-os install app obsidian` (a name or a Flatpak id such as `md.obsidian.Obsidian`), or ask
-"install Obsidian". `herald-os remove app obsidian` takes it out. On Fedora and Arch with Herald OS
+"install Obsidian". `herald-os remove app obsidian` takes it out. On Fedora and Arch with MadX Agent OS
 as a package, `herald-os install app` uses the system's own packages when they have the app.
 
 ## What comes installed
 
-Every Herald OS Linux install starts with a curated set: Firefox, Files (Nautilus), Text Editor,
+Every MadX Agent OS Linux install starts with a curated set: Firefox, Files (Nautilus), Text Editor,
 LibreOffice, Loupe, Papers, Calculator, Calendar, VLC and developer tools; Obsidian, Spotify,
 LocalSend, VS Code and Signal from Flathub; and web apps for HEY, Google Calendar, Google Messages,
 WhatsApp, X, YouTube, ChatGPT and GitHub. `herald-os omakase list` shows it, and
@@ -43,7 +43,7 @@ WhatsApp, X, YouTube, ChatGPT and GitHub. `herald-os omakase list` shows it, and
 
 Each entry knows several ways to install, in order: Flatpak, the system's packages (dnf, pacman, the
 AUR), npm, mise, its own recipe, a web app, or a download page. The first one your machine can use
-wins. On the Herald OS image the system itself only changes by a whole update, so apps come as
+wins. On the MadX Agent OS image the system itself only changes by a whole update, so apps come as
 Flatpaks or go into your home folder (`~/.local`), and need no administrator password.
 
 Installed apps appear in Applications (`Super+A`) and the command bar. They update with the rest of

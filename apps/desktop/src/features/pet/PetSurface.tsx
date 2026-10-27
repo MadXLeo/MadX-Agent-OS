@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { type HTMLAttributes, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { PET_FRAME_HEIGHT, PET_FRAME_WIDTH, type PetCover, type PetPrefs, type PetRect, type PetSnapshot, type PetWindowPlacement } from '../../../shared/pet.ts'
@@ -21,7 +22,7 @@ import { $petSnapshot, petBridge } from './transport.ts'
  * tells it when one of Herald's own is full screen or presenting.
  */
 
-const PET_TITLE = 'Herald OS · Pet'
+const PET_TITLE = `${PRODUCT.name} · Pet`
 /** The menu bar's and the dock's strips (niri's struts in linux/niri/config.kdl). */
 const MENU_BAR = 30
 const DOCK = 84

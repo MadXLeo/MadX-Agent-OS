@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import type { BluetoothDevice, ControlAction, DisplayInfo, NetworkStatus, StatusPanelId, StatusPanelState, SystemStats } from '../../shared/ipc.ts'
 import { run } from './exec.ts'
 import { HostNotSupported } from './types.ts'
@@ -128,5 +129,5 @@ export async function darwinControlAction(action: ControlAction): Promise<void> 
     return
   }
 
-  throw new HostNotSupported(`changing ${action.panel} from Herald OS on macOS (use Control Center)`)
+  throw new HostNotSupported(`changing ${action.panel} from ${PRODUCT.name} on macOS (use Control Center)`)
 }

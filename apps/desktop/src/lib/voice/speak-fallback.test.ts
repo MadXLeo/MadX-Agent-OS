@@ -125,7 +125,7 @@ describe('the spoken-output chain', () => {
     expect(await speakWithFallbacks(LINE, { notify })).toEqual({ spokenBy: 'system', failed: 'edge' })
     expect(edges.systemSaid).toEqual([LINE])
     expect(edges.played).toHaveLength(1)
-    expect(notices).toEqual([['Voice', "Microsoft's free voice isn't working right now, so Herald OS is using your Mac's voice. Updating Hermes usually fixes it.", 'info']])
+    expect(notices).toEqual([['Voice', "Microsoft's free voice isn't working right now, so MadX Agent OS is using your Mac's voice. Updating Hermes usually fixes it.", 'info']])
     expect(warn.mock.calls.flat().join('\n')).toContain('TTS generation failed (edge): 403')
 
     expect(await speakWithFallbacks('And here is the second reply.', { notify })).toEqual({ spokenBy: 'system', failed: 'edge' })
@@ -140,7 +140,7 @@ describe('the spoken-output chain', () => {
 
     await speakWithFallbacks(LINE, { notify })
 
-    expect(notices).toEqual([['Voice', "Microsoft's free voice isn't working right now, so Herald OS is using the system voice. Updating Hermes usually fixes it.", 'info']])
+    expect(notices).toEqual([['Voice', "Microsoft's free voice isn't working right now, so MadX Agent OS is using the system voice. Updating Hermes usually fixes it.", 'info']])
   })
 
   it('says once, plainly, that nothing can speak when the computer has no voice of its own', async () => {
@@ -187,7 +187,7 @@ describe('the spoken-output chain', () => {
     edges.synthesis = [new Error('POST /api/audio/speak -> 400: TTS generation failed (openai): Connection error.')]
 
     expect(await speakWithFallbacks(LINE, { notify })).toEqual({ spokenBy: 'system', failed: 'openai' })
-    expect(notices[0][1]).toBe("The OpenAI voice isn't working right now, so Herald OS is using your Mac's voice. You can choose another voice in Settings > Voice.")
+    expect(notices[0][1]).toBe("The OpenAI voice isn't working right now, so MadX Agent OS is using your Mac's voice. You can choose another voice in Settings > Voice.")
   })
 
   it("speaks with the Mac's voice when Hermes cannot be reached at all", async () => {
@@ -195,7 +195,7 @@ describe('the spoken-output chain', () => {
     edges.synthesis = [new Error('Hermes backend is not ready')]
 
     expect(await speakWithFallbacks(LINE, { notify })).toEqual({ spokenBy: 'system', failed: null })
-    expect(notices[0][1]).toBe("Hermes's voice isn't working right now, so Herald OS is using your Mac's voice.")
+    expect(notices[0][1]).toBe("Hermes's voice isn't working right now, so MadX Agent OS is using your Mac's voice.")
   })
 
   it('says nothing at all for a line barge-in silenced while it was being made', async () => {
@@ -211,7 +211,7 @@ describe('the spoken-output chain', () => {
   it("lets a caller that reports the outcome itself count as the session's notice", async () => {
     edges.synthesis = [new Error(EDGE_403), new Error(EDGE_403)]
 
-    expect(await speakWithFallbacks('Hello. This is Hermes, speaking from Herald OS.')).toEqual({ spokenBy: 'system', failed: 'edge' })
+    expect(await speakWithFallbacks('Hello. This is Hermes, speaking from MadX Agent OS.')).toEqual({ spokenBy: 'system', failed: 'edge' })
     await speakWithFallbacks(LINE, { notify })
 
     expect(edges.systemSaid).toHaveLength(2)
@@ -240,9 +240,9 @@ describe('the words', () => {
     expect(helloReport({ spokenBy: 'none', failed: 'edge', system: 'missing' })?.text).toBe("Microsoft's free voice failed, and there's no system voice on this computer that can stand in. Updating Hermes usually fixes it.")
   })
 
-  it('reads in the language Herald OS is shown in', () => {
+  it('reads in the language MadX Agent OS is shown in', () => {
     $prefs.set({ ...$prefs.get(), language: 'pt-BR' })
 
-    expect(fallbackNotice({ spokenBy: 'system', failed: 'edge' })).toBe('A voz gratuita da Microsoft não está funcionando agora, então o Herald OS está usando a voz do seu Mac. Atualizar o Hermes costuma resolver.')
+    expect(fallbackNotice({ spokenBy: 'system', failed: 'edge' })).toBe('A voz gratuita da Microsoft não está funcionando agora, então o MadX Agent OS está usando a voz do seu Mac. Atualizar o Hermes costuma resolver.')
   })
 })

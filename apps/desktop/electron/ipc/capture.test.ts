@@ -41,7 +41,7 @@ const { IPC } = await import('../../shared/ipc.ts')
 const { captureRegion, captureScreenshot, capturesDir, QR_NOT_COPIED, registerCaptureIpc, resetScreenRecordingCheck } = await import('./capture.ts')
 
 const platform = process.platform
-const blocked = /^Herald OS needs Screen Recording permission\. Turn on Herald OS in System Settings > Privacy & Security > Screen & System Audio Recording/
+const blocked = /^MadX Agent OS needs Screen Recording permission\. Turn on MadX Agent OS in System Settings > Privacy & Security > Screen & System Audio Recording/
 const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 const interactive = () => run.mock.calls.filter(([command, args]) => command === 'screencapture' && args.some(flag => flag.startsWith('-i') || flag === '-v'))
 const probes = () => run.mock.calls.filter(([command, args]) => command === 'screencapture' && args.length === 4 && args[0] === '-x')
@@ -87,7 +87,7 @@ describe('the Screen Recording check on macOS', () => {
     expect(fs.existsSync(path.dirname(probe))).toBe(false)
     expect(interactive()).toHaveLength(0)
     expect(electron.showMessageBox).toHaveBeenCalledTimes(1)
-    expect(electron.showMessageBox.mock.calls[0][0]).toMatchObject({ message: 'Herald OS needs Screen Recording permission', buttons: ['Open System Settings', 'Quit & Reopen', 'Not Now'], cancelId: 2 })
+    expect(electron.showMessageBox.mock.calls[0][0]).toMatchObject({ message: 'MadX Agent OS needs Screen Recording permission', buttons: ['Open System Settings', 'Quit & Reopen', 'Not Now'], cancelId: 2 })
   })
 
   it('asks macOS only once a launch, and does not stack explanations', async () => {
@@ -107,7 +107,7 @@ describe('the Screen Recording check on macOS', () => {
     expect(electron.openExternal).toHaveBeenCalledWith('x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_ScreenCapture')
   })
 
-  it('Quit & Reopen relaunches Herald OS so a changed switch applies', async () => {
+  it('Quit & Reopen relaunches MadX Agent OS so a changed switch applies', async () => {
     electron.showMessageBox.mockResolvedValueOnce({ response: 1 })
     await expect(captureRegion()).rejects.toThrow(blocked)
     await flush()
@@ -130,7 +130,7 @@ describe('the Screen Recording check on macOS', () => {
     electron.status = 'restricted'
     electron.showMessageBox.mockResolvedValueOnce({ response: 0 })
     await expect(captureRegion()).rejects.toThrow(
-      'Screen Recording is restricted on this Mac. A restriction on this Mac, such as a device-management profile, Screen Time or parental controls, decides whether Herald OS may record the screen, so the switch in System Settings may be locked. Ask whoever set the restriction to allow Screen Recording for Herald OS.'
+      'Screen Recording is restricted on this Mac. A restriction on this Mac, such as a device-management profile, Screen Time or parental controls, decides whether MadX Agent OS may record the screen, so the switch in System Settings may be locked. Ask whoever set the restriction to allow Screen Recording for MadX Agent OS.'
     )
     await flush()
 
@@ -149,7 +149,7 @@ describe('the Screen Recording check on macOS', () => {
 
     resetScreenRecordingCheck()
     electron.status = 'denied'
-    await expect(captureRegion()).rejects.toThrow(/^Herald OS 需要“屏幕录制”权限/)
+    await expect(captureRegion()).rejects.toThrow(/^MadX Agent OS 需要“屏幕录制”权限/)
     expect(electron.showMessageBox.mock.calls[1][0]).toMatchObject({ buttons: ['打开系统设置', '退出并重新打开', '以后再说'] })
   })
 

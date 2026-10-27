@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { Token } from './lexer.ts'
 import { localeRegion, numberSymbols, type NumberSymbols } from './numbers.ts'
 import {
@@ -240,7 +241,7 @@ class Parser {
         const unknown = this.peek()
 
         if (unknown?.kind === 'word' && this.pos === this.tokens.length - 1) {
-          throw new ParseError(`Herald doesn't know the unit “${unknown.text}”`, unknown.from)
+          throw new ParseError(`${PRODUCT.shortName} doesn't know the unit “${unknown.text}”`, unknown.from)
         }
 
         this.pos = save

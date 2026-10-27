@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import './docs.css'
 import { useStore } from '@nanostores/react'
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
@@ -171,7 +172,7 @@ export function DocsWindow({ payload }: { payload?: Record<string, unknown> }) {
       if (officeAppFor(file, abilities) === 'docs') {
         docsSession.open(file).catch((error: unknown) => docsSession.notify(`Could not open ${file.split('/').pop()}: ${messageOf(error)}`, 'error'))
       } else {
-        docsSession.notify(`Herald Docs does not open ${file.split('/').pop()}`, 'error')
+        docsSession.notify(`${PRODUCT.apps.docs} does not open ${file.split('/').pop()}`, 'error')
       }
     })
   }

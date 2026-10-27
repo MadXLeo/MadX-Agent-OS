@@ -53,7 +53,8 @@ describe('what covers the pet', () => {
   it('knows the audience window by the title Herald Slides gives it', () => {
     const presenter = fs.readFileSync(new URL('../office/presenter.ts', import.meta.url), 'utf8')
 
-    expect(presenter).toContain(`const AUDIENCE_TITLE = '${AUDIENCE_TITLE}'`)
+    expect(presenter).toContain('const AUDIENCE_TITLE = `${PRODUCT.apps.slides} Audience`')
+    expect(AUDIENCE_TITLE).toBe('MadX Slides Audience')
   })
 })
 

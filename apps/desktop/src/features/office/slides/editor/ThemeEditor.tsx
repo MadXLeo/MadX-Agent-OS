@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import { IconAlertTriangle } from '@tabler/icons-react'
 import { useMemo, useState } from 'react'
 import { GlassButton } from '../../../../components/ui/glass.tsx'
@@ -147,7 +148,7 @@ export function ThemeEditor({ doc, theme: base, fresh, scope: asked, onClose }: 
       },
       (error: unknown) => {
         setSaving(false)
-        commands.notify(`Herald Slides could not save the theme: ${messageOf(error)}`)
+        commands.notify(`${PRODUCT.apps.slides} could not save the theme: ${messageOf(error)}`)
       }
     )
   }

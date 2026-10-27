@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { hostPlatform } from '../lib/platform-labels.ts'
 import { $prefs, updatePrefs } from '../store/backend.ts'
 import { $dictation, toggleDictation } from '../store/dictation.ts'
@@ -44,7 +45,7 @@ export const typingCommands: readonly OsCommand[] = [
   {
     id: 'keymap.set',
     title: 'Keyboard layout',
-    description: "Herald OS Linux: Herald's keys, or the Omarchy keymap where Super+C, X and V copy, cut and paste in every app (voice moves to Super+Shift+V).",
+    description: `${PRODUCT.name} Linux: ${PRODUCT.shortName}'s keys, or the Omarchy keymap where Super+C, X and V copy, cut and paste in every app (voice moves to Super+Shift+V).`,
     tier: 'mutate',
     args: [{ name: 'keymap', type: 'string', description: 'herald or omarchy', required: true, enum: ['herald', 'omarchy'] }],
     phrases: [
@@ -53,7 +54,7 @@ export const typingCommands: readonly OsCommand[] = [
     ],
     run: async ({ keymap }) => {
       if (hostPlatform() !== 'linux') {
-        return fail('The keymap applies to Herald OS Linux; macOS keeps its own shortcuts.')
+        return fail(`The keymap applies to ${PRODUCT.name} Linux; macOS keeps its own shortcuts.`)
       }
 
       const next = keymap === 'omarchy' ? 'omarchy' : 'herald'
@@ -62,7 +63,7 @@ export const typingCommands: readonly OsCommand[] = [
         await updatePrefs({ keymap: next })
       }
 
-      return ok(next === 'omarchy' ? 'Omarchy keymap: Super+C, X and V copy, cut and paste; voice is Super+Shift+V' : "Herald's keymap is back", { highlight: { kind: 'setting', id: 'general' } })
+      return ok(next === 'omarchy' ? 'Omarchy keymap: Super+C, X and V copy, cut and paste; voice is Super+Shift+V' : `${PRODUCT.shortName}'s keymap is back`, { highlight: { kind: 'setting', id: 'general' } })
     }
   }
 ]

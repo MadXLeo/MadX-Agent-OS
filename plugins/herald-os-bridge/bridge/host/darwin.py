@@ -54,7 +54,7 @@ def osascript_error(result: ExecResult, target: str, fallback: str) -> RuntimeEr
     """The error for a failed ``osascript`` call, naming the Automation switch when macOS refused it."""
     if apple_events_refused(result.stderr):
         return RuntimeError(
-            f"macOS did not let Herald OS control {target}: turn on {target} under Herald OS in "
+            f"macOS did not let MadX Agent OS control {target}: turn on {target} under MadX Agent OS in "
             "System Settings > Privacy & Security > Automation, then try again"
         )
     return RuntimeError(result.stderr.strip() or fallback)
@@ -63,7 +63,7 @@ def osascript_error(result: ExecResult, target: str, fallback: str) -> RuntimeEr
 FORCE_QUIT_GRACE = 2.0
 
 # Processes that keep the session running (quitting one could sign the person out, blank the
-# screen or drop a password prompt), System Events (which the bridge drives), and Herald OS itself,
+# screen or drop a password prompt), System Events (which the bridge drives), and MadX Agent OS itself,
 # by name and by bundle id. Neither kind of quit ever reaches them.
 SESSION_PROCESSES = frozenset({
     "loginwindow", "com.apple.loginwindow",
@@ -611,17 +611,17 @@ class DarwinHost(HostAdapter):
                 raise
             raise RuntimeError(f"{exc} while force quitting {label}, after sending {', '.join(sent)}") from exc
         if denied:
-            raise RuntimeError(f"macOS did not let Herald OS stop {label} (process {', '.join(str(p) for p in sorted(denied))})")
+            raise RuntimeError(f"macOS did not let MadX Agent OS stop {label} (process {', '.join(str(p) for p in sorted(denied))})")
 
     @staticmethod
     def _refuse_protected(*names: str | None) -> None:
-        """Refuse the session processes and Herald OS itself, whichever name or bundle id names them."""
+        """Refuse the session processes and MadX Agent OS itself, whichever name or bundle id names them."""
         for name in names:
             key = (name or "").strip().lower().removesuffix(".app")
             if key in HERALD_OS:
-                raise RuntimeError("Herald OS does not quit itself")
+                raise RuntimeError("MadX Agent OS does not quit itself")
             if key in SESSION_PROCESSES:
-                raise RuntimeError(f"{name.strip()} is part of macOS and is never quit by Herald OS")
+                raise RuntimeError(f"{name.strip()} is part of macOS and is never quit by MadX Agent OS")
 
     def _quit_by_name(self, label: str) -> bool:
         """Ask an app to quit through AppleScript alone (Finder, one in ~/Downloads); False when no

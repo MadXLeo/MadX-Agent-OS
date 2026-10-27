@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { PET_MAX_SCALE, PET_MIN_SCALE, type PetActivity, type PetHideReason, petShown } from '../../shared/pet.ts'
 import { $petPrefs, findInstalledPet, hidePet, selectPet, setPetEnabled, setPetScale, showPet } from '../features/pet/actions.ts'
 import { $petInfo } from '../features/pet/info.ts'
@@ -19,7 +20,7 @@ const DOING: Record<PetActivity, string> = {
 
 const AWAY: Record<PetHideReason, string> = {
   fullscreen: 'out of the way of a full-screen app',
-  presenting: 'out of the way while Herald Slides presents',
+  presenting: `out of the way while ${PRODUCT.apps.slides} presents`,
   doNotDisturb: 'out of the way during Do Not Disturb'
 }
 
@@ -99,7 +100,7 @@ export const petCommands: readonly OsCommand[] = [
     id: 'pet.select',
     title: 'Choose a pet',
     description:
-      'Make a pet the one Hermes shows everywhere (the Hermes CLI, the TUI, Hermes’s desktop app and Herald), by its name or folder name. A pet that is not installed is installed from the petdex gallery by its slug first.',
+      `Make a pet the one Hermes shows everywhere (the Hermes CLI, the TUI, Hermes’s desktop app and ${PRODUCT.shortName}), by its name or folder name. A pet that is not installed is installed from the petdex gallery by its slug first.`,
     tier: 'mutate',
     args: [{ name: 'name', type: 'string', description: 'The pet’s name, or its petdex slug', required: true }],
     phrases: ['use the {name} pet', 'switch the pet to {name}', 'pick the {name} pet', 'choose the {name} pet'],

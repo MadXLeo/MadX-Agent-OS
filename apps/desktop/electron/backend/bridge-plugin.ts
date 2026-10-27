@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { execFile } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -151,7 +152,7 @@ export async function ensureBridgePlugin(runtime: BackendRuntime, resources: str
 
   const failed =
     (await step(runtime, ['plugins', 'enable', 'herald-os-bridge'], `adds it to plugins.enabled in ${path.join(hermesHome(), 'config.yaml')}`)) ??
-    (await step(runtime, ['tools', 'enable', 'herald_os'], 'saves platform_toolsets.cli with herald_os in it; the tools run only in Herald OS sessions')) ??
+    (await step(runtime, ['tools', 'enable', 'herald_os'], `saves platform_toolsets.cli with herald_os in it; the tools run only in ${PRODUCT.name} sessions`)) ??
     (await keepToolsDirect(runtime))
 
   if (failed) {

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../../shared/product.ts'
 import { atom } from 'nanostores'
 import { keysLabel } from '../../../../lib/shortcuts.ts'
 import { messageOf } from '../../../canvas/errors.ts'
@@ -415,7 +416,7 @@ export async function insertPictures(files: readonly Blob[], at?: [number, numbe
         return element ? model.updateElements(placed.deck, slideId, [element.id], (entry) => ({ ...entry, x: at[0] - entry.width / 2 + index * 16, y: at[1] - entry.height / 2 + index * 16 }), placed.label) : placed
       }, doc)
     } catch {
-      slidesSession.notify('Herald Slides could not read that picture', 'error')
+      slidesSession.notify(`${PRODUCT.apps.slides} could not read that picture`, 'error')
     }
   }
 }

@@ -94,11 +94,11 @@ describe('the Pet Room commands', () => {
     expect(describeRoom(summary({ total: 1, waiting: 1, lines: ['Trip plan: waiting for your OK'] }))).toBe('1 agent in the Pet Room: 1 waiting for you. Trip plan: waiting for your OK')
   })
 
-  it('read out work outside Herald after the Room’s own, with the steps live detail brings', () => {
-    const lines = ['Trip plan (mission): reading Budget.xlsx', 'Support bot (outside Herald): running a command']
+  it('read out work outside MadX OS after the Room’s own, with the steps live detail brings', () => {
+    const lines = ['Trip plan (mission): reading Budget.xlsx', 'Support bot (outside MadX OS): running a command']
 
-    expect(describeRoom(summary({ total: 1, working: 1, elsewhere: 1, lines }))).toBe('1 agent in the Pet Room: 1 at work. Trip plan (mission): reading Budget.xlsx. Outside Herald: Support bot (outside Herald): running a command')
-    expect(describeRoom(summary({ elsewhere: 1, lines: lines.slice(1) }))).toBe('Nothing is at work in the Pet Room right now. Outside Herald: Support bot (outside Herald): running a command')
+    expect(describeRoom(summary({ total: 1, working: 1, elsewhere: 1, lines }))).toBe('1 agent in the Pet Room: 1 at work. Trip plan (mission): reading Budget.xlsx. Outside MadX OS: Support bot (outside MadX OS): running a command')
+    expect(describeRoom(summary({ elsewhere: 1, lines: lines.slice(1) }))).toBe('Nothing is at work in the Pet Room right now. Outside MadX OS: Support bot (outside MadX OS): running a command')
   })
 
   it('say plainly when Hermes cannot be asked', async () => {
@@ -120,9 +120,9 @@ describe('the Pet Room as an app', () => {
   it('has a window of its own in panels mode whose title the Dock maps back to it', () => {
     const win: WmWindow = { id: 7, title: PANEL_WINDOWS.room.title, appId: 'herald-os', pid: null, workspaceId: null, focused: false, floating: false, urgent: false, ours: true }
 
-    expect(PANEL_WINDOWS.room.title).toBe('Herald OS · Pet Room')
+    expect(PANEL_WINDOWS.room.title).toBe('MadX Agent OS · Pet Room')
     expect(ourFloatingAppId(win)).toBe('room')
-    expect(ourFloatingAppId({ ...win, title: 'Herald OS · Pet' })).toBeNull()
+    expect(ourFloatingAppId({ ...win, title: 'MadX Agent OS · Pet' })).toBeNull()
   })
 })
 

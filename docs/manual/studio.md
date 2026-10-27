@@ -29,6 +29,6 @@ keep working on it with or without Hermes.
 ## Good to know
 
 - Building runs commands on your computer, in the project folder, through Hermes's terminal tool,
-  which follows Hermes's own approval settings rather than Herald OS's permission tiers.
-- Hermes needs whatever the project needs (Node, Python, Ruby …). Herald OS Linux installs those in
+  which follows Hermes's own approval settings rather than MadX Agent OS's permission tiers.
+- Hermes needs whatever the project needs (Node, Python, Ruby …). MadX Agent OS Linux installs those in
   one step from Settings > Software; see [Coding agents and local models](coding-agents.md).

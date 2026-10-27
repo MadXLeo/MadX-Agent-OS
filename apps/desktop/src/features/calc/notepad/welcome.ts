@@ -1,5 +1,6 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 /** The first note a person sees: one of every kind of line Herald Calc reads. */
-export const WELCOME_NOTE = `# Welcome to Herald Calc
+export const WELCOME_NOTE = `# Welcome to ${PRODUCT.apps.calc}
 // Write sums the way you'd say them. Each line works itself out on the right.
 
 ## Everyday

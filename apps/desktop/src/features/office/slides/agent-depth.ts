@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { openEntries, type Outcome } from '../agent.ts'
 import {
   addConnectorStep,
@@ -176,7 +177,7 @@ export async function deleteTheme(args: Args): Promise<Outcome> {
   const builtIn = THEMES.find((theme) => theme.id === wanted || theme.name.toLowerCase() === wanted)
 
   if (builtIn) {
-    throw new Error(`${builtIn.name} is one of Herald’s own themes, which stay: only custom themes are deleted`)
+    throw new Error(`${builtIn.name} is one of ${PRODUCT.shortName}’s own themes, which stay: only custom themes are deleted`)
   }
 
   const custom = await loadCustomThemes()

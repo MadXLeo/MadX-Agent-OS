@@ -1027,9 +1027,9 @@ class LinuxHost(HostAdapter):
         raise RuntimeError(result.stderr.strip() or fallback.stderr.strip() or "could not lock the screen")
 
     def sleep_display(self) -> None:
-        # niri, Herald OS Linux's compositor, turns the screens back on at the next key press or mouse move.
+        # niri, MadX Agent OS Linux's compositor, turns the screens back on at the next key press or mouse move.
         result = run(["niri", "msg", "action", "power-off-monitors"], timeout=10)
-        _missing(result, "niri (the Herald OS Linux session)")
+        _missing(result, "niri (the MadX Agent OS Linux session)")
         if not result.ok:
             raise RuntimeError(result.stderr.strip() or "could not put the display to sleep")
 
@@ -1122,7 +1122,7 @@ class LinuxHost(HostAdapter):
             raise RuntimeError(result.stderr.strip() or "could not move items to the trash")
 
     def notify(self, title: str, body: str) -> None:
-        result = run(["notify-send", "--app-name=Herald OS", "--", title, body], timeout=10)
+        result = run(["notify-send", "--app-name=MadX Agent OS", "--", title, body], timeout=10)
         _missing(result, "libnotify for notify-send")
         if not result.ok:
             raise RuntimeError(result.stderr.strip() or "could not send the notification")

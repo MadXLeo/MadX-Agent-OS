@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import {
   IconActivity,
@@ -46,7 +47,7 @@ const KINDS: { kind: RoomKind; label: string; description: string; icon: ReactNo
   { kind: 'mission', label: 'Missions', description: 'Each mission Hermes is working through.', icon: <IconTarget /> },
   { kind: 'helper', label: 'Helpers', description: 'The helpers Hermes hands part of a task to.', icon: <IconSubtask /> },
   { kind: 'automation', label: 'Automations', description: 'Each automation on your Automations page.', icon: <IconRepeat /> },
-  { kind: 'elsewhere', label: 'Hermes outside Herald', description: 'Work in the lane for Hermes outside Herald.', icon: <IconBroadcast /> }
+  { kind: 'elsewhere', label: `Hermes outside ${PRODUCT.shortName}`, description: `Work in the lane for Hermes outside ${PRODUCT.shortName}.`, icon: <IconBroadcast /> }
 ]
 
 const MOTIONS: { id: RoomMotion; label: string; description: string }[] = [
@@ -214,29 +215,29 @@ export function RoomSection() {
         <SettingsRow
           icon={<IconFileText />}
           label="Document names on desks"
-          description="The documents open in Herald Docs, Sheets and Slides and your Canvas projects stand as desks, and a pet working on one stands at its desk. Off leaves the desks unnamed."
+          description={`The documents open in ${PRODUCT.apps.docs}, Sheets and Slides and your Canvas projects stand as desks, and a pet working on one stands at its desk. Off leaves the desks unnamed.`}
           keywords="pet room desks documents names office canvas"
         >
           <Toggle checked={prefs.deskNames} onChange={next => save({ deskNames: next })} label="Document names on desks" />
         </SettingsRow>
       </SettingsGroup>
 
-      <SettingsGroup title="Hermes outside Herald">
+      <SettingsGroup title={`Hermes outside ${PRODUCT.shortName}`}>
         <SettingsRow
           icon={<IconBroadcast />}
-          label="Show Hermes work outside Herald"
+          label={`Show Hermes work outside ${PRODUCT.shortName}`}
           description="A lane at the edge of the room shows Hermes at work elsewhere: messaging bots, the Hermes CLI and TUI, Hermes's own desktop app and automations its messaging gateway runs. Coarse: titles and whether each is active, from Hermes's session list once a minute."
           keywords="pet room elsewhere outside lane telegram discord cli tui gateway sessions"
         >
-          <Toggle checked={prefs.elsewhere} onChange={next => save({ elsewhere: next })} label="Show Hermes work outside Herald" />
+          <Toggle checked={prefs.elsewhere} onChange={next => save({ elsewhere: next })} label={`Show Hermes work outside ${PRODUCT.shortName}`} />
         </SettingsRow>
         <SettingsRow
           icon={<IconActivity />}
-          label="Live steps from Hermes outside Herald"
-          description="Herald's bridge plugin in each Hermes process reports which tool each piece of work is using, the helpers it starts and the approvals it waits on, by name only: never what anyone wrote, a command, a file's content or a result. Nothing is sent while this is off. Approvals there are shown in the room and never answered here."
+          label={`Live steps from Hermes outside ${PRODUCT.shortName}`}
+          description={`${PRODUCT.shortName}'s bridge plugin in each Hermes process reports which tool each piece of work is using, the helpers it starts and the approvals it waits on, by name only: never what anyone wrote, a command, a file's content or a result. Nothing is sent while this is off. Approvals there are shown in the room and never answered here.`}
           keywords="pet room elsewhere outside live steps tools helpers approvals plugin bridge activity"
         >
-          <Toggle checked={prefs.elsewhereLive} disabled={!prefs.elsewhere} onChange={next => save({ elsewhereLive: next })} label="Live steps from Hermes outside Herald" />
+          <Toggle checked={prefs.elsewhereLive} disabled={!prefs.elsewhere} onChange={next => save({ elsewhereLive: next })} label={`Live steps from Hermes outside ${PRODUCT.shortName}`} />
         </SettingsRow>
       </SettingsGroup>
 
@@ -244,7 +245,7 @@ export function RoomSection() {
         <SettingsRow
           icon={<IconHistory />}
           label="Keep an activity log"
-          description="For the time-lapse in the Pet Room, Herald keeps what the room showed in its data folder: the kind of each agent, where it worked, its steps and the names it worked on, hand-offs, approval waits but never what they asked, and automation runs. Never titles, chat or file content."
+          description={`For the time-lapse in the Pet Room, ${PRODUCT.shortName} keeps what the room showed in its data folder: the kind of each agent, where it worked, its steps and the names it worked on, hand-offs, approval waits but never what they asked, and automation runs. Never titles, chat or file content.`}
           keywords="pet room activity log history time-lapse timelapse replay record keep"
         >
           <Toggle checked={prefs.log} onChange={next => save({ log: next })} label="Keep an activity log" />
@@ -285,7 +286,7 @@ export function RoomSection() {
         <SettingsRow
           icon={<IconDeviceDesktop />}
           label="Show the Pet Room as the screensaver"
-          description="Herald's screensaver shows the room with no names, document names or bubbles. Any key, click or move ends it, and nothing in it answers or opens. While Herald Slides presents or the pet is put away for a screen share, the clock shows instead."
+          description={`${PRODUCT.shortName}'s screensaver shows the room with no names, document names or bubbles. Any key, click or move ends it, and nothing in it answers or opens. While ${PRODUCT.apps.slides} presents or the pet is put away for a screen share, the clock shows instead.`}
           keywords="pet room screensaver screen saver idle"
           below={
             <GlassButton size="sm" variant="ghost" onClick={() => focusSettings({ section: 'general' })}>

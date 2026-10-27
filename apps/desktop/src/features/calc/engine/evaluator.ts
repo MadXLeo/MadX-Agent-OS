@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import type { BigNumber, MathJsInstance, Unit } from 'mathjs'
 import type { CalcRates } from '../../../../shared/calc.ts'
 import { formatNumber, formatValue, unitDisplay } from './format.ts'
@@ -39,7 +40,7 @@ export class UnknownName extends CalcError {
   }
 }
 
-const NO_RATES = "No currency rates yet: Herald fetches the European Central Bank's once a day when it can"
+const NO_RATES = `No currency rates yet: ${PRODUCT.shortName} fetches the European Central Bank's once a day when it can`
 const DIVIDE_BY_ZERO = 'Dividing by zero has no answer'
 const TOO_BIG = 'That number is too big to work with'
 const MAX_STEPS = 24
@@ -395,7 +396,7 @@ export class Evaluator {
     try {
       return this.math.unit(this.toBig(x), ref.unit)
     } catch {
-      throw new CalcError(`Herald doesn't know the unit “${ref.symbol}”`)
+      throw new CalcError(`${PRODUCT.shortName} doesn't know the unit “${ref.symbol}”`)
     }
   }
 
@@ -1265,7 +1266,7 @@ export class Evaluator {
 
         return this.fromBig(x.atanh() as BigNumber)
       default:
-        throw new CalcError(`Herald doesn't know the function ${fn}`)
+        throw new CalcError(`${PRODUCT.shortName} doesn't know the function ${fn}`)
     }
   }
 

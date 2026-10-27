@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { atom, computed } from 'nanostores'
 import type { WebViewEvent } from '../../shared/ipc.ts'
 import { isWebUrl } from '../lib/web-url.ts'
@@ -116,7 +117,7 @@ function bind(): void {
 /** Open an http(s) page in a Herald OS window; resolves with the web window id. */
 export async function openWebWindow(url: string, options: OpenWebWindowOptions = {}): Promise<string> {
   if (!isWebUrl(url)) {
-    throw new Error('Only http(s) pages can open in a Herald OS window.')
+    throw new Error(`Only http(s) pages can open in a ${PRODUCT.name} window.`)
   }
 
   bind()
