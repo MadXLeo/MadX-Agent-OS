@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import { PRODUCT } from '../shared/product.ts'
 import path from 'node:path'
 import { CALC_PREFS_DEFAULTS, mergeCalcPrefs, normalizeCalcPrefs } from '../shared/calc.ts'
 import { type EventAutomation, isEventName } from '../shared/events.ts'
@@ -25,8 +26,8 @@ const DEFAULTS: HeraldOSPrefs = {
   calc: CALC_PREFS_DEFAULTS,
   fullscreenOnLaunch: true,
   reduceMotion: false,
-  accent: 'blue',
-  theme: 'ocean',
+  accent: PRODUCT.appearance.accent,
+  theme: PRODUCT.appearance.theme,
   spaces: [
     { id: 'personal', name: 'Personal', color: '#4d92ff' },
     { id: 'work', name: 'Work', color: '#36e6a6' },

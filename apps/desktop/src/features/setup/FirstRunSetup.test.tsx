@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 // @vitest-environment happy-dom
 import type { ModelOptionsResult } from '@herald-os/client'
 import { act } from 'react'
@@ -43,7 +44,7 @@ const SIGNED_OUT_AUTH = $hermesAuth.get()
 
 // What may read the same in every language: product names, and the keyboard shortcuts, commands
 // and units that stay as they are (en.ts says which). The longer command goes first.
-const KEPT = ['Herald OS', 'Hermes', 'OpenRouter', 'Super+Space', 'Super+M', 'herald-os password --disk --new-owner', 'herald-os password', 'API', 'GHz', 'TPM']
+const KEPT = [PRODUCT.name, 'Hermes', 'OpenRouter', 'Super+Space', 'Super+M', 'herald-os password --disk --new-owner', 'herald-os password', 'API', 'GHz', 'TPM']
 
 // Portuguese words spelled as English ones are ("o menu", "for ligado", "use pelo menos", "um terminal",
 // "teclado Bluetooth").
@@ -414,8 +415,8 @@ describe('first-run setup', () => {
     const steps = await walk('en', path)
     const all = steps.flatMap(step => step.texts)
 
-    expect(all).toContain('Welcome to Herald OS')
-    expect(all).toContain('Set up Herald OS')
+    expect(all).toContain(`Welcome to ${PRODUCT.name}`)
+    expect(all).toContain(`Set up ${PRODUCT.name}`)
     expect(all).toContain(path === 'someone else' ? 'Ready to hand over' : 'You are all set')
     if (path !== 'someone else') {
       expect(all).toContain('It is for me')

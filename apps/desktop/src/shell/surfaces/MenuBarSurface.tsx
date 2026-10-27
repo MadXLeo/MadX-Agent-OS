@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconCheck, IconChevronDown, IconRefresh } from '@tabler/icons-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -26,7 +27,7 @@ export function MenuBarSurface() {
     <header className="flex h-full w-full items-center justify-between px-3 text-[12.5px] text-fg select-none" style={{ background: 'linear-gradient(180deg, var(--menubar-from, rgba(3,10,40,.72)), var(--menubar-to, rgba(3,10,40,.42)))' }}>
       <div className="flex min-w-0 items-center gap-2.5">
         <HeraldLogo height={12} />
-        <span className="font-semibold">Herald OS</span>
+        <span className="font-semibold">{PRODUCT.name}</span>
         {title && (
           <>
             <span className="text-fg-4">·</span>

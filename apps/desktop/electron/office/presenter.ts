@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { BrowserWindow, screen } from 'electron'
 
 /*
@@ -10,7 +11,7 @@ import { BrowserWindow, screen } from 'electron'
 export const AUDIENCE_WINDOW_NAME = 'herald-slides-audience'
 
 /** Fixed, so that compositor rules can match it. */
-const AUDIENCE_TITLE = 'Herald Slides Audience'
+const AUDIENCE_TITLE = `${PRODUCT.apps.slides} Audience`
 
 /**
  * The answer to a page's `window.open` when it asks for Herald Slides' audience window: allowed, full

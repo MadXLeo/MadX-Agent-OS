@@ -123,7 +123,7 @@ spawn-at-startup "herald-os-session"
 
 // Menu bar: full width, top, never focused on open, no frame.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Menu Bar$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Menu Bar$"
     open-floating true
     open-focused false
     default-floating-position x=0 y=0 relative-to="top"
@@ -136,7 +136,7 @@ window-rule {
 
 // Dock: bottom centre, no frame; the bottom strut keeps tiles clear of it, so it does not hide.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Dock$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Dock$"
     open-floating true
     open-focused false
     default-floating-position x=0 y=0 relative-to="bottom"
@@ -149,7 +149,7 @@ window-rule {
 
 // Command bar / launcher / ask: centred overlay, focused, no frame.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Command$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Command$"
     open-floating true
     open-focused true
     default-floating-position x=0 y=96 relative-to="top"
@@ -162,7 +162,7 @@ window-rule {
 
 // Quick panels (Wi-Fi, Bluetooth, sound, displays, power, calendar): under the menu bar, top right.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Panel$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Panel$"
     open-floating true
     open-focused true
     default-floating-position x=10 y=36 relative-to="top-right"
@@ -175,7 +175,7 @@ window-rule {
 
 // Camera bubble: a round floating window in the bottom-right corner, never taking focus.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Camera$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Camera$"
     open-floating true
     open-focused false
     default-floating-position x=24 y=24 relative-to="bottom-right"
@@ -187,7 +187,7 @@ window-rule {
 
 // Screensaver: fullscreen over everything until the next key or pointer move.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Screensaver$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Screensaver$"
     open-fullscreen true
     open-focused true
     border { off; }
@@ -199,7 +199,7 @@ window-rule {
 // and the keys. Herald opens it for the display the presenter view is not on and asks for that
 // output when it goes full screen; a rule cannot name "the other output", so the request decides.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald Slides Audience$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Slides|Herald Slides) Audience$"
     open-fullscreen true
     open-focused false
     border { off; }
@@ -209,7 +209,7 @@ window-rule {
 
 // Wallpaper renderer: an offscreen helper that must never be shown.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Wallpaper$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Wallpaper$"
     open-floating true
     open-focused false
     opacity 0.0
@@ -221,14 +221,14 @@ window-rule {
 
 // The Hermes window and its floating apps: rounded glass tiles.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"#
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"#
     geometry-corner-radius 14
     clip-to-geometry true
 }
 // The desktop pet: bottom right above the Dock, never focused on open, no frame; the shell moves it.
 // After the rule above, which would round and clip the sprite.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Pet$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Pet$"
     open-floating true
     open-focused false
     default-floating-position x=24 y=104 relative-to="bottom-right"
@@ -243,7 +243,7 @@ window-rule {
 // it. Never focused on open: the keys stay with the Dock, and the pointer is not pulled to the menu.
 // After the rule for the Hermes window and its floating apps, which would round and clip it.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Dock Menu$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Dock Menu$"
     open-floating true
     open-focused false
     default-floating-position x=0 y=68 relative-to="bottom"
@@ -255,42 +255,42 @@ window-rule {
 }
 // The Hermes window shares the screen with one app by default (its pages adapt to a half column).
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS)$"
     default-column-width { proportion 0.5; }
 }
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · System$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · System$"
     default-column-width { proportion 0.5; }
 }
 // The Studio and its site preview side by side fill the screen while Hermes builds.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Studio$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Studio$"
     default-column-width { proportion 0.6; }
 }
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Preview$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^Preview$"
     default-column-width { proportion 0.4; }
 }
 // Herald Canvas wants room for the image and its panels; Hermes's half stays beside it.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Canvas$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Canvas$"
     default-column-width { proportion 0.75; }
 }
 // Herald Docs, Sheets and Slides want the same room for the page, the grid or the slide.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · (Docs|Sheets|Slides)$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · (Docs|Sheets|Slides)$"
     default-column-width { proportion 0.75; }
 }
 // The Pet Room is watched beside the work, not worked in: a third of the screen, the narrowest
 // preset (Mod+R widens it), leaves the rest to the app Hermes is working in.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Pet Room$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Pet Room$"
     default-column-width { proportion 0.33333; }
 }
 // Herald Calc is kept at hand over the work rather than given a column: it floats, at the size the
 // shell opens it with.
 window-rule {
-    match app-id=r#"^(herald-os|Herald OS)$"# title="^Herald OS · Calc$"
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title="^(MadX Agent OS|Herald OS) · Calc$"
     open-floating true
     default-column-width { fixed 780; }
     default-window-height { fixed 560; }
@@ -300,7 +300,7 @@ window-rule {
 // them after the binary: electron in a checkout, herald-os packaged.
 window-rule {
     match app-id="^electron$"
-    match app-id=r#"^(herald-os|Herald OS)$"# title=r#"^(Open a (document|spreadsheet|presentation)|Open in Herald Canvas|Save as|Save project|Export|Export as PDF|Print|Print to File)$"#
+    match app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"# title=r#"^(Open a (document|spreadsheet|presentation)|Open in Herald Canvas|Save as|Save project|Export|Export as PDF|Print|Print to File)$"#
     open-floating true
     open-focused true
 }
@@ -308,7 +308,7 @@ window-rule {
 // Foreign apps get the same rounding and open as tiles even when they remember being maximized
 // or fullscreen elsewhere (apps that genuinely need fullscreen can still ask for it later).
 window-rule {
-    exclude app-id=r#"^(herald-os|Herald OS)$"#
+    exclude app-id=r#"^(madx-agent-os|MadX Agent OS|herald-os|Herald OS)$"#
     geometry-corner-radius 12
     clip-to-geometry true
     open-maximized false

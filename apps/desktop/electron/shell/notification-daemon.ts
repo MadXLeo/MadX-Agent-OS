@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { BrowserWindow, ipcMain } from 'electron'
 import * as dbus from 'dbus-next'
 import { type IncomingNotification, IPC } from '../../shared/ipc.ts'
@@ -79,7 +80,7 @@ class NotificationsInterface extends dbus.interface.Interface {
   }
 
   GetServerInformation(): [string, string, string, string] {
-    return ['Herald OS', 'Herald OS', '0.1', '1.2']
+    return [PRODUCT.name, PRODUCT.name, '0.1', '1.2']
   }
 
   Notify(

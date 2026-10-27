@@ -1,3 +1,4 @@
+import { PRODUCT } from '../shared/product.ts'
 import * as dbus from 'dbus-next'
 import { Notification } from 'electron'
 import fs from 'node:fs'
@@ -8,7 +9,7 @@ import { nodeSocketAddress, onBusClosed } from './shell/notification-daemon.ts'
 
 const BUS_NAME = 'org.freedesktop.Notifications'
 const OBJECT_PATH = '/org/freedesktop/Notifications'
-const APP_NAME = 'Herald OS'
+const APP_NAME = PRODUCT.name
 /** The longest wait for a notification server; the alert is optional and the Herald bell already has it. */
 export const NOTIFY_TIMEOUT_MS = 5000
 

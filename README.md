@@ -1,8 +1,15 @@
 <p align="center">
-  <img src="apps/desktop/build/icon.png" alt="Herald OS" width="112">
+  <img src="apps/desktop/src/assets/brand/madx-wordmark.png" alt="MadX Agent OS" width="440">
 </p>
 
-<h1 align="center">Herald OS</h1>
+<h1 align="center">MadX Agent OS</h1>
+
+**MadXCore · 0.1.0-alpha — migration in progress.** The first desktop identity increment is
+implemented; this is not yet a validated MadX OS release. Start with the
+[current results](docs/madx/VALIDATION.md), [feature parity register](docs/madx/FEATURE_PARITY.md),
+[architecture](docs/madx/ARCHITECTURE.md) and [next implementation task](docs/madx/NEXT.md).
+The inherited installation guide below still describes upstream releases, paths and commands.
+Do not interpret those download links as newly built or tested MadX artifacts.
 
 <p align="center">
   An agent-native operating system, with <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a> as the interface.

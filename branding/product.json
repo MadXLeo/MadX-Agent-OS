@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "name": "MadX Agent OS",
+  "shortName": "MadX OS",
+  "ecosystem": "MadXCore",
+  "version": "0.1.0-alpha",
+  "slug": "madx-agent-os",
+  "repository": "https://github.com/MadXLeo/MadX-Agent-OS",
+  "apps": {
+    "studio": "MadX AI Studio",
+    "core": "MadX Core",
+    "models": "MadX Models",
+    "intelligence": "MadX Intelligence",
+    "update": "MadX Update",
+    "lora": "MadX LoRA Studio",
+    "canvas": "MadX Canvas",
+    "docs": "MadX Docs",
+    "sheets": "MadX Sheets",
+    "slides": "MadX Slides",
+    "calc": "MadX Calc",
+    "office": "MadX Office"
+  },
+  "appearance": { "theme": "graphite", "accent": "ice" },
+  "assets": {
+    "wordmark": "brand/madx-wordmark.png"
+  },
+  "compatibility": {
+    "electronProfile": "Herald OS",
+    "linuxExecutable": "herald-os",
+    "desktopId": "herald-os",
+    "applicationId": "dev.iamluke.heraldos",
+    "hermesStore": "herald-os",
+    "bridgePlugin": "herald-os-bridge",
+    "environmentPrefixes": ["MADX_OS_", "HERALD_OS_", "HERMES_OS_"]
+  }
+}

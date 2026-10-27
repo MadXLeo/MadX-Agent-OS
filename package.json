@@ -1,16 +1,16 @@
 {
-  "name": "herald-os",
-  "version": "0.1.0-alpha.5",
+  "name": "madx-agent-os",
+  "version": "0.1.0-alpha",
   "private": true,
-  "description": "Herald OS: an agent-native operating system built on Hermes Agent.",
+  "description": "MadX Agent OS: an agent-native operating system powered by Hermes Agent.",
   "license": "MIT",
   "author": "Luke The Dev",
-  "homepage": "https://github.com/iamlukethedev/Herald-OS",
+  "homepage": "https://github.com/MadXLeo/MadX-Agent-OS",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iamlukethedev/Herald-OS.git"
+    "url": "https://github.com/MadXLeo/MadX-Agent-OS.git"
   },
-  "bugs": "https://github.com/iamlukethedev/Herald-OS/issues",
+  "bugs": "https://github.com/MadXLeo/MadX-Agent-OS/issues",
   "type": "module",
   "workspaces": [
     "apps/*",
@@ -51,7 +51,10 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:bridge": "bash scripts/test-bridge.sh",
-    "dist:mac": "npm run dist:mac --workspace apps/desktop"
+    "dist:mac": "npm run dist:mac --workspace apps/desktop",
+    "branding:sync": "node scripts/madx/branding.mjs --write",
+    "branding:check": "node scripts/madx/branding.mjs --check",
+    "branding:audit": "node scripts/madx/audit-branding.mjs"
   },
   "devDependencies": {
     "cross-env": "^10.1.0"

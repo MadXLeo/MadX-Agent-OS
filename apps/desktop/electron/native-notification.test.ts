@@ -114,7 +114,7 @@ describe('notifyMessage', () => {
     const message = notifyMessage({ title: 'Approval needed', body: 'Hermes is asking for permission' })
 
     expect(message).toMatchObject({ destination: 'org.freedesktop.Notifications', path: '/org/freedesktop/Notifications', interface: 'org.freedesktop.Notifications', member: 'Notify', signature: 'susssasa{sv}i' })
-    expect(message.body.slice(0, 6)).toEqual(['Herald OS', 0, '', 'Approval needed', 'Hermes is asking for permission', []])
+    expect(message.body.slice(0, 6)).toEqual(['MadX Agent OS', 0, '', 'Approval needed', 'Hermes is asking for permission', []])
     expect(message.body[6]['suppress-sound'].value).toBe(true)
     expect(message.body[7]).toBe(-1)
   })

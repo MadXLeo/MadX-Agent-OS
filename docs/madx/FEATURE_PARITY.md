@@ -30,7 +30,7 @@ Typecheck/build success alone does not establish functional parity. No existing 
 | Multi-engine voice, wake, interruption, dictation | `src/lib/voice`, `src/features/voice`, `electron/ipc/voice.ts`, `dictation.ts` | Preserve voice and permission controls | T + H |
 | Missions, task steps, tool history | `src/features/missions`, `src/store/missions.ts` | Retain agent task monitor | T + H |
 | Scheduled/event automations and hooks | `src/features/automations`, `electron/events`, `shared/events.ts` | Retain; new controls must use existing approvals | T + H |
-| Memory search, categories, editing, deletion, providers | `src/features/memory`, `electron/ipc/memory*` if present; store uses existing file API | MadX Intelligence foundation | T + H; new approval/provenance/export work remains |
+| Memory search, categories, editing, deletion, providers | `src/features/memory`, `memory-store.ts`; store uses existing file API | MadX Intelligence foundation | T + H; new approval/provenance/export work remains |
 | Hermes skill configuration/development | `settings/sections/`, `plugins/herald-os-bridge/skills`, Hermes runtime | Retain skills; add version/promotion UI later | P + H; managed proposal workflow N |
 | MCP/connections and environment settings | `src/features/connections`, `src/features/settings` | Retain integration settings | T + H |
 | Files, search, previews, watches, system editor | `src/features/files`, `electron/ipc/fs.ts`, `edit.ts`, `electron/platform` | Retain safe filesystem boundaries | T + P + H |

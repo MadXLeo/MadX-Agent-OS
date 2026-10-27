@@ -1,9 +1,9 @@
 {
   "name": "@herald-os/desktop",
-  "productName": "Herald OS",
-  "version": "0.1.0-alpha.5",
+  "productName": "MadX Agent OS",
+  "version": "0.1.0-alpha",
   "private": true,
-  "description": "The Herald OS shell: menu bar, dock, windows and apps for an agent-native operating system.",
+  "description": "MadX Agent OS: an agent-native operating system powered by Hermes Agent.",
   "author": "Luke The Dev",
   "license": "MIT",
   "type": "module",
@@ -139,7 +139,7 @@
   },
   "build": {
     "appId": "dev.iamluke.heraldos",
-    "productName": "Herald OS",
+    "productName": "MadX Agent OS",
     "executableName": "Herald OS",
     "artifactName": "HeraldOS-${version}-${os}-${arch}.${ext}",
     "directories": {
@@ -225,12 +225,12 @@
         }
       ],
       "extendInfo": {
-        "NSAppleEventsUsageDescription": "Herald OS controls applications on your behalf when you ask it to.",
-        "NSMicrophoneUsageDescription": "Herald OS uses the microphone for voice input.",
-        "NSCameraUsageDescription": "Herald OS shows your camera in a bubble while you record the screen, when you turn it on.",
-        "NSCalendarsFullAccessUsageDescription": "Herald OS shows today's events on the Overview, and gives their titles and times to Hermes when you turn on Pick up where you left off.",
-        "NSCalendarsUsageDescription": "Herald OS shows today's events on the Overview, and gives their titles and times to Hermes when you turn on Pick up where you left off.",
-        "NSLocalNetworkUsageDescription": "Herald OS lets Hermes reach the devices on your local network that you set it up to use, such as a computer that runs your model."
+        "NSAppleEventsUsageDescription": "MadX Agent OS controls applications on your behalf when you ask it to.",
+        "NSMicrophoneUsageDescription": "MadX Agent OS uses the microphone for voice input.",
+        "NSCameraUsageDescription": "MadX Agent OS shows your camera in a bubble while you record the screen, when you turn it on.",
+        "NSCalendarsFullAccessUsageDescription": "MadX Agent OS shows today's events on the Overview, and gives their titles and times to Hermes when you turn on Pick up where you left off.",
+        "NSCalendarsUsageDescription": "MadX Agent OS shows today's events on the Overview, and gives their titles and times to Hermes when you turn on Pick up where you left off.",
+        "NSLocalNetworkUsageDescription": "MadX Agent OS lets Hermes reach the devices on your local network that you set it up to use, such as a computer that runs your model."
       }
     },
     "dmg": {
@@ -275,7 +275,7 @@
       ],
       "desktop": {
         "entry": {
-          "Name": "Herald OS",
+          "Name": "MadX Agent OS",
           "Comment": "Agent-native desktop powered by Hermes Agent",
           "Categories": "System;"
         }

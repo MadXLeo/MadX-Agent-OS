@@ -1,6 +1,9 @@
 import { app, BrowserWindow, globalShortcut, ipcMain, protocol, shell } from 'electron'
 import os from 'node:os'
 import path from 'node:path'
+import fs from 'node:fs'
+import { PRODUCT } from '../shared/product.ts'
+import { productProfilePath } from './product-profile.ts'
 import { type EnvInfo, type HeraldOSPrefs, IPC, type PrefsPatch, type RestRequest, type ShellCommand, type WindowState } from '../shared/ipc.ts'
 import { BackendManager } from './backend/manager.ts'
 import { forgetInheritedSession } from './backend/session-env.ts'
@@ -65,7 +68,12 @@ import { WallpaperService } from './shell/wallpaper.ts'
 import { appIconPath, createMainWindow } from './window.ts'
 
 setPackaged(app.isPackaged)
-app.setName('Herald OS')
+// Before ready/sessions/single-instance locking: changing the name must not strand user data.
+const profile = productProfilePath(app.getPath('appData'))
+fs.mkdirSync(profile, { recursive: true })
+app.setPath('userData', profile)
+app.setPath('sessionData', profile)
+app.setName(PRODUCT.name)
 // Chromium turns WebGL off where it does not accelerate the graphics (virtual machines, drivers it
 // blocklists), and Herald Canvas draws with WebGL: there it falls back to SwiftShader, Chromium's
 // software renderer, rather than to nothing. Machines it accelerates are not affected.
@@ -348,7 +356,7 @@ function createWindow(): void {
 }
 
 app.whenReady().then(async () => {
-  log('main', `Herald OS ${app.getVersion()} starting (dev=${isDev()}, mode=${mode}, HERMES_HOME=${hermesHome()})`)
+  log('main', `${PRODUCT.name} ${app.getVersion()} starting (dev=${isDev()}, mode=${mode}, HERMES_HOME=${hermesHome()})`)
   // A packaged app carries its icon in the bundle; `electron .` would show Electron's.
   const icon = isDev() ? appIconPath() : undefined
 

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconId, IconLock, IconPhoto } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
@@ -37,12 +38,12 @@ export function AboutIdentity() {
   const branding = useStore($branding)
 
   return (
-    <SettingsBlock label="Herald OS" description={branding.name ?? undefined} keywords="about logo branding version">
+    <SettingsBlock label={PRODUCT.name} description={branding.name ?? undefined} keywords="about logo branding version">
       <GlassCard className="flex items-center gap-4 p-5">
-        {branding.logo ? <img src={branding.logo} alt={branding.name ? `${branding.name} logo` : 'Logo'} className="h-12 max-w-[180px] object-contain" /> : <HeraldLogo height={28} />}
+        {branding.logo ? <img src={branding.logo} alt={branding.name ? `${branding.name} logo` : 'Logo'} className="h-12 max-w-[180px] object-contain" /> : <HeraldLogo height={48} />}
         <div className="min-w-0">
           {branding.name && <div className="truncate text-[15px] font-semibold text-fg">{branding.name}</div>}
-          <div className={branding.name ? 'text-[12.5px] text-fg-3' : 'text-[15px] font-semibold text-fg'}>Herald OS {env?.version ?? ''}</div>
+          <div className={branding.name ? 'text-[12.5px] text-fg-3' : 'text-[15px] font-semibold text-fg'}>{`${PRODUCT.name} `}{env?.version ?? ''}</div>
         </div>
       </GlassCard>
     </SettingsBlock>
@@ -65,10 +66,10 @@ export function BrandingSettings() {
 
   return (
     <SettingsGroup title="Branding">
-      <SettingsRow icon={<IconPhoto />} label="Logo" description={branding.logo ? 'Yours, shown above.' : 'The Herald logo. A PNG, JPEG, WebP or SVG of your own replaces it.'} keywords="branding logo company">
+      <SettingsRow icon={<IconPhoto />} label="Logo" description={branding.logo ? 'Yours, shown above.' : `The ${PRODUCT.shortName} logo. A PNG, JPEG, WebP or SVG of your own replaces it.`} keywords="branding logo company">
         {branding.logo && (
           <GlassButton size="sm" variant="ghost" onClick={() => void run('branding.reset', { what: 'logo' })}>
-            Use the Herald logo
+            Use the {PRODUCT.shortName} logo
           </GlassButton>
         )}
         <GlassButton size="sm" onClick={() => void choose('logo')}>

@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import type { ComponentType } from 'react'
 import type { TextKey } from '../../shared/i18n.ts'
 import type { InstalledApp } from '../../shared/ipc.ts'
@@ -66,7 +67,7 @@ export const FLOATING_APPS: readonly HermesAppDef<FloatingAppId>[] = [
   { id: 'system', name: 'System', tagline: 'Monitor and control your Mac.', category: 'system', kind: 'window', icon: 'system', defaultSize: { width: 980, height: 640 }, shortcut: '9' },
   { id: 'chat-popout', name: 'Hermes', tagline: 'A conversation in its own window.', category: 'productivity', kind: 'window', icon: 'hermes', defaultSize: { width: 820, height: 620 } },
   // Opened by the shell for a specific page (e.g. the provider sign-in); not launchable on its own.
-  { id: 'web', name: 'Web', tagline: 'A page inside Herald OS.', category: 'productivity', kind: 'window', icon: 'grid', defaultSize: { width: 960, height: 680 } },
+  { id: 'web', name: 'Web', tagline: `A page inside ${PRODUCT.name}.`, category: 'productivity', kind: 'window', icon: 'grid', defaultSize: { width: 960, height: 680 } },
   // One per Hermes session; opened with "build …" or "show me the code".
   { id: 'studio', name: 'Studio', tagline: 'Watch Hermes build.', category: 'development', kind: 'window', icon: 'studio', defaultSize: { width: 1280, height: 800 } },
   // Opens on a screenshot (the capture preview's Edit).
@@ -74,12 +75,12 @@ export const FLOATING_APPS: readonly HermesAppDef<FloatingAppId>[] = [
   { id: 'camera', name: 'Camera', tagline: 'Your camera in a bubble, for screen recordings.', category: 'creative', kind: 'window', icon: 'system', defaultSize: { width: 260, height: 290 } },
   // A widget plugin in its own window (its `panel` placement); opened with plugin.open.
   { id: 'widget', name: 'Widget', tagline: 'A widget plugin in a window.', category: 'productivity', kind: 'window', icon: 'grid', defaultSize: { width: 360, height: 280 } },
-  { id: 'canvas', name: 'Herald Canvas', tagline: 'Edit images in layers, with Hermes.', category: 'creative', kind: 'window', icon: 'canvas', defaultSize: { width: 1320, height: 840 } },
-  { id: 'docs', name: 'Herald Docs', tagline: 'Write and edit documents, with Hermes.', category: 'productivity', kind: 'window', icon: 'docs', defaultSize: { width: 1120, height: 840 } },
-  { id: 'sheets', name: 'Herald Sheets', tagline: 'Spreadsheets and formulas, with Hermes.', category: 'productivity', kind: 'window', icon: 'sheets', defaultSize: { width: 1280, height: 820 } },
-  { id: 'slides', name: 'Herald Slides', tagline: 'Make presentations, with Hermes.', category: 'productivity', kind: 'window', icon: 'slides', defaultSize: { width: 1280, height: 820 } },
+  { id: 'canvas', name: PRODUCT.apps.canvas, tagline: 'Edit images in layers, with Hermes.', category: 'creative', kind: 'window', icon: 'canvas', defaultSize: { width: 1320, height: 840 } },
+  { id: 'docs', name: PRODUCT.apps.docs, tagline: 'Write and edit documents, with Hermes.', category: 'productivity', kind: 'window', icon: 'docs', defaultSize: { width: 1120, height: 840 } },
+  { id: 'sheets', name: PRODUCT.apps.sheets, tagline: 'Spreadsheets and formulas, with Hermes.', category: 'productivity', kind: 'window', icon: 'sheets', defaultSize: { width: 1280, height: 820 } },
+  { id: 'slides', name: PRODUCT.apps.slides, tagline: 'Make presentations, with Hermes.', category: 'productivity', kind: 'window', icon: 'slides', defaultSize: { width: 1280, height: 820 } },
   { id: 'room', name: 'Pet Room', tagline: 'Watch Hermes at work.', category: 'productivity', kind: 'window', icon: 'room', defaultSize: { width: 1100, height: 720 } },
-  { id: 'calc', name: 'Herald Calc', tagline: 'Math in plain sentences, exact every time.', category: 'productivity', kind: 'window', icon: 'calc', defaultSize: { width: 780, height: 560 } }
+  { id: 'calc', name: PRODUCT.apps.calc, tagline: 'Math in plain sentences, exact every time.', category: 'productivity', kind: 'window', icon: 'calc', defaultSize: { width: 780, height: 560 } }
 ]
 
 /** Floating apps the launcher and command bar offer; the rest open only with a payload. */

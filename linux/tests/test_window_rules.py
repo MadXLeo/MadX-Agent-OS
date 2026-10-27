@@ -1,12 +1,22 @@
 """niri's window rules for the shell's windows, checked against the titles the shell gives them."""
 
 import re
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CONFIG = (ROOT / "linux" / "niri" / "config.kdl").read_text()
+CONFIG = (ROOT / "linux" / "niri" / "config.kdl").read_text(encoding="utf-8")
 DESKTOP = ROOT / "apps" / "desktop"
 FLOATS = "open-floating true"
+PRODUCT = json.loads((ROOT / "branding" / "product.json").read_text(encoding="utf-8"))
+
+
+def product_source(relative):
+    """Resolve the small product constants in the source-level window contract fixture."""
+    source = (DESKTOP / relative).read_text(encoding="utf-8")
+    source = source.replace("${PRODUCT.name}", PRODUCT["name"])
+    source = source.replace("${PRODUCT.apps.slides}", PRODUCT["apps"]["slides"])
+    return source.replace("`", "'")
 
 
 def _rules(text):
@@ -54,9 +64,9 @@ def props(app_id, title):
 def _dialog_titles():
     """The titles the main process gives the dialogs it opens, from its source."""
     titles = set()
-    nouns = re.search(r"OFFICE_NOUNS[^=]*=\s*\{([^}]*)\}", (DESKTOP / "shared" / "office" / "files.ts").read_text()).group(1)
+    nouns = re.search(r"OFFICE_NOUNS[^=]*=\s*\{([^}]*)\}", (DESKTOP / "shared" / "office" / "files.ts").read_text(encoding="utf-8")).group(1)
     for source in ("electron/office/ipc.ts", "electron/canvas/ipc.ts"):
-        text = (DESKTOP / source).read_text()
+        text = (DESKTOP / source).read_text(encoding="utf-8")
         for expr in re.findall(r"\btitle: ([^,}\n]+)", text):
             # A ternary's titles are its branches, not what it compares.
             titles |= set(re.findall(r"'([^']+)'", expr.split("?", 1)[-1]))
@@ -82,7 +92,7 @@ def test_the_shell_s_own_windows_are_not_taken_for_dialogs():
 
 
 def test_office_windows_tile_at_three_quarters_of_the_screen():
-    mode = (DESKTOP / "electron" / "shell" / "mode.ts").read_text()
+    mode = product_source("electron/shell/mode.ts")
     titles = re.findall(r"(?:docs|sheets|slides): \{ title: '([^']+)'", mode)
     assert len(titles) == 3
     for title in titles:
@@ -92,7 +102,7 @@ def test_office_windows_tile_at_three_quarters_of_the_screen():
 
 
 def test_the_pet_room_tiles_at_a_third_of_the_screen_beside_the_work_and_is_never_taken_for_the_pet():
-    title = re.search(r"room: \{ title: '([^']+)'", (DESKTOP / "electron" / "shell" / "mode.ts").read_text()).group(1)
+    title = re.search(r"room: \{ title: '([^']+)'", product_source("electron/shell/mode.ts")).group(1)
     for app_id in ("herald-os", "Herald OS"):
         rules = props(app_id, title)
         assert _last(rules, "default-column-width") == "default-column-width { proportion 0.33333; }"
@@ -101,7 +111,7 @@ def test_the_pet_room_tiles_at_a_third_of_the_screen_beside_the_work_and_is_neve
 
 
 def test_herald_calc_floats_over_the_work_at_the_size_the_shell_opens_it_with():
-    calc = re.search(r"calc: \{ title: '([^']+)', width: (\d+), height: (\d+) \}", (DESKTOP / "electron" / "shell" / "mode.ts").read_text())
+    calc = re.search(r"calc: \{ title: '([^']+)', width: (\d+), height: (\d+) \}", product_source("electron/shell/mode.ts"))
     title, width, height = calc.groups()
     assert (width, height) == ("780", "560")
     for app_id in ("herald-os", "Herald OS"):
@@ -118,7 +128,7 @@ def test_herald_calc_floats_over_the_work_at_the_size_the_shell_opens_it_with():
 
 
 def test_the_audience_window_opens_full_screen_and_leaves_the_keys_to_the_presenter_view():
-    title = re.search(r"const AUDIENCE_TITLE = '([^']+)'", (DESKTOP / "electron" / "office" / "presenter.ts").read_text()).group(1)
+    title = re.search(r"const AUDIENCE_TITLE = '([^']+)'", product_source("electron/office/presenter.ts")).group(1)
     rules = props("herald-os", title)
     assert "open-fullscreen true" in rules
     assert "open-focused false" in rules
@@ -131,8 +141,17 @@ def _last(rules, name):
     return lines[-1] if lines else None
 
 
+def test_madx_and_legacy_windows_receive_identical_placement_during_upgrade():
+    for suffix in ("", " · Menu Bar", " · Dock", " · Dock Menu", " · Command", " · Panel", " · Pet", " · Calc", " · Docs", " · Sheets", " · Slides", " · Studio", " · Pet Room", " · Wallpaper"):
+        legacy = props("herald-os", "Herald OS" + suffix)
+        assert legacy, suffix
+        for app_id in (PRODUCT["slug"], PRODUCT["name"], "herald-os", "Herald OS"):
+            assert props(app_id, PRODUCT["name"] + suffix) == legacy, (app_id, suffix)
+    assert props(PRODUCT["slug"], PRODUCT["apps"]["slides"] + " Audience") == props("herald-os", "Herald Slides Audience")
+
+
 def test_the_pet_floats_above_the_dock_never_takes_the_keys_as_it_opens_and_has_no_frame():
-    title = re.search(r"pet: '([^']+)'", (DESKTOP / "electron" / "shell" / "mode.ts").read_text()).group(1)
+    title = re.search(r"pet: '([^']+)'", product_source("electron/shell/mode.ts")).group(1)
     for app_id in ("herald-os", "Herald OS"):
         rules = props(app_id, title)
         assert FLOATS in rules
@@ -147,7 +166,7 @@ def test_the_pet_floats_above_the_dock_never_takes_the_keys_as_it_opens_and_has_
 
 
 def test_the_dock_menu_floats_above_the_dock_leaves_the_keys_to_it_and_has_no_frame():
-    mode = (DESKTOP / "electron" / "shell" / "mode.ts").read_text()
+    mode = product_source("electron/shell/mode.ts")
     title = re.search(r"DOCK_MENU_TITLE = '([^']+)'", mode).group(1)
     dock = re.search(r"dock: '([^']+)'", mode).group(1)
     for app_id in ("herald-os", "Herald OS"):

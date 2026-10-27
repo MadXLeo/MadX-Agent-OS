@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { PRODUCT } from '../../shared/product.ts'
 import type { BackendState } from '../../shared/ipc.ts'
 import { HeraldLogo } from '../components/herald-logo.tsx'
 import { cn } from '../lib/cn.ts'
@@ -26,13 +27,14 @@ export function BootScreen({ state, leaving = false }: { state: BackendState; le
   return (
     <div
       className={cn('drag-region absolute inset-0 z-(--z-boot) flex flex-col items-center justify-center', leaving ? 'boot-leave pointer-events-none' : 'animate-fade-in')}
-      style={{ background: 'radial-gradient(circle at 50% 45%, #1240c8 0%, #0a2a96 45%, #04113f 100%)' }}
+      style={{ background: 'radial-gradient(ellipse at 50% 42%, #18242a 0%, #0d1117 48%, #06080b 100%)' }}
       aria-hidden={leaving}
     >
       <div className={cn('no-drag glass flex w-[440px] flex-col items-center gap-6 rounded-2xl px-8 py-10 text-center', leaving && 'boot-card-leave')}>
-        <HeraldLogo height={44} />
+        <HeraldLogo height={92} wordmark />
         <div className="flex flex-col gap-1.5">
-          <div className="text-[22px] font-medium tracking-tight">Herald OS</div>
+          <div className="text-[22px] font-medium tracking-tight">{PRODUCT.name}</div>
+          <div className="text-[11px] tracking-widest text-fg-3">{PRODUCT.ecosystem} · {PRODUCT.version}</div>
           <div className="flex items-center justify-center gap-2 text-[13px] text-fg-2">
             {!failed && <Spinner />}
             <span>{PHASE_COPY[state.phase]}</span>

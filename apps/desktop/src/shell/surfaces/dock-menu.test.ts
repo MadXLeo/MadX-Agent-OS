@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import { DOCK_MENU_TITLE as MAIN_DOCK_MENU_TITLE, surfaceTitle } from '../../../electron/shell/mode.ts'
 import { describe, expect, it } from 'vitest'
 import type { WmState, WmWindow } from '../../../shared/ipc.ts'
 import { DOCK_MENU_TITLE, DOCK_TITLE, dockMenuFeatures, dockMenuHeight, dockMenuPlacement, dockRect, keysLeftDock, menuLosesKeys, nextItem, type Rect } from './dock-menu.ts'
@@ -53,7 +54,11 @@ describe('where the Dock menu opens', () => {
 
   it('opens over the middle icon exactly where niri’s rule puts the window, so it need not move', () => {
     const config = fs.readFileSync(new URL('../../../../../linux/niri/config.kdl', import.meta.url), 'utf8')
-    const rule = config.slice(config.indexOf(`title="^${DOCK_MENU_TITLE}$"`))
+    const rule = config.split('window-rule {').find(block => {
+      const title = /title="([^"]+)"/.exec(block)?.[1]
+      return title !== undefined && new RegExp(title).test(DOCK_MENU_TITLE)
+    }) ?? ''
+    expect(rule).not.toBe('')
     const [, x, y] = /default-floating-position x=(\d+) y=(\d+) relative-to="bottom"/.exec(rule) ?? []
 
     for (const count of [1, 2, 7]) {
@@ -145,9 +150,7 @@ describe('the highlight', () => {
 
 describe('the titles', () => {
   it('are the ones main gives the Dock and its menu, which niri’s rules match', () => {
-    const mode = fs.readFileSync(new URL('../../../electron/shell/mode.ts', import.meta.url), 'utf8')
-
-    expect(mode).toContain(`dock: '${DOCK_TITLE}'`)
-    expect(mode).toContain(`DOCK_MENU_TITLE = '${DOCK_MENU_TITLE}'`)
+    expect(surfaceTitle('dock')).toBe(DOCK_TITLE)
+    expect(MAIN_DOCK_MENU_TITLE).toBe(DOCK_MENU_TITLE)
   })
 })

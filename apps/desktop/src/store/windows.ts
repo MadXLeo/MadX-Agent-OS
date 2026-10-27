@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { atom, computed } from 'nanostores'
 import { appById, appName, type FloatingAppId, type HermesAppId, type PageId } from '../shell/apps.ts'
 import { afterExit, motion } from '../lib/motion.ts'
@@ -36,7 +37,7 @@ export const $page = atom<PageId>('overview')
 /** Menu-bar title: the focused window's title, an app's own name in the language shown. */
 export const $focusedTitle = computed([$windows, $focusedWindowId, $page, $language], (windows, id, page) => {
   if (!id || !windows[id]) {
-    return 'Herald OS'
+    return PRODUCT.name
   }
 
   if (id === MAIN_WINDOW_ID) {

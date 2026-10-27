@@ -1,4 +1,5 @@
 import { atom } from 'nanostores'
+import { PRODUCT } from '../../shared/product.ts'
 import type { BackendState, EnvInfo, HeraldOSPrefs, PrefsPatch, WindowState } from '../../shared/ipc.ts'
 import { LEGACY_NOTIFY_KEYS, NOTIFY_DEFAULTS, readLegacyNotifyFlags } from '../../shared/notify-prefs.ts'
 import { PALETTE_PROPERTIES, paletteVars, schemeOf } from '../../shared/theme.ts'
@@ -12,8 +13,8 @@ export const $env = atom<EnvInfo | null>(null)
 export const $prefs = atom<HeraldOSPrefs>({
   fullscreenOnLaunch: true,
   reduceMotion: false,
-  accent: 'blue',
-  theme: 'ocean',
+  accent: PRODUCT.appearance.accent,
+  theme: PRODUCT.appearance.theme,
   spaces: [{ id: 'personal', name: 'Personal', color: '#4d92ff' }],
   activeSpace: 'personal',
   favorites: [],

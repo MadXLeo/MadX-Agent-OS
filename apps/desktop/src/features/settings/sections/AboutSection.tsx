@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconDownload, IconFileText, IconInfoCircle, IconServer } from '@tabler/icons-react'
 import { useState } from 'react'
@@ -25,7 +26,7 @@ export function AboutSection() {
       <AboutIdentity />
 
       <SettingsGroup title="Versions">
-        <SettingsRow icon={<IconInfoCircle />} label="Herald OS" description={env?.isDev ? 'Development build.' : 'Agent-native operating system.'} keywords="version build shell">
+        <SettingsRow icon={<IconInfoCircle />} label={PRODUCT.name} description={env?.isDev ? 'Development build.' : 'Agent-native operating system.'} keywords="version build shell">
           <Pill tone="accent">{env?.version ?? '—'}</Pill>
         </SettingsRow>
         <SettingsRow icon={<IconServer />} label="Hermes runtime" description={<span className="selectable">{backend.runtime?.label ?? 'Not resolved yet.'}</span>} keywords="hermes agent version runtime">
@@ -36,8 +37,13 @@ export function AboutSection() {
 
       <BrandingSettings />
 
+      <SettingsGroup title="Legal and open source">
+        <SettingsRow icon={<IconInfoCircle />} label={PRODUCT.ecosystem} description={`${PRODUCT.name} is a distribution derived from Herald OS. Upstream copyright © 2026 Luke The Dev; MIT license. See the bundled LICENSE and NOTICE for full terms and third-party notices.`} keywords="legal license copyright upstream" />
+        <SettingsRow icon={<IconServer />} label="Hermes Agent" description={`The independently maintained agent engine from Nous Research, used under its MIT license. ${PRODUCT.name} is not an official Nous Research product and is not endorsed by Nous Research.`} keywords="legal hermes nous license" />
+      </SettingsGroup>
+
       <SettingsGroup title="Maintenance">
-        <SettingsRow icon={<IconDownload />} label="Check for updates" description="Herald OS runs whatever Hermes is installed. Run “hermes update” in Terminal, then restart Hermes from Network." keywords="upgrade update hermes update terminal">
+        <SettingsRow icon={<IconDownload />} label="Check for updates" description={`${PRODUCT.name} runs whatever Hermes is installed. Run “hermes update” in Terminal, then restart Hermes from Network.`} keywords="upgrade update hermes update terminal">
           <GlassButton size="sm" onClick={() => openApp('terminal')} aria-label="Open Terminal">
             Open Terminal
           </GlassButton>

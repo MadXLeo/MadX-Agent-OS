@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../../shared/product.ts'
 import { useLayoutEffect, useRef } from 'react'
 import type { ShellCommand, WmWindow } from '../../../shared/ipc.ts'
 import type { FloatingAppId } from '../apps.ts'
@@ -16,23 +17,26 @@ export function useShellCommands(handler: (command: ShellCommand) => void): void
 
 /** Window titles main gives our own floating windows (see electron/shell/mode.ts); they double as identity. */
 const OUR_FLOATING_TITLES: Record<string, FloatingAppId> = {
-  'Herald OS · Terminal': 'terminal',
-  'Herald OS · System': 'system',
-  'Herald OS · Chat': 'chat-popout',
-  'Herald OS · Studio': 'studio',
-  'Herald OS · Canvas': 'canvas',
-  'Herald OS · Docs': 'docs',
-  'Herald OS · Sheets': 'sheets',
-  'Herald OS · Slides': 'slides',
-  'Herald OS · Pet Room': 'room',
-  'Herald OS · Calc': 'calc'
+  [`${PRODUCT.name} · Terminal`]: 'terminal',
+  [`${PRODUCT.name} · System`]: 'system',
+  [`${PRODUCT.name} · Chat`]: 'chat-popout',
+  [`${PRODUCT.name} · Studio`]: 'studio',
+  [`${PRODUCT.name} · Canvas`]: 'canvas',
+  [`${PRODUCT.name} · Docs`]: 'docs',
+  [`${PRODUCT.name} · Sheets`]: 'sheets',
+  [`${PRODUCT.name} · Slides`]: 'slides',
+  [`${PRODUCT.name} · Pet Room`]: 'room',
+  [`${PRODUCT.name} · Calc`]: 'calc'
 }
 
-export const OUR_MAIN_TITLE = 'Herald OS'
+export const OUR_MAIN_TITLE = PRODUCT.name
 
 /** Which floating Hermes app one of our compositor windows hosts, when it is one. */
 export function ourFloatingAppId(win: WmWindow): FloatingAppId | null {
-  return win.ours ? (OUR_FLOATING_TITLES[win.title] ?? null) : null
+  const title = win.title.startsWith(`${PRODUCT.compatibility.electronProfile} · `)
+    ? PRODUCT.name + win.title.slice(PRODUCT.compatibility.electronProfile.length)
+    : win.title
+  return win.ours ? (OUR_FLOATING_TITLES[title] ?? null) : null
 }
 
 /** A short human label for a compositor window: its title, else its app id. */

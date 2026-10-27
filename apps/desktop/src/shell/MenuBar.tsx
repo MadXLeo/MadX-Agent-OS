@@ -1,3 +1,4 @@
+import { PRODUCT } from '../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { IconBattery, IconBattery1, IconBattery2, IconBattery3, IconBattery4, IconBatteryCharging, IconBell, IconBluetooth, IconCheck, IconChevronDown, IconCoffee, IconGauge, IconMoon, IconSearch, IconSunset2, IconVolume, IconWifi, IconWifiOff } from '@tabler/icons-react'
 import { Fragment, type ReactNode, useEffect, useRef, useState } from 'react'
@@ -230,8 +231,8 @@ export function MenuBar() {
     <header className="drag-region absolute inset-x-0 top-0 z-(--z-menubar) flex h-(--menubar-h) items-center justify-between px-3 text-[12.5px] text-fg select-none" style={{ background: 'linear-gradient(180deg, var(--menubar-from, rgba(3,10,40,.55)), var(--menubar-to, rgba(3,10,40,.15)))' }}>
       <div className="flex items-center gap-2.5 pl-[74px]">
         <HeraldLogo height={12} />
-        <span className="font-semibold">Herald OS</span>
-        {title !== 'Herald OS' && (
+        <span className="font-semibold">{PRODUCT.name}</span>
+        {title !== PRODUCT.name && (
           <>
             <span className="text-fg-4">·</span>
             <span className="text-fg-2">{title}</span>
