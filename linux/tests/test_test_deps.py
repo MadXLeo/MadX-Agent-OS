@@ -42,32 +42,42 @@ def test_ci_installs_the_requirements_for_the_runner():
     assert runs.index("python -m pip install -r linux/tests/requirements.txt") < next(i for i, run in enumerate(runs) if "test-bridge.sh" in run)
 
 
-def run_runner(tmp_path: Path, python_has: str) -> str:
+def run_runner(tmp_path: Path, python_has: str) -> list[str]:
     bin_dir, log = tmp_path / "bin", tmp_path / "ran"
     bin_dir.mkdir()
     python = bin_dir / "python"
     python.write_text(
         "#!/usr/bin/env bash\n"
         f'if [[ "$1" == -c ]]; then for m in ${{2//,/ }}; do [[ "$m" == import || " {python_has} " == *" $m "* ]] || exit 1; done; exit 0; fi\n'
-        f'echo "python $*" >>"{log}"\n'
+        'printf "%s\\0" python "$@" >>"$RUNNER_LOG"\n'
     )
     uv = bin_dir / "uv"
-    uv.write_text(f'#!/usr/bin/env bash\necho "uv $*" >>"{log}"\n')
+    uv.write_text('#!/usr/bin/env bash\nprintf "%s\\0" uv "$@" >>"$RUNNER_LOG"\n')
     for tool in (python, uv):
         tool.chmod(0o755)
     subprocess.run(
         ["bash", str(ROOT / "scripts" / "test-bridge.sh")],
-        env={"PATH": f"{bin_dir}:/usr/bin:/bin", "HOME": str(tmp_path), "HERALD_OS_PYTHON": str(python)},
+        env={"PATH": f"{bin_dir}:/usr/bin:/bin", "HOME": str(tmp_path),
+             "HERALD_OS_PYTHON": str(python), "RUNNER_LOG": log.as_posix()},
         check=True,
     )
-    return log.read_text()
+    # Preserve argument boundaries, including paths with spaces; $* loses that information.
+    return log.read_bytes().decode().split("\0")[:-1]
 
 
 def test_the_runner_uses_a_python_that_has_pytest_and_pyyaml(tmp_path):
-    assert run_runner(tmp_path, "pytest yaml").startswith("python -m pytest -q . ")
+    assert run_runner(tmp_path, "pytest yaml")[:5] == ["python", "-m", "pytest", "-q", "."]
 
 
 def test_the_runner_falls_back_to_uv_with_the_requirements_when_pyyaml_is_missing(tmp_path):
     ran = run_runner(tmp_path, "pytest")
-    assert ran.startswith("uv run ")
-    assert f"--with-requirements {REQUIREMENTS} " in ran
+    assert ran[:6] == ["uv", "run", "--no-project", "--python", "3.11", "--with-requirements"]
+    requirements = ran[6]
+    if sys.platform == "win32":
+        # Git Bash's /c/... and Python's C:\\... identify the same file. Convert only the
+        # argument's representation; samefile still rejects a different requirements file.
+        requirements = subprocess.check_output(
+            ["bash", "-c", 'cygpath -w -- "$1"', "test-path", requirements], text=True,
+        ).strip()
+    assert Path(requirements).samefile(REQUIREMENTS)
+    assert ran[7:12] == ["python", "-m", "pytest", "-q", "."]
