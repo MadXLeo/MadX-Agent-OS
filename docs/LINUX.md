@@ -24,7 +24,7 @@ kernel + systemd  ->  greetd (autologin/login*)   ->  niri  ->  MadX Agent OS sh
 \* greetd signs `hermes` in by itself on an image install and in the development VM. On a system
 switched from another bootc system it shows a login screen (agreety) instead, and the session starts
 for whoever signs in, unless no account there can sign in, when `hermes` signs in by itself without
-a password, outside `wheel` ([Switching a bootc system to MadX Agent OS](#switching-a-bootc-system-to-herald-os)).
+a password, outside `wheel` ([Switching a bootc system to MadX Agent OS](#switching-a-bootc-system-to-madx-agent-os)).
 
 ## Quick start (QEMU, all from the terminal)
 
@@ -375,7 +375,7 @@ waits for them at the next start. `herald-os reset` (type ERASE, then your passw
 account, its apps and saved networks on the next restart and runs setup again; the system stays. On
 an unencrypted disk, it says first that this is deletion, not a secure erase. A system switched from
 another bootc system is different: it gets a login screen and a locked account instead ([Switching a
-bootc system to MadX Agent OS](#switching-a-bootc-system-to-herald-os)).
+bootc system to MadX Agent OS](#switching-a-bootc-system-to-madx-agent-os)).
 
 **The disk password.** `herald-os password --disk` finds the LUKS devices under the root filesystem
 (`/sysroot` on the image) from `lsblk`; when `lsblk` cannot list them it changes nothing and says so

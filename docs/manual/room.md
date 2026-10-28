@@ -34,7 +34,7 @@ screensaver (see [The Room as the screensaver](#the-room-as-the-screensaver)).
 | A pet coming in at the door | A helper agent Hermes started for this work |
 | A pet at the Automations board, at work | One of your automations is running (see [Automations](#automations)) |
 | A pet resting by the Automations board | An automation between runs |
-| A pet in the lane at the right edge | Hermes at work outside MadX, when you turn that on (see [Hermes outside MadX](#hermes-outside-herald)) |
+| A pet in the lane at the right edge | Hermes at work outside MadX, when you turn that on (see [Hermes outside MadX](#hermes-outside-madx)) |
 | A pet from the lane at a station, or on the bench with a sign | With live steps on, work outside MadX at the tool it is using, or waiting for your OK in its own app ("Needs your OK in Telegram") |
 | A plain grey figure | A pet whose picture cannot be read: its tag, bubble and facts still show (see [Which pets](#which-pets)) |
 

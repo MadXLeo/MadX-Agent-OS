@@ -160,7 +160,7 @@ system? It can switch to the MadX Agent OS image in place, which replaces the sy
 a spare machine or in a virtual machine. Afterwards a login screen asks who signs in, and your own
 account and its password keep working. MadX Agent OS also adds a `hermes` account, which stays locked,
 and is not an administrator, until you give it a password (`sudo passwd hermes`).
-[docs/LINUX.md](docs/LINUX.md#switching-a-bootc-system-to-herald-os) has the steps, what changes and
+[docs/LINUX.md](docs/LINUX.md#switching-a-bootc-system-to-madx-agent-os) has the steps, what changes and
 how to go back.
 
 ### Arch Linux
@@ -644,7 +644,7 @@ MadX Agent OS runs on your own Hermes, so a few of its changes reach Hermes's ot
   `tts.provider`) when the provider you had cannot run, and tells you when it does.
 
 To undo it on Linux, run `herald-os setup --undo`. On macOS, the steps are in
-[docs/SYSTEM-BRIDGE.md](docs/SYSTEM-BRIDGE.md#what-herald-os-changes-in-your-hermes).
+[docs/SYSTEM-BRIDGE.md](docs/SYSTEM-BRIDGE.md#what-madx-agent-os-changes-in-your-hermes).
 
 ## Building a macOS release
 

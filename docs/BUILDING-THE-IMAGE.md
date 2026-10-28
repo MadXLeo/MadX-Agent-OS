@@ -2,7 +2,7 @@
 
 MadX Agent OS Linux ships as a Fedora bootc image (ADR-018): a container image that is also a bootable
 system. This page is for building that image yourself, booting your build and changing what goes
-into it. [docs/LINUX.md](LINUX.md#the-herald-os-image-fedora-bootc) covers what the image is, its
+into it. [docs/LINUX.md](LINUX.md#the-madx-agent-os-image-fedora-bootc) covers what the image is, its
 installer and disks, signing and switching another bootc system to it; the
 [manual](manual/README.md) covers using it.
 
@@ -194,7 +194,7 @@ bash linux/vm/package-disk.sh output amd64 <version> dist   # arm64 for an aarch
 `dist/` then has `madx-agent-os-<version>-x86_64.qcow2.zst` and `madx-agent-os-<version>-x86_64.vhdx.zip`
 (or `madx-agent-os-<version>-aarch64.qcow2.zst` and `madx-agent-os-<version>-aarch64.utm.zip`), or
 `madx-agent-os-<version>-x86_64.iso`, each with a `.sha256`, and split into parts when over 2 GiB
-([docs/LINUX.md](LINUX.md#the-herald-os-image-fedora-bootc) has the parts and how to join them).
+([docs/LINUX.md](LINUX.md#the-madx-agent-os-image-fedora-bootc) has the parts and how to join them).
 `<version>` may use only letters, digits, `.`, `_` and `-`. `package-disk.sh` deletes the builder's
 `disk.qcow2` once it is converted.
 
@@ -246,7 +246,7 @@ The new image starts on the next restart, and the one before stays in the boot m
 `herald-os rollback` (or `sudo bootc rollback`) makes it the default again. A machine that already
 ran MadX Agent OS keeps its account and Hermes, since the first-boot units run once per machine
 (`/var/lib/herald-os/firstboot-done`); on a system switched from another bootc system, the first
-boot does more, as in [Switching a bootc system to MadX Agent OS](LINUX.md#switching-a-bootc-system-to-herald-os).
+boot does more, as in [Switching a bootc system to MadX Agent OS](LINUX.md#switching-a-bootc-system-to-madx-agent-os).
 
 Afterwards, on your build:
 
@@ -345,7 +345,7 @@ Settings > About > Branding or `herald-os branding set`
 names `ghcr.io/madxleo/madx-agent-os` and `ghcr.io/madxleo/madx-agent-os-nvidia`, so either
 image accepts signed updates of itself and of the other. Without the file, as today, a build accepts updates
 without a signature check. With it committed, the image workflow stops unless `COSIGN_PRIVATE_KEY`
-is set and matches it. [docs/LINUX.md](LINUX.md#the-herald-os-image-fedora-bootc) has the
+is set and matches it. [docs/LINUX.md](LINUX.md#the-madx-agent-os-image-fedora-bootc) has the
 maintainer's steps for turning signing on.
 
 ### An NVIDIA variant

@@ -61,7 +61,7 @@ in by itself, without a password but outside the administrators, and the first-s
 for one; it becomes an administrator at the next restart after it has one. If no login screen
 appears, press `Ctrl+Alt+F2` for a text console and sign in there; see
 [Locked out of your account](troubleshooting.md#locked-out-of-your-account).
-[docs/LINUX.md](../LINUX.md#switching-a-bootc-system-to-herald-os) has the steps, what changes and
+[docs/LINUX.md](../LINUX.md#switching-a-bootc-system-to-madx-agent-os) has the steps, what changes and
 how to go back.
 
 **How is this different from Omarchy?**

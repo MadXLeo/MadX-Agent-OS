@@ -253,7 +253,7 @@ Show Hermes work outside MadX on too.
   1 MiB.
 
 The Pet Room shows this work in its lane and at its stations, and never opens or answers anything
-there ([the Pet Room](manual/room.md#hermes-outside-herald)).
+there ([the Pet Room](manual/room.md#hermes-outside-madx)).
 
 ## Permission tiers
 

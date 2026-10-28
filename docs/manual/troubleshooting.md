@@ -84,7 +84,7 @@ output of `herald-os debug`. On the tarball, `herald-os rollback` swaps back to
   for a text console, sign in with your own account, and `sudo journalctl -b -u herald-os-login`
   says why. Once it is fixed, `sudo systemctl restart herald-os-login` and
   `sudo systemctl start greetd` bring the login screen back
-  ([docs/LINUX.md](../LINUX.md#switching-a-bootc-system-to-herald-os) has more).
+  ([docs/LINUX.md](../LINUX.md#switching-a-bootc-system-to-madx-agent-os) has more).
 - **The lock screen does not take your password.** Check Caps Lock and the keyboard layout. A
   fingerprint or security key you set up works too.
 - **You forgot the password,** but another account on the computer is an administrator: sign in

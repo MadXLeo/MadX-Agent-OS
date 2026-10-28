@@ -49,7 +49,7 @@ To switch the tools off without uninstalling, set `herald_os.bridge.enabled: fal
 
 To take it all back, `herald-os setup --undo` on Linux; elsewhere the steps, and the list of what
 MadX Agent OS changes in Hermes, are in
-[docs/SYSTEM-BRIDGE.md](../../docs/SYSTEM-BRIDGE.md#what-herald-os-changes-in-your-hermes).
+[docs/SYSTEM-BRIDGE.md](../../docs/SYSTEM-BRIDGE.md#what-madx-agent-os-changes-in-your-hermes).
 
 ## Live steps from Hermes outside MadX Agent OS
 
