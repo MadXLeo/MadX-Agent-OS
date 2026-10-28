@@ -46,6 +46,30 @@ def test_missing_system_deployment_is_refused():
         probe.diagnostics("autopart --encrypted\npoweroff\n")
 
 
+def test_real_builder_kickstart_include_is_verified_and_preserved(tmp_path):
+    source = "%include /run/install/repo/osbuild-base.ks\nautopart --type=btrfs --encrypted\n"
+    with pytest.raises(ValueError, match="missing"):
+        probe.diagnostics(source, tmp_path)
+    (tmp_path / "osbuild-base.ks").write_text("ostreecontainer --url=/run/install/repo/container --transport=oci\n")
+    result = probe.diagnostics(source, tmp_path)
+    assert result.startswith(source) and "%onerror" in result
+    assert "ostreecontainer" not in result  # The original ISO still owns the included deployment.
+
+
+@pytest.mark.parametrize("path", ["/etc/host.ks", "/run/install/repo/../host.ks", "https://example.com/remote.ks"])
+def test_deployment_includes_cannot_read_outside_the_iso(tmp_path, path):
+    with pytest.raises(ValueError, match="ISO"):
+        probe.diagnostics(f"%include {path}\n", tmp_path)
+
+
+def test_cyclic_includes_and_script_only_deployments_are_not_installation_evidence(tmp_path):
+    (tmp_path / "loop.ks").write_text("%include /run/install/repo/loop.ks\n")
+    with pytest.raises(ValueError, match="cyclic"):
+        probe.diagnostics("%include /run/install/repo/loop.ks\n", tmp_path)
+    with pytest.raises(ValueError, match="no system deployment"):
+        probe.diagnostics("%post\nostreecontainer --url=not-a-kickstart-directive\n%end\n")
+
+
 def test_diagnostics_preserve_the_deployment_and_capture_fatal_and_success_paths():
     original = "ostreecontainer --url=/run/install/repo/container --transport=oci\n"
     result = probe.diagnostics(original)

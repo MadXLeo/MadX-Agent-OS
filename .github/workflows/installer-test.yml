@@ -112,6 +112,9 @@ jobs:
           echo "kickstart in the ISO: $ks"
           7z e -oiso herald.iso "${ks#/}" >/dev/null
           cp "iso/$(basename "$ks")" ks.cfg
+          # bootc-image-builder puts the deployment directive in osbuild-base.ks, included by
+          # osbuild.ks. Validate the include against files from this verified ISO, not the host.
+          7z x -r -oiso-kickstarts herald.iso '*.ks' >/dev/null
           # The default the person sees: the automatic layout encrypted, the passphrase left to them.
           default="$(grep -E '^autopart( |$)' ks.cfg || true)"
           echo "the ISO's layout: ${default:-(none)}"
@@ -147,7 +150,7 @@ jobs:
             bash linux/vm/account-kickstart.sh "$ACCOUNT" test-key.pub >>ks.cfg
           fi
           echo "----- ks.cfg"; sed "s/$PASSPHRASE/<passphrase>/" ks.cfg
-          python3 linux/vm/installer-probe.py diagnostics ks.cfg ks-with-diagnostics.cfg
+          python3 linux/vm/installer-probe.py diagnostics ks.cfg ks-with-diagnostics.cfg --iso-root iso-kickstarts
           mv ks-with-diagnostics.cfg ks.cfg
           sed "s/$PASSPHRASE/<passphrase>/g" ks.cfg >ks-redacted.cfg
       - name: Prepare the ISO's actual UEFI boot path
