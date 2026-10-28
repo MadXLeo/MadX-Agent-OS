@@ -75,7 +75,7 @@ SESSION_PROCESSES = frozenset({
     "securityagent", "com.apple.securityagent",
     "system events", "com.apple.systemevents",
 })
-HERALD_OS = frozenset({"herald os", "dev.iamluke.heraldos"})
+HERALD_OS = frozenset({"madx agent os", "herald os", "dev.iamluke.heraldos"})
 
 
 # Safari and the apps updated with it run from a cryptex (a sealed, system-signed copy) since macOS

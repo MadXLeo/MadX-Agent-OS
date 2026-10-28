@@ -117,7 +117,7 @@ def test_the_newest_stable_release_with_this_machine_s_tarball_wins():
     assert tb.pick_release(listing, "arm64")["version"] == "0.1.5"
     assert tb.pick_release(listing, "arm64", channel="edge")["version"] == "0.2.0-beta.1"
     exact = tb.pick_release(listing, "arm64", version="0.2.0-beta.1")
-    assert exact["checksum_url"].endswith("herald-os-0.2.0-beta.1-linux-arm64.tar.gz.sha256")
+    assert exact["checksum_url"].endswith("madx-agent-os-0.2.0-beta.1-linux-arm64.tar.gz.sha256")
     assert tb.pick_release(listing, "x64", version="0.3.0") is None
     assert tb.pick_release([], "x64") is None
 
@@ -226,7 +226,9 @@ def test_update_swaps_in_the_new_release_and_rollback_swaps_back(layout, publish
 
 
 def test_a_tarball_that_does_not_match_its_checksum_changes_nothing(layout, published):
-    (published / f"herald-os-0.2.0-linux-{tb.machine_arch()}.tar.gz").write_bytes(b"something else")
+    tarball = published / f"madx-agent-os-0.2.0-linux-{tb.machine_arch()}.tar.gz"
+    assert tarball.is_file(), "corrupt the published package, not an unrelated filename"
+    tarball.write_bytes(b"something else")
     with pytest.raises(SystemExit):
         tb.update(layout)
     assert tb.read_version(layout.app) == "0.1.0" and not layout.previous.exists()

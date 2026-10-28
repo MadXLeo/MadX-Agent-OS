@@ -99,6 +99,7 @@ def mac(plugin, monkeypatch):
         AppInfo(name="Safari", path="/Applications/Safari.app", bundle_id="com.apple.Safari"),
         AppInfo(name="Docker", path="/Applications/Docker.app", bundle_id="com.docker.docker"),
         AppInfo(name="MadX Agent OS", path="/Applications/MadX Agent OS.app", bundle_id="dev.iamluke.heraldos"),
+        AppInfo(name="Herald OS", path="/Applications/Herald OS.app", bundle_id="dev.iamluke.heraldos"),
     ]
     monkeypatch.setattr(adapter, "installed_apps", lambda: apps)
     clock = [0.0]
@@ -244,13 +245,14 @@ def test_herald_os_never_quits_itself(mac, name, force):
     assert 900 in machine.procs and not machine.signals and not machine.ran("osascript")
 
 
-def test_a_partial_match_that_lands_on_herald_os_is_refused(mac):
+@pytest.mark.parametrize("name,partial", [("MadX Agent OS", "MadX"), ("Herald OS", "Herald")])
+def test_a_partial_match_that_lands_on_herald_os_is_refused(mac, name, partial):
     _, tools, fake = mac
     machine = fake({"osascript": (0, "not running\n", "")})
-    machine.procs[900] = (ME, "/Applications/MadX Agent OS.app/Contents/MacOS/MadX Agent OS")
-    assert quit_app(tools, "Herald")["error"] == "MadX Agent OS does not quit itself"
-    assert machine.ran("osascript") == [by_name("Herald")]
-    assert 900 in machine.procs
+    machine.procs[900] = (ME, f"/Applications/{name}.app/Contents/MacOS/{name}")
+    assert quit_app(tools, partial)["error"] == "MadX Agent OS does not quit itself"
+    assert machine.ran("osascript") == [by_name(partial)]
+    assert 900 in machine.procs and not machine.signals
 
 
 @pytest.mark.parametrize("force", [False, True])
