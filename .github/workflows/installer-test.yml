@@ -158,12 +158,15 @@ jobs:
           python3 linux/vm/installer-probe.py grub iso/grub.cfg iso/test-grub.cfg
           # Fedora media also carries GRUB configuration inside its EFI FAT image. Patch both
           # copies, and preserve the original El Torito boot setup; never bypass it with -kernel.
-          7z e -oiso herald.iso images/efiboot.img >/dev/null
-          test -s iso/efiboot.img
+          # The builder's El Torito entry uses an appended EFI partition, a different extent
+          # from /images/efiboot.img. Extract and replace the partition the firmware actually boots.
+          python3 linux/vm/efi-boot.py extract herald.iso iso/efiboot.img >iso-boot-layout.json
+          partition="$(python3 -c 'import json; print(json.load(open("iso-boot-layout.json"))["partition"])')"
           mcopy -o -i iso/efiboot.img iso/test-grub.cfg ::/EFI/BOOT/grub.cfg
           xorriso -indev herald.iso -outdev test-installer.iso \
             -map iso/test-grub.cfg /EFI/BOOT/grub.cfg -map iso/efiboot.img /images/efiboot.img \
-            -boot_image any replay >iso-repack.log 2>&1
+            -boot_image any replay -append_partition "$partition" 0xef iso/efiboot.img >iso-repack.log 2>&1
+          python3 linux/vm/efi-boot.py verify test-installer.iso iso/efiboot.img >iso-boot-verified.json
           if [[ "$PRESERVE_DISK" == true ]]; then
             python3 linux/vm/windows-fixture.py "$PWD"
             sha256sum mock-windows.raw >mock-windows.sha256
@@ -304,6 +307,8 @@ jobs:
             ssh.log
             guest-smoke.log
             iso-repack.log
+            iso-boot-layout.json
+            iso-boot-verified.json
             mock-windows.sha256
             image-source.json
             *-x86_64.iso.sha256
