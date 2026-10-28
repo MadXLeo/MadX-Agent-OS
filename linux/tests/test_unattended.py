@@ -757,7 +757,7 @@ def test_logging_the_key_instead_of_its_type_is_caught(tmp_path):
     assert bad.split()[1][:16] in found.stderr
 
 
-# The installer test's optional account path (.github/workflows/installer-test.yml), and the snippet
+# The installer test's required account path (.github/workflows/installer-test.yml), and the snippet
 # linux/vm/account-kickstart.sh makes for it.
 WORKFLOW = ROOT / ".github" / "workflows" / "installer-test.yml"
 SNIPPET = ROOT / "linux" / "vm" / "account-kickstart.sh"
@@ -768,12 +768,12 @@ def workflow() -> dict:
     return yaml.safe_load(WORKFLOW.read_text())
 
 
-def test_the_installer_test_s_account_path_is_off_unless_asked_for():
+def test_the_installer_test_requires_an_account_for_guest_acceptance():
     flow = workflow()
     triggers = flow.get("on", flow.get(True))
     assert list(triggers) == ["workflow_dispatch"]
     account = triggers["workflow_dispatch"]["inputs"]["account"]
-    assert account["default"] == "" and account.get("required") is False
+    assert account["default"] == "madx-test" and account.get("required") is True
     steps = flow["jobs"]["install"]["steps"]
     uses = [step for step in steps if "${{ inputs.account }}" in str(step)]
     # The input reaches the scripts only through the environment, never pasted into one.

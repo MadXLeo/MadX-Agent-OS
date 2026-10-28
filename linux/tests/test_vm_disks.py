@@ -104,7 +104,9 @@ def test_the_disks_job_packages_with_the_script_and_uploads_what_it_made():
     assert room["if"] == "matrix.type == 'qcow2'"
     assert all(tool in room["run"] for tool in ("qemu-utils", "zip", "zstd"))
     build = next(step for step in steps if step.get("name") == "Build the disk with bootc-image-builder")["run"]
-    assert build.index("sudo podman rmi --ignore") > build.index("bootc-image-builder@sha256:")
+    assert build.index("sudo podman rmi --ignore") > build.index("bash linux/image/build-disk.sh")
+    helper = (ROOT / "linux/image/build-disk.sh").read_text()
+    assert "bootc-image-builder@sha256:" in helper and '--local "$ref"' in helper
     rmi = build[build.index("sudo podman rmi"):]
     assert '"$IMAGE:$CHANNEL-${{ matrix.arch }}"' in rmi and "quay.io/centos-bootc/bootc-image-builder@sha256:" in rmi
     pack = next(step for step in steps if step.get("name") == "Name, compress and split it")["run"]

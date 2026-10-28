@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -38,8 +39,14 @@ jobs:
       - name: Audit product copy and documented compatibility exceptions
         run: node scripts/madx/audit-branding.mjs --check
       - run: npm run typecheck
-      - run: npm test
+      - name: Desktop tests with retained evidence
+        run: npm run test --workspaces --if-present -- --reporter=default --reporter=junit --outputFile=desktop-tests.xml
       - run: npm run build
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: desktop-tests-${{ runner.os }}
+          path: apps/desktop/desktop-tests.xml
 
   bridge:
     name: Bridge plugin (${{ matrix.os }})
@@ -57,8 +64,49 @@ jobs:
       - name: cryptsetup, for the disk password tests on LUKS images
         if: runner.os == 'Linux'
         run: sudo apt-get update -qq && sudo apt-get install -y -qq cryptsetup-bin
+      - name: Kickstart parser for real installer syntax checks
+        run: python -m pip install pykickstart
       - name: pytest
-        run: HERALD_OS_PYTHON="$(command -v python)" bash scripts/test-bridge.sh
+        run: python -m pytest -c plugins/herald-os-bridge/tests/pytest.ini plugins/herald-os-bridge/tests linux/tests -q --junitxml=bridge-linux-tests.xml
+      - name: Require real Linux alias filesystem tests
+        if: runner.os == 'Linux'
+        run: |
+          python -m pytest linux/tests/test_branding.py -q --junitxml=alias-tests.xml
+          python scripts/madx/check-junit.py alias-tests.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bridge-tests-${{ runner.os }}
+          path: |
+            bridge-linux-tests.xml
+            alias-tests.xml
+
+  hermes-runtime:
+    name: Real Hermes runtime (no model provider)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install the pinned runtime in an isolated environment
+        run: |
+          bash scripts/sync-upstream.sh
+          python -m venv .venv/hermes-runtime
+          .venv/hermes-runtime/bin/python -m pip install -e ./upstream/hermes-agent
+          .venv/hermes-runtime/bin/python -m pip freeze >.venv/astra-hermes-dependencies.txt
+      - name: Real process, authentication, bridge discovery and persistence
+        run: .venv/hermes-runtime/bin/python scripts/madx/hermes-smoke.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hermes-runtime-evidence
+          path: |
+            .venv/astra-hermes-runtime.json
+            .venv/astra-hermes-dependencies.txt
+            .venv/astra-runtime/*.log
+          include-hidden-files: true
 
   scripts:
     name: Scripts

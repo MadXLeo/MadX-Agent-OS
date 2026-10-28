@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "rules": [
+    { "files": ["linux/vm/guest-smoke.sh"], "pattern": "app_id.*Herald OS", "category": "compatibility-contract", "reason": "VM acceptance recognizes both existing and new desktop app IDs." },
     { "files": ["README.md", "apps/desktop/src/features/settings/sections/AboutSection.tsx"], "pattern": "derived from.*Herald OS", "category": "required-attribution", "reason": "Fork provenance and upstream copyright." },
     { "files": ["branding/product.json", "apps/desktop/shared/product.ts", "linux/branding/product.json"], "pattern": "electronProfile.*Herald OS", "category": "compatibility-contract", "reason": "Reuse existing profile without discarding settings or cookies." },
     { "files": ["apps/desktop/electron/context/snapshot.ts"], "pattern": "const SELF =", "category": "compatibility-contract", "reason": "Exclude both product names from screen context." },

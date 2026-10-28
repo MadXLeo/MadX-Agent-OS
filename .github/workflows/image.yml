@@ -25,7 +25,11 @@ on:
   workflow_dispatch:
     inputs:
       disks:
-        description: Also build the ISO and the VM disk
+        description: Also build an x86_64 validation ISO (publishing runs additionally build VM disks)
+        type: boolean
+        default: false
+      publish:
+        description: Push registry tags (leave off for isolated validation builds)
         type: boolean
         default: false
 
@@ -37,6 +41,7 @@ concurrency:
 
 env:
   IMAGE: ghcr.io/madxleo/madx-agent-os
+  PUBLISH: ${{ github.event_name != 'workflow_dispatch' || inputs.publish }}
   # Signing waits for the key (cosign generate-key-pair; the public half goes in linux/image/cosign.pub).
   SIGNING: ${{ secrets.COSIGN_PRIVATE_KEY != '' && 'true' || 'false' }}
 
@@ -189,7 +194,37 @@ jobs:
             -t localhost/herald-os .
           sudo podman build -f linux/image/Containerfile.nvidia --build-arg HERALD_OS=localhost/herald-os \
             --build-arg "AKMODS_REF=$AKMODS_REF" --build-arg "AKMODS_NVIDIA_REF=$AKMODS_NVIDIA_REF" -t "$REPO:$TAG" .
+      - name: Inspect the actual image and systemd units
+        run: |
+          set -o pipefail
+          extra=()
+          [[ "${{ matrix.image }}" != madx-agent-os-nvidia ]] || extra+=(--nvidia)
+          sudo podman image inspect "$REPO:$TAG" >image-inspect.json
+          sudo podman run --rm --network=none --entrypoint python3 -v "$PWD:/validation:ro" "$REPO:$TAG" \
+            /validation/scripts/madx/check-image.py --root / --metadata /validation/branding "${extra[@]}" | tee image-validation.json
+          sudo podman run --rm --network=none --entrypoint /bin/bash "$REPO:$TAG" -ec \
+            'systemd-analyze --recursive-errors=no verify /usr/lib/systemd/system/herald-os-*.service' 2>&1 | tee systemd-verify.log
+          sudo podman run --rm --network=none -e ELECTRON_RUN_AS_NODE=1 \
+            --entrypoint /usr/share/herald-os/app/herald-os "$REPO:$TAG" -e \
+            'if (!process.versions.electron) process.exit(1); console.log(JSON.stringify(process.versions))' >electron-runtime.json
+      - name: Build a validation ISO without publishing
+        if: github.event_name == 'workflow_dispatch' && !inputs.publish && inputs.disks && matrix.image == 'madx-agent-os' && matrix.arch == 'amd64'
+        run: |
+          bash linux/image/build-disk.sh "$REPO:$TAG" anaconda-iso linux/image/iso.toml validation-output
+          sudo chown -R "$(id -u)" validation-output
+          bash linux/vm/package-disk.sh validation-output amd64 "validation-$(git rev-parse --short HEAD)" validation-dist
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: image-evidence-${{ matrix.image }}-${{ matrix.arch }}
+          path: |
+            image-inspect.json
+            image-validation.json
+            systemd-verify.log
+            electron-runtime.json
+            validation-dist/
       - name: Push it
+        if: env.PUBLISH == 'true'
         run: |
           echo "${{ github.token }}" | sudo podman login ghcr.io -u "${{ github.actor }}" --password-stdin
           sudo podman push --digestfile digest.txt "$REPO:$TAG"
@@ -198,7 +233,7 @@ jobs:
             sudo podman push "$REPO:$TAG" "docker://$REPO:${GITHUB_REF_NAME#v}"
           fi
       - name: Sign it with the project's key
-        if: env.SIGNING == 'true'
+        if: env.SIGNING == 'true' && env.PUBLISH == 'true'
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
@@ -217,6 +252,7 @@ jobs:
   manifest:
     name: Multi-arch tag
     needs: [channel, image]
+    if: github.event_name != 'workflow_dispatch' || inputs.publish
     permissions:
       packages: write
     env:
@@ -283,13 +319,8 @@ jobs:
         run: |
           echo "${{ github.token }}" | sudo podman login ghcr.io -u "${{ github.actor }}" --password-stdin
           sudo podman pull "$IMAGE:$CHANNEL-${{ matrix.arch }}"
-          mkdir -p output
           # Pinned to the builder's last multi-arch build: its latest tag became amd64-only on 13 October 2026.
-          sudo podman run --rm --privileged --pull=newer --security-opt label=type:unconfined_t \
-            -v ./output:/output -v "./linux/image/${{ matrix.config }}:/config.toml:ro" \
-            -v /var/lib/containers/storage:/var/lib/containers/storage \
-            quay.io/centos-bootc/bootc-image-builder@sha256:2b52843ea2bfda73b0a08d97e76b734393b1d3a804681b9fabb26723bd3a2f0b \
-            --type ${{ matrix.type }} --rootfs btrfs --local "$IMAGE:$CHANNEL-${{ matrix.arch }}"
+          bash linux/image/build-disk.sh "$IMAGE:$CHANNEL-${{ matrix.arch }}" "${{ matrix.type }}" "linux/image/${{ matrix.config }}" output
           # The disk is built; the images only take the room packaging needs.
           sudo podman rmi --ignore "$IMAGE:$CHANNEL-${{ matrix.arch }}" \
             quay.io/centos-bootc/bootc-image-builder@sha256:2b52843ea2bfda73b0a08d97e76b734393b1d3a804681b9fabb26723bd3a2f0b
