@@ -11,6 +11,24 @@ Validation codes: **T** = included in attempted desktop suite (see BASELINE.md f
 integration; **V** = requires disposable-VM validation; **N** = new capability, not implemented.
 Typecheck/build success alone does not establish functional parity. No existing feature is removed.
 
+## Astra runtime and release evidence — 2026-10-28
+
+Fresh desktop results remain 4,915 renderer/shared passes (five skips) and 89 focused main-process
+passes. Typecheck/build and branding checks pass. Selected Python validation now passes 60 tests
+with 26 Windows/platform skips, plus three installer workflow tests. Full native suites remain open.
+
+| Area | New implemented check / observed evidence | Remaining gate |
+| --- | --- | --- |
+| Hermes process, health/auth, bridge discovery | Real pinned server executed twice on Windows; missing/wrong tokens rejected; bridge tools registered | Linux service and host adapter, model chat/tools/approvals, desktop recovery |
+| Memory and skills | Real MemoryStore and skills API; contents survive server restart in an isolated profile | Existing-profile OS upgrade and user-facing integration |
+| Linux alias/filesystem behavior | Existing CI now requires the filesystem suite with zero skips and retains JUnit | Ubuntu execution; installed unit resolution |
+| Image packaging | Actual image inspector and packaged Electron smoke added to existing image workflow | Image/tarball/ISO builds and inspected artifacts |
+| UEFI installation | Existing workflow now uses the ISO bootloader, fatal/success diagnostics and installed-desktop assertions | Actual media boot, install, reboot and visual review |
+| Adjacent Windows-style disk | New GPT/sentinel fixture and before/after hashes in VM workflow | Real VM execution; no actual Windows/shared-ESP certification |
+| Update/rollback and NVIDIA | Existing implementation reviewed; validation sequence documented, identifiers retained | Two deployment transitions, data integrity, GPU/laptop testing |
+
+The H/V gates below remain open. See ASTRA_PROGRESS.md for the precise scope and next execution.
+
 ## Phase 1 evidence update — 2026-10-27
 
 The full renderer/shared suite now passes **4,915 tests in 351 files**, with five skips and no

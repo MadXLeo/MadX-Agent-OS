@@ -6,6 +6,10 @@ into it. [docs/LINUX.md](LINUX.md#the-herald-os-image-fedora-bootc) covers what 
 installer and disks, signing and switching another bootc system to it; the
 [manual](manual/README.md) covers using it.
 
+MadX release validation is still pending: see [the Astra handoff](madx/ASTRA_PROGRESS.md).
+Run the privileged image builder only on a disposable Linux builder. This session does not
+authorize installing to the Windows host or changing its disks, EFI entries or firmware.
+
 ## Where the recipe lives
 
 | File | What it does |
@@ -47,8 +51,9 @@ image's layer, `nvidia.sh`, prints four `--- <step>` lines of its own and ends w
    `linux/bin/herald-os*` go to `/usr/bin`; `themes`, `omakase`, `catalog`, `niri`, `migrations`,
    `plymouth` and `session` from `linux/` go to `/usr/share/herald-os`. Also the Wayland session
    entry, the update-check user units and greetd's config (`/etc/greetd/config.toml`).
-4. **The image's name.** `IMAGE_ID=herald-os` goes in `/usr/lib/os-release`. Every other
-   os-release line stays Fedora's.
+4. **The image's name.** `linux/branding/os-release.py` writes MadX display fields,
+   `IMAGE_ID=madx-agent-os` and the product version. Fedora's `ID`, `ID_LIKE` and version fields
+   stay intact. Legacy `IMAGE_ID=herald-os` installations remain recognized by the updater.
 5. **The shell.** The tarball is unpacked to `/usr/share/herald-os/app` (the build stops if it has
    no `resources/app.asar`), `chrome-sandbox` is made setuid root, the bridge plugin is linked at
    `/usr/share/herald-os/bridge` and the icon goes to
@@ -155,7 +160,7 @@ image is `localhost/herald-os:latest` in root's image store, about 5.7 GB on x86
 
 ```bash
 sudo podman images localhost/herald-os
-sudo podman run --rm localhost/herald-os grep IMAGE_ID /usr/lib/os-release   # IMAGE_ID=herald-os
+sudo podman run --rm localhost/herald-os grep IMAGE_ID /usr/lib/os-release   # IMAGE_ID="madx-agent-os"
 ```
 
 The scripts, lists and units in the image come from `linux/` in your checkout, and only the app
@@ -168,18 +173,14 @@ The workflow's "Build the disk with bootc-image-builder" step, pointed at your l
 VM disk:
 
 ```bash
-mkdir -p output
-sudo podman run --rm --privileged --pull=newer --security-opt label=type:unconfined_t \
-  -v ./output:/output -v ./linux/image/disk.toml:/config.toml:ro \
-  -v /var/lib/containers/storage:/var/lib/containers/storage \
-  quay.io/centos-bootc/bootc-image-builder@sha256:2b52843ea2bfda73b0a08d97e76b734393b1d3a804681b9fabb26723bd3a2f0b \
-  --type qcow2 --rootfs btrfs --local localhost/herald-os:latest
+bash linux/image/build-disk.sh localhost/herald-os:latest qcow2 linux/image/disk.toml output
 ```
 
 That writes `output/qcow2/disk.qcow2`. The builder runs privileged and mounts the new btrfs root
 itself, so the host's kernel must support btrfs: without it, the build stops with
-`unknown filesystem type 'btrfs'`. For the installer, mount `linux/image/iso.toml` as
-`/config.toml` and use `--type anaconda-iso`, which writes `output/bootiso/install.iso`; CI makes the
+`unknown filesystem type 'btrfs'`. The output directory must be new and below the working directory.
+For the installer, use `anaconda-iso linux/image/iso.toml output-iso` as the last three arguments,
+which writes `output-iso/bootiso/install.iso`; CI makes the
 ISO for x86_64 only. The builder is pinned to the digest the workflow uses, its last multi-arch
 build.
 
@@ -199,13 +200,18 @@ bash linux/vm/package-disk.sh output amd64 <version> dist   # arm64 for an aarch
 
 ### In CI, on your fork
 
-`.github/workflows/image.yml` pushes to `ghcr.io/<repository owner>/herald-os`, so on a fork it
-publishes to your own GHCR package. Run "MadX Agent OS image" from the Actions tab: a run from a branch
-other than `main` gets the tag `dev-<first 7 characters of the commit>`, so it never replaces a
-channel, and ticking "Also build the ISO and the VM disk" adds the disks as artifacts of the run.
-A push to `main` that touches the image's files publishes `edge`, and a `v*` tag publishes
-`stable` and the version and attaches the disks to a draft release. The workflow makes nothing
-public: the GHCR package stays private until you change it in the package's settings.
+The configured repositories are `ghcr.io/madxleo/madx-agent-os` and
+`ghcr.io/madxleo/madx-agent-os-nvidia`; a fork must explicitly change its product/registry
+configuration before publishing. A manual "MadX Agent OS image" run defaults to `publish=false`:
+it builds and inspects local images without pushing registry tags or signing/publishing releases.
+Selecting `disks=true` also builds an x86_64 ISO in the
+`image-evidence-madx-agent-os-amd64` workflow artifact. Feed that run ID to the existing
+"Installer test" workflow's `image_run` input, leaving `tag` empty.
+
+Only an explicitly authorized `publish=true` run pushes tags and builds the regular release disk
+matrix. A non-main branch receives `dev-<commit>` tags. Existing push triggers still publish
+`edge` from main and prerelease tags, and `stable` from final release tags; a release tag also
+attaches disks to a draft release. No push or publication was performed during Astra validation.
 
 ## Booting or switching to your build
 

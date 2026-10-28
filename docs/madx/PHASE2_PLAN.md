@@ -3,6 +3,12 @@
 Planning only. Implementation is gated on the Phase 1 checks in REMAINING_ISSUES.md. LoRA Studio,
 self-development, training and model lifecycle services are outside this phase.
 
+2026-10-28: native release gates remain open; see ASTRA_PROGRESS.md. Claude's separately reported
+`claude/ecc-upstream-integration` at `3b28ee7` contains keyring/Secret Service and a read-only model
+plan. Do not recreate or merge those changes in this Astra session. After explicit integration
+authorization, review that dependency and rerun portal, credential and Hermes acceptance before
+building desktop experience work on it. Its reported test results are not Astra evidence.
+
 ## 1. Establish native acceptance evidence
 
 Capture desktop and panels sessions on Linux, plus the macOS application. Test keyboard-only use,

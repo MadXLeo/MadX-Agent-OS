@@ -338,17 +338,24 @@ The zips join the same way from `.001`, `.002` (`cat <file>.zip.[0-9][0-9][0-9] 
 workflow removes the images after the builder, so the runner has room for every output.
 `.github/workflows/installer-test.yml` installs a release's ISO into a KVM machine (with an
 unattended disk layout added to the ISO's kickstart), boots it and screenshots its first start. It
-does so twice. The encrypted run fails unless the ISO's kickstart pre-selects encryption; it then
+tests encrypted, unencrypted, and unencrypted with an adjacent synthetic Windows-style GPT disk.
+The encrypted run fails unless the ISO's kickstart pre-selects encryption; it then
 installs with a passphrase, checks that the installed disk is LUKS and opens with it (from a loop
 device on the runner), and types it at boot over the serial console, with the boot splash off for
 that run. The unencrypted run states the layout without `--encrypted`, as unticking the box would,
 and checks there is no LUKS. A kickstart cannot click the box itself, so the default is checked in
 the ISO's kickstart, not on the screen. Its
-optional `account` input (empty by default, so a run without it is unchanged) also appends the
+required `account` input (default `madx-test`) appends the
 account `%pre` of `unattended.ks` with that name and a throwaway key
 (`linux/vm/account-kickstart.sh` fills it in), forwards port 2222 to the machine's SSH, and fails
 unless the key signs in as the account while root and passwords are refused. It needs a release
-whose image has `herald-os setup ssh`.
+whose image has `herald-os setup ssh`. The workflow boots the ISO's actual UEFI loader, retains
+Anaconda failure diagnostics, and requires a deployed system, active core services, matching
+command/service aliases and a desktop window after reboot. It can also consume an unpublished
+validation ISO through `image_run`; supply exactly one of that run ID or `tag`. The protected
+disk's hash must remain unchanged. This fixture does not contain Windows and does not certify
+shared-ESP or Windows Boot Manager behavior. Execution remains pending; see
+[ASTRA_PROGRESS.md](madx/ASTRA_PROGRESS.md).
 
 On the image, apps install through Flatpak or into `~/.local` (the catalog picks those methods
 there); the system itself changes only by a whole new image.
@@ -511,7 +518,8 @@ the old password no longer opens them.
      `COSIGN_PASSWORD`.
   3. Set the repository variable `SIGNING_ENABLED` to `true`. CI's Signing policy check warns until
      `cosign.pub` is committed.
-  4. Verify: run the MadX Agent OS image workflow from `main`, then
+  4. Verify: after publication is authorized, run the MadX Agent OS image workflow from `main`
+     with `publish=true`, then
      `cosign verify --key cosign.pub --insecure-ignore-tlog=true ghcr.io/madxleo/madx-agent-os:edge`
      (no transparency log, as above).
   5. Only then commit `cosign.pub` as `linux/image/cosign.pub`. From then on the image workflow fails

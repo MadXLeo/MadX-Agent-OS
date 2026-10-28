@@ -1,4 +1,44 @@
-# Phase 1 validation — 2026-10-27
+# Phase 1 validation
+
+## Astra Linux validation preparation — 2026-10-28
+
+Started clean at `50dd6d4` on `codex/madx-foundation`; work continues on
+`codex/linux-release-validation`. The original five commits remain intact. See
+[ASTRA_PROGRESS.md](ASTRA_PROGRESS.md) for exact commands, artifacts, commits and the Linux handoff.
+
+| Fresh check | Result |
+| --- | --- |
+| Initial Linux source baseline | 40 passed, 26 Windows/platform skips. |
+| TypeScript checks and production desktop build | PASS; existing bundler warnings remain. |
+| Full renderer/shared suite | 4,915 passed, 5 skipped, 0 failed; 351 files. |
+| Focused main-process regressions | 89 passed in six files. |
+| Release harness, installer parser, branding, window rules and disk tests | 60 passed, 26 skipped; includes real pykickstart parsing of generated diagnostics and disk restrictions. |
+| Installer workflow/account tests | 3 passed, 218 deselected. |
+| Branding synchronization and copy audit | PASS; compatibility exceptions retained. |
+| Native source parsing | 71 Python, 41 Bash, 6 TOML files; PASS. |
+| Edited workflows | Actionlint 1.7.12 PASS; YAML and Bash syntax checked separately. No Linux job execution implied. |
+| Actual Hermes 0.21.5 server, pinned `f97608f178d1ffeca59860195ab7da295f7c8e5f` | PASS on Windows: two real process launches, API health, token rejection, bridge tool registration, memory, skills and persistence across restart. |
+
+The Hermes smoke uses a disposable profile, isolated Python environment and no provider credentials.
+It does not execute a model conversation, desktop tool, approval dialog or systemd service.
+No configured provider was found; common local-provider ports 11434 and 1234 were closed.
+The temporary profile lives outside `.venv`, because Hermes excludes skill paths containing that
+component. Logs redact the throwaway session token; existing user profiles are untouched.
+
+CI now retains desktop/Python reports, requires Linux alias tests without skips, runs the real
+Hermes smoke on Ubuntu, inspects built-image contents/systemd/Electron, and supports unpublished
+ISO artifacts. The installer harness boots actual UEFI media, captures Anaconda/OSTree diagnostics,
+checks an installed desktop over SSH, and hashes an adjacent synthetic GPT disk before/after.
+These are implemented checks awaiting Linux execution, not successful image/boot results.
+
+No container image, native Linux app package, ISO or booted guest was produced here. WSL is not
+installed; Podman/Docker/QEMU are unavailable. GitHub's branch search returned no matching
+foundation branch; its limited PR-run query returned no runs for `50dd6d4`. No code was pushed
+and no remote workflow was dispatched. Native runs cannot validate unpublished local changes.
+The 128 previously reproduced Windows main-process failures remain open, not waived or rerun.
+Claude's separate keyring/model-plan branch was neither inspected nor merged.
+
+## Prior Phase 1 source evidence — 2026-10-27
 
 Phase 1 source changes are implemented and checked locally; **Phase 1 is not yet complete**.
 Supported-platform and VM release gates remain in [REMAINING_ISSUES.md](REMAINING_ISSUES.md).

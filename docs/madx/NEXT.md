@@ -1,12 +1,15 @@
 # Continue MadX Agent OS
 
-Stay on `codex/madx-foundation`. Preserve the working implementation and the original baseline.
-Read VALIDATION.md, REMAINING_ISSUES.md and MIGRATIONS.md. Do not repeat the initial inventory.
+Continue `codex/linux-release-validation`, based on `codex/madx-foundation` at `50dd6d4`.
+Read ASTRA_PROGRESS.md, VALIDATION.md, REMAINING_ISSUES.md and MIGRATIONS.md. Preserve existing
+work and do not repeat the initial inventory. Do not merge or modify Claude's separate workspace.
 
-The next work is supported-platform Phase 1 validation: complete Linux/macOS suites, actual Hermes
-integration, native packaging, staged aliases under Linux, then disposable-VM boot/install/upgrade
-and rollback. Inspect the installer runtime branding before claiming Phase 1 complete. The source
-copy audit and production desktop build pass; Windows-only failures and unrun gates remain explicit.
+The next work is execution of the existing CI/image/installer workflows on the new source after
+an authorized transfer to Linux. Run the image workflow with publish=false and disks=true, then
+pass its run ID to installer-test's image_run. Inspect the first real Anaconda/GRUB diagnostics,
+boot screenshots and guest checks before any installer fix. Source and Windows Hermes runtime
+checks pass; Linux, model-backed chat and update/rollback gates remain open. See ASTRA_PROGRESS.md
+for the exact sequence, evidence limits and the isolated update/rollback procedure.
 
 Do not start LoRA Studio, self-development or Phase 2 implementation until these gates pass.
 PHASE2_PLAN.md is planning only. Keep all compatibility identifiers listed in MIGRATIONS.md and

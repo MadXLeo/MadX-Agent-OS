@@ -1,7 +1,12 @@
 # Phase 1 release gates
 
-Updated 2026-10-27. Source implementation is ready for supported-platform validation. Phase 1 is
+Updated 2026-10-28. Source implementation is ready for supported-platform validation. Phase 1 is
 **not declared complete**. No LoRA or self-development work has started.
+
+The current Astra work adds executable Linux/image/VM gates to existing workflows and passes a
+real Windows Hermes server smoke. None of the native jobs has executed on this source. Follow
+ASTRA_PROGRESS.md after an authorized transfer to Linux; do not publish an image to obtain a test
+ISO. Manual image builds now default to `publish=false`.
 
 ## Required before completion
 
@@ -23,8 +28,11 @@ Updated 2026-10-27. Source implementation is ready for supported-platform valida
 5. Test fresh install, upgrade from an existing upstream install, reboot and rollback using isolated
    virtual disks. Hash preferences, browser profiles, Hermes memories, plugin settings and documents
    before/after. Verify old and new command names and service names address the same implementation.
-6. Run actual Hermes chat, tools, approvals, memory, skills, routines and provider recovery against
-   the pinned engine. Renderer mocks and type compatibility do not prove an end-to-end connection.
+6. Run actual Hermes chat, tools, approvals, routines and provider recovery against the pinned
+   engine. Real Windows API health/authentication, bridge discovery, memory, skills and restart
+   now pass. Linux service startup, host tools, desktop recovery and model-backed operation remain
+   unvalidated. First boot currently installs Hermes from `main` unless an installation ref is set;
+   capture that actual revision and validate it as well as the source/client pin before release.
 7. Exercise NVIDIA image build/kernel matching, encrypted installation, recovery and dual-boot
    scenarios in disposable VMs only. The previously reported GRUB failure still needs its logs;
    no root cause or fix has been claimed.
@@ -32,6 +40,17 @@ Updated 2026-10-27. Source implementation is ready for supported-platform valida
    published. Current registry references are build configuration, not a claim that tags exist.
 9. Replace historical documentation screenshots with captures from the validated native build.
    They are explicitly labeled as upstream references, not passed off as current MadX screenshots.
+
+The simulated Windows GPT case checks an adjacent disk only: shared-ESP installation, boot-menu
+coexistence and an actual Windows boot remain untested. Installer UI/branding and Plymouth prompts
+also need visual inspection; unattended text mode does not cover the interactive storage UI.
+NVIDIA remains an optional CI leg upstream; an overall workflow success is insufficient proof
+that the NVIDIA image passed. Require that leg's own build/inspection report for laptop readiness.
+
+Existing source uses SELinux permissive mode (ADR-012), and this checkout has no committed project
+cosign public key. Preserve these explicit upstream/release limitations; source validation does
+not certify a hardened or signed release. Secret Service/keyring work is a separate Claude branch
+dependency and must be reviewed after an authorized integration, not duplicated here.
 
 ## Intentionally retained names
 
