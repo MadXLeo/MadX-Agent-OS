@@ -1,5 +1,19 @@
 # Phase 1 validation
 
+## Continuation — awaiting authorized Linux execution
+
+Started at `a486db3` on `codex/linux-release-validation`. The latest continuation repaired the
+bridge CI runner regression, added full Linux skip accounting and image-run provenance checks,
+and prepared exact remote invocations. Resumed at `310cfda` with all pending docs preserved. The
+Git Bash path-spelling test defect was reproduced, then fixed using exact argument capture and
+requirements-file identity. The expanded local run is **76 passed, 26 skipped, zero failed**.
+Three installer workflow tests
+pass; Actionlint, three YAML/46 Bash workflow blocks, branding and 72 Python/41 Bash/six TOML
+source checks pass. TypeScript checks were rerun and pass. The native JUnit gate correctly rejects
+the actual Windows report's 26 skipped cases. No desktop or Hermes runtime implementation changed;
+their earlier full tests/build/smoke below were not repeated. Full details, logs, gates and approval scope are in
+ASTRA_PROGRESS.md. No image/ISO/VM result is claimed.
+
 ## Astra Linux validation preparation — 2026-10-28
 
 Started clean at `50dd6d4` on `codex/madx-foundation`; work continues on

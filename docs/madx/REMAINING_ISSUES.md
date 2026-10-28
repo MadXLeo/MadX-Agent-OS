@@ -8,6 +8,21 @@ real Windows Hermes server smoke. None of the native jobs has executed on this s
 ASTRA_PROGRESS.md after an authorized transfer to Linux; do not publish an image to obtain a test
 ISO. Manual image builds now default to `publish=false`.
 
+Continuation: no Linux runtime is installed, the validation branch is not remote, and pushing
+requires explicit approval. ASTRA_PROGRESS.md now contains the exact branch and workflow commands.
+The previous CI runner regression is fixed. The Git Bash test's path-spelling defect is also fixed:
+it now checks the actual requirements file and preserves argument boundaries; expanded checks
+pass 76 tests with 26 platform skips. Linux JUnit rejects unexpected skips, with only named
+macOS PDFKit and root-only nft exclusions. Execute the latter separately before security signoff.
+Image-run provenance must match the installer checkout. Hermes first-boot version drift is now
+recorded by the guest probe, but no actual guest has run.
+
+Manual CI dispatch has not been attempted. Remote main still lacks its manual trigger, so the
+prepared execution uses an authorized push to this branch's explicit CI trigger instead. No main
+merge is required. Image and installer workflows can be selected at this branch after it is pushed;
+their actual execution, artifact checksums and VM outcomes remain unverified. The latest user
+instruction is still not to push yet.
+
 ## Required before completion
 
 1. Run the complete desktop and bridge suites on Linux and macOS. On Windows, 128 main-process

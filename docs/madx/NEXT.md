@@ -4,12 +4,15 @@ Continue `codex/linux-release-validation`, based on `codex/madx-foundation` at `
 Read ASTRA_PROGRESS.md, VALIDATION.md, REMAINING_ISSUES.md and MIGRATIONS.md. Preserve existing
 work and do not repeat the initial inventory. Do not merge or modify Claude's separate workspace.
 
-The next work is execution of the existing CI/image/installer workflows on the new source after
-an authorized transfer to Linux. Run the image workflow with publish=false and disks=true, then
+The next work requires approval to push this branch and run existing CI/image/installer workflows.
+The host has no Linux runtime, and remote main lacks CI's manual trigger; the branch's push trigger
+now runs CI without a merge. Use the exact commands in ASTRA_PROGRESS.md. Run the image workflow
+on this branch with publish=false and disks=true, then
 pass its run ID to installer-test's image_run. Inspect the first real Anaconda/GRUB diagnostics,
 boot screenshots and guest checks before any installer fix. Source and Windows Hermes runtime
 checks pass; Linux, model-backed chat and update/rollback gates remain open. See ASTRA_PROGRESS.md
-for the exact sequence, evidence limits and the isolated update/rollback procedure.
+for the exact sequence, evidence limits and the isolated update/rollback procedure. Keep image
+and installer revisions identical: the installer rejects mismatched image-run evidence.
 
 Do not start LoRA Studio, self-development or Phase 2 implementation until these gates pass.
 PHASE2_PLAN.md is planning only. Keep all compatibility identifiers listed in MIGRATIONS.md and

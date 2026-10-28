@@ -13,6 +13,13 @@ Typecheck/build success alone does not establish functional parity. No existing 
 
 ## Astra runtime and release evidence — 2026-10-28
 
+Continuation: CI again uses the established bridge runner; unexpected Linux skips are rejected;
+image architecture/source labels and installer run provenance are checked. Guest Hermes revision
+drift is observed without altering the installed version. After correcting the Git Bash test's
+path comparison, expanded local checks report 76 passes, 26 skips and zero failures; three
+installer workflow tests and all TypeScript checks also pass.
+These safeguards have no Linux runtime result yet and do not close H/V gates.
+
 Fresh desktop results remain 4,915 renderer/shared passes (five skips) and 89 focused main-process
 passes. Typecheck/build and branding checks pass. Selected Python validation now passes 60 tests
 with 26 Windows/platform skips, plus three installer workflow tests. Full native suites remain open.

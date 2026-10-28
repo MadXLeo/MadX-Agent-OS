@@ -1,5 +1,154 @@
 # Astra progress — 2026-10-28
 
+## Continuation: execution prepared, remote authorization required
+
+Started clean at `a486db3d851ad8f6eea6a5917773841857dc9d8d` on
+`codex/linux-release-validation`. Windows still has no installed WSL, Podman, Docker or QEMU;
+`gh` is also absent. No system software was installed. GitHub read-only checks confirm a public
+repository, default branch `main`, and no remote validation branch. Account access does not
+override the user's requirement for approval before pushing. No remote run was started.
+
+Resumed the interrupted work at `310cfda`, retaining the committed CI/provenance improvements
+and all five pending documentation changes. The user explicitly repeated **do not push yet**.
+The Git Bash test defect is now fixed and validated below; no host software or remote state changed.
+Source commits: `310cfda` (CI runner, strict Linux evidence and image provenance, retained from the
+interrupted session) and `9444c6d` (Git Bash/native Python test-path identity fix). The evidence
+commit follows these; the final response records its ID and final working-tree state.
+
+### Repairs and safeguards
+
+- Reproduced and fixed a previous-session CI regression: the bridge job bypassed
+  `scripts/test-bridge.sh`, breaking its existing dependency/runner assertion. CI again uses the
+  established runner and Python selection, explicitly passes both suites, and retains JUnit.
+- Remote main lacks CI's manual trigger. This validation branch now has a CI push trigger, so an
+  authorized push can test the branch without merging into main. Image/installer workflows
+  already have manual triggers on remote main; invoke their **branch versions** as shown below.
+  Read-only checks reconfirmed this after resumption. Manual CI API dispatch has not been attempted
+  (the branch is not remote); the execution plan does not depend on branch-only manual dispatch.
+- Full Linux JUnit now rejects unreviewed skips. Only macOS PDFKit and root-only nft syntax have
+  named exclusions with review reasons. Alias tests remain strictly zero-skip. Missing namespaces,
+  loop devices or prerequisites must produce incomplete validation, not a green release claim.
+  Root nft validation remains a separate gate; the general suite stays unprivileged.
+- Validation ISO downloads require a successful completed manual image run from this repository
+  at the exact checked-out commit. Wrong revisions/workflows/repositories, forks and incomplete
+  or failed runs are rejected. Original ISO checksums are retained in installer artifacts.
+- Images carry an OCI source-revision label; inspection checks architecture and revision.
+  Artifacts retain UPSTREAM.lock. Guest observations record Hermes command availability, installed
+  Git revision and drift from the tested pin, without changing first-boot versions. This is not
+  proof of model-backed functionality.
+
+### Executed checks and resolved test defect
+
+Initial selected baseline: **60 passed, 26 skipped**. The expanded run first exposed two failures;
+restoring the bridge runner fixed the CI regression. Before interruption the result was **75
+passed, 26 skipped, one failed**. Resumption reproduced the last failure in
+`test_test_deps.py::test_the_runner_falls_back_to_uv_with_the_requirements_when_pyyaml_is_missing`:
+Git Bash returned `/c/Users/.../requirements.txt`, while the test expected the spelling `C:\Users\...`.
+The test now records NUL-separated arguments, converts the Git Bash path on Windows, and checks
+the actual requirements file with `Path.samefile`. It also checks the invocation's arguments;
+neither file selection nor missing-dependency fallback was relaxed. The production runner is
+unchanged. All four dependency-runner tests now pass.
+
+Final expanded result: **76 passed, 26 skipped, zero failed**. The skips remain three filesystem
+symlink cases and 23 Linux-only packaging cases. Running the native JUnit gate on this actual
+Windows report correctly rejected those skips. Provenance acceptance/rejection and explicit-skip
+accounting tests pass. The earlier 128 Windows main-process failures are separate and remain open.
+
+Three installer workflow tests pass (218 deselected). Actionlint passes for three edited workflows;
+three YAML files and 46 Bash blocks parse. Native parsing passes 72 Python, 41 Bash and six TOML
+files. TypeScript checks for all workspaces, branding and whitespace checks pass. Desktop code
+and the Hermes smoke implementation are unchanged; their earlier full test/build/runtime results
+below remain historical, not new runs.
+
+Executed commands, with Git Bash on PATH and PYTHONUTF8=1:
+
+```text
+.venv/py312/Scripts/python.exe -m pytest linux/tests/test_release_validation.py linux/tests/test_installer.py linux/tests/test_branding.py linux/tests/test_window_rules.py linux/tests/test_vm_disks.py -q
+.venv/py312/Scripts/python.exe -m pytest linux/tests/test_release_validation.py linux/tests/test_installer.py linux/tests/test_branding.py linux/tests/test_window_rules.py linux/tests/test_vm_disks.py linux/tests/test_test_deps.py -q
+.venv/py312/Scripts/python.exe -m pytest linux/tests/test_unattended.py -k installer_test -q
+.venv/actionlint/actionlint.exe -shellcheck= -pyflakes= .github/workflows/ci.yml .github/workflows/image.yml .github/workflows/installer-test.yml
+.venv/py312/Scripts/python.exe scripts/madx/check-native.py --bash "C:\Program Files\Git\bin\bash.exe"
+npm run typecheck
+npm run branding:check
+node scripts/madx/audit-branding.mjs --check
+git diff --check
+```
+
+The interrupted run's ignored logs remain `madx-continuation-*.log`. The resumed evidence is
+`madx-resume-{baseline-deps,deps,tests,installer-workflow,typecheck,workflows,workflow-shells,native,
+branding,skip-rejection}.log`, with `.venv/madx-resume-tests.xml`. The expanded run added
+`--junitxml=.venv/madx-resume-tests.xml` to the command above. Native skip detection was also run as
+`python scripts/madx/check-junit.py .venv/madx-resume-tests.xml --allow-skipped linux/tests/expected-linux-skips.json`;
+its rejection is an expected validation result, not another product failure. Compact evidence and
+hashes are appended to VALIDATION_RESULTS.json.
+
+### Exact remote execution proposal — not executed
+
+Separate approval is required to push **only** `codex/linux-release-validation` to the public
+repository and run CI plus the nonpublishing image/installer workflows. Neither is approved in
+this resumed session. No merge, release, registry push or host
+software installation is included. Keep the branch fixed between build and installation.
+
+```text
+git rev-parse HEAD
+git status --short
+git push origin HEAD:refs/heads/codex/linux-release-validation
+```
+
+The push triggers CI. These commands require an already authenticated GitHub CLI environment,
+or equivalent GitHub API/UI operations; installing CLI on Windows is not presumed authorized.
+Replace placeholders with the recorded full SHA and returned run IDs. Verify every `headSha`.
+No `gh workflow run ci.yml` is needed. Image and release push triggers exclude this branch, so
+pushing it does not publish images or tags. Do not push if the working tree is unexpectedly dirty.
+
+```text
+gh run list --repo MadXLeo/MadX-Agent-OS --workflow ci.yml --branch codex/linux-release-validation --commit <full-SHA> --event push --json databaseId,headSha,status,conclusion,url
+gh run watch <CI-run-ID> --repo MadXLeo/MadX-Agent-OS --exit-status
+gh workflow run image.yml --repo MadXLeo/MadX-Agent-OS --ref codex/linux-release-validation -f publish=false -f disks=true
+gh run list --repo MadXLeo/MadX-Agent-OS --workflow image.yml --branch codex/linux-release-validation --commit <full-SHA> --event workflow_dispatch --json databaseId,headSha,status,conclusion,url
+gh run watch <image-run-ID> --repo MadXLeo/MadX-Agent-OS --exit-status
+gh run download <image-run-ID> --repo MadXLeo/MadX-Agent-OS --name image-evidence-madx-agent-os-amd64 --dir <new-evidence-directory>
+gh workflow run installer-test.yml --repo MadXLeo/MadX-Agent-OS --ref codex/linux-release-validation -f image_run=<image-run-ID> -f tag= -f account=madx-test
+```
+
+Inspect CI failures, each image leg and checksums, then all three installer artifacts and screenshots.
+Image building can diagnose packaging separately, but failed CI remains a release blocker. Do not
+run the old default-branch publishing workflow. GitHub documents manual triggers in
+[manual workflow runs](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow),
+and branch/input/SHA selectors in [workflow run](https://cli.github.com/manual/gh_workflow_run)
+and [run list](https://cli.github.com/manual/gh_run_list).
+
+### Milestone evidence and separate readiness estimates
+
+| Required runtime result | Evidence |
+| --- | --- |
+| Built Linux image | Blocked: no local builder; remote execution needs authorized push. |
+| Generated bootable ISO | Blocked; no ISO or ISO checksum available. |
+| UEFI media boot | Unverified; harness not run. |
+| Isolated installation | Unverified; no new Anaconda logs. |
+| First reboot | Unverified. |
+| Running graphical desktop | Unverified on Linux; prior production bundles are not boot evidence. |
+| Required systemd services | Unverified; source checks only. |
+| Basic Linux Hermes integration | Unverified; prior Windows smoke supplies partial evidence only. |
+| Update/rollback | Unverified; the two-image VM procedure below remains required. |
+| No critical installer failure | Unproven; original GRUB failure still lacks reproduction/logs. |
+
+| Area | Readiness estimate |
+| --- | --- |
+| Source migration | Substantially implemented and previously desktop-tested; native appearance/compatibility need execution. |
+| Linux image build readiness | Execution prepared; no successful build yet. |
+| VM installation readiness | Harness prepared with provenance checks; no successful boot/install yet. |
+| Hermes Linux integration | Not validated; pinned Windows server smoke passed previously. |
+| Release readiness | Not ready: native, update/rollback, signing/security and hardware gates remain. |
+| Overall MadX v0.1 | Source foundation and validation tooling; installability unproven. Claude's later provider/keyring/LoRA integration and combined verification remain dependencies. |
+
+NVIDIA remains source-reviewed only. Real laptop checklist: GPU detection, CUDA/container GPU,
+hybrid graphics, Wi-Fi, Bluetooth, audio, suspend/resume, external display, battery/thermal behavior
+and Secure Boot. No Alienware installation is authorized. Claude's workspace and host disks, EFI,
+firmware and encryption were not changed. Session commit IDs are recorded in the final response.
+
+## Prior session evidence
+
 MadX source validation and a real Hermes server smoke pass. **MadX v0.1 is not yet proven
 installable; Phase 1 remains open.** No Linux image, ISO, installed desktop, update or rollback
 was run on this Windows host. The next step is to execute the extended existing workflows on

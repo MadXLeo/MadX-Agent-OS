@@ -377,5 +377,108 @@
       ".venv/astra-hermes-runtime.json": "3d6a78486fbcb79e066bc171b7646e0682199ca848008e22055ca38ca6b2ac60",
       ".venv/astra-hermes-dependencies.txt": "1f7f5f9cbcfe925c0b277a9753e1eb6d35d0478c3b8e6c360ce2108f04d5bf7e"
     }
+  },
+  "linuxValidationContinuation": {
+    "date": "2026-10-28",
+    "platform": "Windows",
+    "branch": "codex/linux-release-validation",
+    "interruptedSessionInitialHead": "a486db3d851ad8f6eea6a5917773841857dc9d8d",
+    "resumedHead": "310cfda5b7fe6136f8bfe6959a57d4a22ea2c863",
+    "resumedUncommittedFiles": [
+      "docs/madx/ASTRA_PROGRESS.md",
+      "docs/madx/FEATURE_PARITY.md",
+      "docs/madx/NEXT.md",
+      "docs/madx/REMAINING_ISSUES.md",
+      "docs/madx/VALIDATION.md"
+    ],
+    "sourceCommits": [
+      "310cfda5b7fe6136f8bfe6959a57d4a22ea2c863",
+      "9444c6d5d0a62fc2d8c87374bb670d089c98d717"
+    ],
+    "interruptedSelectedTests": {
+      "passed": 75,
+      "skipped": 26,
+      "failed": 1
+    },
+    "resumedDependencyBaseline": {
+      "passed": 3,
+      "failed": 1
+    },
+    "selectedTests": {
+      "passed": 76,
+      "skipped": 26,
+      "failed": 0,
+      "junit": ".venv/madx-resume-tests.xml"
+    },
+    "finalDependencyRecheck": {
+      "passed": 4,
+      "failed": 0
+    },
+    "installerWorkflowTests": {
+      "passed": 3,
+      "deselected": 218,
+      "failed": 0
+    },
+    "pathDefect": "Resolved test representation mismatch with NUL-separated argv, Git Bash path conversion on Windows and exact requirements-file identity; production runner unchanged.",
+    "typecheck": "passed, all workspaces",
+    "workflowSyntax": {
+      "files": 3,
+      "bashBlocks": 46,
+      "actionlint": "1.7.12",
+      "result": "passed; not remote execution"
+    },
+    "nativeSyntax": {
+      "python": 72,
+      "bash": 41,
+      "toml": 6,
+      "result": "passed"
+    },
+    "branding": "synchronization and copy audit passed",
+    "sourceProvenance": "acceptance and wrong revision/workflow/repository/fork/incomplete-run rejection cases passed",
+    "linuxSkipDetection": "Actual Windows report with 26 skips rejected as expected; exact reviewed exclusions tested separately",
+    "remoteInspection": {
+      "defaultBranch": "main",
+      "branchPresent": false,
+      "ciManualTriggerOnMain": false,
+      "imageAndInstallerManualTriggersOnMain": true,
+      "dispatchAttempted": false,
+      "executionPath": "authorized branch push triggers CI; select branch versions for manual image/installer dispatch"
+    },
+    "priorMainWindowsFailures": {
+      "count": 128,
+      "rerun": false,
+      "status": "unresolved; not waived"
+    },
+    "desktopBuildAndFullTests": "historical previous-session evidence; no application code changed",
+    "hermesWindowsSmoke": "historical pass at f97608f178d1ffeca59860195ab7da295f7c8e5f; not rerun",
+    "linuxImageBuilt": false,
+    "isoBuilt": false,
+    "isoChecksum": null,
+    "vmBooted": false,
+    "vmInstalled": false,
+    "linuxHermes": "unverified",
+    "modelBackedHermes": "unverified",
+    "updateRollback": "unverified",
+    "nvidiaHardware": "unverified",
+    "phase1Complete": false,
+    "pushed": false,
+    "published": false,
+    "remoteWorkflowsDispatched": false,
+    "hostSystemSoftwareInstalled": false,
+    "rawEvidenceSha256": {
+      "madx-continuation-baseline.log": "ef277188cd85c5950f041b4178b41f20e377aec2a539b368af80cd8576b9372a",
+      "madx-continuation-tests.log": "9e8e9cd946f7ce43e96907d90de6dfe3de28372d22fd66e97405fdac91e27367",
+      "madx-resume-baseline-deps.log": "d341cfc8efd3d6059b2d17bbc9e6ebf67038ac6ed6d1e00fc8a82c6117d2aad8",
+      "madx-resume-deps.log": "497319fdb349cdd3e1cfc6e6075d0959ebfad14eb38b95adf44e6f228030e6d6",
+      "madx-resume-tests.log": "cb9a0273b2338e64c67474f3c4d1afb87270c522d360adc60b40ffbadfd74bfc",
+      "madx-resume-installer-workflow.log": "60c1c052f5bc7448a218ad817a67d0fa6575ac5640e94e52477f3ba283afa191",
+      "madx-resume-typecheck.log": "c6c13b6c9e5117f7ee92e58a5b84d1b3239c35e15edcef71b5eddf3a17ab91b1",
+      "madx-resume-workflows.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "madx-resume-workflow-shells.log": "206d96800da4af52a1297161a1c857a5412b13191095a484a4890984a290d2b0",
+      "madx-resume-native.log": "6f6dc96190b05a57b57faa16544af55e1e3cffea53c4ed34bf06450e9e9afec8",
+      "madx-resume-branding.log": "b44e96a6b4c2806e8883ae774fd4514257756c804459173d0c9d6149b1dabd14",
+      "madx-resume-skip-rejection.log": "67fad2cc654d68dbb9b56259981d4c7f993da23c0dfe3600edbc490936c163ed",
+      ".venv/madx-resume-tests.xml": "70d5e3c6928215113fe75f3b862d887b05446a6c8607e75149d0a0d591fba5fd"
+    }
   }
 }
