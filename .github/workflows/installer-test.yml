@@ -18,6 +18,10 @@ name: Installer test
 # The protected second disk contains only a synthetic GPT and sentinels, not a Windows installation.
 
 on:
+  # Register this existing workflow in Actions without running any installation on a push.
+  push:
+    branches: [codex/linux-release-validation]
+    paths: ['.github/workflows/installer-test.yml']
   workflow_dispatch:
     inputs:
       tag:
@@ -37,8 +41,18 @@ permissions:
   actions: read
 
 jobs:
+  register-validation:
+    name: Register manual installer workflow
+    if: github.event_name == 'push'
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo 'Workflow registered. Installation requires a manual run against a verified image run.'
+
   install:
     name: Install and boot (x86_64, ${{ matrix.disk }})
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     strategy:

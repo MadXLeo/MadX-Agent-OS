@@ -771,7 +771,9 @@ def workflow() -> dict:
 def test_the_installer_test_requires_an_account_for_guest_acceptance():
     flow = workflow()
     triggers = flow.get("on", flow.get(True))
-    assert list(triggers) == ["workflow_dispatch"]
+    assert set(triggers) == {"push", "workflow_dispatch"}
+    assert triggers["push"] == {"branches": ["codex/linux-release-validation"], "paths": [".github/workflows/installer-test.yml"]}
+    assert flow["jobs"]["install"]["if"] == "github.event_name == 'workflow_dispatch'"
     account = triggers["workflow_dispatch"]["inputs"]["account"]
     assert account["default"] == "madx-test" and account.get("required") is True
     steps = flow["jobs"]["install"]["steps"]

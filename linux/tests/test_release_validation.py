@@ -3,6 +3,7 @@ import binascii
 import importlib.util
 from pathlib import Path
 import struct
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -200,3 +201,39 @@ def test_validation_branch_runs_ci_without_a_default_branch_merge_and_checks_lin
     gate = steps["Reject unexpected Linux skips"]
     assert "always()" in gate["if"] and "runner.os == 'Linux'" in gate["if"]
     assert "bridge-linux-tests.xml --allow-skipped linux/tests/expected-linux-skips.json" in gate["run"]
+
+
+@pytest.mark.parametrize("event,ref,publish,build,push", [
+    ("push", "heads/codex/linux-release-validation", False, False, False),
+    ("workflow_dispatch", "heads/codex/linux-release-validation", False, True, False),
+    ("workflow_dispatch", "heads/codex/linux-release-validation", True, True, False),
+    ("push", "heads/main", False, True, True),
+    ("push", "tags/v0.1.0", False, True, True),
+    ("workflow_dispatch", "heads/main", False, True, False),
+    ("workflow_dispatch", "heads/main", True, True, True),
+])
+def test_workflow_registration_never_builds_installs_or_publishes(event, ref, publish, build, push):
+    image_flow = yaml.safe_load((ROOT / ".github/workflows/image.yml").read_text())
+    installer = yaml.safe_load((ROOT / ".github/workflows/installer-test.yml").read_text())
+    context = {"github": SimpleNamespace(event_name=event, ref="refs/" + ref),
+               "inputs": SimpleNamespace(publish=publish)}
+
+    def enabled(expression):
+        # These guards use only equality and boolean operators, shared by Python/GitHub.
+        expression = expression.removeprefix("${{").removesuffix("}}").strip()
+        return bool(eval(expression.replace("&&", " and ").replace("||", " or "),
+                         {"__builtins__": {}}, context))
+
+    assert enabled(image_flow["jobs"]["channel"]["if"]) is build
+    assert image_flow["jobs"]["image"]["needs"] == "channel"
+    assert enabled(image_flow["env"]["PUBLISH"]) is push
+    assert enabled(image_flow["jobs"]["manifest"]["if"]) is push
+    assert enabled(installer["jobs"]["install"]["if"]) is (event == "workflow_dispatch")
+    registration = event == "push" and ref == "heads/codex/linux-release-validation"
+    assert enabled(image_flow["jobs"]["register-validation"]["if"]) is registration
+    for flow in (image_flow, installer):
+        assert "codex/linux-release-validation" in flow[True]["push"]["branches"]
+        job = flow["jobs"]["register-validation"]
+        assert job["permissions"] == {"contents": "read"}
+        assert len(job["steps"]) == 1 and set(job["steps"][0]) == {"run"}
+        assert job["steps"][0]["run"].startswith("echo '")

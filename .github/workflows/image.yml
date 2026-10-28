@@ -11,7 +11,7 @@ on:
   push:
     tags: ['v*']
     # main publishes the edge channel (`herald-os channel edge`); only changes that reach the image.
-    branches: [main]
+    branches: [main, codex/linux-release-validation]
     paths:
       - 'linux/**'
       - 'apps/**'
@@ -41,13 +41,24 @@ concurrency:
 
 env:
   IMAGE: ghcr.io/madxleo/madx-agent-os
-  PUBLISH: ${{ github.event_name != 'workflow_dispatch' || inputs.publish }}
+  # This validation branch can never publish, including during workflow registration pushes.
+  PUBLISH: ${{ github.ref != 'refs/heads/codex/linux-release-validation' && (github.event_name != 'workflow_dispatch' || inputs.publish) }}
   # Signing waits for the key (cosign generate-key-pair; the public half goes in linux/image/cosign.pub).
   SIGNING: ${{ secrets.COSIGN_PRIVATE_KEY != '' && 'true' || 'false' }}
 
 jobs:
+  register-validation:
+    name: Register manual validation workflow
+    if: github.event_name == 'push' && github.ref == 'refs/heads/codex/linux-release-validation'
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo 'Workflow registered. Image validation requires a manual run with publish=false and disks=true.'
+
   channel:
     name: Channel
+    if: github.event_name != 'push' || github.ref != 'refs/heads/codex/linux-release-validation'
     runs-on: ubuntu-24.04
     outputs:
       channel: ${{ steps.pick.outputs.channel }}
@@ -255,7 +266,7 @@ jobs:
   manifest:
     name: Multi-arch tag
     needs: [channel, image]
-    if: github.event_name != 'workflow_dispatch' || inputs.publish
+    if: github.ref != 'refs/heads/codex/linux-release-validation' && (github.event_name != 'workflow_dispatch' || inputs.publish)
     permissions:
       packages: write
     env:
