@@ -184,7 +184,7 @@ jobs:
           done
       - name: Build the image
         run: |
-          base=(--build-arg SHELL_TARBALL=herald-os-linux.tar.gz)
+          base=(--build-arg SHELL_TARBALL=herald-os-linux.tar.gz --label "org.opencontainers.image.revision=$GITHUB_SHA")
           if [[ "${{ matrix.image }}" != madx-agent-os-nvidia ]]; then
             sudo podman build -f linux/image/Containerfile "${base[@]}" -t "$REPO:$TAG" .
             exit 0
@@ -200,6 +200,8 @@ jobs:
           extra=()
           [[ "${{ matrix.image }}" != madx-agent-os-nvidia ]] || extra+=(--nvidia)
           sudo podman image inspect "$REPO:$TAG" >image-inspect.json
+          [[ "$(sudo podman image inspect --format '{{.Architecture}}' "$REPO:$TAG")" == "${{ matrix.arch }}" ]]
+          [[ "$(sudo podman image inspect --format '{{index .Labels "org.opencontainers.image.revision"}}' "$REPO:$TAG")" == "$GITHUB_SHA" ]]
           sudo podman run --rm --network=none --entrypoint python3 -v "$PWD:/validation:ro" "$REPO:$TAG" \
             /validation/scripts/madx/check-image.py --root / --metadata /validation/branding "${extra[@]}" | tee image-validation.json
           sudo podman run --rm --network=none --entrypoint /bin/bash "$REPO:$TAG" -ec \
@@ -222,6 +224,7 @@ jobs:
             image-validation.json
             systemd-verify.log
             electron-runtime.json
+            upstream/UPSTREAM.lock
             validation-dist/
       - name: Push it
         if: env.PUBLISH == 'true'

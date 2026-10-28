@@ -22,6 +22,7 @@ windows = load("windows_fixture", "linux/vm/windows-fixture.py")
 image = load("image_probe", "scripts/madx/check-image.py")
 junit = load("junit_probe", "scripts/madx/check-junit.py")
 hermes = load("hermes_probe", "scripts/madx/hermes-smoke.py")
+provenance = load("image_run_probe", "scripts/madx/verify-image-run.py")
 
 
 def test_test_boot_preserves_the_iso_kernel_and_stage2_but_replaces_only_test_options():
@@ -110,6 +111,42 @@ def test_native_evidence_accepts_executed_cases(tmp_path):
     assert junit.check(report) == 1
 
 
+def test_reviewed_skips_are_explicit_but_do_not_count_as_executed_tests(tmp_path):
+    report = tmp_path / "tests.xml"
+    report.write_text('<testsuite><testcase classname="bridge.tests.test_documents" name="macos"><skipped/></testcase><testcase name="executed"/></testsuite>')
+    assert junit.check(report, {"test_documents.macos": "macOS matrix owns this case"}) == 1
+    with pytest.raises(ValueError, match="unexpected skip"):
+        junit.check(report, {"test_documents.something_else": "not this case"})
+    report.write_text('<testsuite><testcase classname="test_documents" name="macos"><skipped/></testcase></testsuite>')
+    with pytest.raises(ValueError, match="no passing executed tests"):
+        junit.check(report, {"test_documents.macos": "macOS matrix owns this case"})
+
+
+def successful_image_run():
+    return {"head_sha": "a" * 40, "path": ".github/workflows/image.yml", "event": "workflow_dispatch",
+            "status": "completed", "conclusion": "success", "repository": {"full_name": "MadXLeo/MadX-Agent-OS"},
+            "head_repository": {"full_name": "MadXLeo/MadX-Agent-OS"}}
+
+
+@pytest.mark.parametrize("key,value", [
+    ("head_sha", "b" * 40), ("path", ".github/workflows/ci.yml"), ("event", "pull_request"),
+    ("status", "in_progress"), ("conclusion", "failure"), ("conclusion", None),
+    ("repository", {"full_name": "different/repo"}), ("head_repository", {"full_name": "different/fork"}),
+    ("head_repository", None),
+])
+def test_installer_rejects_unrelated_incomplete_or_failed_image_evidence(key, value):
+    run = successful_image_run()
+    run[key] = value
+    with pytest.raises(ValueError):
+        provenance.verify(run, "a" * 40, "MadXLeo/MadX-Agent-OS")
+
+
+def test_installer_accepts_only_the_requested_full_image_revision():
+    provenance.verify(successful_image_run(), "a" * 40, "MadXLeo/MadX-Agent-OS")
+    with pytest.raises(ValueError, match="full source commit"):
+        provenance.verify(successful_image_run(), "aaaaaaa", "MadXLeo/MadX-Agent-OS")
+
+
 def test_empty_image_cannot_pass_a_source_only_check(tmp_path):
     result = image.inspect(tmp_path, {"slug": "madx-agent-os", "version": "0.1.0-alpha"}, {"files": {}})
     assert not result["passed"]
@@ -140,6 +177,8 @@ def test_installer_uses_uefi_media_and_checks_a_real_guest_not_only_screenshots(
     assert "sha256sum -c mock-windows.sha256" in install
     assert "--bind 127.0.0.1 --directory installer-http" in install
     assert "file=mock-windows.raw" in steps["Boot what was installed"]
+    download = steps["The installer, from the release"]
+    assert download.index("verify-image-run.py") < download.index("gh run download")
 
 
 def test_manual_image_validation_cannot_publish_without_explicit_selection():
@@ -152,3 +191,12 @@ def test_manual_image_validation_cannot_publish_without_explicit_selection():
     assert "env.PUBLISH == 'true'" in steps["Sign it with the project's key"]["if"]
     assert "inputs.publish" in workflow["jobs"]["manifest"]["if"]
     assert "check-image.py" in steps["Inspect the actual image and systemd units"]["run"]
+
+
+def test_validation_branch_runs_ci_without_a_default_branch_merge_and_checks_linux_skips():
+    workflow = yaml.safe_load((ROOT / ".github/workflows/ci.yml").read_text())
+    assert "codex/linux-release-validation" in workflow[True]["push"]["branches"]
+    steps = {step.get("name"): step for step in workflow["jobs"]["bridge"]["steps"]}
+    gate = steps["Reject unexpected Linux skips"]
+    assert "always()" in gate["if"] and "runner.os == 'Linux'" in gate["if"]
+    assert "bridge-linux-tests.xml --allow-skipped linux/tests/expected-linux-skips.json" in gate["run"]

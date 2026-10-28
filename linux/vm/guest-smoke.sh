@@ -34,4 +34,21 @@ windows = json.load(sys.stdin)
 assert any(w.get("app_id") in ("herald-os", "madx-agent-os", "MadX Agent OS", "Herald OS") for w in windows), "no desktop window"
 print("MADX_DESKTOP_WINDOW=1")'
 echo MADX_GUEST_CORE_PASSED=1
+expected_hermes="${1:-}"
+[[ -z "$expected_hermes" || "$expected_hermes" =~ ^[0-9a-f]{40}$ ]] || exit 2
+echo "MADX_HERMES_TESTED_PIN=$expected_hermes"
+if madx-agent-os hermes-command >/dev/null 2>&1; then
+  echo MADX_HERMES_COMMAND_AVAILABLE=1
+else
+  echo MADX_HERMES_COMMAND_AVAILABLE=0
+fi
+if [[ -d "$HOME/.hermes/hermes-agent/.git" ]]; then
+  installed_hermes="$(git -C "$HOME/.hermes/hermes-agent" rev-parse HEAD)"
+  echo "MADX_HERMES_INSTALLED_REVISION=$installed_hermes"
+  if [[ -n "$expected_hermes" && "$installed_hermes" != "$expected_hermes" ]]; then
+    echo MADX_HERMES_REVISION_DRIFT=1
+  fi
+else
+  echo MADX_HERMES_INSTALLED_REVISION=unknown
+fi
 # This does not certify model-backed Hermes chat or update/rollback. Those are separate gates.

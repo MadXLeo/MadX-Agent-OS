@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    # The default branch does not yet expose workflow_dispatch. An authorized push of this
+    # validation branch must run its own CI without merging or publishing an image.
+    branches: [main, codex/linux-release-validation]
   pull_request:
   workflow_dispatch:
 
@@ -61,13 +63,18 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -r linux/tests/requirements.txt
-      - name: cryptsetup, for the disk password tests on LUKS images
+      - name: Native test dependencies
         if: runner.os == 'Linux'
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq cryptsetup-bin
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq cryptsetup-bin util-linux zip shellcheck openssh-client gnupg curl openssl
       - name: Kickstart parser for real installer syntax checks
         run: python -m pip install pykickstart
       - name: pytest
-        run: python -m pytest -c plugins/herald-os-bridge/tests/pytest.ini plugins/herald-os-bridge/tests linux/tests -q --junitxml=bridge-linux-tests.xml
+        run: |
+          HERALD_OS_PYTHON="$(command -v python)" bash scripts/test-bridge.sh \
+            "$PWD/plugins/herald-os-bridge/tests" "$PWD/linux/tests" --junitxml="$PWD/bridge-linux-tests.xml"
+      - name: Reject unexpected Linux skips
+        if: always() && runner.os == 'Linux'
+        run: python scripts/madx/check-junit.py bridge-linux-tests.xml --allow-skipped linux/tests/expected-linux-skips.json
       - name: Require real Linux alias filesystem tests
         if: runner.os == 'Linux'
         run: |

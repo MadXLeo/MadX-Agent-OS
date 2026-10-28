@@ -71,7 +71,8 @@ jobs:
           if [[ -n "$TAG" && -z "$IMAGE_RUN" ]]; then
             gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern '*-x86_64.iso*'
           elif [[ -z "$TAG" && "$IMAGE_RUN" =~ ^[0-9]+$ ]]; then
-            gh run view "$IMAGE_RUN" --repo "$GITHUB_REPOSITORY" --json headSha,conclusion,url >image-source.json
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$IMAGE_RUN" >image-source.json
+            python3 scripts/madx/verify-image-run.py image-source.json --revision "$(git rev-parse HEAD)" --repository "$GITHUB_REPOSITORY"
             gh run download "$IMAGE_RUN" --repo "$GITHUB_REPOSITORY" --name image-evidence-madx-agent-os-amd64 --dir installer-input
             find installer-input -type f -name 'madx-agent-os-*-x86_64.iso*' -exec cp -- {} . \;
           else
@@ -260,7 +261,9 @@ jobs:
             fi
             grep -q 'Permission denied (publickey)' ssh.log || { echo "::error::sshd offered more than keys"; failed=1; }
             echo "----- ssh.log (signed in: ${signed_in:-no})"; cat ssh.log
-            ssh_to -i test-key "$ACCOUNT@127.0.0.1" 'bash -s' <linux/vm/guest-smoke.sh >guest-smoke.log 2>&1 \
+            hermes_pin="$(sed -n 's/^sha=//p' upstream/UPSTREAM.lock | tr -d '[:space:]')"
+            [[ "$hermes_pin" =~ ^[0-9a-f]{40}$ ]] || { echo '::error::invalid Hermes source pin'; exit 1; }
+            ssh_to -i test-key "$ACCOUNT@127.0.0.1" "bash -s -- $hermes_pin" <linux/vm/guest-smoke.sh >guest-smoke.log 2>&1 \
               || { echo '::error::installed guest acceptance failed'; failed=1; }
             cat guest-smoke.log
           fi
@@ -286,3 +289,4 @@ jobs:
             iso-repack.log
             mock-windows.sha256
             image-source.json
+            *-x86_64.iso.sha256

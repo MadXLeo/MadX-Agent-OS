@@ -1,0 +1,4 @@
+{
+  "test_documents.test_macos_reads_pdf_text_and_scans": "PDFKit and Vision are macOS-only; the existing macOS matrix owns this test.",
+  "test_ssh.test_nft_takes_the_rate_limit": "Requires root; the general suite deliberately runs as an unprivileged user. Native nft syntax remains a separate release gate."
+}
