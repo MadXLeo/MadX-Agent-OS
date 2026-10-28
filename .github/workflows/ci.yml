@@ -66,6 +66,17 @@ jobs:
       - name: Native test dependencies
         if: runner.os == 'Linux'
         run: sudo apt-get update -qq && sudo apt-get install -y -qq cryptsetup-bin util-linux zip shellcheck openssh-client gnupg curl openssl
+      - name: Require user namespaces for migration tests
+        if: runner.os == 'Linux'
+        run: |
+          # Only this disposable GitHub runner: Ubuntu's AppArmor restriction otherwise skips
+          # 25 root/user migration tests. Keep pytest unprivileged and prove the namespace works.
+          if ! unshare -r true; then
+            if [[ -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]]; then
+              sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+            fi
+          fi
+          unshare -r sh -c 'test "$(id -u)" = 0'
       - name: Kickstart parser for real installer syntax checks
         run: python -m pip install pykickstart
       - name: pytest
