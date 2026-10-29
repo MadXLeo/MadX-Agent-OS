@@ -11,27 +11,54 @@ Validation codes: **T** = included in attempted desktop suite (see BASELINE.md f
 integration; **V** = requires disposable-VM validation; **N** = new capability, not implemented.
 Typecheck/build success alone does not establish functional parity. No existing feature is removed.
 
-## Astra runtime and release evidence — 2026-10-28
+## Astra runtime and release evidence — 2026-10-29
 
 Continuation: CI again uses the established bridge runner; unexpected Linux skips are rejected;
 image architecture/source labels and installer run provenance are checked. Guest Hermes revision
 drift is observed without altering the installed version. After correcting the Git Bash test's
 path comparison, expanded local checks report 76 passes, 26 skips and zero failures; three
 installer workflow tests and all TypeScript checks also pass.
-These safeguards have no Linux runtime result yet and do not close H/V gates.
+Linux CI has now actually run at `e062c0334dcb382236b18a60422eab0e46a0d8d2` (run 40684976475):
+the desktop suite reports **5,835 passed, two optional spreadsheet-validator skips, zero failures**;
+TypeScript, branding and the production build passed. The real Linux Hermes process smoke passed.
+The bridge/system suite reports **2,275 passed, eight failed, 27 skipped**. Repairs and a runner
+namespace preflight passed in `e8e6010`, CI run 40741143041: Linux bridge/system 2,309 passed
+with two reviewed exclusions, dedicated aliases 19/19, macOS desktop 5,833 passed/four skipped,
+macOS bridge/system 2,205 passed/106 skipped. Both desktop builds passed. CI 40743566443 at
+`606e1e1` subsequently passed (Linux bridge 2,316/two skips; macOS bridge 2,212/106 skips).
+Image run 40743693944 built and inspected both default architectures and an actual amd64 ISO.
+All three installer jobs verified the ISO checksum but failed before VM boot on an included
+kickstart validation defect. Fix `da90688` passed full CI. Actual ISO inspection then found an
+appended-EFI-partition mismatch in the test setup; `2290c81` repairs it and passes 49 focused tests.
+Full CI then passed at `2290c81` (Linux bridge 2,328/two skips; macOS bridge 2,224/106 skips;
+both desktop suites/builds passed). Image 40780003482 built both default architectures and a new ISO;
+installer 40811638765 verified it but failed before boot because deployment validation tried to
+read an account include generated later inside the guest. Repair `161557f` reorders validation
+before account injection; 50 focused tests and both preparation-step fixtures pass. Full CI at
+`161557f` passed (Linux system 2,329/two skips, macOS system 2,225/106 skips, desktop suites/builds and
+real Hermes passed); image 40812159188 built and inspected both default architectures and the ISO.
+Installer 40814588924 booted the ISO through UEFI and installed all three cases. Both unencrypted
+guests rebooted into the graphical MadX welcome screen; the adjacent synthetic GPT disk retained
+its hash. Acceptance failed on lost SSH keys (Anaconda lacked base64) and encrypted unlock input.
+Fixes `cb55130`/`448e85e` passed full native CI 40848022569: Linux system 2,336/two skips,
+macOS system 2,232/106 skips, aliases 19/19, desktop suites/typechecks/builds and pinned Hermes.
+Image 40848023781 built both default images and a new ISO; installer 40850572175 is running
+against the same source. Its actual acceptance result remains pending.
+Installed service acceptance, interactive operation and encrypted first reboot remain open.
+NVIDIA failed on missing upstream kernel modules; H/V gates remain open.
 
-Fresh desktop results remain 4,915 renderer/shared passes (five skips) and 89 focused main-process
+Earlier Windows desktop results were 4,915 renderer/shared passes (five skips) and 89 focused main-process
 passes. Typecheck/build and branding checks pass. Selected Python validation now passes 60 tests
 with 26 Windows/platform skips, plus three installer workflow tests. Full native suites remain open.
 
 | Area | New implemented check / observed evidence | Remaining gate |
 | --- | --- | --- |
-| Hermes process, health/auth, bridge discovery | Real pinned server executed twice on Windows; missing/wrong tokens rejected; bridge tools registered | Linux service and host adapter, model chat/tools/approvals, desktop recovery |
+| Hermes process, health/auth, bridge discovery | Real pinned server executed twice on both Windows and Linux; missing/wrong tokens rejected; bridge tools registered | Installed Linux service and host adapter, model chat/tools/approvals, desktop recovery |
 | Memory and skills | Real MemoryStore and skills API; contents survive server restart in an isolated profile | Existing-profile OS upgrade and user-facing integration |
-| Linux alias/filesystem behavior | Existing CI now requires the filesystem suite with zero skips and retains JUnit | Ubuntu execution; installed unit resolution |
-| Image packaging | Actual image inspector and packaged Electron smoke added to existing image workflow | Image/tarball/ISO builds and inspected artifacts |
-| UEFI installation | Existing workflow now uses the ISO bootloader, fatal/success diagnostics and installed-desktop assertions | Actual media boot, install, reboot and visual review |
-| Adjacent Windows-style disk | New GPT/sentinel fixture and before/after hashes in VM workflow | Real VM execution; no actual Windows/shared-ESP certification |
+| Linux alias/filesystem behavior | All 19 branding/alias cases passed without skips in the full Linux suite and the dedicated gate | Installed unit resolution and VM upgrade behavior |
+| Image packaging | Default amd64/arm64 images built; filesystem, systemd units and packaged Electron passed; actual amd64 ISO booted through UEFI | Native package variants and NVIDIA build |
+| UEFI installation | Three installations passed; both unencrypted guests rebooted into MadX desktop; encrypted disk password checks passed | Repaired SSH/guest acceptance, encrypted first reboot, interactive visual review |
+| Adjacent Windows-style disk | Actual VM install and acceptance attempt preserved the synthetic GPT/sentinel disk hash | No actual Windows/shared-ESP certification |
 | Update/rollback and NVIDIA | Existing implementation reviewed; validation sequence documented, identifiers retained | Two deployment transitions, data integrity, GPU/laptop testing |
 
 The H/V gates below remain open. See ASTRA_PROGRESS.md for the precise scope and next execution.

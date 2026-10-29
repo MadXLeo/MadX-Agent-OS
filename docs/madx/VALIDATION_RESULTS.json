@@ -480,5 +480,640 @@
       "madx-resume-skip-rejection.log": "67fad2cc654d68dbb9b56259981d4c7f993da23c0dfe3600edbc490936c163ed",
       ".venv/madx-resume-tests.xml": "70d5e3c6928215113fe75f3b862d887b05446a6c8607e75149d0a0d591fba5fd"
     }
+  },
+  "authorizedLinuxValidation": {
+    "date": "2026-10-29",
+    "repository": "MadXLeo/MadX-Agent-OS",
+    "branch": "codex/linux-release-validation",
+    "approvedInitialRevision": "e062c0334dcb382236b18a60422eab0e46a0d8d2",
+    "repairRevision": "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
+    "repairCommits": [
+      "cf9cd9f995a355b123509b2a6113ff63ffb11000",
+      "417300e39ef473de15f501f9117e580ac442ea5e",
+      "e8e6010b38a351f2dfa6f6ac553bd0a901bae955",
+      "606e1e1be710451f80510d6d355518e20a023b95",
+      "da9068836bc7c0dfea424751825e8d6f63e5ff3c",
+      "2290c818e34fed73b45dadc085aabb66f1ec20a5",
+      "161557f9da021d0c7b44024260bc75448c5cc083",
+      "cb551306deb495cbe79ee4eb904875849f25c83d",
+      "448e85ea672fd4b00f6b581f5b27b5d858264a8e"
+    ],
+    "initialCI": {
+      "runId": 40684976475,
+      "event": "push",
+      "desktop": {
+        "passed": 5835,
+        "failed": 0,
+        "skipped": 2,
+        "files": 426,
+        "skipReasons": [
+          "optional openpyxl interpreter not configured",
+          "xmllint absent"
+        ]
+      },
+      "typecheck": "passed",
+      "productionBuild": "passed",
+      "branding": "passed",
+      "nativeInputs": "passed",
+      "secretScan": {
+        "result": "passed",
+        "commits": 461
+      },
+      "bridge": {
+        "passed": 2275,
+        "failed": 8,
+        "skipped": 27,
+        "unexpectedSkips": 25,
+        "aliasTests": {
+          "passed": 19,
+          "skipped": 0
+        }
+      },
+      "macOS": "cancelled without execution"
+    },
+    "linuxHermesRuntime": {
+      "result": "passed",
+      "revision": "f97608f178d1ffeca59860195ab7da295f7c8e5f",
+      "checks": [
+        "health",
+        "authentication rejection",
+        "bridge discovery",
+        "memory and skills",
+        "server restart persistence"
+      ],
+      "systemdService": "unverified",
+      "modelBacked": "unverified"
+    },
+    "repairCI": {
+      "runId": 40741143041,
+      "status": "completed",
+      "namespacePreflight": "passed",
+      "fullNativeRerun": "passed",
+      "desktop": {
+        "passed": 5835,
+        "failed": 0,
+        "skipped": 2,
+        "files": 426
+      },
+      "productionBuild": "passed",
+      "typecheck": "passed",
+      "hermesRuntime": "passed",
+      "macOS": {
+        "bridge": {
+          "passed": 2205,
+          "skipped": 106
+        },
+        "desktop": {
+          "passed": 5833,
+          "skipped": 4
+        },
+        "typecheck": "passed",
+        "productionBuild": "passed"
+      },
+      "conclusion": "success",
+      "bridge": {
+        "passed": 2309,
+        "skipped": 2,
+        "failed": 0
+      }
+    },
+    "localRepairChecks": {
+      "documentationPages": 49,
+      "brokenLinks": 0,
+      "provenanceAndRunnerTestsPassed": 31,
+      "actionlint": "passed",
+      "branding": "passed",
+      "pythonCompilation": "passed",
+      "affectedUnixTests": "Windows collection blocked by missing os.getuid/pwd; not passed",
+      "currentDocumentationPytestOnWindows": "collection blocked by missing Unix pwd module; no test execution, not passed"
+    },
+    "artifactSha256": {
+      "12815105374": "31f255bbb9777e3a96647f4807cc066846dda36231a793fad5dbb6415599557e",
+      "12813939066": "31f710b0117c9b6ff8c476905e336bc24b95bf65fd139e811eb8b2e80f0fd3cf",
+      "12815146225": "3acf729695e6256f01e5b9375174a97a17ee6bd523e50131762f2675e8429e16",
+      "12839867223": "b0e357c9f665411fea9e4358593c40e9a6443b1a2966cfa9a03e4c2ec7fef181",
+      "12839712352": "6c15a950d64e1f2adec2c411287210bfc6e873363e5989fed958799182d3bc10",
+      "12855811564": "9240afc4456c36dab39fa48a0fde67037785dd81d26b9c603dcd2bb0e1a7882b",
+      "12854609751": "a2532ccfc90726a9f5f042cf958edf62379ea02f63deb94547120b64667f4240",
+      "12841515010": "b9ba54189a5e733856a65c7b2baa063d68461d7951dfa0d48af5b86a818ce057",
+      "12841480190": "77093f99ee5533023a7b0a04620282eb412a309d59280f34841d2e51f05c0f3a",
+      "12840304027": "0e84bb50f4a058a964e524d05d98171bad3f272f74aa1c20fbedeba17c3cb622",
+      "12855642616": "190762ff0ec8eb60cb921a40b3acf4f6e3505bd2eba83062ac2e7b9a7b1eb8b7",
+      "12855632149": "bf94500ac7ca88a3dd2ac91a27b433645732fc0129689f038f232a0d38d86ca5",
+      "12854453967": "b3da72458b87da2412782d5aa354f5c8ebb1b1023f250a4b5f442f3cb409280d",
+      "12839833956": "b18a68b58308e36b40c72de0a22ed8df2aa4a198f1c1b9d14830c59b7ef38be6",
+      "12839702905": "270313f593f347bd5223beb21edf7f4a33119e77007fcaae0795e0c809aba50d",
+      "12839428084": "75a01023bd39a301682070578c3004b3cd6872577afb4a91e49ac9fb0ae2eccf",
+      "12841541120": "450eb75d9182023a2bca1ec0c5d13d7672245f78637c2314ebc3760baa9ac56f",
+      "12857065824": "b439770a2ade87e09cb80d3d78bc1bdba1bf28bf25ca41cf9274b3e36608eb9b",
+      "12857002733": "b1cd9c6d33c3b7c2040ea30182382793863d91828823e8ce2f62ba110242b626",
+      "12856856726": "75dc997e0769d23bd7f9feb4b44a617408ef303008706b159c0c2c126bea518b",
+      "12856432839": "4c58e46e727a54a2fb108f56d43dbbe4f08db5dfd7e82698641f1131ac02665a",
+      "12856079943": "c2d0d34a12cf415549cd41b0b25ac1188d03fc6b2f58cd6ed6809b078b61cd2f",
+      "12856966883": "389f56218df1864b27fac20527530f00f57afd1872254af31d5519132b3bcfaa",
+      "12856404610": "6b0c8b6923b4340e9319433ff81ad29b5edadc40a6ab1f1fa1eed83883a30050",
+      "12870537639": "8bf3683dfe9488bbba0e24d955452d2f7f890d51dcb0808045ab2b1c3c70e78c",
+      "12870259178": "b859a566642609fb8b1f8210fee564bac31532ff353dfde7090a415be4c90420",
+      "12869839414": "f53fa73122a87e5c8b9dd7b503fe8aaba233b9be8cc82c88bc9ab5a4ed3e0ca1",
+      "12871441224": "5ebe167b5a09381e795d56ab3d1feddbdd0793989166f0768af5aef356b54265",
+      "12871081596": "fd479369f90a600a77b5bbdf5d56e992fe0df42bb7cf426ee0bf5dc7cfe69c2f",
+      "12871052105": "1eceab452d25f2e9c2967ce26ca39a189eb6991ea9835ea70355ca9babd67a6f",
+      "12870921817": "eaec3453b92ca19875e545a299d58dd34d0a34f7aee88df7572ec3a6eeecfd4c",
+      "12870757381": "871d68c55b0d31f4daf716721709551aff9415e45e46679645b683d923df0b02",
+      "12870978034": "e0ab05e4e1b8ba431b0e09312df5b6fb28f7899755f3da8c78e179aa7f259eff",
+      "12873530720": "f940f2352b71444f49ebd3acd1e8117ece4f7cac83123de71e7284dc1b8ac3ba",
+      "12873083407": "81d757bbc1377a55a37740915f912aa52241da054ea0b18429e47de2810f447f",
+      "12872898816": "e89af999e4483f72d4a35cab14a839db9e7342f355a338262d4d5551716d195b",
+      "12886380026": "bc256711ab6df35d7d1cc5ad43a03678f5d90f602adb19325da818d89a96a3d5",
+      "12886127788": "e8b29fafca2e0bb8155ec22bbb028cf6f747fe60a65b6fe85d71f114d17c5e5e",
+      "12885777439": "048dbaecc7a02ea36c30221db2739a102df4dabd52a80aebe2a29a1dded68149",
+      "12885757662": "959cb103b51b05a16b282de528c8bdb09c1ab5d3f09c3774cf05fe6d72d784f3",
+      "12885254645": "3b613adb0ad8eb596d17bf9f6f44966d62d61c677b5cc620c3c4d3923937ec74",
+      "12886635879": "be30d0595bab179154c1329350e234c50459778c4bf4cb4373ecaafc9dcf3a5a"
+    },
+    "imageWorkflowRun": 40848023781,
+    "linuxImageBuilt": true,
+    "isoBuilt": true,
+    "isoChecksum": "c0bacb3f36409678b9de091022cb0eea85c9ec88e47ffdbf9b9988fd7c5a9357",
+    "vmBooted": true,
+    "vmInstalled": true,
+    "firstReboot": "passed in both unencrypted guests; encrypted unlock did not complete",
+    "graphicalDesktop": "MadX welcome desktop rendered in both unencrypted guests; interactive acceptance unverified",
+    "hermesInstalledService": "unverified",
+    "phase1Complete": false,
+    "pushed": true,
+    "published": false,
+    "mainMerged": false,
+    "tagsCreated": false,
+    "hostSystemSoftwareInstalled": false,
+    "hostDisksOrFirmwareModified": false,
+    "imageRevisionCI": {
+      "runId": 40743566443,
+      "revision": "606e1e1be710451f80510d6d355518e20a023b95",
+      "status": "completed",
+      "conclusion": "success",
+      "attempts": 2,
+      "firstAttemptMacOS": "cancelled before execution; retried at identical source",
+      "linuxBridge": {
+        "passed": 2316,
+        "skipped": 2,
+        "failed": 0
+      },
+      "macOSBridge": {
+        "passed": 2212,
+        "skipped": 106,
+        "failed": 0
+      },
+      "linuxDesktop": {
+        "passed": 5835,
+        "skipped": 2,
+        "failed": 0
+      },
+      "macOSDesktop": {
+        "passed": 5833,
+        "skipped": 4,
+        "failed": 0
+      },
+      "aliases": {
+        "passed": 19,
+        "skipped": 0
+      },
+      "typechecks": "passed",
+      "productionBuilds": "passed",
+      "hermesRuntime": "passed"
+    },
+    "imageEvidence": {
+      "revision": "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
+      "publish": false,
+      "disks": true,
+      "status": "completed",
+      "conclusion": "success",
+      "amd64": {
+        "result": "passed",
+        "digest": "sha256:a1e5c33066b525062d3752259a71dae844d7316cd191fff88996284d30eb51dc"
+      },
+      "arm64": {
+        "result": "passed",
+        "digest": "sha256:f7013331587eebedabb3397d908206235b794687b772cc49ee568a47dab704f2"
+      },
+      "nvidia": {
+        "result": "failed",
+        "reason": "Upstream ghcr.io/ublue-os/akmods:main-44-7.2.13-200.fc44.x86_64 not published"
+      },
+      "filesystemInspection": "passed",
+      "systemdUnitVerification": "passed",
+      "electronExecution": "44.5.1",
+      "amd64Archive": {
+        "id": 12885819367,
+        "bytes": 3810650606,
+        "githubReportedSha256": "10920e99e4bba4922be3ef40d776fb6c26f1cac88ea4c679fdf796f2aa9d229b",
+        "localVerification": "small metadata members read by HTTPS range and ZIP CRC checked; full archive not downloaded"
+      },
+      "iso": {
+        "name": "madx-agent-os-validation-448e85e-x86_64.iso",
+        "bytes": 3883677696,
+        "sha256": "c0bacb3f36409678b9de091022cb0eea85c9ec88e47ffdbf9b9988fd7c5a9357",
+        "partsSha256": [
+          "b506d0642cd415280bfc4e455097852c327e7eb320542a09273a4573704b50b7",
+          "cbf2b479f4e8a080884ac471b87d8adae71b1c7371102bb1e05ca5039b6f9c1f"
+        ],
+        "verification": "checksum files inspected; reconstructed ISO verification pending installer"
+      }
+    },
+    "installerEvidence": {
+      "runId": 40850572175,
+      "imageRunId": 40848023781,
+      "revision": "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
+      "account": "madx-test",
+      "result": "in_progress",
+      "cases": [
+        "encrypted",
+        "unencrypted",
+        "unencrypted with protected adjacent disk"
+      ],
+      "uefiBoot": "pending at this revision",
+      "installation": "pending at this revision",
+      "firstReboot": "pending at this revision",
+      "graphicalDesktop": "pending at this revision",
+      "hermesInstalledService": "unverified"
+    },
+    "currentRerun": {
+      "revision": "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
+      "ciRunId": 40848022569,
+      "imageRunId": 40848023781,
+      "publish": false,
+      "disks": true,
+      "status": "installer_in_progress",
+      "sourceMatchGate": "unchanged; fresh image required",
+      "installerRunId": 40850572175,
+      "ciConclusion": "success",
+      "tests": {
+        "linuxBridge": {
+          "passed": 2336,
+          "skipped": 2,
+          "failed": 0
+        },
+        "macOSBridge": {
+          "passed": 2232,
+          "skipped": 106,
+          "failed": 0
+        },
+        "aliases": {
+          "passed": 19,
+          "skipped": 0
+        },
+        "linuxDesktop": {
+          "passed": 5835,
+          "skipped": 2,
+          "failed": 0
+        },
+        "macOSDesktop": {
+          "passed": 5833,
+          "skipped": 4,
+          "failed": 0
+        },
+        "typechecks": "passed",
+        "productionBuilds": "passed",
+        "branding": "passed",
+        "scripts": "passed",
+        "signingPolicy": "passed",
+        "secretScan": "passed",
+        "realHermes": "passed",
+        "newAccountRegressions": "passed"
+      },
+      "ciArchivesLocallySha256Verified": true,
+      "imageConclusion": "success"
+    },
+    "kickstartRepairCI": {
+      "runId": 40778418968,
+      "revision": "da9068836bc7c0dfea424751825e8d6f63e5ff3c",
+      "conclusion": "success",
+      "linuxBridge": {
+        "passed": 2321,
+        "skipped": 2
+      },
+      "macOSBridge": {
+        "passed": 2217,
+        "skipped": 106
+      },
+      "desktopTests": "passed",
+      "typechecks": "passed",
+      "productionBuilds": "passed",
+      "realHermes": "passed"
+    },
+    "supersededImageRun": {
+      "runId": 40778438792,
+      "conclusion": "cancelled",
+      "reason": "stopped after actual artifact metadata identified a second EFI test-harness mismatch",
+      "completedImageEvidence": false
+    },
+    "efiHarnessRepair": {
+      "revision": "2290c818e34fed73b45dadc085aabb66f1ec20a5",
+      "localTestsPassed": 49,
+      "actionlint": "passed",
+      "observedImageRunId": 40743693944,
+      "observedIsoFileEfiLba2048": 1408823,
+      "observedElToritoEfiLba2048": 1886021,
+      "observedGptPartition": 2,
+      "observedGptStartSector512": 7544084,
+      "repair": "extract, patch and replace actual appended EFI partition; verify GPT/El Torito agreement and patched bytes",
+      "nativeRepack": "passed in all three jobs of installer run 40814588924",
+      "vmBoot": "actual ISO UEFI boot passed in all three cases"
+    },
+    "previousImageEvidence": {
+      "revision": "606e1e1be710451f80510d6d355518e20a023b95",
+      "publish": false,
+      "disks": true,
+      "status": "completed",
+      "conclusion": "success",
+      "amd64": {
+        "result": "passed",
+        "digest": "sha256:1727dc630a4462d57cfdecacade0b8195af9718b7f32d99ace92148db9da2873"
+      },
+      "arm64": {
+        "result": "passed",
+        "digest": "sha256:b8f05b9417d09034e409e0a5662a1f38df27a020d8fd72b764de7eba145b5ca5"
+      },
+      "nvidia": {
+        "result": "failed",
+        "reason": "Upstream ghcr.io/ublue-os/akmods:main-44-7.2.13-200.fc44.x86_64 not published"
+      },
+      "filesystemInspection": "passed",
+      "systemdUnitVerification": "passed",
+      "electronExecution": "44.5.1",
+      "amd64Archive": {
+        "id": 12840979501,
+        "bytes": 3810801139,
+        "githubReportedSha256": "40a3b611e23d3c9a4a70fb4238b7ea07edf7ae98ca3c6a63b54e175ec178aa8a",
+        "localVerification": "small metadata members read by HTTPS range and ZIP CRC checked; full archive not downloaded"
+      },
+      "iso": {
+        "name": "madx-agent-os-validation-606e1e1-x86_64.iso",
+        "bytes": 3883882496,
+        "sha256": "3bab771854c6d2e811f9100761c15c860ba1c341b8e0d144d7f81dc4919d7d95",
+        "verification": "full reconstructed ISO SHA-256 passed in all three jobs of installer run 40777283477",
+        "partsSha256": [
+          "c2c44acb3b00e68afa47236f8a178b27f2cb8dc14ab16d7ec33ca346298d7df7",
+          "60d2e221264be4afd5651ab4779f7c25727b058cfe3069acddacdb3388d4c82d"
+        ]
+      }
+    },
+    "previousInstallerEvidence": {
+      "runId": 40777283477,
+      "imageRunId": 40743693944,
+      "revision": "606e1e1be710451f80510d6d355518e20a023b95",
+      "account": "madx-test",
+      "cases": [
+        "encrypted",
+        "unencrypted",
+        "unencrypted with protected adjacent disk"
+      ],
+      "result": "all three failed before QEMU started",
+      "failure": "harness required inline deployment, but osbuild.ks includes /run/install/repo/osbuild-base.ks",
+      "grubFailureReproduced": false,
+      "guestLogsOrScreenshots": false,
+      "repairRevision": "da9068836bc7c0dfea424751825e8d6f63e5ff3c",
+      "localFocusedTestsPassed": 42,
+      "actionlint": "passed"
+    },
+    "efiRepairCI": {
+      "runId": 40780000937,
+      "revision": "2290c818e34fed73b45dadc085aabb66f1ec20a5",
+      "conclusion": "success",
+      "tests": {
+        "linuxBridge": {
+          "passed": 2328,
+          "skipped": 2,
+          "failed": 0
+        },
+        "macOSBridge": {
+          "passed": 2224,
+          "skipped": 106,
+          "failed": 0
+        },
+        "aliases": {
+          "passed": 19,
+          "skipped": 0
+        },
+        "linuxDesktop": {
+          "passed": 5835,
+          "skipped": 2,
+          "failed": 0
+        },
+        "macOSDesktop": {
+          "passed": 5833,
+          "skipped": 4,
+          "failed": 0
+        },
+        "typechecks": "passed",
+        "productionBuilds": "passed",
+        "scripts": "passed",
+        "signingPolicy": "passed",
+        "secretScan": "passed",
+        "realHermes": "passed"
+      }
+    },
+    "imageHistory": [
+      {
+        "revision": "2290c818e34fed73b45dadc085aabb66f1ec20a5",
+        "publish": false,
+        "disks": true,
+        "status": "completed",
+        "conclusion": "success",
+        "amd64": {
+          "result": "passed",
+          "digest": "sha256:f401d553d303346a9ddb393e2ea36a1aefc9ebd3d0cfe557549efe5e8c054c1e"
+        },
+        "arm64": {
+          "result": "passed",
+          "digest": "sha256:8538ccf53c54df097b9426ea9cec9baa99614a68facf1ee3b1667f414b42e625"
+        },
+        "nvidia": {
+          "result": "failed",
+          "reason": "Upstream ghcr.io/ublue-os/akmods:main-44-7.2.13-200.fc44.x86_64 not published"
+        },
+        "filesystemInspection": "passed",
+        "systemdUnitVerification": "passed",
+        "electronExecution": "44.5.1",
+        "amd64Archive": {
+          "id": 12858305397,
+          "bytes": 3810819654,
+          "githubReportedSha256": "0bbf8df2f827020361a11adfab5a5b8d14c7663056d4be7df6a2ddec949a9542",
+          "localVerification": "small metadata members read by HTTPS range and ZIP CRC checked; full archive not downloaded"
+        },
+        "iso": {
+          "name": "madx-agent-os-validation-2290c81-x86_64.iso",
+          "bytes": 3883870208,
+          "sha256": "02d343cafcde2eb5201a146625e033dc6ca98be0f2612619eb2e16206476a472",
+          "partsSha256": [
+            "52efa608094c993eb8941a26d2f1ec8f116f86cb36761666087c98f8fd251bcc",
+            "3dda98641f02f5d56e3969a27d4aa6e672ebba450f811f8101349a8687fdd81d"
+          ],
+          "verification": "full reconstructed ISO SHA-256 passed in all three jobs of installer run 40811638765"
+        }
+      },
+      {
+        "runId": 40812159188,
+        "evidence": {
+          "revision": "161557f9da021d0c7b44024260bc75448c5cc083",
+          "publish": false,
+          "disks": true,
+          "status": "completed",
+          "conclusion": "success",
+          "amd64": {
+            "result": "passed",
+            "digest": "sha256:b615b4597990049ae3931132832099749d5db22bda599017b05dd74b63f9fc12"
+          },
+          "arm64": {
+            "result": "passed",
+            "digest": "sha256:5a0e3543016d488c3ed7edc501055dd47055f59002898169eb538d6e7a89e2df"
+          },
+          "nvidia": {
+            "result": "failed",
+            "reason": "Upstream ghcr.io/ublue-os/akmods:main-44-7.2.13-200.fc44.x86_64 not published"
+          },
+          "filesystemInspection": "passed",
+          "systemdUnitVerification": "passed",
+          "electronExecution": "44.5.1",
+          "amd64Archive": {
+            "id": 12871138762,
+            "bytes": 3810660070,
+            "githubReportedSha256": "49d3cdb946fb9f0ae09df6b0dab97b75b3903bcb0fd4468b85d3ae8873f001a0",
+            "localVerification": "small metadata members read by HTTPS range and ZIP CRC checked; full archive not downloaded"
+          },
+          "iso": {
+            "name": "madx-agent-os-validation-161557f-x86_64.iso",
+            "bytes": 3883671552,
+            "sha256": "d1ac64f36cfebe34718ad90d3b693ae1d738a961c09151f86e3c581bc8875a20",
+            "partsSha256": [
+              "9abfeb36c794746745a7c8bb5ec4a1ac731b86459866a3944167929cf9283782",
+              "d0f07e05d2c3183b8eb4d55d844614458174780d58f3225cc4284fb84f80ea72"
+            ],
+            "verification": "full reconstructed ISO SHA-256 passed in all three jobs of installer run 40814588924"
+          }
+        }
+      }
+    ],
+    "installerHistory": [
+      {
+        "runId": 40811638765,
+        "imageRunId": 40780003482,
+        "revision": "2290c818e34fed73b45dadc085aabb66f1ec20a5",
+        "account": "madx-test",
+        "result": "all three failed before QEMU started",
+        "cases": [
+          "encrypted",
+          "unencrypted",
+          "unencrypted with protected adjacent disk"
+        ],
+        "uefiBoot": "unverified",
+        "installation": "unverified",
+        "firstReboot": "unverified",
+        "graphicalDesktop": "unverified",
+        "hermesInstalledService": "unverified",
+        "failure": "ISO deployment validated, but account /tmp/herald-os-account.ks is generated later by guest %pre",
+        "grubFailureReproduced": false,
+        "guestLogsOrScreenshots": false,
+        "repairRevision": "161557f9da021d0c7b44024260bc75448c5cc083",
+        "localFocusedTestsPassed": 50,
+        "actualPreparationStepFixtures": "encrypted and unencrypted passed with fixture ISO reader; real account generator and pykickstart parser"
+      },
+      {
+        "runId": 40814588924,
+        "imageRunId": 40812159188,
+        "revision": "161557f9da021d0c7b44024260bc75448c5cc083",
+        "account": "madx-test",
+        "result": "failure",
+        "cases": [
+          "encrypted",
+          "unencrypted",
+          "unencrypted with protected adjacent disk"
+        ],
+        "uefiBoot": "passed in all three cases",
+        "installation": "passed in all three cases",
+        "firstReboot": "passed in both unencrypted guests; encrypted unlock did not complete",
+        "graphicalDesktop": "MadX welcome desktop rendered in both unencrypted guests; interactive acceptance unverified",
+        "hermesInstalledService": "unverified",
+        "encryptionChecks": "passed: LUKS only for encrypted case; correct password accepted and wrong password rejected",
+        "adjacentSyntheticDisk": "hash unchanged after installation and after acceptance failure",
+        "grubFailureReproduced": false,
+        "failure": "Anaconda lacks external base64: empty SSH key file leaves SSH off; encrypted guest remains at unlock prompt",
+        "hermesFirstbootLog": "installation and bridge setup completed in unencrypted guests; installed revision/service acceptance unverified",
+        "evidenceArchivesLocallySha256Verified": true,
+        "artifacts": [
+          {
+            "id": 12873530720,
+            "case": "unencrypted",
+            "sha256": "f940f2352b71444f49ebd3acd1e8117ece4f7cac83123de71e7284dc1b8ac3ba"
+          },
+          {
+            "id": 12873083407,
+            "case": "unencrypted with protected adjacent disk",
+            "sha256": "81d757bbc1377a55a37740915f912aa52241da054ea0b18429e47de2810f447f"
+          },
+          {
+            "id": 12872898816,
+            "case": "encrypted",
+            "sha256": "e89af999e4483f72d4a35cab14a839db9e7342f355a338262d4d5551716d195b"
+          }
+        ]
+      }
+    ],
+    "completedValidationRuns": [
+      {
+        "revision": "161557f9da021d0c7b44024260bc75448c5cc083",
+        "ciRunId": 40812157730,
+        "imageRunId": 40812159188,
+        "publish": false,
+        "disks": true,
+        "status": "installer_completed_with_acceptance_failures",
+        "installerRunId": 40814588924,
+        "sourceMatchGate": "unchanged; fresh image required",
+        "ciConclusion": "success",
+        "tests": {
+          "linuxBridge": {
+            "passed": 2329,
+            "skipped": 2,
+            "failed": 0
+          },
+          "macOSBridge": {
+            "passed": 2225,
+            "skipped": 106,
+            "failed": 0
+          },
+          "aliases": {
+            "passed": 19,
+            "skipped": 0
+          },
+          "linuxDesktop": {
+            "passed": 5835,
+            "skipped": 2,
+            "failed": 0
+          },
+          "macOSDesktop": {
+            "passed": 5833,
+            "skipped": 4,
+            "failed": 0
+          },
+          "typechecks": "passed",
+          "productionBuilds": "passed",
+          "scripts": "passed",
+          "signingPolicy": "passed",
+          "secretScan": "passed",
+          "realHermes": "passed"
+        },
+        "imageConclusion": "success",
+        "installerConclusion": "failure"
+      }
+    ],
+    "firstInstalledBootRepairs": {
+      "accountRevision": "cb551306deb495cbe79ee4eb904875849f25c83d",
+      "validationRevision": "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
+      "localFocusedTestsPassed": 55,
+      "actionlint": "passed",
+      "portableAccountReproduction": "original silently drops key without base64; repaired pre/post preserve exact key; encoding failure refuses",
+      "newNativeAccountTestsOnWindows": "two failed at fixture symlink creation (WinError 1314); not passed locally",
+      "serialInputHypothesis": "incomplete bulk serial input; paced bidirectional helper requires native validation"
+    }
   }
 }

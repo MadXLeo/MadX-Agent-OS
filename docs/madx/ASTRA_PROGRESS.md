@@ -1,6 +1,360 @@
-# Astra progress — 2026-10-28
+# Astra progress — updated 2026-10-29 (Asia/Calcutta)
 
-## Continuation: execution prepared, remote authorization required
+## Current repair source and actual VM results
+
+Current code HEAD is **`448e85ea672fd4b00f6b581f5b27b5d858264a8e`**, pushed only to
+`codex/linux-release-validation`. [CI 40848022569](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40848022569)
+passed at that exact revision: Linux system **2,336 passed/two reviewed skips**, macOS system
+**2,232 passed/106 platform skips**, aliases **19/19**, desktop **5,835/two skips on Linux** and
+**5,833/four skips on macOS**. Typechecks, production builds, branding, scripts, signing policy,
+secret scanning and pinned real Hermes passed. All five CI evidence ZIPs were downloaded and
+SHA-256 verified. Both new account regression tests passed on Linux and macOS; no unexpected Linux
+skips were accepted. Unpublished [image 40848023781](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40848023781)
+completed with publish=false/disks=true. Both default images passed inspection, systemd verification
+and packaged Electron execution (44.5.1); NVIDIA failed on the same missing upstream module image.
+The manual installer rerun [40850572175](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40850572175)
+is running against this exact image/source with account=madx-test and no tag. Its outcome is pending.
+
+| Current object at `448e85e` | Digest / checksum |
+| --- | --- |
+| amd64 OCI image | `sha256:a1e5c33066b525062d3752259a71dae844d7316cd191fff88996284d30eb51dc` |
+| arm64 OCI image | `sha256:f7013331587eebedabb3397d908206235b794687b772cc49ee568a47dab704f2` |
+| ISO `madx-agent-os-validation-448e85e-x86_64.iso` (3,883,677,696 bytes) | `c0bacb3f36409678b9de091022cb0eea85c9ec88e47ffdbf9b9988fd7c5a9357` |
+| ISO part0 | `b506d0642cd415280bfc4e455097852c327e7eb320542a09273a4573704b50b7` |
+| ISO part1 | `cbf2b479f4e8a080884ac471b87d8adae71b1c7371102bb1e05ca5039b6f9c1f` |
+| amd64 Actions archive 12885819367 | `10920e99e4bba4922be3ef40d776fb6c26f1cac88ea4c679fdf796f2aa9d229b` |
+| arm64 Actions archive 12886635879 | `be30d0595bab179154c1329350e234c50459778c4bf4cb4373ecaafc9dcf3a5a` |
+
+Both full source labels and the unchanged Hermes pin were checked. The arm64 evidence ZIP was
+downloaded/hash-verified. The amd64 metadata was range-read and ZIP CRC-checked; its full archive
+digest is GitHub-reported and ISO/part hashes come from its checksum files. The installer must
+verify the reconstructed ISO. Registry pushes/signing, manifests and release steps were skipped.
+
+Installer [40814588924](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40814588924), using image
+40812159188 at `161557f`, **booted the actual ISO through UEFI and completed Anaconda installation
+in all three cases**. The reconstructed ISO checksum, actual EFI partition replacement/verification
+and expected encrypted/unencrypted disk layouts passed. The encrypted disk accepted the correct
+test password and rejected an incorrect password. The adjacent synthetic Windows-style GPT disk
+retained its exact hash after installation and after the acceptance failure.
+
+Both unencrypted VMs then booted the installed deployment and displayed the MadX desktop, dock and
+"Welcome to MadX Agent OS" screen. The retained `shots/boot-18min.png` images were visually inspected.
+This proves first reboot and graphical rendering; interactive application acceptance is still open.
+The encrypted VM remained at the disk-unlock prompt. **The overall installer run failed**, and no
+GRUB installation failure was reproduced.
+
+The unencrypted installation log identifies a concrete product defect: `base64: command not found`
+in the minimal Anaconda runtime. Account setup continued with an empty key file, so first boot
+correctly left SSH off (`no SSH keys from the install: SSH stays off`). Commit `cb55130` uses the
+already-required Python base64 codec, refuses encoding failures before generating the account
+fragment, and makes the generated post-install script fail on errors. A portable reproduction
+confirmed the original empty-key failure and verified exact key preservation with the fix.
+
+Commit `448e85e` paces serial password bytes, clears partial input and keeps the connection open
+after Enter. Incomplete serial input is the current hypothesis for the encrypted boot failure,
+not a confirmed UART root cause. The workflow now distinguishes SSH readiness failure from an
+authentication-policy failure and runs acceptance only after readiness succeeds. **55 focused
+tests and actionlint pass locally**. Two new native account tests could not run locally because
+Windows refused test-fixture symlinks (WinError 1314); both subsequently passed in native CI.
+
+First-boot logs show Hermes installation and bridge setup completing in the unencrypted guests.
+Installed service state, the installed Hermes revision, guest acceptance and model-backed operation
+remain unverified because SSH was unavailable. The source/client Hermes pin was not changed.
+
+All three failure-evidence ZIPs were downloaded and SHA-256 verified:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| 12873530720, unencrypted | `f940f2352b71444f49ebd3acd1e8117ece4f7cac83123de71e7284dc1b8ac3ba` |
+| 12873083407, unencrypted/protected disk | `81d757bbc1377a55a37740915f912aa52241da054ea0b18429e47de2810f447f` |
+| 12872898816, encrypted | `e89af999e4483f72d4a35cab14a839db9e7342f355a338262d4d5551716d195b` |
+
+They retain install/boot/SSH logs, screenshots, redacted kickstarts, source provenance, EFI layout
+verification and the protected-disk checksum. No host disks, EFI entries or firmware were touched.
+
+### Last fully validated CI and completed image source
+
+Previous code source is **`161557f9da021d0c7b44024260bc75448c5cc083`**, pushed on the authorized
+branch. It fixes the second real preparation failure described below. Full CI
+[40812157730](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40812157730) passed: Linux system
+**2,329 passed/two reviewed skips**, macOS system **2,225 passed/106 platform skips**, aliases 19/19,
+both desktop suites (Linux 5,835/two skips; macOS 5,833/four skips), typechecks/builds, scripts,
+signing, secrets and real Hermes passed. All five CI archives were downloaded and SHA-256 verified.
+Unpublished image [40812159188](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40812159188)
+completed at this revision with publish=false/disks=true. Both default architectures passed
+filesystem inspection, systemd unit verification and packaged Electron execution. NVIDIA hit the
+same upstream module blocker; no registry/release/tag publication occurred.
+
+| Current object at `161557f` | Digest / checksum |
+| --- | --- |
+| amd64 OCI image | `sha256:b615b4597990049ae3931132832099749d5db22bda599017b05dd74b63f9fc12` |
+| arm64 OCI image | `sha256:5a0e3543016d488c3ed7edc501055dd47055f59002898169eb538d6e7a89e2df` |
+| ISO `madx-agent-os-validation-161557f-x86_64.iso` (3,883,671,552 bytes) | `d1ac64f36cfebe34718ad90d3b693ae1d738a961c09151f86e3c581bc8875a20` |
+| ISO part0 | `9abfeb36c794746745a7c8bb5ec4a1ac731b86459866a3944167929cf9283782` |
+| ISO part1 | `d0f07e05d2c3183b8eb4d55d844614458174780d58f3225cc4284fb84f80ea72` |
+| amd64 Actions archive 12871138762 | `49d3cdb946fb9f0ae09df6b0dab97b75b3903bcb0fd4468b85d3ae8873f001a0` |
+| arm64 Actions archive 12870978034 | `e0ab05e4e1b8ba431b0e09312df5b6fb28f7899755f3da8c78e179aa7f259eff` |
+
+Both source labels match the complete source revision. The small arm64 archive was fully
+downloaded/hash-verified; amd64 metadata members were range-read and ZIP CRC-checked. ISO/part
+checksums come from those metadata files; the full archive was not downloaded to the Windows host.
+[Installer 40814588924](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40814588924) was dispatched
+against this exact image run/source with account=madx-test, no tag. All three cases verified the
+reconstructed ISO; their actual installation and first-boot outcomes are recorded above.
+
+### Previous validated source and second preparation failure
+
+Source **`2290c818e34fed73b45dadc085aabb66f1ec20a5`** is committed and pushed only to
+`codex/linux-release-validation`. Full [CI 40780000937](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40780000937)
+passed: Linux bridge/system **2,328 passed, two reviewed skips**, aliases **19/19**, macOS
+bridge/system **2,224 passed, 106 platform skips**, Linux desktop **5,835 passed/two skips**,
+macOS desktop **5,833 passed/four skips**. Both typechecks/production builds, scripts, signing
+policy, secret scan and real pinned Hermes runtime passed. The five CI evidence archives were
+downloaded and their SHA-256 digests verified.
+
+[Image 40780003482](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40780003482) built and
+inspected both default architectures and a fresh ISO at that source. Filesystem inspections,
+systemd unit verification and packaged Electron 44.5.1 execution passed. Both labels match the
+full source SHA; Hermes remains pinned to `f97608f178d1ffeca59860195ab7da295f7c8e5f`.
+NVIDIA failed again on the same unavailable upstream akmods tag; default-image success does not
+waive that failure. Registry push/sign, manifest, published disk and release steps were skipped.
+
+| Object at `2290c81` | Digest / checksum |
+| --- | --- |
+| amd64 OCI image | `sha256:f401d553d303346a9ddb393e2ea36a1aefc9ebd3d0cfe557549efe5e8c054c1e` |
+| arm64 OCI image | `sha256:8538ccf53c54df097b9426ea9cec9baa99614a68facf1ee3b1667f414b42e625` |
+| ISO `madx-agent-os-validation-2290c81-x86_64.iso` (3,883,870,208 bytes) | `02d343cafcde2eb5201a146625e033dc6ca98be0f2612619eb2e16206476a472` |
+| ISO part0 | `52efa608094c993eb8941a26d2f1ec8f116f86cb36761666087c98f8fd251bcc` |
+| ISO part1 | `3dda98641f02f5d56e3969a27d4aa6e672ebba450f811f8101349a8687fdd81d` |
+| amd64 Actions archive 12858305397 | `0bbf8df2f827020361a11adfab5a5b8d14c7663056d4be7df6a2ddec949a9542` |
+| arm64 Actions archive 12856404610 | `6b0c8b6923b4340e9319433ff81ad29b5edadc40a6ab1f1fa1eed83883a30050` |
+
+The arm64 evidence archive was fully downloaded/hash-verified. The amd64 archive's small metadata
+members were read by HTTPS byte ranges and ZIP CRC-checked. Its archive digest is GitHub-reported;
+the large ISO was not downloaded to the host. ISO checksums above come from the artifact files;
+all three jobs in installer 40811638765 verified the reconstructed ISO (`.iso: OK`).
+
+[Installer 40811638765](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40811638765) was dispatched
+against image **40780003482**, exact source `2290c81`, `account=madx-test`, no release tag. All three
+cases failed before QEMU started. The ISO include was resolved successfully, but the deployment
+validator then rejected `/tmp/herald-os-account.ks`, which the existing account `%pre` generates
+later inside Anaconda. Its absence on the runner is expected. Failure artifacts were downloaded
+and SHA-256 verified; no guest logs/screenshots exist from this attempt.
+
+Repair `161557f` moves strict ISO deployment validation before appending the guest-generated
+account fragment. It does not allow host paths or relax include/source checks. Guest smoke also
+records first-boot/Hermes service state before later acceptance checks. **50 focused tests,
+actionlint and shell syntax checks pass.** Additionally, the actual workflow preparation shell
+step was executed locally for encrypted and unencrypted layouts with a fixture ISO reader and
+real account generator; both generated kickstarts passed pykickstart parsing. That fixture test
+did not boot or install an OS. The subsequent native run is recorded at the top; installed Hermes
+service acceptance and interactive graphical operation remain **unverified**.
+
+## Actual image and installer milestone — 2026-10-29
+
+Image run [40743693944](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40743693944)
+completed at source `606e1e1be710451f80510d6d355518e20a023b95`. Default **amd64 and arm64 images
+built and passed inspection**, systemd unit verification and packaged Electron execution
+(44.5.1). The amd64 job built an actual ISO, volume label `MADX_AGENT_OS`, totaling
+**3,883,882,496 bytes**. No registry push, manifest publication, release or tag occurred.
+
+| Built object | Digest / checksum |
+| --- | --- |
+| amd64 OCI image | `sha256:1727dc630a4462d57cfdecacade0b8195af9718b7f32d99ace92148db9da2873` |
+| arm64 OCI image | `sha256:b8f05b9417d09034e409e0a5662a1f38df27a020d8fd72b764de7eba145b5ca5` |
+| ISO `madx-agent-os-validation-606e1e1-x86_64.iso` | `3bab771854c6d2e811f9100761c15c860ba1c341b8e0d144d7f81dc4919d7d95` |
+| ISO part0 | `c2c44acb3b00e68afa47236f8a178b27f2cb8dc14ab16d7ec33ca346298d7df7` |
+| ISO part1 | `60d2e221264be4afd5651ab4779f7c25727b058cfe3069acddacdb3388d4c82d` |
+| amd64 Actions archive 12840979501 | `40a3b611e23d3c9a4a70fb4238b7ea07edf7ae98ca3c6a63b54e175ec178aa8a` |
+| arm64 Actions archive 12841541120 | `450eb75d9182023a2bca1ec0c5d13d7672245f78637c2314ebc3760baa9ac56f` |
+
+The small arm64 archive was downloaded and its SHA-256 verified. The 3.81 GB amd64 archive was
+inspected through HTTPS byte ranges: its small members passed ZIP CRC checks, both image labels
+match the exact source revision, filesystem inspections report no failures, and UPSTREAM.lock
+retains Hermes `f97608f178d1ffeca59860195ab7da295f7c8e5f`. The table's ISO/part checksums are
+from the packaged checksum files; all three installer jobs subsequently rejoined the parts and
+verified the full ISO against that SHA-256 (`.iso: OK`).
+The large host download was stopped after 4 MiB because it was too slow; the partial file remains
+ignored and is not claimed as a downloaded or verified ISO. OCI repository-shaped names in the
+inspection describe local build tags, not published registry availability.
+
+**NVIDIA did not build.** Its job failed because Universal Blue has not published
+`ghcr.io/ublue-os/akmods:main-44-7.2.13-200.fc44.x86_64`. The selected Fedora base was
+`quay.io/fedora/fedora-bootc@sha256:e541eab24374e2d35d91ec0b2b3edd71eb7880b50b73329e4116102a751c0e99`.
+The workflow marks NVIDIA optional, so overall success does not establish NVIDIA readiness.
+No kernel/base downgrade or Hermes revision change was made to bypass this failure.
+
+CI 40743566443 at this exact image revision passed every Linux job: bridge/system **2,316
+passed, two reviewed exclusions**, dedicated aliases **19/19**, desktop/build/typecheck and real
+Hermes passed. Both macOS jobs were initially cancelled before execution, then passed in attempt 2
+at the same source: bridge/system **2,212 passed, 106 skipped**, desktop **5,833 passed, four skipped**,
+TypeScript and production build passed. The workflow is now fully successful. Its five evidence
+archives were downloaded and their GitHub SHA-256 digests verified.
+
+Installer run [40777283477](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40777283477)
+was actually dispatched against image run **40743693944**, with `account=madx-test` and no release
+tag, at the same source revision. All three cases (encrypted, unencrypted and protected adjacent
+disk) failed **before VM boot** in kickstart preparation. The ISO's top-level `osbuild.ks` delegates
+deployment to `%include /run/install/repo/osbuild-base.ks`; the test harness incorrectly demanded
+an inline deployment command. This is a reproduced harness defect, not a reproduced GRUB error.
+The three small failure artifacts were downloaded and SHA-256 verified. No guest logs or screenshots
+exist because QEMU had not started.
+
+Repair `da9068836bc7c0dfea424751825e8d6f63e5ff3c` follows includes only within kickstart files extracted
+from the already verified ISO, refuses missing/escaping/cyclic includes, ignores commands inside
+script sections, and preserves the original deployment configuration. **42 focused tests passed**;
+actionlint and whitespace checks passed. Only the authorized branch was pushed. CI
+[40778418968](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40778418968) passed: Linux bridge/system
+**2,321 passed, two reviewed exclusions**, macOS bridge/system **2,217 passed, 106 skipped**, both
+desktop suites, typechecks/builds and real Hermes passed. Unpublished image build
+[40778438792](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40778438792) was started
+at this exact revision (`publish=false`, `disks=true`). That build was deliberately cancelled
+after the additional boot-layout defect below was found; it is not a completed image-build result.
+The image must be rebuilt to preserve the strict image/installer source match; the provenance gate
+was not relaxed to reuse the previous ISO.
+At that cancelled attempt, UEFI boot and installation remained unverified. Later actual VM
+results are recorded at the top; installed Hermes service acceptance remains **unverified**.
+
+### Boot partition inspection and second harness repair
+
+Reading the first MiB of the actual `606e1e1` ISO through artifact byte ranges exposed a second
+test-harness mismatch. Its ISO directory places `/images/efiboot.img` at 2,048-byte LBA **1,408,823**,
+but the El Torito EFI entry boots LBA **1,886,021**. That is GPT partition 2, beginning at 512-byte
+sector **7,544,084**: an appended 20 MiB EFI image. Replacing only the ISO directory file does not
+replace those appended bytes. This is artifact-layout evidence, not a claimed GRUB runtime failure.
+
+Repair `2290c818e34fed73b45dadc085aabb66f1ec20a5` extracts the actual boot partition, checks GPT
+header/table checksums and agreement with the El Torito EFI entry, patches the test arguments,
+replaces that appended partition after xorriso replay, and verifies that the resulting ISO's
+bootable partition exactly matches the patched image. The
+[xorriso manual](https://man.archlinux.org/man/xorriso.1) documents replay ordering and overriding
+appended partitions. The helper accepts ordinary test files only, bounds metadata reads, and
+refuses unknown or inconsistent boot layouts. It does not address host devices or firmware.
+**49 focused tests and actionlint pass locally.** This repair was pushed only to the authorized
+branch. CI [40780000937](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40780000937) and unpublished
+image [40780003482](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40780003482) subsequently passed
+at `2290c818e34fed73b45dadc085aabb66f1ec20a5`, with the separate NVIDIA exception above.
+The installer rerun is recorded at the top.
+
+## Authorized Linux execution — initial run and repairs
+
+The user authorized the isolated Linux validation milestone on
+`codex/linux-release-validation`, starting at the verified full commit
+`e062c0334dcb382236b18a60422eab0e46a0d8d2`. Only that branch was pushed; main, tags,
+releases, registries, Windows disks/EFI/firmware and the separate workspace were not changed.
+Git Credential Manager was already installed. Its sign-in was completed by the user after the
+first push attempt reported missing credentials; no credentials were passed through chat.
+
+Pre-push review covered the clean working tree, commit history, workflow permissions/publication
+guards, all 1,817 tracked files and 543 newly introduced historical blobs. Pattern matches were
+test fixtures or UI labels, with no actual credentials found. Large tracked files were branding
+assets, not disk images or build output. This local review was followed by the real CI Gitleaks
+scan: **461 commits scanned, no leaks found**.
+
+[CI run 40684976475](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40684976475)
+is a `push` run on the exact approved commit. The branch push trigger works without a main merge.
+Results retained so far:
+
+- Linux desktop: **5,835 passed, zero failed, two skipped**, across 426 passing test files.
+  TypeScript, branding and the production build passed. The two skips are the existing chart
+  validation tests that require the optional openpyxl interpreter and xmllint; neither tool was
+  configured in that job. These remain unexecuted checks, not passes.
+- Real Linux Hermes runtime: passed using pin
+  `f97608f178d1ffeca59860195ab7da295f7c8e5f`. Actual server launches verified health, authentication
+  rejection, bridge discovery, memory/skills and restart persistence. This does not establish
+  systemd startup, graphical integration or model-backed behavior.
+- Scripts/native inputs, signing policy and secret scan passed. The Linux bridge/system suite
+  finished with **2,275 passed, eight failed and 27 skipped**. Both macOS jobs were cancelled
+  without executing. At this initial-run checkpoint no image or installer had been dispatched;
+  subsequent actual executions are recorded above.
+- Local rechecks: **52 passed, three skipped** (Windows symlink privilege), TypeScript, actionlint
+  and both branding checks passed. No new host software was installed.
+
+Downloaded evidence archives match GitHub's SHA-256 digests:
+
+| Artifact | ID | SHA-256 |
+| --- | --- | --- |
+| desktop-tests-Linux | 12815105374 | `31f255bbb9777e3a96647f4807cc066846dda36231a793fad5dbb6415599557e` |
+| hermes-runtime-evidence | 12813939066 | `31f710b0117c9b6ff8c476905e336bc24b95bf65fd139e811eb8b2e80f0fd3cf` |
+| bridge-tests-Linux | 12815146225 | `3acf729695e6256f01e5b9375174a97a17ee6bd523e50131762f2675e8429e16` |
+
+### Repairs from actual Linux results
+
+- `cf9cd9f`: repaired documentation links whose headings had been renamed. A focused check of
+  49 linked documentation pages passes; this also caught three additional stale anchors in the
+  image-building guide outside the original failing test's page list.
+- `417300e`: repaired the stale checksum URL expectation and made the corruption test alter the
+  actual published MadX package, asserting the file exists first. The self-quit regression test
+  now exercises matching MadX and legacy app fixtures; direct self-protection recognizes both
+  display names and the retained application ID. No update origin or Hermes pin changed.
+- `e8e6010`: the Linux runner must successfully enter an unprivileged user namespace. If Ubuntu's
+  AppArmor namespace restriction blocks it, the workflow changes that runtime setting only on
+  its disposable GitHub runner, then verifies the namespace before testing. This follows the
+  [Ubuntu 24.04 release notes](https://documentation.ubuntu.com/release-notes/24.04/).
+  The 25 migration skips remain forbidden; the two separately reviewed exclusions are unchanged.
+
+Actionlint, branding audit, Python compilation and 31 provenance/runner tests pass locally.
+Attempting the affected Unix test files on Windows failed at collection (`os.getuid` / `pwd`
+unavailable), so that is not counted as a passing rerun. The repaired branch was pushed at full
+revision `e8e6010b38a351f2dfa6f6ac553bd0a901bae955` and triggered
+[CI run 40741143041](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40741143041).
+That run **completed successfully** on the exact repair revision:
+
+| Job | Executed result |
+| --- | --- |
+| Linux desktop | 5,835 passed, two optional spreadsheet-validator skips; typecheck and production build passed |
+| Linux bridge/system | 2,309 passed, two reviewed exclusions; all 25 previously skipped namespace tests executed |
+| Dedicated Linux aliases | 19 passed, zero skipped |
+| macOS desktop | 5,833 passed, four skips; typecheck and production build passed |
+| macOS bridge/system | 2,205 passed, 106 skips |
+| Real Linux Hermes | Passed at the unchanged pin |
+| Scripts, signing policy, secrets | Passed; Gitleaks scanned 464 commits |
+
+The macOS desktop skips are three Linux-specific filesystem cases and the optional openpyxl
+chart validator. Its XML chart check ran. The macOS bridge skips comprise cryptsetup (28), loop
+device (1), root nft (1), setsid/proc (15), shellcheck (5), util-linux terminal (9), namespaces
+(24) and Linux disk packaging (23). Linux executed those applicable native cases. macOS executed
+the PDFKit case excluded on Linux. Root nft syntax remains a separate unexecuted release gate.
+
+All five repair-run archives were downloaded and their digests checked:
+
+| Artifact | ID | SHA-256 |
+| --- | --- | --- |
+| desktop-tests-Linux | 12839867223 | `b0e357c9f665411fea9e4358593c40e9a6443b1a2966cfa9a03e4c2ec7fef181` |
+| bridge-tests-Linux | 12839833956 | `b18a68b58308e36b40c72de0a22ed8df2aa4a198f1c1b9d14830c59b7ef38be6` |
+| hermes-runtime-evidence | 12839712352 | `6c15a950d64e1f2adec2c411287210bfc6e873363e5989fed958799182d3bc10` |
+| desktop-tests-macOS | 12839702905 | `270313f593f347bd5223beb21edf7f4a33119e77007fcaae0795e0c809aba50d` |
+| bridge-tests-macOS | 12839428084 | `75a01023bd39a301682070578c3004b3cd6872577afb4a91e49ac9fb0ae2eccf` |
+
+### Manual workflow dispatch: actual failure and registration repair
+
+The first image dispatch returned HTTP 404. API inspection showed only CI registered in Actions,
+although both manual workflow files exist on main. File presence alone did not prove dispatch
+availability. GitHub documents the initial-run registration requirement in its
+[workflow_dispatch reference](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_dispatch).
+
+Commit `606e1e1be710451f80510d6d355518e20a023b95` adds registration-only jobs for pushes on the
+authorized branch. The image build chain is skipped on those pushes; installation remains manual.
+Publishing is explicitly disabled on this branch, even with a manual publish=true input. The
+existing main/tag release behavior is preserved. Seven event/ref/input cases test these guards;
+37 focused validation/installer tests and actionlint pass locally.
+
+The branch-only push registered both workflows successfully. Image registration run 40743566536
+ran only its registration job: channel, image, manifest, disks and release were skipped. Installer
+registration run 40743566760 ran only its registration job: installation was skipped. **These runs
+are registration evidence, not image or installation evidence.** No main merge was needed.
+
+Actual manual image dispatch then returned HTTP 204 with publish=false and disks=true:
+[image run 40743693944](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40743693944),
+at source `606e1e1be710451f80510d6d355518e20a023b95`. That image build and full CI 40743566443
+subsequently passed for the default architectures; the actual installer result and repair are
+recorded at the top. Do not advance the remote source while image/installer provenance is being checked.
+
+The later UEFI boot, installation and unencrypted desktop evidence is recorded at the top;
+installed Hermes service acceptance remains **unverified**. The image and installer must use the same CI-validated
+revision; the initially approved base and every repair revision are recorded above.
+
+## Historical continuation: execution prepared, remote authorization required
 
 Started clean at `a486db3d851ad8f6eea6a5917773841857dc9d8d` on
 `codex/linux-release-validation`. Windows still has no installed WSL, Podman, Docker or QEMU;
@@ -118,7 +472,7 @@ run the old default-branch publishing workflow. GitHub documents manual triggers
 and branch/input/SHA selectors in [workflow run](https://cli.github.com/manual/gh_workflow_run)
 and [run list](https://cli.github.com/manual/gh_run_list).
 
-### Milestone evidence and separate readiness estimates
+### Historical milestone evidence before remote authorization
 
 | Required runtime result | Evidence |
 | --- | --- |
@@ -346,7 +700,7 @@ from the current deployment, while normal update uses bootc/rpm-ostree's configu
 - [Kickstart directives](https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html) support
   the diagnostic sections and disk restrictions; parsing is covered locally.
 - [xorriso manual](https://www.gnu.org/software/xorriso/man_1_xorriso.html) describes boot setup
-  replay; actual repacked-media boot remains pending.
+  replay; actual repacked-media UEFI boot passed in installer 40814588924.
 - [bootc status documentation](https://github.com/bootc-dev/bootc/blob/main/docs/src/man/bootc-status.8.md)
   defines the machine-readable deployment check.
 - [Actionlint 1.7.12](https://github.com/rhysd/actionlint/releases/tag/v1.7.12) was used for workflow validation.

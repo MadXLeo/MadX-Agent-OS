@@ -1,46 +1,85 @@
 # Phase 1 release gates
 
-Updated 2026-10-28. Source implementation is ready for supported-platform validation. Phase 1 is
+Updated 2026-10-29. Native CI and unpublished image builds have run. Phase 1 is
 **not declared complete**. No LoRA or self-development work has started.
 
-The current Astra work adds executable Linux/image/VM gates to existing workflows and passes a
-real Windows Hermes server smoke. None of the native jobs has executed on this source. Follow
-ASTRA_PROGRESS.md after an authorized transfer to Linux; do not publish an image to obtain a test
-ISO. Manual image builds now default to `publish=false`.
+The user authorized the named validation branch and disposable Linux/UEFI workflows. The initial
+approved commit `e062c0334dcb382236b18a60422eab0e46a0d8d2` was pushed and executed as
+[CI 40684976475](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40684976475).
+Linux desktop tests (5,835 passed, two optional spreadsheet-validator skips), TypeScript, branding,
+production build, pinned Hermes runtime, native input checks and the full-history secret scan passed.
+All 19 branding/alias cases in the full Linux report passed without skips. Both macOS jobs were
+cancelled without execution.
 
-Continuation: no Linux runtime is installed, the validation branch is not remote, and pushing
-requires explicit approval. ASTRA_PROGRESS.md now contains the exact branch and workflow commands.
-The previous CI runner regression is fixed. The Git Bash test's path-spelling defect is also fixed:
-it now checks the actual requirements file and preserves argument boundaries; expanded checks
-pass 76 tests with 26 platform skips. Linux JUnit rejects unexpected skips, with only named
-macOS PDFKit and root-only nft exclusions. Execute the latter separately before security signoff.
-Image-run provenance must match the installer checkout. Hermes first-boot version drift is now
-recorded by the guest probe, but no actual guest has run.
+The Linux bridge/system suite had eight failures and 27 skips. Stale documentation anchors,
+misnamed package fixtures and self-app matching fixtures have been repaired in focused commits.
+The runner now must enable and prove user namespaces instead of skipping 25 migration tests.
+The two reviewed exclusions (macOS PDFKit and root-only nft syntax) remain explicitly unexecuted.
+Repair revision `e8e6010b38a351f2dfa6f6ac553bd0a901bae955` passed
+[CI 40741143041](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40741143041): Linux bridge/system
+2,309 passed with two reviewed exclusions, dedicated aliases 19/19, Linux desktop 5,835 passed
+(two skips), macOS desktop 5,833 passed (four skips), macOS bridge/system 2,205 passed (106 skips).
+Typechecks, both desktop builds and real Linux Hermes passed. Skips are itemized in the progress log.
+See ASTRA_PROGRESS.md for exact evidence, artifact checksums and subsequent results.
 
-Manual CI dispatch has not been attempted. Remote main still lacks its manual trigger, so the
-prepared execution uses an authorized push to this branch's explicit CI trigger instead. No main
-merge is required. Image and installer workflows can be selected at this branch after it is pushed;
-their actual execution, artifact checksums and VM outcomes remain unverified. The latest user
-instruction is still not to push yet.
+The image dispatch initially failed with 404 because GitHub had not registered the workflows.
+Registration-only branch jobs fixed this in `606e1e1`; no main merge or publishing was needed.
+Image run 40743693944 at `606e1e1be710451f80510d6d355518e20a023b95` built and inspected the default
+amd64/arm64 images and produced an actual 3,883,882,496-byte ISO with publish=false and disks=true.
+Systemd unit verification and packaged Electron execution passed. CI 40743566443 fully passed
+after retrying the initially cancelled macOS jobs. All three jobs in installer run 40777283477
+verified the full ISO checksum, then failed before boot because the harness did not resolve the
+ISO's included deployment kickstart. Repair `da90688` passed full CI 40778418968. Actual ISO metadata
+then exposed a separate appended-EFI-partition mismatch in the test setup, repaired in `2290c81`.
+That repair passed 49 focused tests/actionlint and full CI 40780000937 (Linux bridge 2,328/two skips;
+macOS bridge 2,224/106 skips; both desktop suites/builds and real Hermes passed). Unpublished image
+40780003482 built and inspected both default architectures and a new ISO. Installer 40811638765
+verified the ISO, then all cases failed before boot on the account include generated inside the
+guest. Repair `161557f` moves deployment validation before test-account injection; 50 focused tests
+and both workflow preparation-step fixtures pass. Full CI 40812157730 passed: Linux system
+2,329/two skips, macOS system 2,225/106 skips, both desktop suites/builds and real Hermes passed.
+Unpublished image 40812159188 completed at that source; both default images/inspections and ISO build
+passed. Installer 40814588924 verified that ISO, booted it through UEFI and completed installation
+in all three cases. Both unencrypted guests rebooted into the MadX graphical desktop; screenshots
+were inspected. The adjacent synthetic GPT disk retained its hash. Overall acceptance failed:
+Anaconda lacked the external base64 executable, dropping the SSH key, and the encrypted guest
+remained at its unlock prompt. No GRUB installation failure was reproduced.
+Commits `cb55130` and `448e85e` repair the key codec/error handling and serial input/readiness checks.
+CI 40848022569 passed at exact source `448e85ea672fd4b00f6b581f5b27b5d858264a8e`:
+Linux system 2,336/two reviewed skips, macOS system 2,232/106 platform skips, all 19 aliases,
+both desktop suites/typechecks/builds, branding and pinned Hermes passed. New account regression
+tests passed on both native platforms. Unpublished image 40848023781 completed with both default
+images and a new ISO; NVIDIA remains blocked. Installer 40850572175 is running against that exact
+image/source with account=madx-test. The fixes still require its acceptance result.
+Superseded image run 40778438792 was deliberately cancelled. The exact-source gate is unchanged.
+Encrypted first reboot, guest/service acceptance, interactive desktop operation and installed
+Hermes revision remain unverified. First-boot logs show Hermes installation completing in the
+unencrypted guests, but do not establish model-backed operation or the service acceptance result.
+The NVIDIA image failed because the upstream akmods image for Fedora kernel
+`7.2.13-200.fc44.x86_64` was unavailable; no downgrade or revision switch was made.
+Image/installer provenance must match exactly. The Windows host still has no
+Linux runtime; all native execution is on disposable GitHub runners. No new host software, registry
+image, release, tag, main merge or physical installation was authorized or performed.
 
 ## Required before completion
 
-1. Run the complete desktop and bridge suites on Linux and macOS. On Windows, 128 main-process
+1. Preserve passing full Linux/macOS desktop and bridge CI on each repair revision. On Windows, 128 main-process
    failures were reproduced against the original `7ff5f81` source. These involve Unix paths,
    permissions, symlinks, sockets and native runtime assumptions. They remain failures, not passes.
-2. Run the three real-filesystem alias migration tests on Linux: repeat install/remove, collision
-   refusal, partial-write rollback and symlink-parent containment. Windows cannot create the
-   required symlinks here. Confirm systemd resolves each MadX alias to the existing unit; do not
-   enable duplicate units. Run `systemd-analyze verify` on the installed units.
+2. Real-filesystem alias migration checks now pass on Linux, including repeat install/remove,
+   collision refusal, partial-write rollback and symlink-parent containment. Image systemd unit
+   verification also passes. Confirm the booted guest resolves each MadX alias to the existing
+   unit; do not enable duplicate units. Installed-service runtime remains unverified.
 3. Build and inspect Linux tarballs, both Arch packages and macOS DMG/ZIP packages. Verify icons,
    executable names, source checksums, resource inclusion and the generated package audit. Exercise
    existing desktop notifications and macOS permissions with the retained application ID.
-4. Build the pinned bootc image and ISO in a disposable Linux environment. Verify os-release,
-   ISO volume metadata, Plymouth (including encrypted-disk password prompts), login, first boot,
+4. Default bootc image/ISO builds, os-release and ISO metadata inspections have passed. Verify
+   Plymouth (including encrypted-disk password prompts), login, first boot,
    offline Hermes recovery and all compositor dialogs. Inspect the installer runtime branding and
    boot menu: ISO metadata alone does not prove Anaconda's visual skin or title is MadX-branded.
    A builder-specific installer branding layer may still be required after inspecting that ISO.
-5. Test fresh install, upgrade from an existing upstream install, reboot and rollback using isolated
+5. Complete fresh-install acceptance (all three installs and two unencrypted reboots ran), then
+   test upgrade from an existing upstream install, reboot and rollback using isolated
    virtual disks. Hash preferences, browser profiles, Hermes memories, plugin settings and documents
    before/after. Verify old and new command names and service names address the same implementation.
 6. Run actual Hermes chat, tools, approvals, routines and provider recovery against the pinned
@@ -49,8 +88,9 @@ instruction is still not to push yet.
    unvalidated. First boot currently installs Hermes from `main` unless an installation ref is set;
    capture that actual revision and validate it as well as the source/client pin before release.
 7. Exercise NVIDIA image build/kernel matching, encrypted installation, recovery and dual-boot
-   scenarios in disposable VMs only. The previously reported GRUB failure still needs its logs;
-   no root cause or fix has been claimed.
+   scenarios in disposable VMs only. The encrypted install and on-disk password checks passed,
+   but automated first-boot unlock did not. The previously reported GRUB error was not reproduced;
+   no GRUB root cause or fix has been claimed.
 8. Validate MadX registry ownership, signing and release downloads. No image or release was
    published. Current registry references are build configuration, not a claim that tags exist.
 9. Replace historical documentation screenshots with captures from the validated native build.
