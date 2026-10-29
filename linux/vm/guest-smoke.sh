@@ -2,6 +2,10 @@
 # Read-only acceptance checks inside the disposable installed guest, reached over its test SSH key.
 set -euo pipefail
 test -d /sys/firmware/efi
+# Retain actual service state even if a later guest acceptance check fails. The Hermes unit
+# installs/retries the engine; inactive with an unmet pending marker can be normal after setup.
+systemctl show herald-os-firstboot.service herald-os-hermes.service \
+  -p Id -p ActiveState -p SubState -p Result -p ConditionResult -p ExecMainStatus
 test -e /run/ostree-booted
 test -s /var/lib/herald-os/firstboot-done
 bootc status --format=json | python3 -c '

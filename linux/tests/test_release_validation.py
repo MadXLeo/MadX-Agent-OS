@@ -70,6 +70,21 @@ def test_cyclic_includes_and_script_only_deployments_are_not_installation_eviden
         probe.diagnostics("%post\nostreecontainer --url=not-a-kickstart-directive\n%end\n")
 
 
+def test_iso_deployment_is_checked_before_guest_generated_account_configuration(tmp_path):
+    source = "%include /run/install/repo/osbuild-base.ks\nautopart --type=btrfs --encrypted\n"
+    (tmp_path / "osbuild-base.ks").write_text("ostreecontainer --url=/run/install/repo/container --transport=oci\n")
+    # This file is written by account-kickstart.sh's %pre inside the guest, not on the runner.
+    account = "%include /tmp/herald-os-account.ks\n"
+    with pytest.raises(ValueError, match="outside the ISO"):
+        probe.diagnostics(source + account, tmp_path)
+    prepared = probe.diagnostics(source, tmp_path) + account
+    assert prepared.endswith(account) and prepared.startswith(source)
+    workflow = yaml.safe_load((ROOT / ".github/workflows/installer-test.yml").read_text())
+    prepare = next(step["run"] for step in workflow["jobs"]["install"]["steps"]
+                   if step.get("name") == "The ISO's kickstart, unattended")
+    assert prepare.index("installer-probe.py diagnostics") < prepare.index("account-kickstart.sh")
+
+
 def test_diagnostics_preserve_the_deployment_and_capture_fatal_and_success_paths():
     original = "ostreecontainer --url=/run/install/repo/container --transport=oci\n"
     result = probe.diagnostics(original)
