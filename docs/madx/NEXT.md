@@ -35,16 +35,24 @@ Installer 40850572175 installed and rebooted all three cases, including encrypte
 accepted the SSH key and rendered MadX's welcome desktop. Its overall result is failure: GSSAPI
 was advertised beyond the managed keys-only policy, and unprivileged bootc status stopped the probe.
 The encrypted boot also reported systemd-remount-fs.service failed; the cause remains unverified.
-Current repair source `b2beb0a8f63e1df65404e50dc5844969ef2ab440` includes `e9d8431` for explicit managed SSH
+Repair source `b2beb0a8f63e1df65404e50dc5844969ef2ab440` includes `e9d8431` for explicit managed SSH
 authentication methods and `b2beb0a` for a test-only root status-capture unit (no sudo grant),
 early Hermes revision observations and remount diagnostics/acceptance checks. 58 focused tests,
-workflow/source checks and both preparation fixtures pass. CI 40896115633 and unpublished image
-40896705234 are running at that exact revision; no new installer has been dispatched yet.
+workflow/source checks and both preparation fixtures pass. CI 40896115633 reported Linux system
+2,346 passed/one dependency-guard failure/two reviewed skips; all 11 new policy/status cases passed.
+Commit `7f88d80a19d99e144fec97ee4ee8b8d3d86440ef` fixes the new test's parser import, with seven
+affected local tests passing. CI 40898401729 passed every Linux job (system 2,347/two skips,
+aliases 19/19, desktop 5,835/two skips, typecheck/build, branding and Hermes). macOS jobs were
+cancelled without a runner because of hosted capacity constraints; attempt 2 is queued.
+Superseded image 40896705234 was cancelled. Fresh unpublished image 40899343029 completed at
+`7f88d80` with publish=false/disks=true: both default images and the ISO passed build/inspection.
+Both revision labels and the unchanged Hermes pin were checked; image metadata and checksums are
+recorded in ASTRA_PROGRESS.md. Installer 40945372298 is running against that exact source/image
+with account=madx-test. Do not dispatch a duplicate.
 Superseded image 40778438792 was deliberately cancelled; NVIDIA still fails on missing upstream modules.
 See ASTRA_PROGRESS.md for current outcomes and exact artifact checksums.
 The host has no Linux runtime; the branch's proven push trigger runs CI without a merge.
-Follow CI 40896115633 and image 40896705234, fix any native regressions, then rerun
-the installer at that same full source revision with account=madx-test. Collect the actual remount
+Follow CI 40898401729 attempt 2 and installer 40945372298. Collect the actual remount
 journal, installed Hermes revision and remaining guest acceptance evidence. Preserve prior artifacts.
 Fix only confirmed failures and preserve matching full source revisions.
 Never reuse a mismatched image or claim boot from a build pass.

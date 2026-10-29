@@ -486,7 +486,7 @@
     "repository": "MadXLeo/MadX-Agent-OS",
     "branch": "codex/linux-release-validation",
     "approvedInitialRevision": "e062c0334dcb382236b18a60422eab0e46a0d8d2",
-    "repairRevision": "b2beb0a8f63e1df65404e50dc5844969ef2ab440",
+    "repairRevision": "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef",
     "repairCommits": [
       "cf9cd9f995a355b123509b2a6113ff63ffb11000",
       "417300e39ef473de15f501f9117e580ac442ea5e",
@@ -498,7 +498,8 @@
       "cb551306deb495cbe79ee4eb904875849f25c83d",
       "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
       "e9d843164bb139c9428cfb7cf07db548c04ec315",
-      "b2beb0a8f63e1df65404e50dc5844969ef2ab440"
+      "b2beb0a8f63e1df65404e50dc5844969ef2ab440",
+      "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef"
     ],
     "initialCI": {
       "runId": 40684976475,
@@ -634,7 +635,13 @@
       "12886635879": "be30d0595bab179154c1329350e234c50459778c4bf4cb4373ecaafc9dcf3a5a",
       "12888178117": "305c450c4e4dd3a448b48144ea67b6028bbd651fb0011a188d68b58962b4e932",
       "12888123248": "77237ab34fb7784df68dbb45f7b36c61262ca3d50cc6b39ac38284feb4352fca",
-      "12888024350": "bb13cd5f19bcd787c4adb08892ba3b6b7538a7992330ca42e2cdfa025256eee9"
+      "12888024350": "bb13cd5f19bcd787c4adb08892ba3b6b7538a7992330ca42e2cdfa025256eee9",
+      "12907172379": "d3dadd7c5efff9c6bb7c3ea53598dfbbd989603c1de3684bf606f43654f8edae",
+      "12906912800": "a7d48caf812742fa08f9875f25bd80711a4d78843bf752e220c30f5d15a2a062",
+      "12906744673": "7cc32adf12c33dc5386f19cc45933f3003c5f305542718007f3888b98f4ff742",
+      "12909870080": "02175ffb535f4b8ac1f7bb1b39a52bb2b0d39eef806d02b35f5fee3f4f14a5f1",
+      "12907249278": "84255872e4de5c8be2410b5bebf67f0f23c74d32ff74ab3e12660fc005fe5075",
+      "12907014213": "ba6a3b7b367aabb969364a1db995c15061d4bed113f2ca05b833389385727b06"
     },
     "imageWorkflowRun": 40848023781,
     "linuxImageBuilt": true,
@@ -776,14 +783,78 @@
       "evidenceArchivesLocallySha256Verified": true
     },
     "currentRerun": {
-      "revision": "b2beb0a8f63e1df65404e50dc5844969ef2ab440",
-      "ciRunId": 40896115633,
-      "imageRunId": 40896705234,
-      "installerRunId": null,
+      "revision": "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef",
+      "ciRunId": 40898401729,
+      "imageRunId": 40899343029,
+      "installerRunId": 40945372298,
+      "status": "linux_ci_and_default_images_passed_installer_running_macos_retry_queued",
+      "sourceMatchGate": "image and installer full revision verified",
       "publish": false,
       "disks": true,
-      "status": "ci_and_image_in_progress",
-      "sourceMatchGate": "unchanged; fresh image required"
+      "linuxCIConclusion": "success",
+      "macOS": "attempt 1 cancelled without execution: hosted runner capacity; attempt 2 queued",
+      "tests": {
+        "linuxBridge": {
+          "passed": 2347,
+          "failed": 0,
+          "skipped": 2
+        },
+        "aliases": {
+          "passed": 19,
+          "skipped": 0
+        },
+        "linuxDesktop": {
+          "passed": 5835,
+          "failed": 0,
+          "skipped": 2
+        },
+        "linuxTypecheck": "passed",
+        "linuxProductionBuild": "passed",
+        "branding": "passed",
+        "scripts": "passed",
+        "signingPolicy": "passed",
+        "secretScan": "passed",
+        "realHermes": "passed"
+      },
+      "ciAttempt": 2,
+      "image": {
+        "conclusion": "success",
+        "defaultAmd64": "success",
+        "defaultArm64": "success",
+        "nvidia": "failed: upstream akmods manifest unavailable",
+        "publicationSteps": "skipped",
+        "amd64OciDigest": "sha256:1bf06d648a3185b15503336665f80554b848e24647df73cc166b0e0d023c1679",
+        "arm64OciDigest": "sha256:00919b6cf1bf2ca6d3961a01e548304554dee69045648a97e138cfb132ab9e98",
+        "iso": {
+          "name": "madx-agent-os-validation-7f88d80-x86_64.iso",
+          "bytes": 3883601920,
+          "sha256": "220db0a115b7869568779947a4bd44c2c942a2dd5260dbbd81eda68dc673a59d",
+          "part0Sha256": "7c0cb780f566dd15bf26627f5b5d9fd85b54f62b915cb9fb979ce5449ce9c9fa",
+          "part1Sha256": "ceeea81b1fbfe2f5f59a6386ac5cb7a258948e8b0acc310248dfe6e854ec4120"
+        },
+        "artifacts": [
+          {
+            "id": 12909803041,
+            "bytes": 3810644500,
+            "sha256": "497ba3f488b0544329cba3667a8d2b3b310a224b30c2d9de209f8ee6242c25a3",
+            "verification": "small metadata range-read and CRC-checked; full archive digest GitHub-reported"
+          },
+          {
+            "id": 12909597062,
+            "bytes": 9092,
+            "sha256": "9b7e6a3574e814d4c5fd6fba86c0c2072c5d486c3a4ff371f675a670c56f3438",
+            "verification": "full archive downloaded, SHA256 and ZIP CRC verified"
+          }
+        ]
+      },
+      "installer": {
+        "status": "in_progress",
+        "account": "madx-test",
+        "tag": "",
+        "sourceRevision": "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef",
+        "imageRunId": 40899343029,
+        "acceptance": "unverified pending actual guest evidence"
+      }
     },
     "kickstartRepairCI": {
       "runId": 40778418968,
@@ -1153,6 +1224,28 @@
         "ciArchivesLocallySha256Verified": true,
         "imageConclusion": "success",
         "installerConclusion": "failure"
+      },
+      {
+        "revision": "b2beb0a8f63e1df65404e50dc5844969ef2ab440",
+        "ciRunId": 40896115633,
+        "imageRunId": 40896705234,
+        "installerRunId": null,
+        "publish": false,
+        "disks": true,
+        "status": "superseded_after_test_dependency_failure",
+        "sourceMatchGate": "unchanged; fresh image required",
+        "imageConclusion": "cancelled",
+        "linuxBridge": {
+          "passed": 2346,
+          "failed": 1,
+          "skipped": 2
+        },
+        "newPolicyAndStatusTests": {
+          "passed": 11,
+          "failed": 0
+        },
+        "failure": "new test imported pykickstart globally without a declared mandatory requirement",
+        "macOS": "queued, had not executed before supersession"
       }
     ],
     "firstInstalledBootRepairs": {
@@ -1175,8 +1268,13 @@
         "bash": 44,
         "toml": 6
       },
-      "isolatedSshFunctions": "both configured modes and 14 forbidden-method cases passed; full native suite pending",
+      "isolatedSshFunctions": "both configured modes and 14 forbidden-method cases passed; full native Linux suite also passed at 7f88d80",
       "remountCause": "unverified; journal capture and explicit failure gate added"
+    },
+    "testDependencyRepair": {
+      "revision": "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef",
+      "localTestsPassed": 7,
+      "change": "use the existing optional-parser local pattern; CI installs the parser and Linux rejects unexpected skips"
     }
   }
 }

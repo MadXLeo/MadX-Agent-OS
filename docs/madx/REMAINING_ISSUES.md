@@ -55,8 +55,16 @@ desktop. The protected synthetic GPT disk hash was unchanged. Overall acceptance
 Fedora advertises GSSAPI beyond the documented managed keys-only policy, and the probe called
 root-only bootc status as an ordinary user. Repairs `e9d8431`/`b2beb0a` enforce the authentication
 method policy and capture privileged read-only status with a test-only boot unit (no sudo grant).
-CI 40896115633 and unpublished image 40896705234 are running at
-`b2beb0a8f63e1df65404e50dc5844969ef2ab440`; their results are pending.
+CI 40896115633 passed 2,346 Linux system cases, including all 11 new policy/status tests, but
+failed the new test's parser dependency declaration. Commit `7f88d80` fixes it; seven affected
+local tests pass. CI 40898401729 passed all Linux jobs at `7f88d80a19d99e144fec97ee4ee8b8d3d86440ef`
+(system 2,347/two reviewed skips, aliases 19/19, desktop 5,835/two skips, build/typecheck/branding
+and Hermes). Its macOS jobs were cancelled before execution because no hosted runner acquired them;
+GitHub reports macOS arm64 capacity constraints. Attempt 2 is queued, so overall CI remains incomplete.
+The superseded image run 40896705234 was cancelled. Image 40899343029 completed at `7f88d80`;
+both default images and a real ISO passed build/inspection with publication disabled. Full source
+labels and unchanged Hermes pin were verified. Installer 40945372298 is running against that exact
+source/image; SSH-policy and privileged-status fixes still require its guest evidence.
 The encrypted boot also logged a failed systemd-remount-fs.service; its journal is needed to
 diagnose the cause. The next probe records that journal and rejects core acceptance on this failure.
 Superseded image run 40778438792 was deliberately cancelled. The exact-source gate is unchanged.

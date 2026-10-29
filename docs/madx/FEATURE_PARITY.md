@@ -45,7 +45,13 @@ macOS system 2,232/106 skips, aliases 19/19, desktop suites/typechecks/builds an
 Image 40848023781 built both default images and a new ISO. Installer 40850572175 installed and
 rebooted all three cases, unlocked encryption, accepted SSH keys and rendered the MadX desktop.
 Acceptance failed on GSSAPI outside the documented managed policy and the probe's root-only bootc
-command; repairs `e9d8431`/`b2beb0a` await CI 40896115633 and a fresh exact-source image/VM rerun.
+command. All 11 new cases for repairs `e9d8431`/`b2beb0a` passed Linux CI, but a new parser import
+failed its dependency guard; `7f88d80` fixes it and passes all Linux CI 40898401729 jobs (system
+2,347/two skips; desktop 5,835/two skips; aliases/build/typecheck/branding/Hermes passed). macOS
+was cancelled before execution by hosted runner capacity constraints; attempt 2 is queued.
+Image 40899343029 built/inspected both default architectures and a real ISO at `7f88d80`, with
+publication disabled and source labels/pin verified. Installer 40945372298 is running against
+that exact image/source; fresh VM acceptance remains pending.
 The encrypted boot's remount service also failed; diagnostic capture and an acceptance gate were
 added, with no guessed OS repair. Core service acceptance and interactive operation remain open.
 NVIDIA failed on missing upstream kernel modules; H/V gates remain open.

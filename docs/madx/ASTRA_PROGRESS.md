@@ -1,18 +1,52 @@
-# Astra progress — updated 2026-10-29 (Asia/Calcutta)
+# Astra progress — updated 2026-10-30 (Asia/Calcutta)
 
 ## Current repair source and actual VM results
 
-Current repair source is **`b2beb0a8f63e1df65404e50dc5844969ef2ab440`**. Focused commits
+Current repair source is **`7f88d80a19d99e144fec97ee4ee8b8d3d86440ef`**. Focused commits
 `e9d8431` (managed SSH authentication policy) and `b2beb0a` (privileged read-only guest evidence)
 were pushed only to the authorized branch. [CI 40896115633](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40896115633)
-is running. Unpublished [image 40896705234](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40896705234)
-is running at the same source with publish=false/disks=true; no installer at this revision has
-been dispatched. Local validation passes
+at `b2beb0a` reported Linux system **2,346 passed, one failed, two reviewed skips**. All 11 new
+SSH-policy/status regressions passed. The failure was the dependency-declaration guard: the new
+test imported pykickstart globally instead of following the existing local optional-parser pattern.
+Commit `7f88d80` fixes that import without relaxing Linux's unexpected-skip gate; seven affected
+local tests pass. New [CI 40898401729](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40898401729)
+has passed every Linux job: system **2,347 passed/two reviewed skips**, aliases **19/19**, desktop
+**5,835 passed/two optional-validator skips**, typecheck/build, branding, scripts, signing policy,
+secret scan and pinned Hermes. All three Linux evidence archives were downloaded/hash-verified.
+Both macOS jobs were cancelled before execution. GitHub's check annotations report that no hosted
+runner acquired either job, with macOS arm64 capacity notices. Attempt 2 retries only the incomplete
+jobs; they are queued. This is not a completed cross-platform CI result.
+The superseded unpublished [image 40896705234](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40896705234)
+was cancelled to preserve exact source matching. Fresh unpublished
+[image 40899343029](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40899343029) completed at
+`7f88d80` with publish=false/disks=true. Both default architectures passed filesystem inspection,
+systemd verification and packaged Electron execution. NVIDIA remains blocked by the same unavailable
+upstream module image. Registry push/signing, multi-architecture publication and release steps were
+skipped. [Installer 40945372298](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40945372298)
+is running against that exact source/image with account=madx-test and an empty release tag.
+
+| Image object at `7f88d80` | Digest / checksum |
+| --- | --- |
+| amd64 OCI image | `sha256:1bf06d648a3185b15503336665f80554b848e24647df73cc166b0e0d023c1679` |
+| arm64 OCI image | `sha256:00919b6cf1bf2ca6d3961a01e548304554dee69045648a97e138cfb132ab9e98` |
+| ISO `madx-agent-os-validation-7f88d80-x86_64.iso` (3,883,601,920 bytes) | `220db0a115b7869568779947a4bd44c2c942a2dd5260dbbd81eda68dc673a59d` |
+| ISO part0 | `7c0cb780f566dd15bf26627f5b5d9fd85b54f62b915cb9fb979ce5449ce9c9fa` |
+| ISO part1 | `ceeea81b1fbfe2f5f59a6386ac5cb7a258948e8b0acc310248dfe6e854ec4120` |
+| amd64 Actions archive 12909803041 | `497ba3f488b0544329cba3667a8d2b3b310a224b30c2d9de209f8ee6242c25a3` |
+| arm64 Actions archive 12909597062 | `9b7e6a3574e814d4c5fd6fba86c0c2072c5d486c3a4ff371f675a670c56f3438` |
+
+Both full source labels and the unchanged Hermes pin were checked. The arm64 ZIP was downloaded,
+SHA-256 verified and CRC-checked. The amd64 metadata was range-read and CRC-checked; its full archive
+digest is GitHub-reported. ISO/part hashes above come from the build's checksum files; the installer
+must independently verify the reconstructed ISO before booting it.
+The three available CI archives at `b2beb0a` were downloaded/hash-verified; Linux desktop,
+typecheck/build, scripts, secrets and pinned Hermes passed. Its macOS jobs had not started.
+Local validation of the substantive repairs passes
 58 focused tests, actionlint, both full kickstart-preparation fixtures and native source checks
 (76 Python, 44 Bash, six TOML). Isolated execution of the actual SSH policy functions passes both
-authentication modes and 14 forbidden-method cases; the full native SSH suite still needs CI.
+authentication modes and 14 forbidden-method cases; the full native Linux SSH suite also passed.
 
-Current validated code source is **`448e85ea672fd4b00f6b581f5b27b5d858264a8e`**, pushed only to
+Last completed cross-platform CI/image source is **`448e85ea672fd4b00f6b581f5b27b5d858264a8e`**, pushed only to
 `codex/linux-release-validation`. [CI 40848022569](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40848022569)
 passed at that exact revision: Linux system **2,336 passed/two reviewed skips**, macOS system
 **2,232 passed/106 platform skips**, aliases **19/19**, desktop **5,835/two skips on Linux** and
@@ -692,20 +726,20 @@ mode and unconfigured project signing remain explicit release/security limitatio
 
 ## H–J. Blockers and progress estimate
 
-**Source migration is substantially implemented; native release readiness is unproven.** Of the
-nine requested installability criteria, zero are fully closed with Linux release evidence here:
-image/ISO creation, UEFI boot, isolated install, reboot, desktop, core services, complete Hermes,
-update/rollback and absence of critical installer/security regressions all require execution.
-Hermes has useful partial evidence from the real Windows process test. A percentage would confuse
+**Source migration is substantially implemented; Phase 1 release readiness remains open.** Real
+images and ISOs have been built. All three disposable UEFI cases installed and rebooted at `448e85e`,
+including encrypted unlock, SSH key sign-in and a rendered graphical desktop. Those results do not
+close core service acceptance, complete Hermes operation, interactive desktop acceptance or
+update/rollback. The current repair revision must pass its own VM checks. A percentage would confuse
 source completion with release readiness. The retained-name contracts and all open platform gates
-remain in REMAINING_ISSUES.md; the feature register records this session's evidence.
+remain in REMAINING_ISSUES.md; the feature register records the evidence and its limits.
 
 Focused commits for this session are recorded in the final section below. Phase 2's desktop and
 Hermes plan remains in PHASE2_PLAN.md and is not started.
 
 ## K. Next Astra engineering task
 
-After an authorized transfer of this branch to a supported Linux environment:
+Continue the already authorized GitHub validation path, preserving exact image/source matching:
 
 1. Run existing `ci.yml` at the exact source commit. Require full desktop/bridge suites, zero-skip
    Linux alias report and the real Hermes job. Keep test reports and dependency snapshot.
@@ -755,7 +789,7 @@ from the current deployment, while normal update uses bootc/rpm-ostree's configu
 
 - `09f0d5a` — real pinned Hermes smoke in an isolated profile.
 - `d08d5e3` — Linux CI evidence, image inspection and actual-UEFI installer acceptance harness.
-- The documentation/evidence commit containing this file follows those source commits; its ID is
-  recorded in the session's final response and Git log. Final working-tree verification is clean.
+- Later repair and evidence commits are recorded above and in Git history. Check the actual working
+  tree before continuing; documentation updates can remain pending while a remote source is held fixed.
 
 Local commits use command-scoped `Codex <codex@localhost>`; global Git identity is unchanged.
