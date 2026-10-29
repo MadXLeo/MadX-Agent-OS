@@ -6,18 +6,20 @@ import shutil
 import subprocess
 
 import pytest
-from pykickstart.parser import KickstartParser
-from pykickstart.version import makeVersion
 
 ROOT = Path(__file__).resolve().parents[2]
 BASH = shutil.which(os.environ.get("HERALD_OS_TEST_BASH", "bash"))
 
 
 def test_status_fragment_is_a_post_install_test_unit_with_no_privilege_grant():
+    # Match the existing installer tests: CI installs this parser and rejects missing-parser
+    # skips on Linux; local environments without it can still run the other test families.
+    parser_module = pytest.importorskip("pykickstart.parser")
+    from pykickstart.version import makeVersion
     made = subprocess.run([BASH, str(ROOT / "linux/vm/status-kickstart.sh")],
                           capture_output=True, text=True, check=True).stdout
     handler = makeVersion()
-    KickstartParser(handler, followIncludes=False).readKickstartFromString(made)
+    parser_module.KickstartParser(handler, followIncludes=False).readKickstartFromString(made)
     assert len(handler.scripts) == 1 and handler.scripts[0].inChroot
     script = handler.scripts[0].script
     assert subprocess.run([BASH, "-n"], input=script, text=True).returncode == 0
