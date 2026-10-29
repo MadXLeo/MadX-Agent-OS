@@ -173,15 +173,23 @@ while IFS= read -r line; do
 done <<<"$keys"
 say "the account: ${ACCOUNT:-hermes}; SSH: $([[ -n "$keys" ]] && echo "on at the first start, for $(grep -c . <<<"$keys") key(s) only" || echo off)"
 # The keys go through base64, so nothing in a comment can end the here-document early.
+# The minimal Anaconda runtime has Python (used above) but may omit the base64 executable.
+# Encode before writing any %post, and refuse on failure instead of silently dropping SSH keys.
+encoded_keys=""
+if [[ -n "$keys" ]]; then
+  encoded_keys="$(printf %s "$keys" | python3 -c 'import base64,sys; print(base64.b64encode(sys.stdin.buffer.read()).decode("ascii"))')" ||
+    refuse "could not encode the SSH keys, so nothing was erased."
+fi
 {
   echo "# The account %pre in unattended.ks wrote this."
   if [[ -n "$ACCOUNT" || -n "$keys" ]]; then
     echo "%post --interpreter=/usr/bin/bash --erroronfail"
+    echo "set -euo pipefail"
     echo "mkdir -p /etc/herald-os"
     [[ -z "$ACCOUNT" ]] || echo "echo 'user=$ACCOUNT' >/etc/herald-os/install.conf"
     if [[ -n "$keys" ]]; then
-      echo "base64 -d >/etc/herald-os/ssh-keys <<'HERALD_OS_KEYS'"
-      printf %s "$keys" | base64
+      echo "python3 -c 'import base64,sys; sys.stdout.buffer.write(base64.b64decode(sys.stdin.buffer.read().strip(), validate=True))' >/etc/herald-os/ssh-keys <<'HERALD_OS_KEYS'"
+      printf '%s\n' "$encoded_keys"
       echo "HERALD_OS_KEYS"
       echo "chmod 0644 /etc/herald-os/ssh-keys"
     fi

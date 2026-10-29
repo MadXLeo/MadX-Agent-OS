@@ -482,7 +482,7 @@ def with_settings(pre: str = ACCOUNT_PRE, **settings: str) -> str:
     return pre
 
 
-def run_account_pre(tmp_path: Path, pre: str = ACCOUNT_PRE, github: dict[str, str] | None = None, keygen_fails: bool = False, no_accounts: bool = False) -> tuple[subprocess.CompletedProcess, Path, Path]:
+def run_account_pre(tmp_path: Path, pre: str = ACCOUNT_PRE, github: dict[str, str] | None = None, keygen_fails: bool = False, no_accounts: bool = False, no_base64: bool = False) -> tuple[subprocess.CompletedProcess, Path, Path]:
     """The account %pre, with a stand-in curl that answers for github.com from `github` (and with
     `keygen_fails`, an ssh-keygen that cannot read any key)."""
     bin_dir, pages = tmp_path / "bin", tmp_path / "pages"
@@ -502,6 +502,9 @@ def run_account_pre(tmp_path: Path, pre: str = ACCOUNT_PRE, github: dict[str, st
     if keygen_fails:
         (bin_dir / "ssh-keygen").write_text("#!/bin/sh\nexit 255\n")
         (bin_dir / "ssh-keygen").chmod(0o755)
+    if no_base64:
+        (bin_dir / "base64").write_text("#!/bin/sh\necho 'base64: command not found' >&2\nexit 127\n")
+        (bin_dir / "base64").chmod(0o755)
     out, console = tmp_path / "account.ks", tmp_path / "console"
     console.write_text("")
     found = subprocess.run(
@@ -514,13 +517,13 @@ def run_account_pre(tmp_path: Path, pre: str = ACCOUNT_PRE, github: dict[str, st
     return found, out, console
 
 
-def installed(tmp_path: Path, include: Path) -> dict[str, str]:
+def installed(tmp_path: Path, include: Path, env=None) -> dict[str, str]:
     """What the %post the account %pre wrote leaves in the installed system's /etc/herald-os."""
     post = re.search(r"^%post [^\n]*\n(.*?)^%end$", include.read_text(), re.M | re.S)
     if not post:
         return {}
     etc = tmp_path / "etc"
-    found = subprocess.run(["bash", "-euc", post.group(1).replace("/etc/herald-os", str(etc / "herald-os"))], capture_output=True, text=True, check=False)
+    found = subprocess.run(["bash", "-euc", post.group(1).replace("/etc/herald-os", str(etc / "herald-os"))], capture_output=True, text=True, check=False, env=env)
     assert found.returncode == 0, found.stderr
     return {path.name: path.read_text() for path in sorted((etc / "herald-os").iterdir())}
 
@@ -550,6 +553,20 @@ def test_keys_alone_are_for_hermes(tmp_path):
     found, out, _ = run_account_pre(tmp_path, with_settings(SSH_KEYS=public_key()))
     assert found.returncode == 0, found.stderr
     assert installed(tmp_path, out) == {"ssh-keys": f"{public_key()}\n"}
+
+
+def test_minimal_installer_preserves_keys_without_a_base64_executable(tmp_path):
+    key = public_key(comment="it's mine HERALD_OS_KEYS")
+    found, out, _ = run_account_pre(tmp_path, with_settings(ACCOUNT="madx-test", SSH_KEYS=key), no_base64=True)
+    assert found.returncode == 0, found.stderr
+    env = {"PATH": f"{tmp_path / 'bin'}:/usr/bin:/bin"}
+    assert installed(tmp_path, out, env=env) == {"install.conf": "user=madx-test\n", "ssh-keys": key + "\n"}
+
+
+def test_key_encoding_failure_refuses_before_any_account_post_is_written(tmp_path):
+    pre = with_settings(SSH_KEYS=public_key())
+    pre = pre.replace("python3 -c 'import base64,sys; print(base64.b64encode(sys.stdin.buffer.read()).decode(\"ascii\"))'", "false")
+    assert account_refused(*run_account_pre(tmp_path, pre), "could not encode the SSH keys")
 
 
 def test_github_keys_are_read_while_the_installer_is_online_and_marked(tmp_path):
