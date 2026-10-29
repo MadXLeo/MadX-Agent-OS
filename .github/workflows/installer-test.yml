@@ -243,7 +243,7 @@ jobs:
             done
             if [[ -n "$asked" ]]; then
               sleep 2
-              printf '%s\r' "$PASSPHRASE" | socat -u - UNIX-CONNECT:serial.sock
+              bash linux/vm/type-passphrase.sh serial.sock
               echo "typed the disk password at the prompt"
             else
               echo "::error::the installed system never asked for the disk password"; failed=1
@@ -268,26 +268,31 @@ jobs:
             ssh_to() { ssh -p 2222 -o BatchMode=yes -o ConnectTimeout=15 -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=known_hosts "$@"; }
             signed_in=""
             for _ in $(seq 1 20); do
-              if ssh_to -i test-key "$ACCOUNT@127.0.0.1" 'id -un; systemctl is-active sshd herald-os-ssh-limit; cat /etc/herald-os/install.conf' >ssh.log 2>&1; then
+              if ssh_to -i test-key "$ACCOUNT@127.0.0.1" 'id -un && systemctl is-active sshd herald-os-ssh-limit && cat /etc/herald-os/install.conf' >ssh.log 2>&1; then
                 signed_in=1
                 break
               fi
               sleep 30
             done
-            grep -qx "$ACCOUNT" ssh.log || { echo "::error::the key did not sign in as $ACCOUNT"; failed=1; }
-            sleep 30
-            if ssh_to -i test-key "root@127.0.0.1" true >>ssh.log 2>&1; then echo "::error::root signed in over SSH"; failed=1; fi
-            sleep 30
-            if ssh_to -o PubkeyAuthentication=no -o PreferredAuthentications=password,keyboard-interactive "$ACCOUNT@127.0.0.1" true >>ssh.log 2>&1; then
-              echo "::error::signed in without the key"; failed=1
+            if [[ -z "$signed_in" ]]; then
+              echo "::error::SSH guest readiness failed for $ACCOUNT; authentication policy and guest acceptance remain unverified"
+              failed=1
+            else
+              grep -qx "$ACCOUNT" ssh.log || { echo "::error::unexpected SSH account"; failed=1; }
+              sleep 30
+              if ssh_to -i test-key "root@127.0.0.1" true >>ssh.log 2>&1; then echo "::error::root signed in over SSH"; failed=1; fi
+              sleep 30
+              if ssh_to -o PubkeyAuthentication=no -o PreferredAuthentications=password,keyboard-interactive "$ACCOUNT@127.0.0.1" true >>ssh.log 2>&1; then
+                echo "::error::signed in without the key"; failed=1
+              fi
+              grep -q 'Permission denied (publickey)' ssh.log || { echo "::error::sshd offered more than keys"; failed=1; }
+              hermes_pin="$(sed -n 's/^sha=//p' upstream/UPSTREAM.lock | tr -d '[:space:]')"
+              [[ "$hermes_pin" =~ ^[0-9a-f]{40}$ ]] || { echo '::error::invalid Hermes source pin'; exit 1; }
+              ssh_to -i test-key "$ACCOUNT@127.0.0.1" "bash -s -- $hermes_pin" <linux/vm/guest-smoke.sh >guest-smoke.log 2>&1 \
+                || { echo '::error::installed guest acceptance failed'; failed=1; }
+              cat guest-smoke.log
             fi
-            grep -q 'Permission denied (publickey)' ssh.log || { echo "::error::sshd offered more than keys"; failed=1; }
             echo "----- ssh.log (signed in: ${signed_in:-no})"; cat ssh.log
-            hermes_pin="$(sed -n 's/^sha=//p' upstream/UPSTREAM.lock | tr -d '[:space:]')"
-            [[ "$hermes_pin" =~ ^[0-9a-f]{40}$ ]] || { echo '::error::invalid Hermes source pin'; exit 1; }
-            ssh_to -i test-key "$ACCOUNT@127.0.0.1" "bash -s -- $hermes_pin" <linux/vm/guest-smoke.sh >guest-smoke.log 2>&1 \
-              || { echo '::error::installed guest acceptance failed'; failed=1; }
-            cat guest-smoke.log
           fi
           echo "quit" | socat - UNIX-CONNECT:monitor.sock >/dev/null || true
           grep -aE 'herald-os|MadX Agent OS|Reached target|Failed|passphrase|Cryptography' boot.log | tail -n 60 || true
