@@ -2,7 +2,17 @@
 
 ## Current repair source and actual VM results
 
-Current code HEAD is **`448e85ea672fd4b00f6b581f5b27b5d858264a8e`**, pushed only to
+Current repair source is **`b2beb0a8f63e1df65404e50dc5844969ef2ab440`**. Focused commits
+`e9d8431` (managed SSH authentication policy) and `b2beb0a` (privileged read-only guest evidence)
+were pushed only to the authorized branch. [CI 40896115633](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40896115633)
+is running. Unpublished [image 40896705234](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40896705234)
+is running at the same source with publish=false/disks=true; no installer at this revision has
+been dispatched. Local validation passes
+58 focused tests, actionlint, both full kickstart-preparation fixtures and native source checks
+(76 Python, 44 Bash, six TOML). Isolated execution of the actual SSH policy functions passes both
+authentication modes and 14 forbidden-method cases; the full native SSH suite still needs CI.
+
+Current validated code source is **`448e85ea672fd4b00f6b581f5b27b5d858264a8e`**, pushed only to
 `codex/linux-release-validation`. [CI 40848022569](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40848022569)
 passed at that exact revision: Linux system **2,336 passed/two reviewed skips**, macOS system
 **2,232 passed/106 platform skips**, aliases **19/19**, desktop **5,835/two skips on Linux** and
@@ -13,7 +23,43 @@ skips were accepted. Unpublished [image 40848023781](https://github.com/MadXLeo/
 completed with publish=false/disks=true. Both default images passed inspection, systemd verification
 and packaged Electron execution (44.5.1); NVIDIA failed on the same missing upstream module image.
 The manual installer rerun [40850572175](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40850572175)
-is running against this exact image/source with account=madx-test and no tag. Its outcome is pending.
+completed against this exact image/source with account=madx-test and no tag. All three cases
+passed ISO preparation, actual UEFI installation and disk-encryption checks, rebooted the installed
+system, and accepted the test SSH key. The encrypted guest unlocked with the paced serial input.
+All three final screenshots show the MadX welcome desktop and were visually inspected. The
+protected synthetic disk retained its hash. Both earlier repairs are confirmed in real VMs.
+
+**The overall installer run still failed.** Fedora advertises GSSAPI alongside public-key SSH
+authentication, violating the managed setup's documented keys-only policy. Commit `e9d8431`
+restricts `AuthenticationMethods` to publickey by default, retains separate publickey/password
+alternatives for `--passwords`, and rejects earlier/conditional configuration that widens access.
+This follows the [OpenSSH authentication-method semantics](https://man.openbsd.org/sshd_config#AuthenticationMethods).
+The public-key, root-denial and password-denial checks remain enabled.
+
+The guest probe also failed because this `bootc status` requires root. Commit `b2beb0a` adds a
+test-only root boot unit that writes read-only deployment observations under `/run/madx-validation`.
+The SSH account reads those files; no sudo grant, root SSH login or production account-policy change
+is added. Hermes revision/command evidence now precedes later acceptance checks so a subsequent
+failure cannot hide it.
+
+The encrypted boot log additionally reports **systemd-remount-fs.service failed**, although the
+desktop starts. Its underlying cause is not yet known. The next probe captures the service journal,
+mount table and fstab, and refuses core acceptance if that unit is failed. No GRUB installation
+failure was reproduced; do not label the remount failure a GRUB defect.
+
+Service evidence in all three guests: `herald-os-firstboot.service` is active/exited with Result=success
+and ExecMainStatus=0. The Hermes retry-install unit is inactive/dead, ConditionResult=no,
+Result=success and ExecMainStatus=0; its pending-install condition was not met. This is not evidence
+that the model-serving process is running. Installed Hermes revision and core guest acceptance
+were not reached because of the bootc privilege failure.
+
+All three current VM evidence archives were downloaded and SHA-256/ZIP CRC/source-verified:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| 12888178117, unencrypted | `305c450c4e4dd3a448b48144ea67b6028bbd651fb0011a188d68b58962b4e932` |
+| 12888123248, unencrypted/protected disk | `77237ab34fb7784df68dbb45f7b36c61262ca3d50cc6b39ac38284feb4352fca` |
+| 12888024350, encrypted | `bb13cd5f19bcd787c4adb08892ba3b6b7538a7992330ca42e2cdfa025256eee9` |
 
 | Current object at `448e85e` | Digest / checksum |
 | --- | --- |
@@ -27,8 +73,8 @@ is running against this exact image/source with account=madx-test and no tag. It
 
 Both full source labels and the unchanged Hermes pin were checked. The arm64 evidence ZIP was
 downloaded/hash-verified. The amd64 metadata was range-read and ZIP CRC-checked; its full archive
-digest is GitHub-reported and ISO/part hashes come from its checksum files. The installer must
-verify the reconstructed ISO. Registry pushes/signing, manifests and release steps were skipped.
+digest is GitHub-reported and ISO/part hashes come from its checksum files. All three installer jobs
+verified the reconstructed ISO. Registry pushes/signing, manifests and release steps were skipped.
 
 Installer [40814588924](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40814588924), using image
 40812159188 at `161557f`, **booted the actual ISO through UEFI and completed Anaconda installation

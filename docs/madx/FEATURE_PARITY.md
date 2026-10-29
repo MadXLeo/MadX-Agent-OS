@@ -42,9 +42,12 @@ guests rebooted into the graphical MadX welcome screen; the adjacent synthetic G
 its hash. Acceptance failed on lost SSH keys (Anaconda lacked base64) and encrypted unlock input.
 Fixes `cb55130`/`448e85e` passed full native CI 40848022569: Linux system 2,336/two skips,
 macOS system 2,232/106 skips, aliases 19/19, desktop suites/typechecks/builds and pinned Hermes.
-Image 40848023781 built both default images and a new ISO; installer 40850572175 is running
-against the same source. Its actual acceptance result remains pending.
-Installed service acceptance, interactive operation and encrypted first reboot remain open.
+Image 40848023781 built both default images and a new ISO. Installer 40850572175 installed and
+rebooted all three cases, unlocked encryption, accepted SSH keys and rendered the MadX desktop.
+Acceptance failed on GSSAPI outside the documented managed policy and the probe's root-only bootc
+command; repairs `e9d8431`/`b2beb0a` await CI 40896115633 and a fresh exact-source image/VM rerun.
+The encrypted boot's remount service also failed; diagnostic capture and an acceptance gate were
+added, with no guessed OS repair. Core service acceptance and interactive operation remain open.
 NVIDIA failed on missing upstream kernel modules; H/V gates remain open.
 
 Earlier Windows desktop results were 4,915 renderer/shared passes (five skips) and 89 focused main-process
@@ -57,7 +60,7 @@ with 26 Windows/platform skips, plus three installer workflow tests. Full native
 | Memory and skills | Real MemoryStore and skills API; contents survive server restart in an isolated profile | Existing-profile OS upgrade and user-facing integration |
 | Linux alias/filesystem behavior | All 19 branding/alias cases passed without skips in the full Linux suite and the dedicated gate | Installed unit resolution and VM upgrade behavior |
 | Image packaging | Default amd64/arm64 images built; filesystem, systemd units and packaged Electron passed; actual amd64 ISO booted through UEFI | Native package variants and NVIDIA build |
-| UEFI installation | Three installations passed; both unencrypted guests rebooted into MadX desktop; encrypted disk password checks passed | Repaired SSH/guest acceptance, encrypted first reboot, interactive visual review |
+| UEFI installation | Three installations and first reboots passed, including encrypted unlock; all rendered the MadX desktop and accepted SSH keys | Authentication-policy repair, privileged guest status, encrypted remount service failure, interactive operation |
 | Adjacent Windows-style disk | Actual VM install and acceptance attempt preserved the synthetic GPT/sentinel disk hash | No actual Windows/shared-ESP certification |
 | Update/rollback and NVIDIA | Existing implementation reviewed; validation sequence documented, identifiers retained | Two deployment transitions, data integrity, GPU/laptop testing |
 

@@ -49,12 +49,21 @@ CI 40848022569 passed at exact source `448e85ea672fd4b00f6b581f5b27b5d858264a8e`
 Linux system 2,336/two reviewed skips, macOS system 2,232/106 platform skips, all 19 aliases,
 both desktop suites/typechecks/builds, branding and pinned Hermes passed. New account regression
 tests passed on both native platforms. Unpublished image 40848023781 completed with both default
-images and a new ISO; NVIDIA remains blocked. Installer 40850572175 is running against that exact
-image/source with account=madx-test. The fixes still require its acceptance result.
+images and a new ISO; NVIDIA remains blocked. Installer 40850572175 installed and rebooted all three
+cases, including encrypted unlock; all accepted the test SSH key and displayed the MadX welcome
+desktop. The protected synthetic GPT disk hash was unchanged. Overall acceptance still failed:
+Fedora advertises GSSAPI beyond the documented managed keys-only policy, and the probe called
+root-only bootc status as an ordinary user. Repairs `e9d8431`/`b2beb0a` enforce the authentication
+method policy and capture privileged read-only status with a test-only boot unit (no sudo grant).
+CI 40896115633 and unpublished image 40896705234 are running at
+`b2beb0a8f63e1df65404e50dc5844969ef2ab440`; their results are pending.
+The encrypted boot also logged a failed systemd-remount-fs.service; its journal is needed to
+diagnose the cause. The next probe records that journal and rejects core acceptance on this failure.
 Superseded image run 40778438792 was deliberately cancelled. The exact-source gate is unchanged.
-Encrypted first reboot, guest/service acceptance, interactive desktop operation and installed
-Hermes revision remain unverified. First-boot logs show Hermes installation completing in the
-unencrypted guests, but do not establish model-backed operation or the service acceptance result.
+Encrypted first reboot is proven. Core guest acceptance, interactive desktop operation and installed
+Hermes revision remain unverified. First-boot services report success; the Hermes retry-install unit
+is inactive because its pending-install condition is false. This does not prove model-serving
+operation. The privilege failure stopped the probe before installed revision/desktop-window checks.
 The NVIDIA image failed because the upstream akmods image for Fedora kernel
 `7.2.13-200.fc44.x86_64` was unavailable; no downgrade or revision switch was made.
 Image/installer provenance must match exactly. The Windows host still has no
@@ -89,7 +98,8 @@ image, release, tag, main merge or physical installation was authorized or perfo
    capture that actual revision and validate it as well as the source/client pin before release.
 7. Exercise NVIDIA image build/kernel matching, encrypted installation, recovery and dual-boot
    scenarios in disposable VMs only. The encrypted install and on-disk password checks passed,
-   but automated first-boot unlock did not. The previously reported GRUB error was not reproduced;
+   and automated first-boot unlock now passes. The remount service failure still needs diagnosis.
+   The previously reported GRUB error was not reproduced;
    no GRUB root cause or fix has been claimed.
 8. Validate MadX registry ownership, signing and release downloads. No image or release was
    published. Current registry references are build configuration, not a claim that tags exist.

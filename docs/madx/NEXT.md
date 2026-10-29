@@ -31,12 +31,22 @@ and accurate SSH readiness reporting) are pushed. Current source is
 `448e85ea672fd4b00f6b581f5b27b5d858264a8e`; CI 40848022569 passed (Linux system 2,336/two skips,
 macOS system 2,232/106 skips, all aliases, both desktop suites/builds and real Hermes).
 Unpublished image 40848023781 completed; both default images and a new ISO passed build/inspection.
-Installer 40850572175 is running against that exact image/source with account=madx-test.
+Installer 40850572175 installed and rebooted all three cases, including encrypted unlock; all
+accepted the SSH key and rendered MadX's welcome desktop. Its overall result is failure: GSSAPI
+was advertised beyond the managed keys-only policy, and unprivileged bootc status stopped the probe.
+The encrypted boot also reported systemd-remount-fs.service failed; the cause remains unverified.
+Current repair source `b2beb0a8f63e1df65404e50dc5844969ef2ab440` includes `e9d8431` for explicit managed SSH
+authentication methods and `b2beb0a` for a test-only root status-capture unit (no sudo grant),
+early Hermes revision observations and remount diagnostics/acceptance checks. 58 focused tests,
+workflow/source checks and both preparation fixtures pass. CI 40896115633 and unpublished image
+40896705234 are running at that exact revision; no new installer has been dispatched yet.
 Superseded image 40778438792 was deliberately cancelled; NVIDIA still fails on missing upstream modules.
 See ASTRA_PROGRESS.md for current outcomes and exact artifact checksums.
 The host has no Linux runtime; the branch's proven push trigger runs CI without a merge.
-Follow installer 40850572175. Preserve the previous logs/screenshots and compare the SSH and
-encrypted-unlock results. Fix only confirmed failures and preserve matching full source revisions.
+Follow CI 40896115633 and image 40896705234, fix any native regressions, then rerun
+the installer at that same full source revision with account=madx-test. Collect the actual remount
+journal, installed Hermes revision and remaining guest acceptance evidence. Preserve prior artifacts.
+Fix only confirmed failures and preserve matching full source revisions.
 Never reuse a mismatched image or claim boot from a build pass.
 Inspect the first real Anaconda/GRUB diagnostics,
 boot screenshots and guest checks before any installer fix. Source and Windows Hermes runtime

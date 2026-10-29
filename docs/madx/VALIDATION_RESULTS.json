@@ -486,7 +486,7 @@
     "repository": "MadXLeo/MadX-Agent-OS",
     "branch": "codex/linux-release-validation",
     "approvedInitialRevision": "e062c0334dcb382236b18a60422eab0e46a0d8d2",
-    "repairRevision": "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
+    "repairRevision": "b2beb0a8f63e1df65404e50dc5844969ef2ab440",
     "repairCommits": [
       "cf9cd9f995a355b123509b2a6113ff63ffb11000",
       "417300e39ef473de15f501f9117e580ac442ea5e",
@@ -496,7 +496,9 @@
       "2290c818e34fed73b45dadc085aabb66f1ec20a5",
       "161557f9da021d0c7b44024260bc75448c5cc083",
       "cb551306deb495cbe79ee4eb904875849f25c83d",
-      "448e85ea672fd4b00f6b581f5b27b5d858264a8e"
+      "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
+      "e9d843164bb139c9428cfb7cf07db548c04ec315",
+      "b2beb0a8f63e1df65404e50dc5844969ef2ab440"
     ],
     "initialCI": {
       "runId": 40684976475,
@@ -629,7 +631,10 @@
       "12885777439": "048dbaecc7a02ea36c30221db2739a102df4dabd52a80aebe2a29a1dded68149",
       "12885757662": "959cb103b51b05a16b282de528c8bdb09c1ab5d3f09c3774cf05fe6d72d784f3",
       "12885254645": "3b613adb0ad8eb596d17bf9f6f44966d62d61c677b5cc620c3c4d3923937ec74",
-      "12886635879": "be30d0595bab179154c1329350e234c50459778c4bf4cb4373ecaafc9dcf3a5a"
+      "12886635879": "be30d0595bab179154c1329350e234c50459778c4bf4cb4373ecaafc9dcf3a5a",
+      "12888178117": "305c450c4e4dd3a448b48144ea67b6028bbd651fb0011a188d68b58962b4e932",
+      "12888123248": "77237ab34fb7784df68dbb45f7b36c61262ca3d50cc6b39ac38284feb4352fca",
+      "12888024350": "bb13cd5f19bcd787c4adb08892ba3b6b7538a7992330ca42e2cdfa025256eee9"
     },
     "imageWorkflowRun": 40848023781,
     "linuxImageBuilt": true,
@@ -637,9 +642,9 @@
     "isoChecksum": "c0bacb3f36409678b9de091022cb0eea85c9ec88e47ffdbf9b9988fd7c5a9357",
     "vmBooted": true,
     "vmInstalled": true,
-    "firstReboot": "passed in both unencrypted guests; encrypted unlock did not complete",
-    "graphicalDesktop": "MadX welcome desktop rendered in both unencrypted guests; interactive acceptance unverified",
-    "hermesInstalledService": "unverified",
+    "firstReboot": "passed in all three cases, including encrypted unlock",
+    "graphicalDesktop": "all three final screenshots visually verified: MadX welcome desktop; interactive operation unverified",
+    "hermesInstalledService": "retry-install unit inactive/dead, ConditionResult=no, Result=success, ExecMainStatus=0; model server not verified",
     "phase1Complete": false,
     "pushed": true,
     "published": false,
@@ -717,7 +722,7 @@
           "b506d0642cd415280bfc4e455097852c327e7eb320542a09273a4573704b50b7",
           "cbf2b479f4e8a080884ac471b87d8adae71b1c7371102bb1e05ca5039b6f9c1f"
         ],
-        "verification": "checksum files inspected; reconstructed ISO verification pending installer"
+        "verification": "full reconstructed ISO SHA-256 passed in all three jobs of installer run 40850572175"
       }
     },
     "installerEvidence": {
@@ -725,64 +730,60 @@
       "imageRunId": 40848023781,
       "revision": "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
       "account": "madx-test",
-      "result": "in_progress",
+      "result": "failure",
       "cases": [
         "encrypted",
         "unencrypted",
         "unencrypted with protected adjacent disk"
       ],
-      "uefiBoot": "pending at this revision",
-      "installation": "pending at this revision",
-      "firstReboot": "pending at this revision",
-      "graphicalDesktop": "pending at this revision",
-      "hermesInstalledService": "unverified"
+      "uefiBoot": "installer ISO UEFI boot passed in all three cases",
+      "installation": "passed in all three cases",
+      "firstReboot": "passed in all three cases, including encrypted unlock",
+      "graphicalDesktop": "all three final screenshots visually verified: MadX welcome desktop; interactive operation unverified",
+      "hermesInstalledService": "retry-install unit inactive/dead, ConditionResult=no, Result=success, ExecMainStatus=0; model server not verified",
+      "encryptionChecks": "passed in all three cases",
+      "sshKeySignIn": "passed in all three cases",
+      "sshRootAndPasswordDenial": "passed in all three cases",
+      "sshKeysOnlyPolicy": "failed: GSSAPI still advertised",
+      "guestCore": "failed: bootc status requires root; rest of acceptance not reached",
+      "adjacentSyntheticDisk": "hash unchanged after install and after acceptance failure",
+      "grubFailureReproduced": false,
+      "encryptedRemountService": "failed in boot log; cause unverified",
+      "firstbootService": {
+        "ActiveState": "active",
+        "SubState": "exited",
+        "ConditionResult": "yes",
+        "Result": "success",
+        "ExecMainStatus": 0
+      },
+      "artifacts": [
+        {
+          "id": 12888178117,
+          "name": "installer-test-unencrypted-preserve-false",
+          "sha256": "305c450c4e4dd3a448b48144ea67b6028bbd651fb0011a188d68b58962b4e932"
+        },
+        {
+          "id": 12888123248,
+          "name": "installer-test-unencrypted-preserve-true",
+          "sha256": "77237ab34fb7784df68dbb45f7b36c61262ca3d50cc6b39ac38284feb4352fca"
+        },
+        {
+          "id": 12888024350,
+          "name": "installer-test-encrypted-preserve-false",
+          "sha256": "bb13cd5f19bcd787c4adb08892ba3b6b7538a7992330ca42e2cdfa025256eee9"
+        }
+      ],
+      "evidenceArchivesLocallySha256Verified": true
     },
     "currentRerun": {
-      "revision": "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
-      "ciRunId": 40848022569,
-      "imageRunId": 40848023781,
+      "revision": "b2beb0a8f63e1df65404e50dc5844969ef2ab440",
+      "ciRunId": 40896115633,
+      "imageRunId": 40896705234,
+      "installerRunId": null,
       "publish": false,
       "disks": true,
-      "status": "installer_in_progress",
-      "sourceMatchGate": "unchanged; fresh image required",
-      "installerRunId": 40850572175,
-      "ciConclusion": "success",
-      "tests": {
-        "linuxBridge": {
-          "passed": 2336,
-          "skipped": 2,
-          "failed": 0
-        },
-        "macOSBridge": {
-          "passed": 2232,
-          "skipped": 106,
-          "failed": 0
-        },
-        "aliases": {
-          "passed": 19,
-          "skipped": 0
-        },
-        "linuxDesktop": {
-          "passed": 5835,
-          "skipped": 2,
-          "failed": 0
-        },
-        "macOSDesktop": {
-          "passed": 5833,
-          "skipped": 4,
-          "failed": 0
-        },
-        "typechecks": "passed",
-        "productionBuilds": "passed",
-        "branding": "passed",
-        "scripts": "passed",
-        "signingPolicy": "passed",
-        "secretScan": "passed",
-        "realHermes": "passed",
-        "newAccountRegressions": "passed"
-      },
-      "ciArchivesLocallySha256Verified": true,
-      "imageConclusion": "success"
+      "status": "ci_and_image_in_progress",
+      "sourceMatchGate": "unchanged; fresh image required"
     },
     "kickstartRepairCI": {
       "runId": 40778418968,
@@ -1104,6 +1105,54 @@
         },
         "imageConclusion": "success",
         "installerConclusion": "failure"
+      },
+      {
+        "revision": "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
+        "ciRunId": 40848022569,
+        "imageRunId": 40848023781,
+        "publish": false,
+        "disks": true,
+        "status": "installer_completed_with_acceptance_failures",
+        "sourceMatchGate": "unchanged; fresh image required",
+        "installerRunId": 40850572175,
+        "ciConclusion": "success",
+        "tests": {
+          "linuxBridge": {
+            "passed": 2336,
+            "skipped": 2,
+            "failed": 0
+          },
+          "macOSBridge": {
+            "passed": 2232,
+            "skipped": 106,
+            "failed": 0
+          },
+          "aliases": {
+            "passed": 19,
+            "skipped": 0
+          },
+          "linuxDesktop": {
+            "passed": 5835,
+            "skipped": 2,
+            "failed": 0
+          },
+          "macOSDesktop": {
+            "passed": 5833,
+            "skipped": 4,
+            "failed": 0
+          },
+          "typechecks": "passed",
+          "productionBuilds": "passed",
+          "branding": "passed",
+          "scripts": "passed",
+          "signingPolicy": "passed",
+          "secretScan": "passed",
+          "realHermes": "passed",
+          "newAccountRegressions": "passed"
+        },
+        "ciArchivesLocallySha256Verified": true,
+        "imageConclusion": "success",
+        "installerConclusion": "failure"
       }
     ],
     "firstInstalledBootRepairs": {
@@ -1114,6 +1163,20 @@
       "portableAccountReproduction": "original silently drops key without base64; repaired pre/post preserve exact key; encoding failure refuses",
       "newNativeAccountTestsOnWindows": "two failed at fixture symlink creation (WinError 1314); not passed locally",
       "serialInputHypothesis": "incomplete bulk serial input; paced bidirectional helper requires native validation"
+    },
+    "guestAcceptanceRepairs": {
+      "sshPolicyRevision": "e9d843164bb139c9428cfb7cf07db548c04ec315",
+      "statusProbeRevision": "b2beb0a8f63e1df65404e50dc5844969ef2ab440",
+      "focusedTestsPassed": 58,
+      "actionlint": "passed",
+      "preparationFixtures": "encrypted and unencrypted passed; no installation in fixtures",
+      "nativeSourceParsing": {
+        "python": 76,
+        "bash": 44,
+        "toml": 6
+      },
+      "isolatedSshFunctions": "both configured modes and 14 forbidden-method cases passed; full native suite pending",
+      "remountCause": "unverified; journal capture and explicit failure gate added"
     }
   }
 }
