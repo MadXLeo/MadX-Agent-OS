@@ -27,7 +27,9 @@ refused, and a GitHub account's weaker keys are skipped. GitHub's key list is re
 with at most three redirects, and nothing over 1 MiB. Then it:
 
 - signs in with keys only: passwords, keyboard-interactive logins and root are turned off in
-  `/etc/ssh/sshd_config.d/10-herald-os.conf`. It asks `sshd` what is in effect, by default and for
+  `/etc/ssh/sshd_config.d/10-herald-os.conf`. `AuthenticationMethods` restricts sign-in to public
+  keys even when the distribution enables other methods, such as GSSAPI. With `--passwords`,
+  public keys and passwords are separate alternatives. It asks `sshd` what is in effect, by default and for
   someone signing in from the internet as you or as root, and reads every sshd file for a `Match`
   block that lets in more (passwords, root, empty passwords, keyboard-interactive). If anything
   overrules its settings, if a file is included from inside a `Match` block, or if any sshd file

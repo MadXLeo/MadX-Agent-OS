@@ -78,6 +78,7 @@ DROP_IN = (
     "# Written by `herald-os setup ssh`; `herald-os setup ssh --off` removes it.\n"
     "PermitRootLogin no\n"
     "PasswordAuthentication no\n"
+    "AuthenticationMethods publickey\n"
     "KbdInteractiveAuthentication no\n"
     "PermitEmptyPasswords no\n"
 )
@@ -91,7 +92,7 @@ GITHUB_CURL_EXACT = ["curl", "-fsSL", "--proto", "=https", "--proto-redir", "=ht
                      "--max-filesize", "1M", "--connect-timeout", "10", "--max-time", "20"]
 CURL_LIMITS = ["--proto", "=https", "--proto-redir", "=https", "--max-redirs", "3", "--max-filesize", "1M"]
 # sshd's own defaults for what the drop-in sets.
-SSHD_DEFAULTS = {"port": "22", "permitrootlogin": "prohibit-password", "passwordauthentication": "yes", "kbdinteractiveauthentication": "yes", "permitemptypasswords": "no"}
+SSHD_DEFAULTS = {"port": "22", "permitrootlogin": "prohibit-password", "passwordauthentication": "yes", "kbdinteractiveauthentication": "yes", "permitemptypasswords": "no", "authenticationmethods": "any"}
 ROOT_PROBE = "user=root,host=x,addr=203.0.113.1"
 REMOTE_PROBE = "user=me,host=x,addr=203.0.113.1"
 
@@ -653,17 +654,32 @@ def test_keys_are_added_once_at_the_end_and_the_lines_there_stay_as_they_were():
 
 def test_the_drop_in_turns_off_root_passwords_and_keyboard_interactive_logins():
     assert cli.sshd_drop_in(False) == DROP_IN
-    assert cli.sshd_drop_in(True) == DROP_IN.replace("PasswordAuthentication no", "PasswordAuthentication yes")
+    assert cli.sshd_drop_in(True) == DROP_IN.replace("PasswordAuthentication no", "PasswordAuthentication yes").replace("AuthenticationMethods publickey", "AuthenticationMethods publickey password")
 
 
 def test_what_sshd_reports_must_match_the_drop_in():
-    good = "port 22\npermitrootlogin no\npasswordauthentication no\nkbdinteractiveauthentication no\npermitemptypasswords no\n"
+    good = "port 22\npermitrootlogin no\npasswordauthentication no\nkbdinteractiveauthentication no\npermitemptypasswords no\nauthenticationmethods publickey\n"
     assert cli.sshd_overruled(good, passwords=False) == []
     assert cli.sshd_overruled(good.replace("passwordauthentication no", "passwordauthentication yes"), passwords=False) == ["passwordauthentication is yes, not no"]
     assert cli.sshd_overruled(good.replace("passwordauthentication no", "passwordauthentication yes"), passwords=True) == []
     assert cli.sshd_overruled(good.replace("permitrootlogin no", "permitrootlogin prohibit-password"), passwords=True) == ["permitrootlogin is prohibit-password, not no"]
     # An older sshd that does not report a setting has not taken it.
     assert cli.sshd_overruled(good.replace("kbdinteractiveauthentication no\n", ""), passwords=False) == ["kbdinteractiveauthentication is not reported, not no"]
+
+
+@pytest.mark.parametrize("methods", ["any", "gssapi-with-mic", "gssapi-keyex", "hostbased", "none", "publickey gssapi-with-mic", ""])
+def test_other_authentication_methods_cannot_bypass_managed_ssh_policy(methods):
+    for passwords in (False, True):
+        effective = DROP_IN.lower().replace("authenticationmethods publickey", f"authenticationmethods {methods}")
+        assert any("authenticationmethods" in problem for problem in cli.sshd_overruled(effective, passwords))
+        assert cli.match_weakening([("site.conf", f"Match User other\n  AuthenticationMethods {methods}\n")], passwords)
+
+
+def test_explicit_password_mode_keeps_password_and_public_key_alternatives():
+    effective = cli.sshd_drop_in(True).lower()
+    assert cli.sshd_overruled(effective, passwords=True) == []
+    assert "authenticationmethods publickey password" in effective
+    assert cli.sshd_overruled(effective, passwords=False)
 
 
 def test_a_match_block_that_lets_in_more_is_found_in_any_file():

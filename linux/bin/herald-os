@@ -3980,6 +3980,7 @@ def sshd_drop_in(passwords: bool) -> str:
         "# Written by `herald-os setup ssh`; `herald-os setup ssh --off` removes it.\n"
         "PermitRootLogin no\n"
         f"PasswordAuthentication {'yes' if passwords else 'no'}\n"
+        f"AuthenticationMethods {'publickey password' if passwords else 'publickey'}\n"
         "KbdInteractiveAuthentication no\n"
         "PermitEmptyPasswords no\n"
     )
@@ -3995,7 +3996,12 @@ def sshd_overruled(effective: str, passwords: bool) -> list[str]:
     wanted = {"permitrootlogin": "no", "kbdinteractiveauthentication": "no", "permitemptypasswords": "no"}
     if not passwords:
         wanted["passwordauthentication"] = "no"
-    return [f"{key} is {values.get(key, 'not reported')}, not {value}" for key, value in wanted.items() if values.get(key) != value]
+    problems = [f"{key} is {values.get(key, 'not reported')}, not {value}" for key, value in wanted.items() if values.get(key) != value]
+    methods = values.get("authenticationmethods", "")
+    if sshd_weaker("authenticationmethods", methods, passwords):
+        allowed = "publickey or password" if passwords else "publickey"
+        problems.append(f"authenticationmethods is {methods or 'not reported'}, not restricted to {allowed}")
+    return problems
 
 
 # The settings the scan reports, spelled as sshd_config(5) spells them.
@@ -4015,7 +4021,8 @@ def sshd_weaker(key: str, value: str, passwords: bool) -> bool:
         return value != "no"
     if key == "authenticationmethods":
         methods = value.replace(",", " ").split()
-        return any(method.startswith("keyboard-interactive") or (method == "password" and not passwords) for method in methods)
+        allowed = {"publickey", "password"} if passwords else {"publickey"}
+        return not methods or any(method not in allowed for method in methods)
     return False
 
 
