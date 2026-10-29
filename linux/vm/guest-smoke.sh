@@ -6,14 +6,40 @@ test -d /sys/firmware/efi
 # installs/retries the engine; inactive with an unmet pending marker can be normal after setup.
 systemctl show herald-os-firstboot.service herald-os-hermes.service \
   -p Id -p ActiveState -p SubState -p Result -p ConditionResult -p ExecMainStatus
+expected_hermes="${1:-}"
+[[ -z "$expected_hermes" || "$expected_hermes" =~ ^[0-9a-f]{40}$ ]] || exit 2
+echo "MADX_HERMES_TESTED_PIN=$expected_hermes"
+if madx-agent-os hermes-command >/dev/null 2>&1; then
+  echo MADX_HERMES_COMMAND_AVAILABLE=1
+else
+  echo MADX_HERMES_COMMAND_AVAILABLE=0
+fi
+if [[ -d "$HOME/.hermes/hermes-agent/.git" ]]; then
+  installed_hermes="$(git -C "$HOME/.hermes/hermes-agent" rev-parse HEAD)"
+  echo "MADX_HERMES_INSTALLED_REVISION=$installed_hermes"
+  if [[ -n "$expected_hermes" && "$installed_hermes" != "$expected_hermes" ]]; then
+    echo MADX_HERMES_REVISION_DRIFT=1
+  fi
+else
+  echo MADX_HERMES_INSTALLED_REVISION=unknown
+fi
 test -e /run/ostree-booted
 test -s /var/lib/herald-os/firstboot-done
-bootc status --format=json | python3 -c '
+# bootc status requires root on this image. The test-only boot unit records it without
+# giving the SSH account administrative access or changing production account policy.
+cat /run/madx-validation/errors.log
+for file in failed-units.txt remount-status.txt remount-journal.txt root-mount.json fstab.txt; do
+  echo "MADX_BOOT_DIAGNOSTIC=$file"
+  cat "/run/madx-validation/$file"
+done
+systemctl is-active madx-validation-status.service
+grep -qx complete /run/madx-validation/complete
+python3 -c '
 import json, sys
 status = json.load(sys.stdin)
 assert status.get("status", {}).get("booted"), "no booted deployment"
-print(json.dumps(status, indent=2))'
-ostree admin status
+print(json.dumps(status, indent=2))' </run/madx-validation/bootc.json
+cat /run/madx-validation/ostree.txt
 systemctl is-active NetworkManager firewalld greetd
 for name in firstboot firstboot-apps hermes login reset; do
   old="$(systemctl show -p Id --value "herald-os-$name.service")"
@@ -37,22 +63,9 @@ import json, sys
 windows = json.load(sys.stdin)
 assert any(w.get("app_id") in ("herald-os", "madx-agent-os", "MadX Agent OS", "Herald OS") for w in windows), "no desktop window"
 print("MADX_DESKTOP_WINDOW=1")'
+if systemctl is-failed --quiet systemd-remount-fs.service; then
+  echo 'MADX_REMOUNT_FAILED=1'
+  exit 1
+fi
 echo MADX_GUEST_CORE_PASSED=1
-expected_hermes="${1:-}"
-[[ -z "$expected_hermes" || "$expected_hermes" =~ ^[0-9a-f]{40}$ ]] || exit 2
-echo "MADX_HERMES_TESTED_PIN=$expected_hermes"
-if madx-agent-os hermes-command >/dev/null 2>&1; then
-  echo MADX_HERMES_COMMAND_AVAILABLE=1
-else
-  echo MADX_HERMES_COMMAND_AVAILABLE=0
-fi
-if [[ -d "$HOME/.hermes/hermes-agent/.git" ]]; then
-  installed_hermes="$(git -C "$HOME/.hermes/hermes-agent" rev-parse HEAD)"
-  echo "MADX_HERMES_INSTALLED_REVISION=$installed_hermes"
-  if [[ -n "$expected_hermes" && "$installed_hermes" != "$expected_hermes" ]]; then
-    echo MADX_HERMES_REVISION_DRIFT=1
-  fi
-else
-  echo MADX_HERMES_INSTALLED_REVISION=unknown
-fi
 # This does not certify model-backed Hermes chat or update/rollback. Those are separate gates.

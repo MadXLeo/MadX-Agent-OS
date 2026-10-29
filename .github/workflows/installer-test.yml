@@ -152,6 +152,7 @@ jobs:
             # The account and a key made for this run only; the private half never leaves the runner.
             ssh-keygen -q -t ed25519 -N '' -C installer-test -f test-key
             bash linux/vm/account-kickstart.sh "$ACCOUNT" test-key.pub >>ks.cfg
+            bash linux/vm/status-kickstart.sh >>ks.cfg
           fi
           echo "----- ks.cfg"; sed "s/$PASSPHRASE/<passphrase>/" ks.cfg
           sed "s/$PASSPHRASE/<passphrase>/g" ks.cfg >ks-redacted.cfg
