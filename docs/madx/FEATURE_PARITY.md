@@ -48,12 +48,17 @@ Acceptance failed on GSSAPI outside the documented managed policy and the probe'
 command. All 11 new cases for repairs `e9d8431`/`b2beb0a` passed Linux CI, but a new parser import
 failed its dependency guard; `7f88d80` fixes it and passes all Linux CI 40898401729 jobs (system
 2,347/two skips; desktop 5,835/two skips; aliases/build/typecheck/branding/Hermes passed). macOS
-was cancelled before execution by hosted runner capacity constraints; attempt 2 is queued.
+was initially cancelled by hosted runner capacity constraints; attempt 2 passed (system 2,243/106
+skips, desktop 5,833/four skips, typecheck/build passed). Overall CI at `7f88d80` is success.
 Image 40899343029 built/inspected both default architectures and a real ISO at `7f88d80`, with
-publication disabled and source labels/pin verified. Installer 40945372298 is running against
-that exact image/source; fresh VM acceptance remains pending.
-The encrypted boot's remount service also failed; diagnostic capture and an acceptance gate were
-added, with no guessed OS repair. Core service acceptance and interactive operation remain open.
+publication disabled and source labels/pin verified. Installer 40945372298 completed against
+that exact image/source: all three cases installed/rebooted, passed SSH restrictions and deployment/
+alias checks, and rendered the MadX desktop. All failed on the composefs root remount conflict,
+now confirmed by journal and fstab evidence. Repair `c5dfa69` migrates physical root options during
+fresh installation; `35fea98` fixes the GPU check's missing HOME, and `21eda78` preserves shell LF
+endings on Windows. 23 focused tests, preparation fixtures, workflow/source and branding checks pass;
+fresh native CI/image/VM validation is required. Installed Hermes revision drift is recorded in
+ASTRA_PROGRESS.md; model-backed operation and interactive desktop acceptance remain open.
 NVIDIA failed on missing upstream kernel modules; H/V gates remain open.
 
 Earlier Windows desktop results were 4,915 renderer/shared passes (five skips) and 89 focused main-process
@@ -64,9 +69,9 @@ with 26 Windows/platform skips, plus three installer workflow tests. Full native
 | --- | --- | --- |
 | Hermes process, health/auth, bridge discovery | Real pinned server executed twice on both Windows and Linux; missing/wrong tokens rejected; bridge tools registered | Installed Linux service and host adapter, model chat/tools/approvals, desktop recovery |
 | Memory and skills | Real MemoryStore and skills API; contents survive server restart in an isolated profile | Existing-profile OS upgrade and user-facing integration |
-| Linux alias/filesystem behavior | All 19 branding/alias cases passed without skips in the full Linux suite and the dedicated gate | Installed unit resolution and VM upgrade behavior |
+| Linux alias/filesystem behavior | All 19 cases passed without skips in Linux CI; installed system/user unit aliases and commands resolved in all three VMs | VM upgrade behavior |
 | Image packaging | Default amd64/arm64 images built; filesystem, systemd units and packaged Electron passed; actual amd64 ISO booted through UEFI | Native package variants and NVIDIA build |
-| UEFI installation | Three installations and first reboots passed, including encrypted unlock; all rendered the MadX desktop and accepted SSH keys | Authentication-policy repair, privileged guest status, encrypted remount service failure, interactive operation |
+| UEFI installation | Three installations/reboots, encrypted unlock, SSH restrictions, privileged deployment evidence, core service states and desktop window checks passed | Root remount repair needs fresh VM validation; interactive operation remains open |
 | Adjacent Windows-style disk | Actual VM install and acceptance attempt preserved the synthetic GPT/sentinel disk hash | No actual Windows/shared-ESP certification |
 | Update/rollback and NVIDIA | Existing implementation reviewed; validation sequence documented, identifiers retained | Two deployment transitions, data integrity, GPU/laptop testing |
 

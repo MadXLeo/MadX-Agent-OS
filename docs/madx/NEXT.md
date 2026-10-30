@@ -1,84 +1,65 @@
 # Continue MadX Agent OS
 
-Continue `codex/linux-release-validation`, based on `codex/madx-foundation` at `50dd6d4`.
-Read ASTRA_PROGRESS.md, VALIDATION.md, REMAINING_ISSUES.md and MIGRATIONS.md. Preserve existing
-work and do not repeat the initial inventory. Do not merge or modify Claude's separate workspace.
+Continue only `codex/linux-release-validation`; preserve the current working tree and history.
+Do not restart the audit or modify Claude's separate workspace. Read ASTRA_PROGRESS.md and
+REMAINING_ISSUES.md for evidence and open gates; VALIDATION_RESULTS.json records exact revisions.
 
-The user authorized this branch's pushes, Linux CI, unpublished image build and disposable UEFI
-installer tests. The approved initial revision `e062c0334dcb382236b18a60422eab0e46a0d8d2` was
-pushed and ran as CI 40684976475. Linux desktop (5,835 passed, two optional-tool skips), build,
-real Hermes runtime and secret scan passed; eight bridge/system test failures and 25 unexpected
-namespace skips required repairs. Repair revision `e8e6010b38a351f2dfa6f6ac553bd0a901bae955`
-passed CI 40741143041. Registration fix `606e1e1` also passed full CI 40743566443; its image run
-40743693944 built both default architectures and an actual ISO. All three installer cases in
-40777283477 verified the ISO checksum but failed before VM boot because the test harness ignored
-the ISO's included deployment kickstart. Fix `da90688` passed full CI 40778418968. Inspection of the
-actual ISO then identified a separate appended-EFI-partition mismatch in the test setup. Repair
-`2290c818e34fed73b45dadc085aabb66f1ec20a5` is pushed; 49 focused tests/actionlint pass. CI 40780000937
-passed; unpublished image 40780003482 built and inspected both default architectures and a new ISO.
-Installer 40811638765 verified the ISO in all three cases but failed before boot: the strict
-deployment validator also tried to read the account include generated later inside the guest.
-Repair `161557f9da021d0c7b44024260bc75448c5cc083` validates the original ISO before adding that account
-fragment. It passed 50 focused tests, workflow/shell checks and both full preparation-step fixture
-checks. Full CI 40812157730 passed (Linux system 2,329/two skips, macOS system 2,225/106 skips).
-Unpublished image 40812159188 completed at this new source; both default architectures and the ISO
-passed their build/inspection steps. Installer 40814588924 booted the ISO through UEFI and installed
-all three cases. Both unencrypted guests rebooted to the graphical MadX welcome screen; the
-protected synthetic GPT disk remained unchanged. Acceptance failed because Anaconda lacked base64
-and lost the SSH key, while the encrypted guest remained at its unlock prompt. No GRUB failure
-was reproduced. Repairs `cb55130` (Python key codec/error handling) and `448e85e` (paced serial input
-and accurate SSH readiness reporting) are pushed. Current source is
-`448e85ea672fd4b00f6b581f5b27b5d858264a8e`; CI 40848022569 passed (Linux system 2,336/two skips,
-macOS system 2,232/106 skips, all aliases, both desktop suites/builds and real Hermes).
-Unpublished image 40848023781 completed; both default images and a new ISO passed build/inspection.
-Installer 40850572175 installed and rebooted all three cases, including encrypted unlock; all
-accepted the SSH key and rendered MadX's welcome desktop. Its overall result is failure: GSSAPI
-was advertised beyond the managed keys-only policy, and unprivileged bootc status stopped the probe.
-The encrypted boot also reported systemd-remount-fs.service failed; the cause remains unverified.
-Repair source `b2beb0a8f63e1df65404e50dc5844969ef2ab440` includes `e9d8431` for explicit managed SSH
-authentication methods and `b2beb0a` for a test-only root status-capture unit (no sudo grant),
-early Hermes revision observations and remount diagnostics/acceptance checks. 58 focused tests,
-workflow/source checks and both preparation fixtures pass. CI 40896115633 reported Linux system
-2,346 passed/one dependency-guard failure/two reviewed skips; all 11 new policy/status cases passed.
-Commit `7f88d80a19d99e144fec97ee4ee8b8d3d86440ef` fixes the new test's parser import, with seven
-affected local tests passing. CI 40898401729 passed every Linux job (system 2,347/two skips,
-aliases 19/19, desktop 5,835/two skips, typecheck/build, branding and Hermes). macOS jobs were
-cancelled without a runner because of hosted capacity constraints; attempt 2 is queued.
-Superseded image 40896705234 was cancelled. Fresh unpublished image 40899343029 completed at
-`7f88d80` with publish=false/disks=true: both default images and the ISO passed build/inspection.
-Both revision labels and the unchanged Hermes pin were checked; image metadata and checksums are
-recorded in ASTRA_PROGRESS.md. Installer 40945372298 is running against that exact source/image
-with account=madx-test. Do not dispatch a duplicate.
-Superseded image 40778438792 was deliberately cancelled; NVIDIA still fails on missing upstream modules.
-See ASTRA_PROGRESS.md for current outcomes and exact artifact checksums.
-The host has no Linux runtime; the branch's proven push trigger runs CI without a merge.
-Follow CI 40898401729 attempt 2 and installer 40945372298. Collect the actual remount
-journal, installed Hermes revision and remaining guest acceptance evidence. Preserve prior artifacts.
-Fix only confirmed failures and preserve matching full source revisions.
-Never reuse a mismatched image or claim boot from a build pass.
-Inspect the first real Anaconda/GRUB diagnostics,
-boot screenshots and guest checks before any installer fix. Source and Windows Hermes runtime
-checks pass; installed Linux, model-backed chat and update/rollback gates remain open. See ASTRA_PROGRESS.md
-for the exact sequence, evidence limits and the isolated update/rollback procedure. Keep image
-and installer revisions identical: the installer rejects mismatched image-run evidence.
+## User's waiting preference
 
-Do not start LoRA Studio, self-development or Phase 2 implementation until these gates pass.
-PHASE2_PLAN.md is planning only. Keep all compatibility identifiers listed in MIGRATIONS.md and
-REMAINING_ISSUES.md. Authorization covers only the named validation branch; no merge, tag, release,
-registry publication, paid infrastructure or new host system software is permitted. Never use host Windows disks,
-EFI entries or firmware for testing.
+When CI, image creation or installer testing needs time, stop and report its run link. Do not
+keep polling or waiting. Resume only when the user says to continue. Do not launch duplicate runs.
 
-Useful local checks:
+## Completed evidence
 
-```text
-npm run branding:check
-node scripts/madx/audit-branding.mjs --check
-npm run typecheck
-npm run build
-npm exec --workspace apps/desktop -- vitest run src shared --maxWorkers=2
-python scripts/madx/check-native.py --bash <bash-executable>
-python -m pytest linux/tests/test_branding.py linux/tests/test_window_rules.py linux/tests/test_vm_disks.py -q
-```
+Last completed CI/image/VM source: `7f88d80a19d99e144fec97ee4ee8b8d3d86440ef`.
 
-The complete native suites remain enabled in CI; do not disable failing tests to manufacture a
-passing release. Credentials, signing keys and publishing are separate from local source validation.
+- CI 40898401729 attempt 2 passed: Linux system 2,347/two skips, aliases 19/19,
+  desktop 5,835/two skips; macOS system 2,243/106 skips, desktop 5,833/four skips.
+  Typechecks, production builds, branding, secret scan and pinned Hermes passed.
+- Unpublished image 40899343029 built and inspected both default architectures and a real ISO.
+  ISO SHA-256: `220db0a115b7869568779947a4bd44c2c942a2dd5260dbbd81eda68dc673a59d`.
+- Installer 40945372298 completed against that exact image/source, account=madx-test.
+  All three cases installed, rebooted (including encrypted unlock), passed SSH restrictions,
+  captured privileged deployment status, resolved aliases and rendered the MadX welcome desktop.
+  The protected synthetic GPT disk retained its hash. No GRUB failure was reproduced.
+  All three failed systemd-remount-fs: Anaconda's Btrfs root fstab options cannot reconfigure
+  the composefs overlay. The boot logs also show an unset HOME in the GPU helper.
+- Installed Hermes revision is `67d47601bc5f8ed322451a672c843ed0e1a7c42c`; CI's unchanged pin is
+  `f97608f178d1ffeca59860195ab7da295f7c8e5f`. Existing first-boot behavior tracks main. Do not silently
+  switch it. Retry-install unit condition=false is not evidence of model-serving/chat.
+
+## Repairs ready for fresh remote validation
+
+Code revision `21eda78b9f63c35da088090df3d6614d01af310f` includes `35fea98` (GPU HOME),
+`c5dfa69` (offline root-options migration) and `21eda78` (LF checkout rules). The migration verifies
+boot options before changing fstab, preserves other mounts/encryption arguments, and keeps the
+remount failure gate enabled. Existing systems are not automatically migrated; custom layouts
+remain unverified. No Hermes pin, release origin or host system configuration was changed.
+
+23 focused local tests passed, plus both actual workflow preparation fixtures, actionlint, branding
+and source parsing (79 Python, 44 Bash, six TOML). The wider Windows fixture run has 54 passes,
+201 failures and 28 skips. All failures are WinError 1314 (missing symlink privilege); representative
+unchanged fixtures reproduce it. These failures are documented, not counted as passes.
+
+## Next execution sequence
+
+1. Review the final diff and clean tree; push only the authorized branch. Record the full new
+   HEAD and its triggered CI link, then stop. The docs commit after the code revision is part of
+   the source to validate. Check live Git state to determine whether this push already happened.
+2. On the user's next continuation, inspect that exact CI result and skips. Fix reproduced
+   failures on the same branch. Only after CI passes, dispatch image.yml with publish=false,
+   disks=true and that exact source revision. Report the link and stop.
+3. On continuation, verify the built image's provenance/checksums. Dispatch installer-test.yml
+   against that exact image run/source, account=madx-test, empty tag. Report its link and stop.
+4. On continuation, inspect real installer logs, rootflags, fstab, /sysroot mount options,
+   remount service, first reboot, screenshots and Hermes evidence. Do not claim repairs passed
+   until these new VMs actually execute.
+
+Remaining MVP gates include the repaired remount check, Hermes revision alignment and model chat,
+interactive desktop operation, update/rollback and profile integrity. NVIDIA remains blocked by
+missing upstream kernel modules; do not silently downgrade or change release origins.
+
+Authorization covers only this branch's pushes, CI, unpublished images and disposable UEFI VMs.
+No main merge, force push, tags, release, registry publication, paid infrastructure or new host
+software. Never touch host Windows partitions, EFI or firmware. Preserve compatibility identifiers
+and legal attribution. Do not begin LoRA, self-development or Phase 2 implementation.

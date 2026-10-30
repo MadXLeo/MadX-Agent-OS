@@ -2,7 +2,56 @@
 
 ## Current repair source and actual VM results
 
-Current repair source is **`7f88d80a19d99e144fec97ee4ee8b8d3d86440ef`**. Focused commits
+**New repairs await native CI and a fresh image/VM run.** `c5dfa699f8265be670089ffc2ffd63e3d9138a1e`
+migrates a fresh Anaconda target's physical Btrfs root options into `rootflags`, verifies the
+installed boot entry still contains its root/encryption/console arguments, backs up `fstab`, and
+comments only its conflicting `/` entry. Other mounts are preserved. The helper runs only against
+the explicit offline installer target; it rejects ambiguous layouts and leaves custom filesystem
+layouts unchanged. Existing installations are not migrated automatically. This addresses the actual
+composefs remount failure, following [bootc's issue](https://github.com/bootc-dev/bootc/issues/971)
+and [Fedora's installer guidance](https://bugzilla.redhat.com/show_bug.cgi?id=2332319), without masking
+the service or weakening the acceptance check.
+
+`35fea988db34714e06a260038c0b390bd5a01931` fixes the first-boot GPU check's observed `HOME: unbound
+variable` error by resolving user state only for notifications. Checkout repair `21eda78`
+preserves LF endings for Linux shell/kickstart inputs; Windows Git's CRLF conversion otherwise made
+the account snippet reader miss its settings. Hermes revisions and release origins remain unchanged.
+
+Local validation: **23 focused tests passed**, both actual workflow-preparation fixtures passed,
+actionlint and branding checks passed, and native-source parsing passed (79 Python, 44 Bash, six
+TOML files). The wider Windows fixture run has 54 passes, 201 failures and 28 skips: all 201 failures
+are the account's missing Windows symlink privilege (WinError 1314). Representative failures also
+occur with unchanged `7f88d80` tests/fixtures. Native CI remains required; these are not claimed as
+passes. No new host software or elevated Windows permissions were introduced.
+
+**Installer 40945372298 completed at `7f88d80`: all three cases installed and rebooted, including
+encrypted unlock, and rendered the MadX welcome desktop.** All three SSH policy checks passed,
+privileged bootc/OSTree evidence was captured, NetworkManager/firewalld/greetd were active, system
+and user aliases resolved correctly, and Niri reported the desktop window. The protected synthetic
+GPT disk retained its checksum. All three jobs failed the remaining remount gate: the actual `/`
+is a composefs overlay, while Anaconda's `/etc/fstab` supplies Btrfs subvolume/compression options
+for it; the journal reports that overlay reconfiguration is forbidden. No GRUB failure occurred.
+
+Hermes command resolution passed in all three guests. Their installed revision is
+`67d47601bc5f8ed322451a672c843ed0e1a7c42c`, whereas CI exercises the unchanged pin
+`f97608f178d1ffeca59860195ab7da295f7c8e5f`. The existing first-boot installer defaults to upstream
+main; this drift is explicit and remains unresolved. First-boot setup succeeded; the Hermes retry
+unit's inactive/condition-false state is normal after setup and does not prove model-serving/chat.
+Installed bootc reported image digest `sha256:3b2837ae5833d113af17937f0339e7ab4de20760858e8060b372f257d2f3fc93`;
+this imported-image digest is recorded separately from the builder's container-inspection digest.
+
+All three VM archives were downloaded, SHA-256/ZIP CRC/source-verified, and final screenshots viewed:
+
+| Artifact at `7f88d80` | SHA-256 |
+| --- | --- |
+| 12931805087, encrypted | `d848a201cd34a89753f90215b0d11ddf0d88fadd0fc642845ecf0e03ded78161` |
+| 12931650099, protected unencrypted | `9ad3eca7fa33ffe563aee22d83abd47e9904aea70337a77d988d73690bc651c5` |
+| 12929878883, unencrypted | `7eb45876823aab530731bb95c6c74e9be18ec6a9cbf321c9275866afd5a3f177` |
+
+User preference: stop and report the run link when remote CI/build/installer work needs time.
+Do not keep polling or waiting; resume only when the user says to continue.
+
+Last completed CI/image/VM source is **`7f88d80a19d99e144fec97ee4ee8b8d3d86440ef`**. Focused commits
 `e9d8431` (managed SSH authentication policy) and `b2beb0a` (privileged read-only guest evidence)
 were pushed only to the authorized branch. [CI 40896115633](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40896115633)
 at `b2beb0a` reported Linux system **2,346 passed, one failed, two reviewed skips**. All 11 new
@@ -14,8 +63,11 @@ has passed every Linux job: system **2,347 passed/two reviewed skips**, aliases 
 **5,835 passed/two optional-validator skips**, typecheck/build, branding, scripts, signing policy,
 secret scan and pinned Hermes. All three Linux evidence archives were downloaded/hash-verified.
 Both macOS jobs were cancelled before execution. GitHub's check annotations report that no hosted
-runner acquired either job, with macOS arm64 capacity notices. Attempt 2 retries only the incomplete
-jobs; they are queued. This is not a completed cross-platform CI result.
+runner acquired either job, with macOS arm64 capacity notices. Attempt 2 retried the incomplete
+jobs and passed. **Overall CI is now success** at the full `7f88d80` source: macOS system
+**2,243 passed/106 platform-tool skips**, desktop **5,833 passed/four skips**, typecheck and production
+build passed. Both macOS evidence archives were downloaded, SHA-256 verified and CRC-checked;
+all five CI evidence archives are retained. The macOS skips remain explicitly unexecuted.
 The superseded unpublished [image 40896705234](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40896705234)
 was cancelled to preserve exact source matching. Fresh unpublished
 [image 40899343029](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40899343029) completed at
@@ -23,7 +75,8 @@ was cancelled to preserve exact source matching. Fresh unpublished
 systemd verification and packaged Electron execution. NVIDIA remains blocked by the same unavailable
 upstream module image. Registry push/signing, multi-architecture publication and release steps were
 skipped. [Installer 40945372298](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40945372298)
-is running against that exact source/image with account=madx-test and an empty release tag.
+completed against that exact source/image with account=madx-test and an empty release tag, with
+the remount failure and partial acceptance results described above.
 
 | Image object at `7f88d80` | Digest / checksum |
 | --- | --- |
@@ -38,7 +91,7 @@ is running against that exact source/image with account=madx-test and an empty r
 Both full source labels and the unchanged Hermes pin were checked. The arm64 ZIP was downloaded,
 SHA-256 verified and CRC-checked. The amd64 metadata was range-read and CRC-checked; its full archive
 digest is GitHub-reported. ISO/part hashes above come from the build's checksum files; the installer
-must independently verify the reconstructed ISO before booting it.
+independently verified the reconstructed ISO in all three jobs before booting it.
 The three available CI archives at `b2beb0a` were downloaded/hash-verified; Linux desktop,
 typecheck/build, scripts, secrets and pinned Hermes passed. Its macOS jobs had not started.
 Local validation of the substantive repairs passes
@@ -46,7 +99,7 @@ Local validation of the substantive repairs passes
 (76 Python, 44 Bash, six TOML). Isolated execution of the actual SSH policy functions passes both
 authentication modes and 14 forbidden-method cases; the full native Linux SSH suite also passed.
 
-Last completed cross-platform CI/image source is **`448e85ea672fd4b00f6b581f5b27b5d858264a8e`**, pushed only to
+Previous completed cross-platform CI/image source is **`448e85ea672fd4b00f6b581f5b27b5d858264a8e`**, pushed only to
 `codex/linux-release-validation`. [CI 40848022569](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40848022569)
 passed at that exact revision: Linux system **2,336 passed/two reviewed skips**, macOS system
 **2,232 passed/106 platform skips**, aliases **19/19**, desktop **5,835/two skips on Linux** and
@@ -76,10 +129,10 @@ The SSH account reads those files; no sudo grant, root SSH login or production a
 is added. Hermes revision/command evidence now precedes later acceptance checks so a subsequent
 failure cannot hide it.
 
-The encrypted boot log additionally reports **systemd-remount-fs.service failed**, although the
-desktop starts. Its underlying cause is not yet known. The next probe captures the service journal,
-mount table and fstab, and refuses core acceptance if that unit is failed. No GRUB installation
-failure was reproduced; do not label the remount failure a GRUB defect.
+At `448e85e`, the encrypted boot log additionally reported **systemd-remount-fs.service failed**,
+although the desktop started. The later `7f88d80` probe captured the journal/mount table/fstab and
+identified the composefs/Btrfs root-option conflict in all three cases. Core acceptance remains
+failed until the repair passes a fresh VM run. No GRUB installation failure was reproduced.
 
 Service evidence in all three guests: `herald-os-firstboot.service` is active/exited with Result=success
 and ExecMainStatus=0. The Hermes retry-install unit is inactive/dead, ConditionResult=no,
@@ -87,7 +140,7 @@ Result=success and ExecMainStatus=0; its pending-install condition was not met. 
 that the model-serving process is running. Installed Hermes revision and core guest acceptance
 were not reached because of the bootc privilege failure.
 
-All three current VM evidence archives were downloaded and SHA-256/ZIP CRC/source-verified:
+All three prior `448e85e` VM evidence archives were downloaded and SHA-256/ZIP CRC/source-verified:
 
 | Artifact | SHA-256 |
 | --- | --- |
@@ -477,7 +530,7 @@ Initial selected baseline: **60 passed, 26 skipped**. The expanded run first exp
 restoring the bridge runner fixed the CI regression. Before interruption the result was **75
 passed, 26 skipped, one failed**. Resumption reproduced the last failure in
 `test_test_deps.py::test_the_runner_falls_back_to_uv_with_the_requirements_when_pyyaml_is_missing`:
-Git Bash returned `/c/Users/.../requirements.txt`, while the test expected the spelling `C:\Users\...`.
+Git Bash returned a POSIX-style requirements path, while the test expected native Windows spelling.
 The test now records NUL-separated arguments, converts the Git Bash path on Windows, and checks
 the actual requirements file with `Path.samefile`. It also checks the invocation's arguments;
 neither file selection nor missing-dependency fallback was relaxed. The production runner is
@@ -590,7 +643,7 @@ Linux, then inspect their actual artifacts and failures.
 
 ## A. Repository state and boundaries
 
-- Original workspace: `C:\Users\divan\Documents\MadX-Agent-OS`.
+- Original workspace: the Windows checkout named `MadX-Agent-OS`.
 - Initial state: clean `codex/madx-foundation` at `50dd6d42a3212203dcd30e901b497896e7a4e39d`.
 - Confirmed retained commits: `5183b5c`, `2422689`, `cc829a8`, `9dd5ce9`, `50dd6d4`.
 - New branch: `codex/linux-release-validation`, based on that HEAD. No reset or project restart.

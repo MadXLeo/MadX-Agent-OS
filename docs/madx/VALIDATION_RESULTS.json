@@ -482,11 +482,11 @@
     }
   },
   "authorizedLinuxValidation": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "repository": "MadXLeo/MadX-Agent-OS",
     "branch": "codex/linux-release-validation",
     "approvedInitialRevision": "e062c0334dcb382236b18a60422eab0e46a0d8d2",
-    "repairRevision": "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef",
+    "repairRevision": "21eda78b9f63c35da088090df3d6614d01af310f",
     "repairCommits": [
       "cf9cd9f995a355b123509b2a6113ff63ffb11000",
       "417300e39ef473de15f501f9117e580ac442ea5e",
@@ -499,7 +499,10 @@
       "448e85ea672fd4b00f6b581f5b27b5d858264a8e",
       "e9d843164bb139c9428cfb7cf07db548c04ec315",
       "b2beb0a8f63e1df65404e50dc5844969ef2ab440",
-      "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef"
+      "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef",
+      "35fea988db34714e06a260038c0b390bd5a01931",
+      "c5dfa699f8265be670089ffc2ffd63e3d9138a1e",
+      "21eda78b9f63c35da088090df3d6614d01af310f"
     ],
     "initialCI": {
       "runId": 40684976475,
@@ -641,7 +644,12 @@
       "12906744673": "7cc32adf12c33dc5386f19cc45933f3003c5f305542718007f3888b98f4ff742",
       "12909870080": "02175ffb535f4b8ac1f7bb1b39a52bb2b0d39eef806d02b35f5fee3f4f14a5f1",
       "12907249278": "84255872e4de5c8be2410b5bebf67f0f23c74d32ff74ab3e12660fc005fe5075",
-      "12907014213": "ba6a3b7b367aabb969364a1db995c15061d4bed113f2ca05b833389385727b06"
+      "12907014213": "ba6a3b7b367aabb969364a1db995c15061d4bed113f2ca05b833389385727b06",
+      "12929846041": "e1bd1560113fe476f21626eb559f975e482153558381be8bacca7f071e06e8e1",
+      "12929157251": "578030f8f05776316ba67ecc98746357c8e5b7d24adde0386ccd3a6d5cdad48b",
+      "12931805087": "d848a201cd34a89753f90215b0d11ddf0d88fadd0fc642845ecf0e03ded78161",
+      "12931650099": "9ad3eca7fa33ffe563aee22d83abd47e9904aea70337a77d988d73690bc651c5",
+      "12929878883": "7eb45876823aab530731bb95c6c74e9be18ec6a9cbf321c9275866afd5a3f177"
     },
     "imageWorkflowRun": 40848023781,
     "linuxImageBuilt": true,
@@ -787,12 +795,12 @@
       "ciRunId": 40898401729,
       "imageRunId": 40899343029,
       "installerRunId": 40945372298,
-      "status": "linux_ci_and_default_images_passed_installer_running_macos_retry_queued",
+      "status": "ci_and_default_images_passed_all_three_guests_installed_and_rebooted_acceptance_failed_remount",
       "sourceMatchGate": "image and installer full revision verified",
       "publish": false,
       "disks": true,
       "linuxCIConclusion": "success",
-      "macOS": "attempt 1 cancelled without execution: hosted runner capacity; attempt 2 queued",
+      "macOS": "attempt 2 passed; attempt 1 cancelled without execution due to hosted runner capacity",
       "tests": {
         "linuxBridge": {
           "passed": 2347,
@@ -814,7 +822,19 @@
         "scripts": "passed",
         "signingPolicy": "passed",
         "secretScan": "passed",
-        "realHermes": "passed"
+        "realHermes": "passed",
+        "macOSBridge": {
+          "passed": 2243,
+          "failed": 0,
+          "skipped": 106
+        },
+        "macOSDesktop": {
+          "passed": 5833,
+          "failed": 0,
+          "skipped": 4
+        },
+        "macOSTypecheck": "passed",
+        "macOSProductionBuild": "passed"
       },
       "ciAttempt": 2,
       "image": {
@@ -830,7 +850,8 @@
           "bytes": 3883601920,
           "sha256": "220db0a115b7869568779947a4bd44c2c942a2dd5260dbbd81eda68dc673a59d",
           "part0Sha256": "7c0cb780f566dd15bf26627f5b5d9fd85b54f62b915cb9fb979ce5449ce9c9fa",
-          "part1Sha256": "ceeea81b1fbfe2f5f59a6386ac5cb7a258948e8b0acc310248dfe6e854ec4120"
+          "part1Sha256": "ceeea81b1fbfe2f5f59a6386ac5cb7a258948e8b0acc310248dfe6e854ec4120",
+          "verification": "full reconstructed ISO SHA-256 passed in all three installer jobs"
         },
         "artifacts": [
           {
@@ -848,13 +869,63 @@
         ]
       },
       "installer": {
-        "status": "in_progress",
+        "status": "completed",
         "account": "madx-test",
         "tag": "",
         "sourceRevision": "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef",
         "imageRunId": 40899343029,
-        "acceptance": "unverified pending actual guest evidence"
-      }
+        "acceptance": "all three cases failed systemd-remount-fs; other observations listed separately",
+        "isoChecksum": "passed in all three jobs",
+        "uefiPreparation": "passed in all three jobs",
+        "installation": "passed in all three jobs",
+        "diskEncryptionExpectations": "passed in all three jobs",
+        "installedBoot": "passed in all three cases, including encrypted unlock",
+        "conclusion": "failure",
+        "sshKeySignIn": "passed in all three cases",
+        "sshRootPasswordAndForbiddenMethodsDenied": "passed in all three cases; publickey only",
+        "privilegedDeploymentStatus": "passed in all three cases",
+        "serviceStates": "NetworkManager, firewalld and greetd active in all three cases",
+        "aliases": "system/user unit and command aliases resolved in all three cases",
+        "graphicalDesktop": "Niri desktop window marker and final screenshots verified in all three cases; interactive operation unverified",
+        "adjacentSyntheticDisk": "hash unchanged after installation and acceptance",
+        "grubFailureReproduced": false,
+        "remountFailure": "composefs overlay rejects Btrfs subvolume/compression options from Anaconda root fstab entry; overlay: No changes allowed in reconfigure; mount exit 32",
+        "gpuCheckFailure": "HOME: unbound variable during first boot",
+        "hermes": {
+          "commandAvailable": true,
+          "installedRevision": "67d47601bc5f8ed322451a672c843ed0e1a7c42c",
+          "ciPin": "f97608f178d1ffeca59860195ab7da295f7c8e5f",
+          "revisionDrift": true,
+          "reason": "existing first-boot installer defaults to upstream main; unchanged by these repairs",
+          "firstbootUnit": "active/exited, Result=success",
+          "retryInstallUnit": "inactive/dead, ConditionResult=no, Result=success",
+          "modelServingAndChat": "unverified"
+        },
+        "installedImportedImageDigest": "sha256:3b2837ae5833d113af17937f0339e7ab4de20760858e8060b372f257d2f3fc93",
+        "digestNote": "guest imported-image digest recorded separately from builder container-inspection digest; equivalence not asserted",
+        "installedOstreeChecksum": "a8e2c005ade8ecbb4dd8a33450deffde3133f91b6da7868df1c57452c311a8b9",
+        "updateOrigin": "ghcr.io/madxleo/madx-agent-os:dev-7f88d80-amd64; unpublished; update/rollback unverified",
+        "artifacts": [
+          {
+            "id": 12931805087,
+            "case": "encrypted",
+            "sha256": "d848a201cd34a89753f90215b0d11ddf0d88fadd0fc642845ecf0e03ded78161"
+          },
+          {
+            "id": 12931650099,
+            "case": "protected unencrypted",
+            "sha256": "9ad3eca7fa33ffe563aee22d83abd47e9904aea70337a77d988d73690bc651c5"
+          },
+          {
+            "id": 12929878883,
+            "case": "unencrypted",
+            "sha256": "7eb45876823aab530731bb95c6c74e9be18ec6a9cbf321c9275866afd5a3f177"
+          }
+        ],
+        "evidenceVerification": "all three ZIPs downloaded, SHA-256 and CRC verified; full source/image run verified; final screenshots viewed"
+      },
+      "ciConclusion": "success",
+      "ciArchivesLocallySha256Verified": true
     },
     "kickstartRepairCI": {
       "runId": 40778418968,
@@ -1269,12 +1340,48 @@
         "toml": 6
       },
       "isolatedSshFunctions": "both configured modes and 14 forbidden-method cases passed; full native Linux suite also passed at 7f88d80",
-      "remountCause": "unverified; journal capture and explicit failure gate added"
+      "remountCause": "confirmed in installer 40945372298: composefs overlay rejects Btrfs options in root fstab entry"
     },
     "testDependencyRepair": {
       "revision": "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef",
       "localTestsPassed": 7,
       "change": "use the existing optional-parser local pattern; CI installs the parser and Linux rejects unexpected skips"
-    }
+    },
+    "pendingRepairs": {
+      "codeRevision": "21eda78b9f63c35da088090df3d6614d01af310f",
+      "commits": [
+        "35fea988db34714e06a260038c0b390bd5a01931",
+        "c5dfa699f8265be670089ffc2ffd63e3d9138a1e",
+        "21eda78b9f63c35da088090df3d6614d01af310f"
+      ],
+      "changes": [
+        "Move physical Btrfs root options to verified installed rootflags; comment only conflicting root fstab entry; preserve other mounts and encryption arguments",
+        "Avoid unset HOME during first-boot GPU checks",
+        "Preserve LF for Linux shell and kickstart inputs in Windows checkouts"
+      ],
+      "scope": "fresh offline MadX installation only; existing installations not automatically migrated; custom filesystem layouts retain previous behavior",
+      "focusedTests": {
+        "passed": 23,
+        "failed": 0
+      },
+      "preparationFixtures": "both encrypted and unencrypted actual workflow fixtures passed; no VM installation in fixtures",
+      "actionlint": "passed",
+      "branding": "passed",
+      "sourceParsing": {
+        "python": 79,
+        "bash": 44,
+        "toml": 6
+      },
+      "broaderWindowsFixtures": {
+        "passed": 54,
+        "failed": 201,
+        "skipped": 28,
+        "failureReason": "all 201 are WinError 1314, missing Windows symlink privilege; representative unchanged 7f88d80 fixtures reproduce this limitation"
+      },
+      "nativeCI": "unverified; next authorized branch push must trigger a fresh exact-source run",
+      "freshImage": "unverified; not executed for these repairs",
+      "freshInstaller": "unverified; not executed for these repairs"
+    },
+    "userWaitPreference": "Stop and report the run link when remote work needs time; do not poll; resume on user instruction."
   }
 }

@@ -1,6 +1,6 @@
 # Phase 1 release gates
 
-Updated 2026-10-29. Native CI and unpublished image builds have run. Phase 1 is
+Updated 2026-10-30. Native CI and unpublished image builds have run. Phase 1 is
 **not declared complete**. No LoRA or self-development work has started.
 
 The user authorized the named validation branch and disposable Linux/UEFI workflows. The initial
@@ -60,18 +60,30 @@ failed the new test's parser dependency declaration. Commit `7f88d80` fixes it; 
 local tests pass. CI 40898401729 passed all Linux jobs at `7f88d80a19d99e144fec97ee4ee8b8d3d86440ef`
 (system 2,347/two reviewed skips, aliases 19/19, desktop 5,835/two skips, build/typecheck/branding
 and Hermes). Its macOS jobs were cancelled before execution because no hosted runner acquired them;
-GitHub reports macOS arm64 capacity constraints. Attempt 2 is queued, so overall CI remains incomplete.
+GitHub reports macOS arm64 capacity constraints. Attempt 2 passed: macOS system 2,243/106 skips,
+desktop 5,833/four skips, typecheck/build passed. Overall CI is now success at `7f88d80`; all five
+evidence archives were downloaded and SHA-256 verified. Skips are not counted as executed passes.
 The superseded image run 40896705234 was cancelled. Image 40899343029 completed at `7f88d80`;
 both default images and a real ISO passed build/inspection with publication disabled. Full source
-labels and unchanged Hermes pin were verified. Installer 40945372298 is running against that exact
-source/image; SSH-policy and privileged-status fixes still require its guest evidence.
-The encrypted boot also logged a failed systemd-remount-fs.service; its journal is needed to
-diagnose the cause. The next probe records that journal and rejects core acceptance on this failure.
+labels and unchanged Hermes pin were verified. Installer 40945372298 completed against that exact
+source/image. All three cases passed SSH restrictions, privileged deployment status,
+core service/alias checks and desktop-window detection, but failed the root remount check. Journals
+confirm that Btrfs options in Anaconda's root fstab entry cannot reconfigure the composefs overlay.
+Repair `c5dfa69` moves physical root options into the installed boot entry, preserves other mounts
+and keeps the service failure gate enabled. It applies only during fresh installation; custom
+filesystem layouts retain their previous behavior and need separate testing. `35fea98` fixes the
+observed GPU-check HOME error; `21eda78` prevents CRLF account-snippet parsing failures on Windows.
+23 focused tests, both preparation fixtures, workflow/source and branding checks pass. All repairs
+still require new native CI and image/VM evidence. The broader Windows fixture run is 54 passed,
+201 failures (all WinError 1314, missing symlink privilege), 28 skipped; baseline fixtures reproduce
+this limitation. Native tests remain enabled.
 Superseded image run 40778438792 was deliberately cancelled. The exact-source gate is unchanged.
-Encrypted first reboot is proven. Core guest acceptance, interactive desktop operation and installed
-Hermes revision remain unverified. First-boot services report success; the Hermes retry-install unit
+Encrypted first reboot is proven. Core acceptance remains blocked by the remount failure; interactive
+desktop operation remains unverified. Installed Hermes is `67d47601bc5f8ed322451a672c843ed0e1a7c42c`,
+different from CI pin `f97608f178d1ffeca59860195ab7da295f7c8e5f`, because existing first-boot behavior
+tracks upstream main. No revision was changed by this repair. First-boot services report success; the Hermes retry-install unit
 is inactive because its pending-install condition is false. This does not prove model-serving
-operation. The privilege failure stopped the probe before installed revision/desktop-window checks.
+operation. The earlier privilege-probe failure is fixed and confirmed in all three real VMs.
 The NVIDIA image failed because the upstream akmods image for Fedora kernel
 `7.2.13-200.fc44.x86_64` was unavailable; no downgrade or revision switch was made.
 Image/installer provenance must match exactly. The Windows host still has no
