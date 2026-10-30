@@ -21,7 +21,6 @@ SYSFS="${HERALD_OS_SYSFS:-/sys}"
 MODULES="${HERALD_OS_MODULES:-/usr/lib/modules}"
 OS_RELEASE="${HERALD_OS_OS_RELEASE:-/usr/lib/os-release}"
 ARCH="${HERALD_OS_ARCH:-$(uname -m)}"
-STATE="${HERALD_OS_STATE:-${XDG_STATE_HOME:-$HOME/.local/state}/herald-os}"
 NVIDIA_IMAGE=ghcr.io/madxleo/madx-agent-os-nvidia
 KEY=/etc/pki/akmods/certs/akmods-ublue.der
 # The UEFI global variable: four bytes of attributes, then 1 while Secure Boot is on.
@@ -60,6 +59,12 @@ notice() {
   local kind="$1" title="$2" body="$3"
   echo "$title: $body"
   [[ "$NOTIFY" == 1 ]] || return 0
+  # The first-boot system unit has no HOME. Only session notifications need user state.
+  if [[ -z "${HERALD_OS_STATE:-}${XDG_STATE_HOME:-}${HOME:-}" ]]; then
+    echo 'No user state directory; GPU notice was logged without a desktop notification.' >&2
+    return 0
+  fi
+  local STATE="${HERALD_OS_STATE:-${XDG_STATE_HOME:-$HOME/.local/state}/herald-os}"
   [[ ! -f "$STATE/gpu-notice-$kind" ]] || return 0
   # Shown by the session before there were two notices.
   [[ "$kind" != switch || ! -f "$STATE/gpu-check-done" ]] || return 0
