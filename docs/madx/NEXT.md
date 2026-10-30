@@ -30,6 +30,15 @@ Last completed CI/image/VM source: `7f88d80a19d99e144fec97ee4ee8b8d3d86440ef`.
 
 ## Repairs ready for fresh remote validation
 
+CI 41000794337 at `c4300785cef44023c60c86d1623bbd0361eeeafd` completed with one failure on each
+native platform: the account parser test still expected one post-install script, although the root
+repair adds another. Linux system: 2,361 passed/one failed/two skips; macOS: 2,257/one/106. All 15 new
+root-mount/GPU cases and all 19 alias cases passed in both full suites. Both desktop suites,
+typechecks/builds, branding, secret scan and Hermes passed. The separate Linux alias job was skipped
+after the suite failed. The corrected test checks both posts, error handling and execution contexts.
+Its portable parser check, 23 focused tests, preparation fixtures and actionlint pass; full CI is next.
+Do not retry the unchanged failing revision or dispatch an image before the corrected revision passes.
+
 Code revision `21eda78b9f63c35da088090df3d6614d01af310f` includes `35fea98` (GPU HOME),
 `c5dfa69` (offline root-options migration) and `21eda78` (LF checkout rules). The migration verifies
 boot options before changing fstab, preserves other mounts/encryption arguments, and keeps the

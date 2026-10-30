@@ -57,7 +57,9 @@ alias checks, and rendered the MadX desktop. All failed on the composefs root re
 now confirmed by journal and fstab evidence. Repair `c5dfa69` migrates physical root options during
 fresh installation; `35fea98` fixes the GPU check's missing HOME, and `21eda78` preserves shell LF
 endings on Windows. 23 focused tests, preparation fixtures, workflow/source and branding checks pass;
-fresh native CI/image/VM validation is required. Installed Hermes revision drift is recorded in
+CI 41000794337 passed all 15 root-mount/GPU cases and all 19 alias cases on both platforms, but failed
+one stale post-script-count assertion in each system suite. The test now verifies both execution
+contexts; fresh CI and image/VM validation are required. Installed Hermes revision drift is recorded in
 ASTRA_PROGRESS.md; model-backed operation and interactive desktop acceptance remain open.
 NVIDIA failed on missing upstream kernel modules; H/V gates remain open.
 

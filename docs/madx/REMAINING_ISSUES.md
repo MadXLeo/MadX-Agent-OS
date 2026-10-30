@@ -3,6 +3,14 @@
 Updated 2026-10-30. Native CI and unpublished image builds have run. Phase 1 is
 **not declared complete**. No LoRA or self-development work has started.
 
+Latest blocker: CI 41000794337 at `c430078` failed one stale installer-test assertion on each native
+platform (Linux 2,361 passed/one failed/two skips; macOS 2,257 passed/one failed/106 skips). All 15
+root-mount/GPU tests and all 19 aliases passed in both full suites. Desktop, typecheck/build, branding,
+secret scan and pinned Hermes passed. The assertion is corrected to verify both post-install scripts
+and their distinct execution contexts. 23 focused local tests, both preparation fixtures, actionlint
+and a portable check of the exact parser assertions pass. The native fixture remains blocked on
+Windows by symlink permissions; fresh CI is required before building the repaired image.
+
 The user authorized the named validation branch and disposable Linux/UEFI workflows. The initial
 approved commit `e062c0334dcb382236b18a60422eab0e46a0d8d2` was pushed and executed as
 [CI 40684976475](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40684976475).

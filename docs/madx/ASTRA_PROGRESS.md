@@ -1,8 +1,33 @@
 # Astra progress — updated 2026-10-30 (Asia/Calcutta)
 
+## Latest CI failure and test correction
+
+[CI 41000794337](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/41000794337) completed at
+`c4300785cef44023c60c86d1623bbd0361eeeafd`. Linux system: **2,361 passed, one failed, two reviewed
+skips**; macOS system: **2,257 passed, one failed, 106 platform/tool skips**. Both failed only
+`test_anaconda_reads_the_account_s_post`, which still assumed a single post-install script after
+the root-mount repair added a second. All 15 new root-mount/GPU cases and all 19 alias cases passed
+inside both full suites. The separate Linux alias job was skipped after pytest failed; it is not
+claimed as executed. The Linux evidence gate rejected the failed test, with no unexpected skips.
+
+Desktop suites passed: Linux **5,835/two skips**, macOS **5,833/four skips**. Both TypeScript checks
+and production builds, branding, script checks, signing policy, full-history secret scan and pinned
+real Hermes passed. All five evidence ZIPs were downloaded and SHA-256/CRC verified; checksums are
+recorded in VALIDATION_RESULTS.json. No fresh image or VM run was dispatched from this failed source.
+
+Commit `312c753a57dbb59a2d837a95a45387336df53311` requires exactly two Bash posts with error-on-failure enabled: account settings
+inside the installed system, and root finalization outside it against the explicit target. It checks
+both bodies. Production installer code and acceptance gates are unchanged by this correction.
+Local validation: **23 focused tests passed**, both actual workflow-preparation fixtures passed and
+actionlint passed. A portable check ran the exact changed assertions against a real generated account
+fragment and rejected a deliberately wrong execution context. The original native fixture remains
+blocked locally by Windows symlink privilege (WinError 1314); full CI must confirm the correction.
+After pushing this correction, stop at the new CI link and resume only on user instruction.
+
 ## Current repair source and actual VM results
 
-**New repairs await native CI and a fresh image/VM run.** `c5dfa699f8265be670089ffc2ffd63e3d9138a1e`
+**New repair tests passed native CI, but the full CI gate and fresh image/VM run remain pending.**
+`c5dfa699f8265be670089ffc2ffd63e3d9138a1e`
 migrates a fresh Anaconda target's physical Btrfs root options into `rootflags`, verifies the
 installed boot entry still contains its root/encryption/console arguments, backs up `fstab`, and
 comments only its conflicting `/` entry. Other mounts are preserved. The helper runs only against

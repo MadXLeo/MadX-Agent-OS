@@ -486,7 +486,7 @@
     "repository": "MadXLeo/MadX-Agent-OS",
     "branch": "codex/linux-release-validation",
     "approvedInitialRevision": "e062c0334dcb382236b18a60422eab0e46a0d8d2",
-    "repairRevision": "21eda78b9f63c35da088090df3d6614d01af310f",
+    "repairRevision": "312c753a57dbb59a2d837a95a45387336df53311",
     "repairCommits": [
       "cf9cd9f995a355b123509b2a6113ff63ffb11000",
       "417300e39ef473de15f501f9117e580ac442ea5e",
@@ -502,7 +502,8 @@
       "7f88d80a19d99e144fec97ee4ee8b8d3d86440ef",
       "35fea988db34714e06a260038c0b390bd5a01931",
       "c5dfa699f8265be670089ffc2ffd63e3d9138a1e",
-      "21eda78b9f63c35da088090df3d6614d01af310f"
+      "21eda78b9f63c35da088090df3d6614d01af310f",
+      "312c753a57dbb59a2d837a95a45387336df53311"
     ],
     "initialCI": {
       "runId": 40684976475,
@@ -649,7 +650,12 @@
       "12929157251": "578030f8f05776316ba67ecc98746357c8e5b7d24adde0386ccd3a6d5cdad48b",
       "12931805087": "d848a201cd34a89753f90215b0d11ddf0d88fadd0fc642845ecf0e03ded78161",
       "12931650099": "9ad3eca7fa33ffe563aee22d83abd47e9904aea70337a77d988d73690bc651c5",
-      "12929878883": "7eb45876823aab530731bb95c6c74e9be18ec6a9cbf321c9275866afd5a3f177"
+      "12929878883": "7eb45876823aab530731bb95c6c74e9be18ec6a9cbf321c9275866afd5a3f177",
+      "12953787454": "b443291c2fdad8b113b8290b96b8e51b3d5c6599e2ed2a919330b4a4d2a24d4b",
+      "12953596498": "33675bd0650512a0e18e3ad8d4e989fb8e8d132546b6815d79153eb3ece97ade",
+      "12953746036": "817a8f38cb808c5817d498d27f1d49dcf36d8f248edf8f9f77f07bb81a823bb5",
+      "12952674124": "4af72907834285941ec8ee4972d8856abcbc2925a8fd7978e4b43648de0808ea",
+      "12952979051": "5945c10933b62afc0c02661a5e63254c7e493f63c98fa68d215e9fa3ed237650"
     },
     "imageWorkflowRun": 40848023781,
     "linuxImageBuilt": true,
@@ -1348,11 +1354,12 @@
       "change": "use the existing optional-parser local pattern; CI installs the parser and Linux rejects unexpected skips"
     },
     "pendingRepairs": {
-      "codeRevision": "21eda78b9f63c35da088090df3d6614d01af310f",
+      "codeRevision": "312c753a57dbb59a2d837a95a45387336df53311",
       "commits": [
         "35fea988db34714e06a260038c0b390bd5a01931",
         "c5dfa699f8265be670089ffc2ffd63e3d9138a1e",
-        "21eda78b9f63c35da088090df3d6614d01af310f"
+        "21eda78b9f63c35da088090df3d6614d01af310f",
+        "312c753a57dbb59a2d837a95a45387336df53311"
       ],
       "changes": [
         "Move physical Btrfs root options to verified installed rootflags; comment only conflicting root fstab entry; preserve other mounts and encryption arguments",
@@ -1378,10 +1385,155 @@
         "skipped": 28,
         "failureReason": "all 201 are WinError 1314, missing Windows symlink privilege; representative unchanged 7f88d80 fixtures reproduce this limitation"
       },
-      "nativeCI": "unverified; next authorized branch push must trigger a fresh exact-source run",
+      "nativeCI": "15 new root/GPU cases passed on Linux and macOS at c430078; overall CI failed one stale parser assertion on each; corrected revision awaits fresh CI",
       "freshImage": "unverified; not executed for these repairs",
-      "freshInstaller": "unverified; not executed for these repairs"
+      "freshInstaller": "unverified; not executed for these repairs",
+      "accountPostAssertionRepair": {
+        "revision": "312c753a57dbb59a2d837a95a45387336df53311",
+        "behavior": "require two Bash posts with errorOnFail; exactly one account post in chroot and one root finalizer outside chroot; verify both bodies",
+        "productionCodeChanged": false,
+        "localFocusedTestsPassed": 23,
+        "preparationFixtures": "encrypted and unencrypted passed",
+        "actionlint": "passed",
+        "portableParserCheck": "exact repository assertions passed on real generated account fragment; deliberately wrong root execution context rejected",
+        "nativeFixtureOnWindows": "failed before parser execution: WinError 1314 creating existing fixture symlinks; not counted as a pass"
+      }
     },
-    "userWaitPreference": "Stop and report the run link when remote work needs time; do not poll; resume on user instruction."
+    "userWaitPreference": "Stop and report the run link when remote work needs time; do not poll; resume on user instruction.",
+    "rootMountRepairCI": {
+      "runId": 41000794337,
+      "revision": "c4300785cef44023c60c86d1623bbd0361eeeafd",
+      "status": "completed",
+      "conclusion": "failure",
+      "linuxSystem": {
+        "passed": 2361,
+        "failed": 1,
+        "skipped": 2
+      },
+      "macOSSystem": {
+        "passed": 2257,
+        "failed": 1,
+        "skipped": 106
+      },
+      "failure": "test_anaconda_reads_the_account_s_post still expected one post after the root-mount repair added a second; same failure on both platforms",
+      "newRootMountAndGpuCases": "15 passed on each native platform",
+      "aliasesInFullSuite": "19 passed on each native platform",
+      "separateLinuxAliasJob": "skipped after pytest failure; not claimed as executed",
+      "linuxEvidenceGate": "correctly rejected failed test; only the two reviewed skips occurred",
+      "linuxDesktop": {
+        "passed": 5835,
+        "failed": 0,
+        "skipped": 2
+      },
+      "macOSDesktop": {
+        "passed": 5833,
+        "failed": 0,
+        "skipped": 4
+      },
+      "typechecksAndBuilds": "passed on both platforms",
+      "brandingScriptsSigningSecretsHermes": "passed",
+      "artifacts": [
+        {
+          "id": 12953787454,
+          "label": "bridge-linux",
+          "sha256": "b443291c2fdad8b113b8290b96b8e51b3d5c6599e2ed2a919330b4a4d2a24d4b",
+          "locallyVerified": true,
+          "reports": [
+            {
+              "report": "bridge-linux-tests.xml",
+              "passed": 2361,
+              "failed": 1,
+              "skipped": 2,
+              "failures": [
+                "test_unattended.test_anaconda_reads_the_account_s_post"
+              ],
+              "newRepairCasesPassed": 15,
+              "mainSuiteAliasCasesPassed": 19,
+              "skipReasons": {
+                "PDFKit and Vision are macOS frameworks": 1,
+                "checking an nftables file needs nft and root": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": 12953596498,
+          "label": "bridge-macos",
+          "sha256": "33675bd0650512a0e18e3ad8d4e989fb8e8d132546b6815d79153eb3ece97ade",
+          "locallyVerified": true,
+          "reports": [
+            {
+              "report": "bridge-linux-tests.xml",
+              "passed": 2257,
+              "failed": 1,
+              "skipped": 106,
+              "failures": [
+                "test_unattended.test_anaconda_reads_the_account_s_post"
+              ],
+              "newRepairCasesPassed": 15,
+              "mainSuiteAliasCasesPassed": 19,
+              "skipReasons": {
+                "cryptsetup is not installed": 28,
+                "needs losetup and root (sudo -n)": 1,
+                "checking an nftables file needs nft and root": 1,
+                "needs setsid and /proc: a command in a session of its own, and seeing what of it is left": 15,
+                "shellcheck is not installed": 5,
+                "needs script from util-linux for a terminal": 9,
+                "needs unprivileged user namespaces (unshare -r)": 24,
+                "package-disk.sh runs on the image workflow's Linux runners (GNU coreutils and zip)": 23
+              }
+            }
+          ]
+        },
+        {
+          "id": 12953746036,
+          "label": "desktop-linux",
+          "sha256": "817a8f38cb808c5817d498d27f1d49dcf36d8f248edf8f9f77f07bb81a823bb5",
+          "locallyVerified": true,
+          "reports": [
+            {
+              "report": "desktop-tests.xml",
+              "passed": 5835,
+              "failed": 0,
+              "skipped": 2,
+              "failures": [],
+              "newRepairCasesPassed": 0,
+              "mainSuiteAliasCasesPassed": 0,
+              "skipReasons": {
+                "": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": 12952674124,
+          "label": "desktop-macos",
+          "sha256": "4af72907834285941ec8ee4972d8856abcbc2925a8fd7978e4b43648de0808ea",
+          "locallyVerified": true,
+          "reports": [
+            {
+              "report": "desktop-tests.xml",
+              "passed": 5833,
+              "failed": 0,
+              "skipped": 4,
+              "failures": [],
+              "newRepairCasesPassed": 0,
+              "mainSuiteAliasCasesPassed": 0,
+              "skipReasons": {
+                "": 4
+              }
+            }
+          ]
+        },
+        {
+          "id": 12952979051,
+          "label": "hermes",
+          "sha256": "5945c10933b62afc0c02661a5e63254c7e493f63c98fa68d215e9fa3ed237650",
+          "locallyVerified": true,
+          "reports": []
+        }
+      ],
+      "newImageOrVmExecuted": false
+    }
   }
 }
