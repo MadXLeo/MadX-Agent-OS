@@ -613,8 +613,15 @@ def test_anaconda_reads_the_account_s_post(tmp_path):
     text = KICKSTART.replace(INCLUDE, str(disk_out)).replace(ACCOUNT_INCLUDE, str(out))
     parser_module.KickstartParser(handler).readKickstartFromString(text)
     posts = [script for script in handler.scripts if script.type == KS_SCRIPT_POST]
-    assert len(posts) == 1 and posts[0].interp == "/usr/bin/bash" and posts[0].errorOnFail and posts[0].inChroot
-    assert "user=luke" in posts[0].script and "/etc/herald-os/ssh-keys" in posts[0].script
+    assert len(posts) == 2
+    assert all(script.interp == "/usr/bin/bash" and script.errorOnFail for script in posts)
+    # Account settings belong inside the installed system. Root finalization runs outside it
+    # against the explicit offline target; neither post may inherit the other's context.
+    account_posts = [script for script in posts if script.inChroot]
+    root_posts = [script for script in posts if not script.inChroot]
+    assert len(account_posts) == len(root_posts) == 1
+    assert "user=luke" in account_posts[0].script and "/etc/herald-os/ssh-keys" in account_posts[0].script
+    assert "python3 /mnt/sysroot/usr/libexec/herald-os/finalize-root-mount.py --root /mnt/sysroot" in root_posts[0].script
 
 
 def test_the_account_pre_stops_on_error_and_logs_where_the_installer_keeps_logs():
