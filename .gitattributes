@@ -1,2 +1,6 @@
 # The PKGBUILD verifies the exact bytes of its shared helper on every platform.
 /packaging/arch/*/herald-os-package.sh text eol=lf
+# Shell interpreters and exact-line kickstart readers need Unix line endings on every host.
+/linux/**/*.sh text eol=lf
+/linux/bin/* text eol=lf
+/linux/image/*.ks text eol=lf
