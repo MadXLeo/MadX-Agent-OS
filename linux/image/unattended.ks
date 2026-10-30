@@ -22,6 +22,13 @@ reboot
 # A %post that writes the account's name and SSH keys into the installed system, when set below.
 %include /tmp/herald-os-account.ks
 
+%post --nochroot --interpreter=/usr/bin/bash --erroronfail
+# Older images do not contain this helper; preserve their existing installation behavior.
+if [[ -f /mnt/sysroot/usr/libexec/herald-os/finalize-root-mount.py ]]; then
+  python3 /mnt/sysroot/usr/libexec/herald-os/finalize-root-mount.py --root /mnt/sysroot
+fi
+%end
+
 %pre --interpreter=/usr/bin/bash --erroronfail --log=/tmp/herald-os-account.log
 # The account the first start makes, and who may sign in to it over SSH. All of it is optional: left
 # empty, the first start makes the account hermes, MadX Agent OS's setup asks for its password, and SSH

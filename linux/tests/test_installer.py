@@ -34,7 +34,15 @@ def test_the_storage_screen_stays_the_persons():
     """Nothing that erases, hides disks or completes the install without the person: no clearpart,
     zerombr or ignoredisk, no account or root password (so the hub never starts by itself), and no
     text mode or reboot."""
-    commands = {line.split()[0] for line in kickstart()}
+    commands, in_post = set(), False
+    for line in kickstart():
+        if line.startswith("%post "):
+            assert not in_post
+            in_post = True
+        elif line == "%end":
+            in_post = False
+        elif not in_post:
+            commands.add(line.split()[0])
     assert commands == {"autopart", "xconfig"}
 
 
@@ -46,6 +54,9 @@ def test_the_kickstart_parses_where_pykickstart_is_installed():
     parser.readKickstartFromString("\n".join(kickstart()) + "\n")
     assert handler.autopart.autopart and handler.autopart.encrypted and not handler.autopart.passphrase
     assert handler.autopart.type is not None
+    assert len(handler.scripts) == 1 and not handler.scripts[0].inChroot
+    assert handler.scripts[0].errorOnFail
+    assert handler.scripts[0].script.strip() == "python3 /mnt/sysroot/usr/libexec/herald-os/finalize-root-mount.py --root /mnt/sysroot"
 
 
 def test_the_installer_test_installs_both_ways():

@@ -7,6 +7,8 @@ systemctl --failed --no-legend --no-pager >/run/madx-validation/failed-units.txt
 systemctl show systemd-remount-fs.service -p ActiveState -p SubState -p Result -p ExecMainStatus >/run/madx-validation/remount-status.txt
 journalctl -b -u systemd-remount-fs.service --no-pager -n 150 >/run/madx-validation/remount-journal.txt
 findmnt --json / >/run/madx-validation/root-mount.json
+findmnt --json /sysroot >/run/madx-validation/physical-root-mount.json
+cat /proc/cmdline >/run/madx-validation/kernel-command-line.txt
 if [[ -f /etc/fstab ]]; then
   cat /etc/fstab >/run/madx-validation/fstab.txt
 else

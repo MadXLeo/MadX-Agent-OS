@@ -28,7 +28,7 @@ test -s /var/lib/herald-os/firstboot-done
 # bootc status requires root on this image. The test-only boot unit records it without
 # giving the SSH account administrative access or changing production account policy.
 cat /run/madx-validation/errors.log
-for file in failed-units.txt remount-status.txt remount-journal.txt root-mount.json fstab.txt; do
+for file in failed-units.txt remount-status.txt remount-journal.txt root-mount.json physical-root-mount.json kernel-command-line.txt fstab.txt; do
   echo "MADX_BOOT_DIAGNOSTIC=$file"
   cat "/run/madx-validation/$file"
 done

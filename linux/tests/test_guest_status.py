@@ -37,6 +37,7 @@ def test_capture_retains_diagnostics_and_marks_complete_only_after_success(tmp_p
     script = script.replace("/run/madx-validation", '"$EVIDENCE"')
     script = script.replace("/usr/bin/bootc", "bootc").replace("/usr/bin/ostree", "ostree")
     script = script.replace("/etc/fstab", '"$FIXTURE_FSTAB"')
+    script = script.replace("/proc/cmdline", '"$FIXTURE_CMDLINE"')
     fakes = """
 systemctl() { printf 'test service evidence\\n'; }
 journalctl() { printf 'test remount journal\\n'; }
@@ -49,11 +50,15 @@ bootc() {
 """
     fstab = tmp_path / "fstab"
     fstab.write_text("test mount table\n")
+    cmdline = tmp_path / "cmdline"
+    cmdline.write_text("rootflags=subvol=root,compress=zstd:1\n")
     result = subprocess.run([BASH, "-c", fakes + script], capture_output=True, text=True,
                             env={**os.environ, "EVIDENCE": tmp_path.as_posix(),
-                                 "FIXTURE_FSTAB": fstab.as_posix(), "BOOTC_FAILS": str(int(bootc_fails))})
+                                 "FIXTURE_FSTAB": fstab.as_posix(), "FIXTURE_CMDLINE": cmdline.as_posix(),
+                                 "BOOTC_FAILS": str(int(bootc_fails))})
     assert (tmp_path / "remount-journal.txt").read_text() == "test remount journal\n"
     assert (tmp_path / "fstab.txt").read_text() == "test mount table\n"
+    assert (tmp_path / "kernel-command-line.txt").read_text() == cmdline.read_text()
     if bootc_fails:
         assert result.returncode != 0
         assert not (tmp_path / "complete").exists()

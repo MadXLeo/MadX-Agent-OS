@@ -452,7 +452,9 @@ def test_anaconda_reads_it_as_one_disk(tmp_path):
     assert handler.clearpart.drives == ["vdb"]
     assert handler.zerombr.zerombr
     assert handler.autopart.autopart and handler.autopart.encrypted
-    assert [script.interp for script in handler.scripts] == ["/usr/bin/bash", "/usr/bin/bash"]
+    assert [script.interp for script in handler.scripts] == ["/usr/bin/bash"] * 3
+    finalizer = next(script for script in handler.scripts if "finalize-root-mount.py" in script.script)
+    assert finalizer.errorOnFail and not finalizer.inChroot
 
 
 # The account %pre: the account's name and the SSH keys that may sign in to it, checked (and GitHub's

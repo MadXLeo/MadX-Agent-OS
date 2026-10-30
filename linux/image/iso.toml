@@ -19,6 +19,9 @@
 contents = """
 autopart --type=btrfs --encrypted
 xconfig --startxonboot
+%post --nochroot --interpreter=/usr/bin/bash --erroronfail
+python3 /mnt/sysroot/usr/libexec/herald-os/finalize-root-mount.py --root /mnt/sysroot
+%end
 """
 
 [customizations.installer.modules]
