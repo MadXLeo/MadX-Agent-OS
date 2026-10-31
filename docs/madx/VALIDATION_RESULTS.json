@@ -482,7 +482,7 @@
     }
   },
   "authorizedLinuxValidation": {
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "repository": "MadXLeo/MadX-Agent-OS",
     "branch": "codex/linux-release-validation",
     "approvedInitialRevision": "e062c0334dcb382236b18a60422eab0e46a0d8d2",
@@ -655,12 +655,23 @@
       "12953596498": "33675bd0650512a0e18e3ad8d4e989fb8e8d132546b6815d79153eb3ece97ade",
       "12953746036": "817a8f38cb808c5817d498d27f1d49dcf36d8f248edf8f9f77f07bb81a823bb5",
       "12952674124": "4af72907834285941ec8ee4972d8856abcbc2925a8fd7978e4b43648de0808ea",
-      "12952979051": "5945c10933b62afc0c02661a5e63254c7e493f63c98fa68d215e9fa3ed237650"
+      "12952979051": "5945c10933b62afc0c02661a5e63254c7e493f63c98fa68d215e9fa3ed237650",
+      "12995502465": "1bf2df9e483ed2e4430b27c0b79e55dc20d32c9547234d1ea2b6c11bc4c2eae0",
+      "12994853718": "79ad6d7ad751b3547bafb7a59eddfcba2aae10a13c2a570c692b6cdc111327dd",
+      "12993609720": "3eb83487cff38ba753df39bb78c5c9f406488ecda7655eff02f005e9f4eb3850",
+      "12996898655": "269a3e3108232268cf76360529da197ad688e9da6fec8b7c162e0142c2e5c5f9",
+      "12996847730": "83f86fcd4a6fd728d1aa1ebbf5472bfa7c4ac51249628a3e84b40e06f19eb865",
+      "12999131995": "36dd5e09ac92ef23507a25c6f0b37f1ff25ad60fafa845eb4e814d82c4c84fd0",
+      "12997503107": "7e44375e8e30ce8057cacce334ca5e207ca498f74d727d18a78303f19e6d268d",
+      "12997463799": "e51f5daa2941226a5e47ff70954f10975f060c9528205b25d82f0255c7446c08",
+      "13032192615": "8bc29d5d3322e9c6c57cb5177836729872cd9f950048c4b277f467a182b63fca",
+      "13032167561": "8e74f933037c8cfab91a72fb531107a41f135a69ba37de8707cdfe8d53a3aee0",
+      "13031473201": "34d5dd8879b6516c41e531b95c6bbef83d307358726b1fe00e043ae0f2a050ab"
     },
-    "imageWorkflowRun": 40848023781,
+    "imageWorkflowRun": 41098826626,
     "linuxImageBuilt": true,
     "isoBuilt": true,
-    "isoChecksum": "c0bacb3f36409678b9de091022cb0eea85c9ec88e47ffdbf9b9988fd7c5a9357",
+    "isoChecksum": "3d4b96047443788737abf318a4ff178354714bcdcec53000f9a63f20a65da853",
     "vmBooted": true,
     "vmInstalled": true,
     "firstReboot": "passed in all three cases, including encrypted unlock",
@@ -1323,6 +1334,20 @@
         },
         "failure": "new test imported pykickstart globally without a declared mandatory requirement",
         "macOS": "queued, had not executed before supersession"
+      },
+      {
+        "revision": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+        "ciRunId": 41093321542,
+        "imageRunId": 41098826626,
+        "installerRunId": 41172111127,
+        "ciConclusion": "success",
+        "imageConclusion": "success",
+        "installerConclusion": "success",
+        "publish": false,
+        "disks": true,
+        "status": "all_three_installer_cases_passed",
+        "sourceMatchGate": "exact source/image verified",
+        "phase1Complete": false
       }
     ],
     "firstInstalledBootRepairs": {
@@ -1385,9 +1410,9 @@
         "skipped": 28,
         "failureReason": "all 201 are WinError 1314, missing Windows symlink privilege; representative unchanged 7f88d80 fixtures reproduce this limitation"
       },
-      "nativeCI": "15 new root/GPU cases passed on Linux and macOS at c430078; overall CI failed one stale parser assertion on each; corrected revision awaits fresh CI",
-      "freshImage": "unverified; not executed for these repairs",
-      "freshInstaller": "unverified; not executed for these repairs",
+      "nativeCI": "passed at 5b704d64d7c154138515b60a26f20ad7f75a1690; full CI 41093321542 attempt 2 success",
+      "freshImage": "completed success at 5b704d6, image run 41098826626; default images, NVIDIA and ISO produced",
+      "freshInstaller": "completed success: 41172111127 at exact 5b704d6 source/image 41098826626; all three cases passed",
       "accountPostAssertionRepair": {
         "revision": "312c753a57dbb59a2d837a95a45387336df53311",
         "behavior": "require two Bash posts with errorOnFail; exactly one account post in chroot and one root finalizer outside chroot; verify both bodies",
@@ -1397,7 +1422,8 @@
         "actionlint": "passed",
         "portableParserCheck": "exact repository assertions passed on real generated account fragment; deliberately wrong root execution context rejected",
         "nativeFixtureOnWindows": "failed before parser execution: WinError 1314 creating existing fixture symlinks; not counted as a pass"
-      }
+      },
+      "status": "validated in native CI, images and all three fresh installer cases"
     },
     "userWaitPreference": "Stop and report the run link when remote work needs time; do not poll; resume on user instruction.",
     "rootMountRepairCI": {
@@ -1534,6 +1560,583 @@
         }
       ],
       "newImageOrVmExecuted": false
+    },
+    "accountPostRepairCI": {
+      "runId": 41093321542,
+      "revision": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+      "attempt": 2,
+      "status": "completed",
+      "conclusion": "success",
+      "linuxConclusion": "success",
+      "linuxSystem": {
+        "passed": 2362,
+        "failed": 0,
+        "skipped": 2
+      },
+      "dedicatedAliases": {
+        "passed": 19,
+        "failed": 0,
+        "skipped": 0
+      },
+      "linuxDesktop": {
+        "passed": 5835,
+        "failed": 0,
+        "skipped": 2
+      },
+      "correctedAccountPostTest": "passed on both native platforms",
+      "linuxTypecheckBuildBrandingScriptsSigningSecretsHermes": "passed",
+      "macOS": "attempt 2 passed; attempt 1 cancelled without execution due to hosted runner capacity",
+      "macOSCause": "GitHub annotations: job was not acquired by a hosted runner after multiple attempts; macOS arm64 capacity constraints",
+      "nextAction": "CI, image and all three isolated installer cases completed successfully; remaining MVP gates recorded separately",
+      "artifacts": [
+        {
+          "id": 12996898655,
+          "name": "bridge-tests-macOS",
+          "sha256": "269a3e3108232268cf76360529da197ad688e9da6fec8b7c162e0142c2e5c5f9",
+          "locallyVerified": true,
+          "reports": [
+            {
+              "name": "bridge-linux-tests.xml",
+              "passed": 2258,
+              "failed": 0,
+              "skipped": 106,
+              "correctedAccountTestPassed": 1,
+              "skipReasons": {
+                "cryptsetup is not installed": 28,
+                "needs losetup and root (sudo -n)": 1,
+                "checking an nftables file needs nft and root": 1,
+                "needs setsid and /proc: a command in a session of its own, and seeing what of it is left": 15,
+                "shellcheck is not installed": 5,
+                "needs script from util-linux for a terminal": 9,
+                "needs unprivileged user namespaces (unshare -r)": 24,
+                "package-disk.sh runs on the image workflow's Linux runners (GNU coreutils and zip)": 23
+              }
+            }
+          ]
+        },
+        {
+          "id": 12996847730,
+          "name": "desktop-tests-macOS",
+          "sha256": "83f86fcd4a6fd728d1aa1ebbf5472bfa7c4ac51249628a3e84b40e06f19eb865",
+          "locallyVerified": true,
+          "reports": [
+            {
+              "name": "desktop-tests.xml",
+              "passed": 5833,
+              "failed": 0,
+              "skipped": 4,
+              "correctedAccountTestPassed": 0,
+              "skipReasons": {
+                "": 4
+              }
+            }
+          ]
+        },
+        {
+          "id": 12995502465,
+          "name": "bridge-tests-Linux",
+          "sha256": "1bf2df9e483ed2e4430b27c0b79e55dc20d32c9547234d1ea2b6c11bc4c2eae0",
+          "locallyVerified": true,
+          "reports": [
+            {
+              "name": "bridge-linux-tests.xml",
+              "passed": 2362,
+              "failed": 0,
+              "skipped": 2,
+              "correctedAccountTestPassed": 1,
+              "skipReasons": {
+                "PDFKit and Vision are macOS frameworks": 1,
+                "checking an nftables file needs nft and root": 1
+              }
+            },
+            {
+              "name": "alias-tests.xml",
+              "passed": 19,
+              "failed": 0,
+              "skipped": 0,
+              "correctedAccountTestPassed": 0,
+              "skipReasons": {}
+            }
+          ]
+        },
+        {
+          "id": 12994853718,
+          "name": "desktop-tests-Linux",
+          "sha256": "79ad6d7ad751b3547bafb7a59eddfcba2aae10a13c2a570c692b6cdc111327dd",
+          "locallyVerified": true,
+          "reports": [
+            {
+              "name": "desktop-tests.xml",
+              "passed": 5835,
+              "failed": 0,
+              "skipped": 2,
+              "correctedAccountTestPassed": 0,
+              "skipReasons": {
+                "": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": 12993609720,
+          "name": "hermes-runtime-evidence",
+          "sha256": "3eb83487cff38ba753df39bb78c5c9f406488ecda7655eff02f005e9f4eb3850",
+          "locallyVerified": true,
+          "reports": []
+        }
+      ],
+      "imageRegistrationRun": 41093321532,
+      "imageRegistrationIsBuild": false,
+      "newImageOrVmExecuted": true,
+      "macOSSystem": {
+        "passed": 2258,
+        "failed": 0,
+        "skipped": 106
+      },
+      "macOSDesktop": {
+        "passed": 5833,
+        "failed": 0,
+        "skipped": 4
+      },
+      "macOSTypecheckAndBuild": "passed"
+    },
+    "rootMountRepairImage": {
+      "runId": 41098826626,
+      "source": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+      "status": "completed",
+      "conclusion": "success",
+      "publish": false,
+      "disks": true,
+      "images": [
+        {
+          "artifact": 12999131995,
+          "name": "image-evidence-madx-agent-os-nvidia-amd64",
+          "bytes": 9622,
+          "sha256": "36dd5e09ac92ef23507a25c6f0b37f1ff25ad60fafa845eb4e814d82c4c84fd0",
+          "verification": "full ZIP downloaded, SHA-256 and CRC verified",
+          "digest": "sha256:f598e6ba249ae8cd13163fcfa38e0b488f3db5e3d886faee5c3651451a90e44a",
+          "architecture": "amd64",
+          "source": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+          "filesystemInspection": {
+            "scope": "built image filesystem; no boot or hardware proof",
+            "passed": true,
+            "nvidia": true,
+            "failures": []
+          },
+          "electronVersion": "44.5.1",
+          "systemdVerifyLog": ""
+        },
+        {
+          "artifact": 12997503107,
+          "name": "image-evidence-madx-agent-os-arm64",
+          "bytes": 9065,
+          "sha256": "7e44375e8e30ce8057cacce334ca5e207ca498f74d727d18a78303f19e6d268d",
+          "verification": "full ZIP downloaded, SHA-256 and CRC verified",
+          "digest": "sha256:859445ace909db8025347c860608a9c56c4b09b6cea080eea750f33a350edb18",
+          "architecture": "arm64",
+          "source": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+          "filesystemInspection": {
+            "scope": "built image filesystem; no boot or hardware proof",
+            "passed": true,
+            "nvidia": false,
+            "failures": []
+          },
+          "electronVersion": "44.5.1",
+          "systemdVerifyLog": ""
+        },
+        {
+          "artifact": 12997463799,
+          "name": "image-evidence-madx-agent-os-amd64",
+          "bytes": 3810735906,
+          "sha256": "e51f5daa2941226a5e47ff70954f10975f060c9528205b25d82f0255c7446c08",
+          "verification": "small members range-read and CRC checked; full ZIP digest GitHub-reported; full reconstructed ISO SHA-256 verified in all three installer jobs",
+          "digest": "sha256:fb154a7b80889538a1effd2b7e28396e6ab73fdd985961df8974cd857c7bbcf2",
+          "architecture": "amd64",
+          "source": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+          "filesystemInspection": {
+            "scope": "built image filesystem; no boot or hardware proof",
+            "passed": true,
+            "nvidia": false,
+            "failures": []
+          },
+          "electronVersion": "44.5.1",
+          "systemdVerifyLog": ""
+        }
+      ],
+      "iso": {
+        "name": "madx-agent-os-validation-5b704d6-x86_64.iso",
+        "bytes": 3883495424,
+        "sha256": "3d4b96047443788737abf318a4ff178354714bcdcec53000f9a63f20a65da853",
+        "partsSha256": [
+          "bcf561e3011c73b06512197a33f5b37dbc532892ff7d91565ee175b4b2416e8f",
+          "ecfb5bd63896746736aca76d77d2cc6f4a9e3005883c77ff0e376f99ed42a327"
+        ],
+        "verification": "build checksum files inspected; full reconstructed ISO SHA-256 independently passed in all three installer jobs before boot"
+      },
+      "nvidia": "matching upstream akmods now available; signatures checked; built image has NVIDIA module; hardware unverified",
+      "nvidiaInputs": {
+        "fedoraBootc": "quay.io/fedora/fedora-bootc@sha256:b3f3896fdefc7e6b285a0df0667338e4438da8ad82cb8dbd9625ab34e8f35903",
+        "akmods": "ghcr.io/ublue-os/akmods@sha256:3ea9c797f01e5b45dff52d56aca5ba815b1b77d193f66410c99c1f6c8f4e7c7e",
+        "akmodsNvidia": "ghcr.io/ublue-os/akmods-nvidia-open@sha256:8183d4a320d36214b076368040744fe93e5dbb43bee40eccd1b9ea91117306fb"
+      },
+      "publication": "disabled by workflow branch guard and confirmed false in all three actual job logs; multiarch/release jobs skipped",
+      "apiReportingDiscrepancy": "completed successful jobs retain stale/null step statuses; actual logs and artifacts corroborate completion; discrepancy retained locally",
+      "newVmAcceptance": "passed all three cases in installer 41172111127 at the exact source/image"
+    },
+    "latestValidatedRevision": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+    "rootMountRepairInstaller": {
+      "runId": 41172111127,
+      "source": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+      "imageRunId": 41098826626,
+      "status": "completed",
+      "conclusion": "success",
+      "account": "madx-test",
+      "tag": "",
+      "isoSha256": "3d4b96047443788737abf318a4ff178354714bcdcec53000f9a63f20a65da853",
+      "fullIsoChecksumVerifiedInJobs": [
+        124452094982,
+        124452095131,
+        124452095188
+      ],
+      "jobs": [
+        {
+          "id": 124452094982,
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v7",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "QEMU with KVM",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "The installer, from the release",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "The ISO's kickstart, unattended",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Prepare the ISO's actual UEFI boot path",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Install",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "The disk is encrypted, or not",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Boot what was installed",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Retain failed-install diagnostics and check the protected disk",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Post Run actions/checkout@v7",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23
+            }
+          ]
+        },
+        {
+          "id": 124452095131,
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v7",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "QEMU with KVM",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "The installer, from the release",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "The ISO's kickstart, unattended",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Prepare the ISO's actual UEFI boot path",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Install",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "The disk is encrypted, or not",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Boot what was installed",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Retain failed-install diagnostics and check the protected disk",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Post Run actions/checkout@v7",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23
+            }
+          ]
+        },
+        {
+          "id": 124452095188,
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Run actions/checkout@v7",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "QEMU with KVM",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "The installer, from the release",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "The ISO's kickstart, unattended",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5
+            },
+            {
+              "name": "Prepare the ISO's actual UEFI boot path",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Install",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "The disk is encrypted, or not",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Boot what was installed",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9
+            },
+            {
+              "name": "Retain failed-install diagnostics and check the protected disk",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10
+            },
+            {
+              "name": "Run actions/upload-artifact@v4",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11
+            },
+            {
+              "name": "Post Run actions/checkout@v7",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 23
+            }
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 13032192615,
+          "name": "installer-test-unencrypted-preserve-true",
+          "bytes": 2843174,
+          "sha256": "8bc29d5d3322e9c6c57cb5177836729872cd9f950048c4b277f467a182b63fca",
+          "sha256AndZipCrcLocallyVerified": true,
+          "sourceVerified": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+          "encrypted": false,
+          "preserveAdjacentSyntheticDisk": true,
+          "coreAcceptance": "passed",
+          "rootRemount": "passed",
+          "screenshots": 7,
+          "finalScreenshotVisuallyReviewed": true
+        },
+        {
+          "id": 13032167561,
+          "name": "installer-test-unencrypted-preserve-false",
+          "bytes": 2756050,
+          "sha256": "8e74f933037c8cfab91a72fb531107a41f135a69ba37de8707cdfe8d53a3aee0",
+          "sha256AndZipCrcLocallyVerified": true,
+          "sourceVerified": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+          "encrypted": false,
+          "preserveAdjacentSyntheticDisk": false,
+          "coreAcceptance": "passed",
+          "rootRemount": "passed",
+          "screenshots": 7,
+          "finalScreenshotVisuallyReviewed": true
+        },
+        {
+          "id": 13031473201,
+          "name": "installer-test-encrypted-preserve-false",
+          "bytes": 2841243,
+          "sha256": "34d5dd8879b6516c41e531b95c6bbef83d307358726b1fe00e043ae0f2a050ab",
+          "sha256AndZipCrcLocallyVerified": true,
+          "sourceVerified": "5b704d64d7c154138515b60a26f20ad7f75a1690",
+          "encrypted": true,
+          "preserveAdjacentSyntheticDisk": false,
+          "coreAcceptance": "passed",
+          "rootRemount": "passed",
+          "screenshots": 7,
+          "finalScreenshotVisuallyReviewed": true
+        }
+      ],
+      "uefiBootInstallationFirstReboot": "passed in all three cases; encrypted unlock passed",
+      "protectedSyntheticDisk": "checksum unchanged after installation and after guest acceptance",
+      "sshPolicy": "test key accepted; root and password-only access rejected",
+      "coreServicesAndAliases": "assertions passed; no failed units listed; MADX_GUEST_CORE_PASSED=1 in all three guests",
+      "rootRemount": {
+        "activeState": "active",
+        "subState": "exited",
+        "result": "success",
+        "execMainStatus": 0,
+        "rootflags": "subvol=root,compress=zstd:1",
+        "physicalRoot": "/sysroot uses Btrfs subvol=/root and compress=zstd:1",
+        "fstab": "only conflicting root entry commented; /home, /boot, /boot/efi retained",
+        "encryptionArguments": "retained in encrypted guest",
+        "composefsRoot": "read-only overlay retained",
+        "existingOrCustomLayouts": "unverified"
+      },
+      "gpuFirstBoot": "firstboot service succeeded; previous HOME unbound error absent in all three boot logs",
+      "desktop": "MADX_DESKTOP_WINDOW=1 in all guests; all three final screenshots visually reviewed and show MadX welcome desktop",
+      "interactiveDesktopOperation": "unverified",
+      "hermes": {
+        "commandAvailable": true,
+        "installedRevision": "78077b2b8f83ac7d9293d3269df7ef20e3a9a994",
+        "testedPin": "f97608f178d1ffeca59860195ab7da295f7c8e5f",
+        "revisionDrift": true,
+        "cause": "existing first-boot installer follows upstream main; source pin was not changed",
+        "retryInstallUnit": "inactive/dead; ConditionResult=no; Result=success; ExecMainStatus=0",
+        "modelServerAndChat": "unverified",
+        "coreGateFailsOnRevisionDrift": false
+      },
+      "bootc": {
+        "importedImageDigest": "sha256:5b8aeb5eaa330748476390b6bf61c68d8aeca942a9f42a4b3afc8a6a51b7ac3e",
+        "ostreeCommit": "935e938799002ea5c3fd6c56908835016c3ddfd388442ba8136b1fc3293b7e3f",
+        "configuredOrigin": "ghcr.io/madxleo/madx-agent-os:dev-5b704d6-amd64",
+        "originPublished": false,
+        "rollback": null,
+        "updateRollbackTested": false,
+        "digestScope": "imported deployment digest; recorded separately from builder container digest"
+      },
+      "grubFailureReproduced": false,
+      "phase1Complete": false,
+      "scope": "disposable GitHub QEMU/KVM UEFI guests only; no host disk, EFI or firmware changes"
     }
   }
 }

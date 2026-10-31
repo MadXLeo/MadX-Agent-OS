@@ -1,4 +1,89 @@
-# Astra progress — updated 2026-10-30 (Asia/Calcutta)
+# Astra progress — updated 2026-10-31 (Asia/Calcutta)
+
+## Boot and installation milestone passed at `5b704d6`
+
+[CI 41093321542](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/41093321542) attempt 1 ran
+at `5b704d64d7c154138515b60a26f20ad7f75a1690`. **Every Linux job passed**: system **2,362 passed,
+two reviewed skips**, dedicated aliases **19/19 with no skips**, desktop **5,835 passed/two skips**,
+TypeScript, production build, branding, scripts, signing policy, secret scan and pinned real Hermes.
+The corrected account-post parser test passed in the actual Linux suite.
+
+Both macOS jobs were initially cancelled before execution because no hosted runner acquired them.
+**Attempt 2 passed; overall CI is success at this exact source.** macOS system: **2,258 passed,
+106 platform/tool skips**; desktop: **5,833 passed/four skips**; TypeScript and production build
+passed. The corrected account-post parser test also passed on macOS. All five CI archives are now
+downloaded and SHA-256/ZIP CRC verified; hashes and skip reasons are in VALIDATION_RESULTS.json.
+
+[Image 41098826626](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/41098826626) completed
+successfully at the same full source with publish=false/disks=true. Both default architectures
+and **the NVIDIA image** passed filesystem inspection, systemd verification and Electron 44.5.1
+execution. The matching upstream akmods images are now available and their signatures were verified;
+no kernel downgrade or Hermes revision switch was made. NVIDIA hardware operation remains unverified.
+
+The build produced `madx-agent-os-validation-5b704d6-x86_64.iso`, **3,883,495,424 bytes**.
+
+| Object at `5b704d6` | SHA-256 / image digest |
+| --- | --- |
+| ISO | `3d4b96047443788737abf318a4ff178354714bcdcec53000f9a63f20a65da853` |
+| ISO part0 | `bcf561e3011c73b06512197a33f5b37dbc532892ff7d91565ee175b4b2416e8f` |
+| ISO part1 | `ecfb5bd63896746736aca76d77d2cc6f4a9e3005883c77ff0e376f99ed42a327` |
+| Default amd64 image | `sha256:fb154a7b80889538a1effd2b7e28396e6ab73fdd985961df8974cd857c7bbcf2` |
+| Default arm64 image | `sha256:859445ace909db8025347c860608a9c56c4b09b6cea080eea750f33a350edb18` |
+| NVIDIA amd64 image | `sha256:f598e6ba249ae8cd13163fcfa38e0b488f3db5e3d886faee5c3651451a90e44a` |
+
+All source labels and the unchanged Hermes pin were verified. The small arm64/NVIDIA archives were
+downloaded and SHA-256/CRC checked. amd64 metadata was range-read and CRC checked; its full archive
+digest remains GitHub-reported. Installer 41172111127 independently verified the full reconstructed
+ISO checksum in all three jobs before boot. GitHub returned successful image jobs with stale/null
+step details; actual logs and artifacts corroborate the build/inspection results and publication-disabled
+environment. This API discrepancy is retained in the local evidence. No images, tags or releases were
+published. The earlier push-triggered image workflow 41093321532 was registration only.
+
+[Installer 41172111127](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/41172111127) **passed all
+three cases** against image run 41098826626 at the exact full source above, account=madx-test and
+empty tag: unencrypted, encrypted, and unencrypted with a protected synthetic Windows-style GPT disk.
+UEFI boot, installation, first reboot, encrypted unlock, SSH restrictions, service/alias assertions
+and desktop-window detection passed. All three guests emitted `MADX_GUEST_CORE_PASSED=1`.
+The protected disk checksum passed both after installation and after guest acceptance. No GRUB
+installation error was reproduced; no GRUB-specific fix is claimed.
+
+The root repair is confirmed in all three guests: `systemd-remount-fs.service` is active/exited with
+Result=success and ExecMainStatus=0; no failed units are listed. The kernel command line retains
+`rootflags=subvol=root,compress=zstd:1`, and physical `/sysroot` has the corresponding Btrfs subvolume
+and compression. Only the conflicting root fstab entry is commented; `/home`, `/boot` and `/boot/efi`
+remain. Encryption arguments are preserved in the encrypted guest. Composefs `/` remains read-only
+as intended. First-boot setup succeeds and the previous GPU-helper unset-HOME error is absent.
+
+All three evidence archives were downloaded and SHA-256/ZIP CRC/source verified. Each contains seven
+post-reboot screenshots; the final screenshot from each was viewed and shows the MadX welcome
+desktop. This establishes graphical rendering, not interactive onboarding or model-backed chat.
+
+| Installer artifact at `5b704d6` | SHA-256 |
+| --- | --- |
+| 13032192615, protected unencrypted | `8bc29d5d3322e9c6c57cb5177836729872cd9f950048c4b277f467a182b63fca` |
+| 13032167561, unencrypted | `8e74f933037c8cfab91a72fb531107a41f135a69ba37de8707cdfe8d53a3aee0` |
+| 13031473201, encrypted | `34d5dd8879b6516c41e531b95c6bbef83d307358726b1fe00e043ae0f2a050ab` |
+
+Hermes is installed and its command resolves in all three guests. The installed revision is
+`78077b2b8f83ac7d9293d3269df7ef20e3a9a994`, different from the unchanged CI pin
+`f97608f178d1ffeca59860195ab7da295f7c8e5f`; all three report revision drift. Existing first-boot
+behavior follows upstream main. The retry-install unit is inactive because its pending-install
+condition is false, with Result=success; this is not proof of a running model/chat service.
+The core acceptance gate reports drift without failing it. Resolve this validation gap explicitly
+before release; no Hermes revision or release origin was changed during this milestone.
+
+Installed bootc reports imported image digest
+`sha256:5b8aeb5eaa330748476390b6bf61c68d8aeca942a9f42a4b3afc8a6a51b7ac3e` and OSTree commit
+`935e938799002ea5c3fd6c56908835016c3ddfd388442ba8136b1fc3293b7e3f`.
+These are recorded separately from the builder's container digest. The configured origin
+`ghcr.io/madxleo/madx-agent-os:dev-5b704d6-amd64` is unpublished; rollback is null. No update or
+rollback acceptance is claimed.
+
+**Phase 1 / working MVP is not complete.** Remaining gates include Hermes revision alignment and
+actual chat/tools, interactive onboarding and desktop use, package/installer visual branding,
+existing-profile upgrade/rollback, custom storage layouts and hardware validation. See
+REMAINING_ISSUES.md. Host Windows partitions, EFI and firmware were untouched. These documentation
+updates record the completed milestone locally; the validated remote source remains `5b704d6`.
 
 ## Latest CI failure and test correction
 
@@ -21,12 +106,12 @@ both bodies. Production installer code and acceptance gates are unchanged by thi
 Local validation: **23 focused tests passed**, both actual workflow-preparation fixtures passed and
 actionlint passed. A portable check ran the exact changed assertions against a real generated account
 fragment and rejected a deliberately wrong execution context. The original native fixture remains
-blocked locally by Windows symlink privilege (WinError 1314); full CI must confirm the correction.
-After pushing this correction, stop at the new CI link and resume only on user instruction.
+blocked locally by Windows symlink privilege (WinError 1314). CI 41093321542 subsequently confirmed
+the correction on Linux and macOS, as recorded above.
 
 ## Current repair source and actual VM results
 
-**New repair tests passed native CI, but the full CI gate and fresh image/VM run remain pending.**
+**The repairs below now pass full native CI, image build and all three fresh VM cases at `5b704d6`.**
 `c5dfa699f8265be670089ffc2ffd63e3d9138a1e`
 migrates a fresh Anaconda target's physical Btrfs root options into `rootflags`, verifies the
 installed boot entry still contains its root/encryption/console arguments, backs up `fstab`, and
@@ -46,8 +131,9 @@ Local validation: **23 focused tests passed**, both actual workflow-preparation 
 actionlint and branding checks passed, and native-source parsing passed (79 Python, 44 Bash, six
 TOML files). The wider Windows fixture run has 54 passes, 201 failures and 28 skips: all 201 failures
 are the account's missing Windows symlink privilege (WinError 1314). Representative failures also
-occur with unchanged `7f88d80` tests/fixtures. Native CI remains required; these are not claimed as
-passes. No new host software or elevated Windows permissions were introduced.
+occur with unchanged `7f88d80` tests/fixtures. The native Linux/macOS suites subsequently passed;
+the Windows failures are not claimed as passes. No new host software or elevated Windows permissions
+were introduced.
 
 **Installer 40945372298 completed at `7f88d80`: all three cases installed and rebooted, including
 encrypted unlock, and rendered the MadX welcome desktop.** All three SSH policy checks passed,
@@ -76,7 +162,7 @@ All three VM archives were downloaded, SHA-256/ZIP CRC/source-verified, and fina
 User preference: stop and report the run link when remote CI/build/installer work needs time.
 Do not keep polling or waiting; resume only when the user says to continue.
 
-Last completed CI/image/VM source is **`7f88d80a19d99e144fec97ee4ee8b8d3d86440ef`**. Focused commits
+Earlier completed CI/image/VM source was **`7f88d80a19d99e144fec97ee4ee8b8d3d86440ef`**. Focused commits
 `e9d8431` (managed SSH authentication policy) and `b2beb0a` (privileged read-only guest evidence)
 were pushed only to the authorized branch. [CI 40896115633](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/40896115633)
 at `b2beb0a` reported Linux system **2,346 passed, one failed, two reviewed skips**. All 11 new

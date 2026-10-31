@@ -11,7 +11,7 @@ Validation codes: **T** = included in attempted desktop suite (see BASELINE.md f
 integration; **V** = requires disposable-VM validation; **N** = new capability, not implemented.
 Typecheck/build success alone does not establish functional parity. No existing feature is removed.
 
-## Astra runtime and release evidence — 2026-10-29
+## Astra runtime and release evidence — updated 2026-10-31
 
 Continuation: CI again uses the established bridge runner; unexpected Linux skips are rejected;
 image architecture/source labels and installer run provenance are checked. Guest Hermes revision
@@ -59,21 +59,33 @@ fresh installation; `35fea98` fixes the GPU check's missing HOME, and `21eda78` 
 endings on Windows. 23 focused tests, preparation fixtures, workflow/source and branding checks pass;
 CI 41000794337 passed all 15 root-mount/GPU cases and all 19 alias cases on both platforms, but failed
 one stale post-script-count assertion in each system suite. The test now verifies both execution
-contexts; fresh CI and image/VM validation are required. Installed Hermes revision drift is recorded in
+contexts; the subsequent CI and image/VM results are recorded below. Installed Hermes revision drift is recorded in
 ASTRA_PROGRESS.md; model-backed operation and interactive desktop acceptance remain open.
-NVIDIA failed on missing upstream kernel modules; H/V gates remain open.
+NVIDIA initially failed on missing upstream kernel modules; the later build succeeds as recorded below.
+
+Latest CI 41093321542 at `5b704d6` confirms the corrected parser test on Linux: system 2,362 passed,
+two reviewed skips; dedicated aliases 19/19; desktop 5,835/two skips; typecheck/build/branding/Hermes
+passed. Attempt 2 resolved the macOS hosted-runner issue: system 2,258 passed/106 skips, desktop
+5,833/four skips, typecheck/build passed. Overall CI is successful. Image 41098826626 also passed
+at the same source: default amd64/arm64 and NVIDIA filesystem/systemd/Electron checks passed and
+a new ISO was produced. Installer 41172111127 passed all three cases at that exact source/image:
+UEFI boot, installation, first reboot, encrypted unlock, SSH restrictions, aliases and core services.
+The remount service succeeds with physical Btrfs options preserved; the GPU HOME error is absent.
+All three final screenshots show the MadX welcome desktop. Installed Hermes `78077b2` differs from
+the tested pin `f97608f`; model-backed and interactive desktop acceptance remain open.
 
 Earlier Windows desktop results were 4,915 renderer/shared passes (five skips) and 89 focused main-process
 passes. Typecheck/build and branding checks pass. Selected Python validation now passes 60 tests
-with 26 Windows/platform skips, plus three installer workflow tests. Full native suites remain open.
+with 26 Windows/platform skips, plus three installer workflow tests. Later full native suite results
+are recorded above; the earlier Windows limitations remain documented.
 
 | Area | New implemented check / observed evidence | Remaining gate |
 | --- | --- | --- |
 | Hermes process, health/auth, bridge discovery | Real pinned server executed twice on both Windows and Linux; missing/wrong tokens rejected; bridge tools registered | Installed Linux service and host adapter, model chat/tools/approvals, desktop recovery |
 | Memory and skills | Real MemoryStore and skills API; contents survive server restart in an isolated profile | Existing-profile OS upgrade and user-facing integration |
 | Linux alias/filesystem behavior | All 19 cases passed without skips in Linux CI; installed system/user unit aliases and commands resolved in all three VMs | VM upgrade behavior |
-| Image packaging | Default amd64/arm64 images built; filesystem, systemd units and packaged Electron passed; actual amd64 ISO booted through UEFI | Native package variants and NVIDIA build |
-| UEFI installation | Three installations/reboots, encrypted unlock, SSH restrictions, privileged deployment evidence, core service states and desktop window checks passed | Root remount repair needs fresh VM validation; interactive operation remains open |
+| Image packaging | Default amd64/arm64 and NVIDIA images built and passed filesystem/systemd/Electron checks at `5b704d6`; exact amd64 ISO checksum verified and booted through UEFI | Native package variants, arm64 boot and NVIDIA hardware |
+| UEFI installation | All three `5b704d6` cases passed: installation/reboot, encrypted unlock, SSH restrictions, deployment evidence, aliases, core services, root remount and desktop window; final screenshots viewed | Interactive operation, custom storage and existing-profile upgrades remain open |
 | Adjacent Windows-style disk | Actual VM install and acceptance attempt preserved the synthetic GPT/sentinel disk hash | No actual Windows/shared-ESP certification |
 | Update/rollback and NVIDIA | Existing implementation reviewed; validation sequence documented, identifiers retained | Two deployment transitions, data integrity, GPU/laptop testing |
 

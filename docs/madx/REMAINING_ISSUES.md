@@ -1,15 +1,39 @@
 # Phase 1 release gates
 
-Updated 2026-10-30. Native CI and unpublished image builds have run. Phase 1 is
+Updated 2026-10-31. Native CI and unpublished image builds have run. Phase 1 is
 **not declared complete**. No LoRA or self-development work has started.
 
-Latest blocker: CI 41000794337 at `c430078` failed one stale installer-test assertion on each native
+CI 41093321542 at `5b704d6` is now fully successful after attempt 2. Linux system: 2,362/two skips,
+aliases 19/19, desktop 5,835/two skips; macOS system: 2,258/106 skips, desktop 5,833/four skips.
+Both platforms' typechecks/builds passed, as did branding, secrets and pinned Hermes. The parser
+correction is proven on both native platforms. The initial macOS hosted-capacity failure is resolved.
+Image 41098826626 passed at that exact source: default amd64/arm64 and NVIDIA built and passed
+filesystem/systemd/Electron checks; a new 3,883,495,424-byte ISO was produced with publication disabled.
+NVIDIA's upstream dependency is now available; hardware operation is still unverified.
+Installer 41172111127 passed all three UEFI cases against this exact image/source: installation,
+first reboot, encrypted unlock, SSH restrictions, aliases, core services and desktop-window checks.
+The root-remount repair is confirmed: the service succeeds, physical Btrfs options are preserved,
+and no failed units are listed. The GPU HOME error is absent. All three final screenshots show the
+MadX welcome desktop; the protected synthetic GPT disk checksum is unchanged. ISO and evidence
+checksums, source revisions and the image API reporting discrepancy are recorded in ASTRA_PROGRESS.md
+and VALIDATION_RESULTS.json. The next gates are Hermes revision alignment/model-backed operation,
+interactive desktop acceptance and existing-profile upgrade/rollback, not another run of this repair.
+
+Current installed Hermes is `78077b2b8f83ac7d9293d3269df7ef20e3a9a994`; CI tests unchanged pin
+`f97608f178d1ffeca59860195ab7da295f7c8e5f`. All three guests report drift. The first-boot installer
+still follows upstream main. The command resolves, and the retry-install unit is correctly inactive
+with no pending-install marker; no running model/chat service has been proven. Core acceptance does
+not fail on drift. Resolve this discrepancy explicitly before claiming a working agent MVP.
+
+## Earlier failures and repairs (superseded by the results above)
+
+Previous CI 41000794337 at `c430078` failed one stale installer-test assertion on each native
 platform (Linux 2,361 passed/one failed/two skips; macOS 2,257 passed/one failed/106 skips). All 15
 root-mount/GPU tests and all 19 aliases passed in both full suites. Desktop, typecheck/build, branding,
 secret scan and pinned Hermes passed. The assertion is corrected to verify both post-install scripts
 and their distinct execution contexts. 23 focused local tests, both preparation fixtures, actionlint
 and a portable check of the exact parser assertions pass. The native fixture remains blocked on
-Windows by symlink permissions; fresh CI is required before building the repaired image.
+Windows by symlink permissions. The subsequent native CI and repaired image/VM checks passed.
 
 The user authorized the named validation branch and disposable Linux/UEFI workflows. The initial
 approved commit `e062c0334dcb382236b18a60422eab0e46a0d8d2` was pushed and executed as
@@ -82,18 +106,20 @@ and keeps the service failure gate enabled. It applies only during fresh install
 filesystem layouts retain their previous behavior and need separate testing. `35fea98` fixes the
 observed GPU-check HOME error; `21eda78` prevents CRLF account-snippet parsing failures on Windows.
 23 focused tests, both preparation fixtures, workflow/source and branding checks pass. All repairs
-still require new native CI and image/VM evidence. The broader Windows fixture run is 54 passed,
+subsequently passed native CI and fresh image/VM acceptance at `5b704d6`. The broader Windows fixture run is 54 passed,
 201 failures (all WinError 1314, missing symlink privilege), 28 skipped; baseline fixtures reproduce
 this limitation. Native tests remain enabled.
 Superseded image run 40778438792 was deliberately cancelled. The exact-source gate is unchanged.
-Encrypted first reboot is proven. Core acceptance remains blocked by the remount failure; interactive
-desktop operation remains unverified. Installed Hermes is `67d47601bc5f8ed322451a672c843ed0e1a7c42c`,
+Encrypted first reboot was proven. Core acceptance at `7f88d80` was blocked by the remount failure;
+the later `5b704d6` run resolves it. Interactive desktop operation remains unverified. That earlier
+image installed Hermes `67d47601bc5f8ed322451a672c843ed0e1a7c42c`,
 different from CI pin `f97608f178d1ffeca59860195ab7da295f7c8e5f`, because existing first-boot behavior
 tracks upstream main. No revision was changed by this repair. First-boot services report success; the Hermes retry-install unit
 is inactive because its pending-install condition is false. This does not prove model-serving
 operation. The earlier privilege-probe failure is fixed and confirmed in all three real VMs.
-The NVIDIA image failed because the upstream akmods image for Fedora kernel
-`7.2.13-200.fc44.x86_64` was unavailable; no downgrade or revision switch was made.
+The earlier NVIDIA image failed because the upstream akmods image for Fedora kernel
+`7.2.13-200.fc44.x86_64` was unavailable. Image 41098826626 subsequently built and inspected it
+successfully with matching modules; no downgrade or revision switch was made.
 Image/installer provenance must match exactly. The Windows host still has no
 Linux runtime; all native execution is on disposable GitHub runners. No new host software, registry
 image, release, tag, main merge or physical installation was authorized or performed.
@@ -105,8 +131,9 @@ image, release, tag, main merge or physical installation was authorized or perfo
    permissions, symlinks, sockets and native runtime assumptions. They remain failures, not passes.
 2. Real-filesystem alias migration checks now pass on Linux, including repeat install/remove,
    collision refusal, partial-write rollback and symlink-parent containment. Image systemd unit
-   verification also passes. Confirm the booted guest resolves each MadX alias to the existing
-   unit; do not enable duplicate units. Installed-service runtime remains unverified.
+   verification also passes, and all three installed guests resolve the tested MadX aliases to
+   existing system/user units. Core service assertions pass. Retain this behavior through upgrades;
+   do not enable duplicate units. Model-backed Hermes operation remains a separate gate.
 3. Build and inspect Linux tarballs, both Arch packages and macOS DMG/ZIP packages. Verify icons,
    executable names, source checksums, resource inclusion and the generated package audit. Exercise
    existing desktop notifications and macOS permissions with the retained application ID.
@@ -115,18 +142,20 @@ image, release, tag, main merge or physical installation was authorized or perfo
    offline Hermes recovery and all compositor dialogs. Inspect the installer runtime branding and
    boot menu: ISO metadata alone does not prove Anaconda's visual skin or title is MadX-branded.
    A builder-specific installer branding layer may still be required after inspecting that ISO.
-5. Complete fresh-install acceptance (all three installs and two unencrypted reboots ran), then
-   test upgrade from an existing upstream install, reboot and rollback using isolated
+5. Fresh-install acceptance now passes all three cases, including root remount. Next test upgrade
+   from an existing upstream install, reboot and rollback using isolated
    virtual disks. Hash preferences, browser profiles, Hermes memories, plugin settings and documents
    before/after. Verify old and new command names and service names address the same implementation.
 6. Run actual Hermes chat, tools, approvals, routines and provider recovery against the pinned
    engine. Real Windows API health/authentication, bridge discovery, memory, skills and restart
-   now pass. Linux service startup, host tools, desktop recovery and model-backed operation remain
-   unvalidated. First boot currently installs Hermes from `main` unless an installation ref is set;
-   capture that actual revision and validate it as well as the source/client pin before release.
-7. Exercise NVIDIA image build/kernel matching, encrypted installation, recovery and dual-boot
+   now pass. Hermes installation/command availability and its retry-service state are captured;
+   actual model-service startup, host tools, desktop recovery and chat remain unvalidated. First
+   boot currently installs Hermes from `main` unless an installation ref is set; resolve the
+   captured revision drift explicitly and validate the installed engine before release.
+7. NVIDIA image build/kernel matching passed in image 41098826626; hardware operation remains open.
+   Exercise encrypted installation, recovery and dual-boot
    scenarios in disposable VMs only. The encrypted install and on-disk password checks passed,
-   and automated first-boot unlock now passes. The remount service failure still needs diagnosis.
+   and automated first-boot unlock now passes. The remount repair passes all three fresh VMs.
    The previously reported GRUB error was not reproduced;
    no GRUB root cause or fix has been claimed.
 8. Validate MadX registry ownership, signing and release downloads. No image or release was
@@ -161,7 +190,8 @@ dependency and must be reviewed after an authorized integration, not duplicated 
 
 The source copy audit has explicit reviewed exceptions in `branding/legacy-allowlist.json`.
 Lowercase identifier findings are not automatically exempted; the table above records their
-contract families. Native packages still need inspection.
+contract families. Built bootc filesystems were inspected; separate native package formats still
+need inspection.
 
 ## Installer references
 

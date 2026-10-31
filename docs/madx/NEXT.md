@@ -9,66 +9,63 @@ REMAINING_ISSUES.md for evidence and open gates; VALIDATION_RESULTS.json records
 When CI, image creation or installer testing needs time, stop and report its run link. Do not
 keep polling or waiting. Resume only when the user says to continue. Do not launch duplicate runs.
 
-## Completed evidence
+## Completed boot/install milestone
 
-Last completed CI/image/VM source: `7f88d80a19d99e144fec97ee4ee8b8d3d86440ef`.
+Validated source: `5b704d64d7c154138515b60a26f20ad7f75a1690`.
 
-- CI 40898401729 attempt 2 passed: Linux system 2,347/two skips, aliases 19/19,
-  desktop 5,835/two skips; macOS system 2,243/106 skips, desktop 5,833/four skips.
-  Typechecks, production builds, branding, secret scan and pinned Hermes passed.
-- Unpublished image 40899343029 built and inspected both default architectures and a real ISO.
-  ISO SHA-256: `220db0a115b7869568779947a4bd44c2c942a2dd5260dbbd81eda68dc673a59d`.
-- Installer 40945372298 completed against that exact image/source, account=madx-test.
-  All three cases installed, rebooted (including encrypted unlock), passed SSH restrictions,
-  captured privileged deployment status, resolved aliases and rendered the MadX welcome desktop.
-  The protected synthetic GPT disk retained its hash. No GRUB failure was reproduced.
-  All three failed systemd-remount-fs: Anaconda's Btrfs root fstab options cannot reconfigure
-  the composefs overlay. The boot logs also show an unset HOME in the GPU helper.
-- Installed Hermes revision is `67d47601bc5f8ed322451a672c843ed0e1a7c42c`; CI's unchanged pin is
-  `f97608f178d1ffeca59860195ab7da295f7c8e5f`. Existing first-boot behavior tracks main. Do not silently
-  switch it. Retry-install unit condition=false is not evidence of model-serving/chat.
+- CI 41093321542 attempt 2 passed: Linux system 2,362/two reviewed skips, aliases 19/19,
+  desktop 5,835/two skips; macOS system 2,258/106 platform skips, desktop 5,833/four skips.
+  Both typechecks/builds, branding, scripts, secret scan and pinned Hermes passed.
+- Unpublished image 41098826626 passed with publish=false/disks=true. Default amd64/arm64 and
+  NVIDIA passed filesystem/systemd/Electron checks. The actual ISO is 3,883,495,424 bytes,
+  SHA-256 `3d4b96047443788737abf318a4ff178354714bcdcec53000f9a63f20a65da853`.
+- Installer 41172111127 passed all three cases against that exact source/image, account=madx-test,
+  empty tag. Each verified the full ISO checksum, booted through UEFI, installed, rebooted and
+  passed core acceptance. Encrypted unlock, SSH restrictions and system/user aliases passed.
+  The synthetic adjacent GPT disk checksum was unchanged after install and acceptance.
+- The root-remount repair is proven: service success, Btrfs rootflags/compression preserved,
+  other fstab mounts/encryption arguments retained. The GPU unset-HOME error is absent.
+  No GRUB installation error was reproduced. All three final screenshots show the MadX welcome
+  desktop; interactive onboarding/use is not tested.
+- All five CI archives and three installer archives were downloaded and SHA-256/CRC verified.
+  Small image archives were verified; amd64 ISO verification ran in the installer jobs. The
+  full amd64 image ZIP digest remains GitHub-reported. Exact hashes are in VALIDATION_RESULTS.json.
 
-## Repairs ready for fresh remote validation
+Evidence documentation is committed locally after the milestone. Remote tested source remains
+`5b704d6`; check live Git state before a later push. A later documentation commit is not the source
+of the executed ISO. Do not rerun this completed repair merely because older historical records
+describe its earlier failures.
 
-CI 41000794337 at `c4300785cef44023c60c86d1623bbd0361eeeafd` completed with one failure on each
-native platform: the account parser test still expected one post-install script, although the root
-repair adds another. Linux system: 2,361 passed/one failed/two skips; macOS: 2,257/one/106. All 15 new
-root-mount/GPU cases and all 19 alias cases passed in both full suites. Both desktop suites,
-typechecks/builds, branding, secret scan and Hermes passed. The separate Linux alias job was skipped
-after the suite failed. The corrected test checks both posts, error handling and execution contexts.
-Its portable parser check, 23 focused tests, preparation fixtures and actionlint pass; full CI is next.
-Do not retry the unchanged failing revision or dispatch an image before the corrected revision passes.
+## Remaining MVP work, in order
 
-Code revision `21eda78b9f63c35da088090df3d6614d01af310f` includes `35fea98` (GPU HOME),
-`c5dfa69` (offline root-options migration) and `21eda78` (LF checkout rules). The migration verifies
-boot options before changing fstab, preserves other mounts/encryption arguments, and keeps the
-remount failure gate enabled. Existing systems are not automatically migrated; custom layouts
-remain unverified. No Hermes pin, release origin or host system configuration was changed.
+1. Resolve the installed Hermes validation gap explicitly. All guests installed
+   `78077b2b8f83ac7d9293d3269df7ef20e3a9a994` via existing upstream-main behavior; CI tests unchanged
+   pin `f97608f178d1ffeca59860195ab7da295f7c8e5f`. The command is available and retry-install unit
+   condition=false is expected, but model-backed chat, tools and approvals are unverified. Review
+   installation/ref handling and define the exact installed/tested revision before changing it;
+   do not silently switch revisions, use credentials or add paid infrastructure.
+2. Exercise interactive onboarding, desktop controls, host tools and provider recovery inside a
+   disposable VM. Inspect interactive installer branding and graphical boot/password prompts;
+   the unattended serial harness disables Plymouth for encrypted unlock and does not prove its UI.
+3. Validate upgrade and rollback from an existing upstream profile on disposable virtual disks,
+   comparing preferences, browser profiles, memories, plugins and documents before/after. The
+   root helper only handles fresh supported Btrfs installs; existing/custom layouts need coverage.
+   The configured dev registry origin is unpublished and rollback is null. Prepare an isolated
+   upgrade path within current boundaries; do not silently switch origin or publish images.
+4. Complete native package checks and remaining hardware/branding gates in REMAINING_ISSUES.md.
+   NVIDIA builds now pass; actual GPU/hardware and arm64 boot are unverified. An adjacent mock
+   Windows disk is not shared-ESP, Windows-boot or physical laptop certification.
 
-23 focused local tests passed, plus both actual workflow preparation fixtures, actionlint, branding
-and source parsing (79 Python, 44 Bash, six TOML). The wider Windows fixture run has 54 passes,
-201 failures and 28 skips. All failures are WinError 1314 (missing symlink privilege); representative
-unchanged fixtures reproduce it. These failures are documented, not counted as passes.
+For any substantive fix, run focused checks, review/commit on this branch, then use the established
+CI -> unpublished image -> isolated installer path with matching full source revisions. Stop at
+each remote run link and resume only on user instruction. Preserve all successful acceptance gates.
 
-## Next execution sequence
+The Windows fixture limitation is unchanged: 54 passes, 201 WinError 1314 failures and 28 skips
+in the wider local fixture run; representative baseline cases reproduce missing symlink privilege.
+These are not passed tests. Linux/macOS suites subsequently passed on their supported hosts.
 
-1. Review the final diff and clean tree; push only the authorized branch. Record the full new
-   HEAD and its triggered CI link, then stop. The docs commit after the code revision is part of
-   the source to validate. Check live Git state to determine whether this push already happened.
-2. On the user's next continuation, inspect that exact CI result and skips. Fix reproduced
-   failures on the same branch. Only after CI passes, dispatch image.yml with publish=false,
-   disks=true and that exact source revision. Report the link and stop.
-3. On continuation, verify the built image's provenance/checksums. Dispatch installer-test.yml
-   against that exact image run/source, account=madx-test, empty tag. Report its link and stop.
-4. On continuation, inspect real installer logs, rootflags, fstab, /sysroot mount options,
-   remount service, first reboot, screenshots and Hermes evidence. Do not claim repairs passed
-   until these new VMs actually execute.
-
-Remaining MVP gates include the repaired remount check, Hermes revision alignment and model chat,
-interactive desktop operation, update/rollback and profile integrity. NVIDIA remains blocked by
-missing upstream kernel modules; do not silently downgrade or change release origins.
-
-Authorization covers only this branch's pushes, CI, unpublished images and disposable UEFI VMs.
-No main merge, force push, tags, release, registry publication, paid infrastructure or new host
-software. Never touch host Windows partitions, EFI or firmware. Preserve compatibility identifiers
-and legal attribution. Do not begin LoRA, self-development or Phase 2 implementation.
+Phase 1 and a working agent MVP remain incomplete. Authorization covers this branch's pushes,
+CI, unpublished images and disposable UEFI VMs only. No main merge, force push, tags, release,
+registry publication, paid infrastructure or new host software. Never touch host Windows
+partitions, EFI or firmware. Preserve compatibility identifiers and legal attribution. Do not
+begin LoRA, self-development or Phase 2 implementation.
