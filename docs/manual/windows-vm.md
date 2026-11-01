@@ -16,7 +16,7 @@ machine: a Windows PC in a window, sharing a folder with you.
 Settings > Software > Windows > Install, or in a terminal:
 
 ```bash
-herald-os install windows
+madx install windows
 ```
 
 In a terminal it asks how much memory, how many cores and how much disk to give Windows; press
@@ -38,16 +38,16 @@ on the network: put files there to open them in Windows, and save there from Win
 back.
 
 ```bash
-herald-os windows status       # running, stopped or not installed
-herald-os windows stop         # shut it down (it starts again when you open it)
-herald-os windows start
-herald-os windows connect      # the same as opening it from Applications
+madx windows status       # running, stopped or not installed
+madx windows stop         # shut it down (it starts again when you open it)
+madx windows start
+madx windows connect      # the same as opening it from Applications
 ```
 
 ## Removing it
 
-`herald-os windows remove` (or Remove in Settings > Software) takes the virtual machine away but
-keeps its disk, so installing again picks up where you left off. `herald-os windows remove --purge`
+`madx windows remove` (or Remove in Settings > Software) takes the virtual machine away but
+keeps its disk, so installing again picks up where you left off. `madx windows remove --purge`
 deletes the disk too. `~/Windows` is never touched.
 
 ## Good to know

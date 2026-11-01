@@ -21,23 +21,23 @@ Windows needs virtualization). On a Mac the list is the coding agents and the lo
 | Web apps | Basecamp, Google Photos, Maps and Contacts, Zoom, Discord, Grok ([Web apps](web-apps.md)) |
 
 Each entry has **Install** or **Remove**, and **Open** for the ones that run in a terminal. From a
-terminal, `herald-os catalog list` shows the catalog (`--group gaming` for one group) and
-`herald-os install steam` or `herald-os remove steam` does the same as the buttons.
+terminal, `madx catalog list` shows the catalog (`--group gaming` for one group) and
+`madx install steam` or `madx remove steam` does the same as the buttons.
 
 ## Any other app
 
 Anything on [Flathub](https://flathub.org) installs too: Install > App… in the MadX Agent OS menu, or
-`herald-os install app obsidian` (a name or a Flatpak id such as `md.obsidian.Obsidian`), or ask
-"install Obsidian". `herald-os remove app obsidian` takes it out. On Fedora and Arch with MadX Agent OS
-as a package, `herald-os install app` uses the system's own packages when they have the app.
+`madx install app obsidian` (a name or a Flatpak id such as `md.obsidian.Obsidian`), or ask
+"install Obsidian". `madx remove app obsidian` takes it out. On Fedora and Arch with MadX Agent OS
+as a package, `madx install app` uses the system's own packages when they have the app.
 
 ## What comes installed
 
 Every MadX Agent OS Linux install starts with a curated set: Firefox, Files (Nautilus), Text Editor,
 LibreOffice, Loupe, Papers, Calculator, Calendar, VLC and developer tools; Obsidian, Spotify,
 LocalSend, VS Code and Signal from Flathub; and web apps for HEY, Google Calendar, Google Messages,
-WhatsApp, X, YouTube, ChatGPT and GitHub. `herald-os omakase list` shows it, and
-`herald-os omakase install` puts back anything you removed.
+WhatsApp, X, YouTube, ChatGPT and GitHub. `madx omakase list` shows it, and
+`madx omakase install` puts back anything you removed.
 
 ## How it installs
 

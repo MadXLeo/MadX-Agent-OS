@@ -10,7 +10,7 @@ mode: the same sessions, tools, memory and approval cards; only the audio path c
 | Global hotkey (`Alt+Space` by default) | Any app, while MadX Agent OS runs |
 | "Hey Hermes" wake word | Anywhere, when enabled in Settings > Voice |
 | Microphone button | Menu bar, Overview composer, Hermes composer, Applications overlay |
-| `herald-os voice [toggle\|start\|stop\|mute]`, `Mod+V` | Linux session |
+| `madx voice [toggle\|start\|stop\|mute]`, `Mod+V` | Linux session |
 
 While a conversation runs the orb sits at the bottom of the Hermes window: state (listening,
 thinking, speaking), captions, mute, "stop talking" and end. Say "stop", "that's all" or
@@ -105,7 +105,7 @@ catalogue under `apps/desktop/src/commands/`). Three things call it:
    screen `state`, `run` a command. Hermes uses it whenever you ask it to open, show, add, find or
    change something in the OS, and to show its work after its own memory / automation / file tools.
    Results (page, highlighted item, list data) flow back so it can answer precisely.
-3. **The command bar** (Cmd+K, group "Do") and the `herald-os os <id> [json]` CLI on Linux.
+3. **The command bar** (Cmd+K, group "Do") and the `madx os <id> [json]` CLI on Linux.
 
 You watch it happen: a caption at the top of the Hermes window names each action ("Remembered:
 …", "Paused Daily digest") with its origin (voice / Hermes), the page switches, and the touched

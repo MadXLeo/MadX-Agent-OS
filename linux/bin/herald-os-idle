@@ -50,7 +50,7 @@ case "${1:-status}" in
   stop) systemctl --user stop "$UNIT" 2>/dev/null || true ;;
   status) systemctl --user is-active "$UNIT" ;;
   *)
-    echo "usage: herald-os-idle start | stop | restart | status" >&2
+    echo "usage: madx-agent-os-idle start | stop | restart | status" >&2
     exit 2
     ;;
 esac

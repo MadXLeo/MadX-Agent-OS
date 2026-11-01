@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""MadX Agent OS from the release tarball (herald-os-<version>-linux-<arch>.tar.gz) unpacked in /opt/herald-os:
+"""MadX Agent OS from the release tarball (madx-agent-os-<version>-linux-<arch>.tar.gz) unpacked in /opt/herald-os:
 the pieces the Arch package lays out, and updates from the project's GitHub releases.
 
-  sudo herald-os-tarball install    the commands and session scripts in /usr/local/bin, MadX Agent OS on the
+  sudo madx-agent-os-tarball install    the commands and session scripts in /usr/local/bin, MadX Agent OS on the
                                     login screen (when niri is installed) and in the application menu, the
                                     update-check user units, chrome-sandbox setuid root; safe to re-run
-  sudo herald-os-tarball remove     take all of that out again (/opt/herald-os itself stays)
-  herald-os-tarball status          the version in /opt/herald-os and what is in place
-  herald-os-tarball check [--channel stable|edge]
+  sudo madx-agent-os-tarball remove     take all of that out again (/opt/herald-os itself stays)
+  madx-agent-os-tarball status          the version in /opt/herald-os and what is in place
+  madx-agent-os-tarball check [--channel stable|edge]
                                     print the version of a newer release and exit 0; exit 1 when up to
                                     date, 2 when this is not a tarball install, 3 when GitHub cannot be asked
-  sudo herald-os-tarball update [<version>]
+  sudo madx-agent-os-tarball update [<version>]
                                     install that release (by default the newest stable one) once its
                                     .sha256 matches; the version it replaces stays in /opt/herald-os.previous
-  sudo herald-os-tarball rollback   swap /opt/herald-os and /opt/herald-os.previous
+  sudo madx-agent-os-tarball rollback   swap /opt/herald-os and /opt/herald-os.previous
 
 A MadX Agent OS in /opt/herald-os that a package installed (herald-os-bin on Arch) is the package's: this
 leaves it alone. HERALD_OS_DESTDIR puts everything under another folder instead of / (a staged install).
@@ -208,9 +208,9 @@ def install(layout: Layout) -> int:
         print(f"  login screen  {layout.session_entry}")
     else:
         print("  login screen  not added: the full session needs niri (docs/LINUX.md lists what else it uses);")
-        print("                install it, then run sudo herald-os-tarball install again")
-    print(f"  app menu      {layout.app_entry} (herald-os-app)")
-    print("Next, once for every account that uses it: herald-os setup")
+        print("                install it, then run sudo madx-agent-os-tarball install again")
+    print(f"  app menu      {layout.app_entry} (madx-agent-os-app)")
+    print("Next, once for every account that uses it: madx setup")
     return 0
 
 
@@ -251,10 +251,10 @@ def status(layout: Layout) -> int:
     linked = sum(points_into(layout.bin / name, layout.app) for name in targets)
     print(f"  commands      {linked} of {len(targets)} linked in {layout.bin}")
     entry = next((path for path in layout.session_entries if path.exists()), None)
-    print(f"  login screen  {entry or 'not added (needs niri, then sudo herald-os-tarball install)'}")
+    print(f"  login screen  {entry or 'not added (needs niri, then sudo madx-agent-os-tarball install)'}")
     print(f"  app menu      {layout.app_entry if layout.app_entry.exists() else 'not added'}")
     if (layout.previous / "resources" / "app.asar").is_file():
-        print(f"  previous      {read_version(layout.previous) or '(unknown version)'} in {layout.previous} (herald-os rollback)")
+        print(f"  previous      {read_version(layout.previous) or '(unknown version)'} in {layout.previous} (madx rollback)")
     return 0
 
 
@@ -397,7 +397,7 @@ def put_in_place(layout: Layout, new: Path) -> Path:
     try:
         new.rename(layout.previous)
     except OSError as exc:
-        print(f"  the version it replaced stays in {new} ({exc.strerror}); herald-os rollback looks for it in {layout.previous}")
+        print(f"  the version it replaced stays in {new} ({exc.strerror}); madx rollback looks for it in {layout.previous}")
         return new
     return layout.previous
 

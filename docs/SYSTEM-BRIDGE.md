@@ -118,20 +118,20 @@ argument has one type whatever the action; the shell's commands take the bridge'
 - All three run behind the same gate as the rest of the table: authorized by tier, audited, and
   offered and run only in MadX Agent OS sessions.
 
-On MadX Agent OS Linux the same commands run from a terminal, through the shell like `herald-os
-canvas`: `herald-os docs read`, `herald-os docs write "## Next steps" --at end`, `herald-os docs
-write - --document ~/Documents/Report.docx < notes.md`, `herald-os docs save --to
-~/Documents/Report.docx`, `herald-os sheets read A1:D20`, `herald-os sheets write B7 "=SUM(B2:B6)"`,
-`herald-os sheets clean A1:D90 dedupe --header`, `herald-os slides from-doc
-~/Documents/Report.docx --notes`, `herald-os slides add-slide "Next steps" --body - < bullets.txt`,
-`herald-os slides notes 3 "Pause for questions"`, `herald-os slides move Risks last`, `herald-os
-slides theme midnight`, `herald-os slides pdf`. With no arguments they open the apps; `list` marks
+On MadX Agent OS Linux the same commands run from a terminal, through the shell like `madx
+canvas`: `madx docs read`, `madx docs write "## Next steps" --at end`, `madx docs
+write - --document ~/Documents/Report.docx < notes.md`, `madx docs save --to
+~/Documents/Report.docx`, `madx sheets read A1:D20`, `madx sheets write B7 "=SUM(B2:B6)"`,
+`madx sheets clean A1:D90 dedupe --header`, `madx slides from-doc
+~/Documents/Report.docx --notes`, `madx slides add-slide "Next steps" --body - < bullets.txt`,
+`madx slides notes 3 "Pause for questions"`, `madx slides move Risks last`, `madx
+slides theme midnight`, `madx slides pdf`. With no arguments they open the apps; `list` marks
 the one in front with `*`, `docs read` prints the outline and then the content, `sheets read`
 prints tab-separated rows of what the cells show, `slides read` prints each slide's title, layout,
-text and notes, and `--json` prints a command's data instead. `herald-os commands` lists every
-form. The depth commands have no forms of their own: `herald-os os <command.id> [json args]` runs
-any of them, as in `herald-os os sheets.insertChart '{"range": "A1:B13", "kind": "line"}'` or
-`herald-os os docs.insertToc '{"levels": 2}'`.
+text and notes, and `--json` prints a command's data instead. `madx commands` lists every
+form. The depth commands have no forms of their own: `madx os <command.id> [json args]` runs
+any of them, as in `madx os sheets.insertChart '{"range": "A1:B13", "kind": "line"}'` or
+`madx os docs.insertToc '{"levels": 2}'`.
 
 ## MadX Calc
 
@@ -163,12 +163,12 @@ day's rates first and a plot may read a whole workbook. Arguments the action doe
   last rates keep answering). Every answer that used them carries `ratesDate`, the ECB's date for
   them, and the line says "ECB reference rates of 2026-10-15".
 
-On MadX Agent OS Linux the same commands run from a terminal: `herald-os calc "20% of 84.50"` prints
+On MadX Agent OS Linux the same commands run from a terminal: `madx calc "20% of 84.50"` prints
 the answer as MadX shows it, `--steps` adds the working (and the rates' date) and `--json` prints
-the command's data; `herald-os calc - < budget.txt` reads a note from stdin and prints each line
-with its answer, `herald-os calc convert 5 km miles` converts (and
-`herald-os calc convert 9am Sydney London` takes a time of day from one place to another),
-`herald-os calc history mortgage` finds past calculations, and `herald-os calc open` opens MadX
+the command's data; `madx calc - < budget.txt` reads a note from stdin and prints each line
+with its answer, `madx calc convert 5 km miles` converts (and
+`madx calc convert 9am Sydney London` takes a time of day from one place to another),
+`madx calc history mortgage` finds past calculations, and `madx calc open` opens MadX
 Calc. Quote a sum that holds `*` or brackets, which the shell would read itself.
 
 ## Where the tools run
@@ -271,7 +271,7 @@ for shell commands, because it is the same gate.
 ## Enabling
 
 Three setups make the same changes: `npm run bootstrap` for a checkout, the app's first start for a
-packaged build, and `herald-os setup` for the Linux packages. Each links the plugin into
+packaged build, and `madx setup` for the Linux packages. Each links the plugin into
 `$HERMES_HOME/plugins/herald-os-bridge`, then runs `hermes plugins enable herald-os-bridge`,
 `hermes tools enable herald_os` (a saved platform toolset list is authoritative upstream), and
 `hermes config set tools.tool_search.enabled off` so the tools are directly callable rather than
@@ -298,7 +298,7 @@ MadX Agent OS runs on the person's own Hermes, so these changes reach Hermes's o
 The record of Tool Search's earlier value is written once, before the first change, by whichever
 setup makes it; setups before it existed kept none.
 
-**Undo.** `herald-os setup --undo` turns the toolset off while Hermes still knows it, then the
+**Undo.** `madx setup --undo` turns the toolset off while Hermes still knows it, then the
 plugin, puts Tool Search back to the recorded value when it is still off (to Hermes's default, `auto`,
 when there is no record), removes the link, and writes the app's `bridge-enabled` marker so the app
 does not set it all up again. By hand, on macOS:
@@ -314,7 +314,7 @@ touch ~/.hermes/herald-os/bridge-enabled
 What stays: the `cli` toolset list remains an explicit saved list, and the plugin is listed under
 `plugins.disabled`. `hermes config set display.skin default` brings back Hermes's own skin, and
 `hermes tools` or Settings > Voice picks the speech providers. To set the bridge up again, run
-`herald-os setup`, or on macOS delete `~/.hermes/herald-os/bridge-enabled` and start MadX Agent OS.
+`madx setup`, or on macOS delete `~/.hermes/herald-os/bridge-enabled` and start MadX Agent OS.
 
 ## Protected paths
 

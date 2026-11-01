@@ -31,4 +31,4 @@ enable = ["org.fedoraproject.Anaconda.Modules.Localization", "org.fedoraproject.
 [customizations.iso]
 volume_id = "MADX_AGENT_OS"
 application_id = "MadX Agent OS"
-publisher = "MadXCore"
+publisher = "MADXCORE"

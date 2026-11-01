@@ -16,8 +16,8 @@ another one, turn it on with your public key (the contents of `~/.ssh/id_ed25519
 computer), or the keys you keep on GitHub:
 
 ```bash
-herald-os setup ssh --key 'ssh-ed25519 AAAA… you@laptop'
-herald-os setup ssh --github your-github-name
+madx setup ssh --key 'ssh-ed25519 AAAA… you@laptop'
+madx setup ssh --github your-github-name
 ```
 
 It shows each key's fingerprint (`ssh-keygen -lf`) before adding it to `~/.ssh/authorized_keys`
@@ -55,8 +55,8 @@ what it put back; if it could not put everything back, it says so and what to ch
 warns about anything that keeps SSH from working.
 
 ```bash
-herald-os setup ssh --status    # whether SSH is on, how you sign in, the firewall, sessions
-herald-os setup ssh --off       # stop sshd, remove its settings and rate limit, close the firewall
+madx setup ssh --status    # whether SSH is on, how you sign in, the firewall, sessions
+madx setup ssh --off       # stop sshd, remove its settings and rate limit, close the firewall
 ```
 
 `--off` asks, in a terminal, whether to end the SSH sessions that are still open (`--end-sessions`
@@ -70,11 +70,11 @@ For installing several computers with SSH on from the start, see
 ## Passwords, fingerprints and security keys
 
 Your account's password unlocks the lock screen and approves administrator tasks. Set or change it
-with `herald-os password` in a terminal. A fingerprint reader or a security key can do the same:
+with `madx password` in a terminal. A fingerprint reader or a security key can do the same:
 
 ```bash
-herald-os setup fingerprint     # enrol a finger, for the lock screen and sudo
-herald-os setup fido2           # a security key such as a YubiKey
+madx setup fingerprint     # enrol a finger, for the lock screen and sudo
+madx setup fido2           # a security key such as a YubiKey
 ```
 
 Each walks you through it in the terminal, and turns it on for the lock screen and `sudo`. On
@@ -88,7 +88,7 @@ cannot be turned on afterwards without installing again, so decide at install ti
 [Installing on a PC](install-pc.md). The disk password is typed before Bluetooth starts, so keep a
 wired keyboard (or one with a 2.4 GHz receiver) for it.
 
-`herald-os password --disk` changes the disk password; it asks for the current one first. When the
+`madx password --disk` changes the disk password; it asks for the current one first. When the
 computer passes to someone else, setup asks the new owner for their own, and the previous one stops
 working ([Setting it up for someone else, and reset](setup-and-reset.md)). The disk password cannot
 be recovered: without it, the files are gone.
@@ -101,7 +101,7 @@ Secure Boot can stay on: MadX Agent OS starts through Fedora's signed shim.
 
 Updates come from the project's image on GitHub's container registry, over an encrypted connection.
 The images are signed, but MadX Agent OS does not check those signatures yet; until it does, updates are
-trusted as far as GitHub is. Firmware updates come through fwupd: `herald-os firmware check`.
+trusted as far as GitHub is. Firmware updates come through fwupd: `madx firmware check`.
 
 ## Still to come
 

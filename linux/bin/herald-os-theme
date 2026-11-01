@@ -6,7 +6,7 @@ shell (theme + accent preference), niri (borders, backdrop), swaylock, GTK 3/4 a
 rescue terminal, and the wallpaper. Applied atomically: every file is written before the shell is
 told, and the previous theme is restored if a step fails.
 
-  herald-os-theme list | current | set <name> | show <name>
+  madx-agent-os-theme list | current | set <name> | show <name>
 """
 
 from __future__ import annotations

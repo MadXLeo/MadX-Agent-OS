@@ -3,7 +3,7 @@ export const PRODUCT = {
   "schemaVersion": 1,
   "name": "MadX Agent OS",
   "shortName": "MadX OS",
-  "ecosystem": "MadXCore",
+  "ecosystem": "MADXCORE",
   "version": "0.1.0-alpha",
   "slug": "madx-agent-os",
   "repository": "https://github.com/MadXLeo/MadX-Agent-OS",
@@ -26,7 +26,9 @@ export const PRODUCT = {
     "sheets": "MadX Sheets",
     "slides": "MadX Slides",
     "calc": "MadX Calc",
-    "office": "MadX Office"
+    "office": "MadX Office",
+    "home": "MadX Home",
+    "settings": "MadX Settings"
   },
   "appearance": {
     "theme": "graphite",
@@ -50,5 +52,6 @@ export const PRODUCT = {
       "HERALD_OS_",
       "HERMES_OS_"
     ]
-  }
+  },
+  "command": "madx"
 } as const

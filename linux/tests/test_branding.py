@@ -47,6 +47,7 @@ def test_alias_plan_shares_implementation_without_duplicate_units(tmp_path, layo
     put(tmp_path, "usr/lib/systemd/user/herald-os-update-check.timer")
     plan = identity.alias_plan(tmp_path, layout)
     assert plan[tmp_path / prefix / "bin/madx-agent-os"] == "herald-os"
+    assert plan[tmp_path / prefix / "bin/madx"] == "herald-os"
     assert plan[tmp_path / "usr/lib/systemd/system/madx-agent-os-firstboot.service"] == "herald-os-firstboot.service"
     assert plan[tmp_path / "usr/lib/systemd/user/madx-agent-os-update-check.timer"] == "herald-os-update-check.timer"
     assert not any(".wants" in str(path) for path in plan)
@@ -66,14 +67,28 @@ def test_conflict_prevents_every_write_and_preserves_existing_data(tmp_path):
 def test_alias_is_idempotent_and_removes_only_its_own_links(tmp_path):
     can_symlink(tmp_path)
     old = put(tmp_path, "usr/bin/herald-os", "working command")
-    assert identity.install(tmp_path, "image") == 1
+    assert identity.install(tmp_path, "image") == 2
     alias = old.with_name("madx-agent-os")
     assert os.readlink(alias) == "herald-os"
     assert alias.read_text() == "working command"
+    primary = old.with_name("madx")
+    assert primary.read_text() == "working command"
+    assert os.readlink(primary) == "herald-os"
     assert identity.install(tmp_path, "image") == 0
-    assert identity.remove(tmp_path, "image") == 1
+    assert identity.remove(tmp_path, "image") == 2
     assert old.read_text() == "working command"
     assert not alias.exists()
+    assert not primary.exists()
+
+
+def test_primary_command_collision_refuses_all_alias_changes(tmp_path):
+    old = put(tmp_path, "usr/bin/herald-os", "working implementation")
+    conflict = put(tmp_path, "usr/bin/madx", "user-owned command")
+    with pytest.raises(ValueError, match="existing file"):
+        identity.install(tmp_path, "image")
+    assert conflict.read_text() == "user-owned command"
+    assert old.read_text() == "working implementation"
+    assert not (tmp_path / "usr/bin/madx-agent-os").exists()
 
 
 def test_install_rolls_back_new_links_after_io_failure(tmp_path, monkeypatch):
@@ -140,7 +155,7 @@ def test_assets_and_distribution_resources_are_shipped():
 
 def test_iso_identity_preserves_the_interactive_encrypted_installer():
     config = tomllib.loads((ROOT / "linux/image/iso.toml").read_text(encoding="utf-8"))["customizations"]
-    assert config["iso"] == {"volume_id": "MADX_AGENT_OS", "application_id": "MadX Agent OS", "publisher": "MadXCore"}
+    assert config["iso"] == {"volume_id": "MADX_AGENT_OS", "application_id": "MadX Agent OS", "publisher": "MADXCORE"}
     kickstart = config["installer"]["kickstart"]["contents"]
     assert "autopart --type=btrfs --encrypted" in kickstart
     assert not any(command in kickstart for command in ("clearpart", "ignoredisk", "bootloader", "zerombr"))

@@ -105,14 +105,14 @@ them all. `Cmd` on a Mac is `Ctrl` on MadX Agent OS Linux.
 
 ## Omarchy keys (MadX Agent OS Linux)
 
-Coming from Omarchy? Settings > General > Keymap, or `herald-os keymap omarchy`, makes `Super+C`,
+Coming from Omarchy? Settings > General > Keymap, or `madx keymap omarchy`, makes `Super+C`,
 `Super+X` and `Super+V` copy, cut and paste in every app, terminals included. Talking to Hermes
-moves to `Super+Shift+V` and centring a column to `Super+Ctrl+C`; `herald-os keymap herald` switches
+moves to `Super+Shift+V` and centring a column to `Super+Ctrl+C`; `madx keymap herald` switches
 back.
 
 ## Your own shortcuts
 
 On MadX Agent OS Linux, add binds to `~/.config/niri/local.kdl`, which MadX Agent OS never overwrites; any
-`herald-os` command can be a bind, and binding a key MadX Agent OS already uses replaces it.
+`madx` command can be a bind, and binding a key MadX Agent OS already uses replaces it.
 [Make it yours](make-it-yours.md#keyboard-shortcuts) has examples, including switching a key off,
 and Hermes can write them for you: "add a shortcut that opens Obsidian".

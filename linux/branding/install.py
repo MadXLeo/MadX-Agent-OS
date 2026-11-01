@@ -27,6 +27,10 @@ def alias_plan(root: Path, layout: str) -> dict[Path, str]:
         old = root / prefix / "bin" / name
         if old.exists() or old.is_symlink():
             paths[old.with_name(name.replace("herald-os", PRODUCT["slug"], 1))] = name
+    # One implementation for every entry point. Preflight also protects a user-owned `madx`.
+    command = root / prefix / "bin/herald-os"
+    if command.exists() or command.is_symlink():
+        paths[command.with_name(PRODUCT["command"])] = command.name
     shares = [(f"{prefix}/share/{PRODUCT['slug']}", "herald-os-linux" if layout == "dev" else "herald-os"),
               (f"opt/{PRODUCT['slug']}", "herald-os")]
     for relative, target in shares:

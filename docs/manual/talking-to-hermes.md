@@ -51,7 +51,7 @@ the keyboard returns to where it was. Screen readers announce each card once as 
 Hermes asks, how many requests are waiting, and which card the keys go to.
 
 Your keys, the command bar and voice can move the keyboard to a card; Hermes's own tools and
-plugins cannot. On MadX Agent OS Linux the key works through `herald-os os requests.focus`, so any
+plugins cannot. On MadX Agent OS Linux the key works through `madx os requests.focus`, so any
 program running as you can call that too, including a command Hermes runs in a terminal (Hermes's
 approval settings decide whether it may), at most once a second. It brings the Hermes window
 forward when that window does not have the keyboard, once per request and again for the same

@@ -779,7 +779,7 @@ def test_setup_offers_to_install_hermes_even_without_a_terminal(no_hermes, monke
     with pytest.raises(SystemExit) as stopped:
         cli.setup([])
     assert stopped.value.code == 1 and installs == []
-    assert "`herald-os setup --yes` installs it and then sets it up" in capsys.readouterr().err
+    assert "`madx setup --yes` installs it and then sets it up" in capsys.readouterr().err
     with pytest.raises(SystemExit):
         cli.setup(["--yes"])
     assert installs == [["bash", "-c", f"curl -fsSL {cli.HERMES_INSTALLER} | bash"]]
@@ -792,7 +792,7 @@ def test_setup_leaves_the_image_s_install_to_the_service_already_at_it(no_hermes
         cli.setup(["--yes"])
     assert stopped.value.code == 1 and installs == []
     err = capsys.readouterr().err
-    assert "herald-os-hermes.service installs it once this computer is online" in err and "(offline now)" in err
+    assert "The MadX Hermes service installs it once this computer is online" in err and "(offline now)" in err
 
 
 def test_setup_leaves_a_foreign_plugin_folder_alone(tmp_path, monkeypatch):

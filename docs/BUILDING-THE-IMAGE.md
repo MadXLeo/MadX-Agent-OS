@@ -21,7 +21,7 @@ authorize installing to the Windows host or changing its disks, EFI entries or f
 | [`linux/omakase/flatpaks.txt`](../linux/omakase/flatpaks.txt), [`webapps.txt`](../linux/omakase/webapps.txt) | The Flathub apps and web apps. Not in the image: they are installed for the session user on the first boot and the first login ([Flatpaks](#flatpaks)). |
 | [`linux/image/firstboot.sh`](../linux/image/firstboot.sh) and the `herald-os-*.service` units | The per-machine half, run on the installed system: the session user, its home folder and Hermes Agent, then the omakase Flatpaks; also Hermes once the computer is online, reset, and the login screen on a switched system. |
 | [`linux/image/kargs.toml`](../linux/image/kargs.toml) | Kernel arguments for every boot (`rhgb quiet plymouth.ignore-serial-consoles`), installed as `/usr/lib/bootc/kargs.d/10-herald-os.toml`. |
-| [`linux/image/firewall-zone.xml`](../linux/image/firewall-zone.xml) | The `herald-os` firewalld zone: LocalSend and mDNS in, nothing else. |
+| [`linux/image/firewall-zone.xml`](../linux/image/firewall-zone.xml) | The compatibility `herald-os` firewalld zone: LocalSend and mDNS in, nothing else. |
 | [`linux/plymouth/herald-os/`](../linux/plymouth/herald-os/) | The boot splash. |
 | [`linux/image/disk.toml`](../linux/image/disk.toml), [`iso.toml`](../linux/image/iso.toml) | bootc-image-builder settings for the VM disk (`qcow2`, a root of at least 40 GiB) and the installer ISO (`anaconda-iso`). |
 | [`linux/vm/package-disk.sh`](../linux/vm/package-disk.sh) | Names, compresses, converts and checksums bootc-image-builder's output for a release. |
@@ -243,22 +243,22 @@ systemctl reboot
 ```
 
 The new image starts on the next restart, and the one before stays in the boot menu:
-`herald-os rollback` (or `sudo bootc rollback`) makes it the default again. A machine that already
+`madx rollback` (or `sudo bootc rollback`) makes it the default again. A machine that already
 ran MadX Agent OS keeps its account and Hermes, since the first-boot units run once per machine
 (`/var/lib/herald-os/firstboot-done`); on a system switched from another bootc system, the first
 boot does more, as in [Switching a bootc system to MadX Agent OS](LINUX.md#switching-a-bootc-system-to-madx-agent-os).
 
 Afterwards, on your build:
 
-- `herald-os update` runs `bootc upgrade` (or `rpm-ostree upgrade` when packages are layered),
+- `madx update` runs `bootc upgrade` (or `rpm-ostree upgrade` when packages are layered),
   which follows the image `bootc status` shows: rebuild or push the same tag, then update.
-- `herald-os channel stable` and `herald-os channel edge` need a registry image. They keep the
+- `madx channel stable` and `madx channel edge` need a registry image. They keep the
   repository of the image `bootc status` shows, change only the tag and run `bootc switch` with
   bootc's default transport, the registry, so they work only where `stable` and `edge` tags exist
   there. After `bootc switch --transport containers-storage`, the channel switch looks for
   `localhost/herald-os:<channel>` in a registry, fails and leaves the channel as it was; switch
   back to a registry image with `bootc switch` first.
-- Keep `IMAGE_ID=herald-os`. `herald-os` and `herald-os-update` tell the MadX Agent OS image from other
+- Keep `IMAGE_ID=madx-agent-os` (legacy `herald-os` remains recognized). `madx` and `herald-os-update` tell the MadX Agent OS image from other
   bootc systems by that line, and leave other systems' updates and rollbacks alone.
 
 ### In a virtual machine
@@ -336,7 +336,7 @@ What the image carries:
   ([above](#switching-a-running-system)).
 
 The logo and name in About and the lock-screen picture are per account, not part of the image:
-Settings > About > Branding or `herald-os branding set`
+Settings > About > Branding or `madx branding set`
 ([Branding](manual/make-it-yours.md#branding) in the manual).
 
 ### Signing

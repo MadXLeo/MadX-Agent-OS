@@ -16,7 +16,7 @@ MadX Agent OS is running but something misbehaves.
   route to host" (Errno 65, in `~/.hermes/logs/agent.log`). Hermes Desktop uses a Hermes that is
   already running, so if you open it while MadX Agent OS runs, it uses MadX Agent OS's and fails the same way.
 - **Hermes runs shell commands instead of its system tools.** The system bridge is not loaded:
-  run `npm run bootstrap` in your MadX Agent OS checkout (or `herald-os setup` from a package), then
+  run `npm run bootstrap` in your MadX Agent OS checkout (or `madx setup` from a package), then
   restart MadX Agent OS. `hermes plugins list` should show `herald-os-bridge` as enabled.
 - **An action was refused.** Protected folders (`~/.ssh`, keychains, Hermes's credentials) are
   always refused, and destructive actions ask every time. Settings > Privacy shows the rules and the
@@ -37,7 +37,7 @@ MadX Agent OS is running but something misbehaves.
 - **A theme does not change everything.** On a Mac, MadX Agent OS recolours itself and Hermes's skin;
   macOS apps keep their own look. On MadX Agent OS Linux, GTK apps pick up a new theme when they next
   start, and Obsidian needs its own theme setting.
-- **Hermes's command line stopped following the theme.** MadX Agent OS only selects its `herald-os`
+- **Hermes's command line stopped following the theme.** MadX Agent OS only selects its compatibility `herald-os`
   skin when you have not picked another one. Run `/skin herald-os` in Hermes to go back to it.
 - **Something is unreadable in a light theme.** Switch back with "use the ocean theme" and tell us
   which screen it was.
@@ -46,7 +46,7 @@ MadX Agent OS is running but something misbehaves.
 
 - **I never get crash offers.** Settings > Notifications > Crash help must be on, and the program
   must not be muted there. On Linux, crashes are read from systemd-coredump through `journalctl`;
-  `herald-os crash list` shows what it sees.
+  `madx crash list` shows what it sees.
 - **The same program keeps crashing.** MadX Agent OS offers help once every ten minutes per program;
   mute it from the notification if you do not need the offers.
 - **macOS shows no notifications from MadX Agent OS.** macOS only delivers notifications from signed
@@ -71,11 +71,11 @@ MadX Agent OS is running but something misbehaves.
 ### An update went wrong
 
 The version before stays in the boot menu. If the computer still starts, choose Update > Go back to
-the previous version in the MadX Agent OS menu (`Super+M`), or run `herald-os rollback`, and restart. If
+the previous version in the MadX Agent OS menu (`Super+M`), or run `madx rollback`, and restart. If
 it does not start, or the desktop never appears, pick the previous entry in the boot menu at
-power-on; once it is running, `herald-os rollback` makes it the default. Your files are not touched
+power-on; once it is running, `madx rollback` makes it the default. Your files are not touched
 either way. Then [tell us](https://github.com/MadXLeo/MadX-Agent-OS/issues) what broke, with the
-output of `herald-os debug`. On the tarball, `herald-os rollback` swaps back to
+output of `madx debug`. On the tarball, `madx rollback` swaps back to
 `/opt/herald-os.previous` at the next login.
 
 ### Locked out of your account
@@ -95,21 +95,21 @@ output of `herald-os debug`. On the tarball, `herald-os rollback` swaps back to
   password; `systemctl default` then carries on starting. On an encrypted disk, the disk password is
   still needed first, and it cannot be recovered: without it, the files are gone.
 - **The screen will not lock at all.** Your account has no password yet: set one with
-  `herald-os password`.
+  `madx password`.
 
 ### Wi-Fi, Bluetooth, sound or the touchpad stopped working
 
 Before you restart the computer, restart only the part that stopped: System > Fix in the MadX Agent OS
 menu (`Super+M`), Restart at the bottom of the Wi-Fi, Bluetooth or Sound panel, or in a terminal:
 
-- `herald-os restart wifi` lifts an airplane-mode block (`rfkill`), turns networking and the Wi-Fi
+- `madx restart wifi` lifts an airplane-mode block (`rfkill`), turns networking and the Wi-Fi
   radio back on, and looks for networks again.
-- `herald-os restart bluetooth` lifts the block and turns the Bluetooth adapter back on: try it
+- `madx restart bluetooth` lifts the block and turns the Bluetooth adapter back on: try it
   when a headset will not reconnect.
-- `herald-os restart sound` restarts PipeWire, its PulseAudio server and WirePlumber, and forces
+- `madx restart sound` restarts PipeWire, its PulseAudio server and WirePlumber, and forces
   them down first if they are stuck: try it when the sound vanished after unplugging a monitor or a
   headset.
-- `herald-os restart touchpad` rebinds the touchpad's driver (`i2c_hid_acpi`, or reloads
+- `madx restart touchpad` rebinds the touchpad's driver (`i2c_hid_acpi`, or reloads
   `intel_quicki2c`), for a touchpad that went dead after waking up. It needs administrator rights,
   so it asks for your password; run it in a terminal if the menu cannot ask.
 
@@ -123,7 +123,7 @@ further.
    `rfkill unblock wifi` lifts a software block.
 3. `nmcli device status` should list the Wi-Fi device. If it is missing, the computer may need
    firmware MadX Agent OS does not have yet (`sudo dmesg | grep -i firmware` names the file it looked
-   for); `herald-os debug` and the output of `lspci -nn` (or `lsusb` for a USB adapter) help a bug
+   for); `madx debug` and the output of `lspci -nn` (or `lsusb` for a USB adapter) help a bug
    report.
 4. `sudo systemctl restart NetworkManager` restarts the network service.
 
@@ -143,7 +143,7 @@ further.
 3. A Bluetooth headset that plays but will not use its microphone (or the other way round) can be
    switched in the Sound panel by choosing it as the input or the output.
 4. If the Sound panel lists only "Dummy Output", the sound chip did not start:
-   `sudo dmesg | grep -i -e sof -e firmware` shows why, and helps a bug report with `herald-os debug`.
+   `sudo dmesg | grep -i -e sof -e firmware` shows why, and helps a bug report with `madx debug`.
 
 ### Local models do not use the NVIDIA card
 
@@ -172,6 +172,6 @@ there: it needs a 2 GiB `/boot` ([Space in /boot](../LINUX.md#the-nvidia-image))
 
 ## Collecting details for a bug report
 
-On MadX Agent OS Linux, `herald-os debug` prints the versions and the last lines of the logs. On a Mac,
+On MadX Agent OS Linux, `madx debug` prints the versions and the last lines of the logs. On a Mac,
 attach the end of `~/.hermes/logs/herald-os.log`. Report security problems privately, as described
 in [SECURITY.md](../../SECURITY.md).

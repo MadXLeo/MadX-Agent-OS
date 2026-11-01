@@ -188,10 +188,22 @@ def test_installer_accepts_only_the_requested_full_image_revision():
 
 
 def test_empty_image_cannot_pass_a_source_only_check(tmp_path):
-    result = image.inspect(tmp_path, {"slug": "madx-agent-os", "version": "0.1.0-alpha"}, {"files": {}})
+    result = image.inspect(tmp_path, {"slug": "madx-agent-os", "command": "madx", "version": "0.1.0-alpha"}, {"files": {}})
     assert not result["passed"]
     assert "no kernel/initramfs pair" in result["failures"]
     assert "MadX image identity missing" in result["failures"]
+    assert "wrong primary command alias: madx" in result["failures"]
+
+
+def test_image_probe_rejects_a_primary_alias_pointing_to_a_different_program(tmp_path, monkeypatch):
+    # Simulate link metadata portably; no Windows symlink permission is needed for this check.
+    primary = tmp_path / "usr/bin/madx"
+    monkeypatch.setattr(Path, "is_symlink", lambda path: path == primary)
+    monkeypatch.setattr(image.os, "readlink", lambda path: "unrelated-program")
+    product = {"slug": "madx-agent-os", "command": "madx", "version": "0.1.0-alpha"}
+    assert "wrong primary command alias: madx" in image.inspect(tmp_path, product, {"files": {}})["failures"]
+    monkeypatch.setattr(image.os, "readlink", lambda path: "herald-os")
+    assert "wrong primary command alias: madx" not in image.inspect(tmp_path, product, {"files": {}})["failures"]
 
 
 def test_runtime_smoke_does_not_inherit_credentials_or_profile_markers(monkeypatch, tmp_path):

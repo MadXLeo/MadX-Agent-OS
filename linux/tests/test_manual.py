@@ -3,7 +3,10 @@
 import importlib.machinery
 import importlib.util
 import re
+import signal
+import sys
 from pathlib import Path
+from types import ModuleType
 
 import pytest
 
@@ -13,14 +16,22 @@ CHAPTERS = sorted(MANUAL.glob("*.md"))
 # Pages outside the manual that link into it.
 LINKING_PAGES = [*CHAPTERS, ROOT / "docs" / "LINUX.md", ROOT / "README.md"]
 
-_LOADER = importlib.machinery.SourceFileLoader("herald_os_cli_manual", str(ROOT / "linux" / "bin" / "herald-os"))
-_SPEC = importlib.util.spec_from_loader("herald_os_cli_manual", _LOADER)
-cli = importlib.util.module_from_spec(_SPEC)
-_LOADER.exec_module(cli)
+@pytest.fixture
+def cli(monkeypatch, tmp_path):
+    # These tests only inspect command metadata/bindings; they never execute Unix operations.
+    if sys.platform == "win32":
+        monkeypatch.setitem(sys.modules, "pwd", ModuleType("pwd"))
+        monkeypatch.setattr(signal, "SIGHUP", 1, raising=False)
+    monkeypatch.setenv("XDG_RUNTIME_DIR", str(tmp_path))
+    loader = importlib.machinery.SourceFileLoader("herald_os_cli_manual", str(ROOT / "linux" / "bin" / "herald-os"))
+    spec = importlib.util.spec_from_loader(loader.name, loader)
+    module = importlib.util.module_from_spec(spec)
+    loader.exec_module(module)
+    return module
 
 LINK = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 CODE_SPAN = re.compile(r"(`+)(.+?)\1")
-COMMAND = re.compile(r"(?<![\w/-])herald-os ([a-z][a-z0-9-]*)(?: ([a-z][a-z0-9-]*))?")
+COMMAND = re.compile(r"(?<![\w/-])(?:madx|madx-agent-os|herald-os) ([a-z][a-z0-9-]*)(?: ([a-z][a-z0-9-]*))?")
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
 
 
@@ -78,7 +89,7 @@ def normalise(combo: str) -> str:
     return "+".join(sorted(MODIFIERS[mod.lower()] for mod in mods) + [key])
 
 
-def omarchy_binds() -> set[str]:
+def omarchy_binds(cli) -> set[str]:
     """Keys `herald-os omarchy install` writes into Hyprland, and the ones `keymap omarchy` adds to niri."""
     hyprland = {normalise(combo) for combo in re.findall(r'o\.bind\("([^"]+)"', cli.HYPR_LUA_BINDS)}
     keymap = {normalise(key) for key in (*cli.OMARCHY_BINDS, *cli.OMARCHY_MOVES.values())}
@@ -144,7 +155,7 @@ def test_slugs_follow_github():
     assert slug("Setting it up for someone else, and reset") == "setting-it-up-for-someone-else-and-reset"
 
 
-def test_every_herald_os_command_in_the_manual_exists():
+def test_every_public_command_in_the_manual_exists(cli):
     choices = {
         "page": set(cli.COMMANDS["page"].split(": ", 1)[1].split()),
         "panel": set(re.search(r"panel ([\w|]+)", cli.COMMANDS["panel"]).group(1).split("|")),
@@ -193,7 +204,7 @@ def catalog_flags() -> set[str]:
     return set(re.findall(r'"(--[a-z][a-z0-9-]*)"', (ROOT / "linux" / "bin" / "herald-os-catalog").read_text()))
 
 
-def test_every_flag_the_manual_gives_a_command_is_in_its_help():
+def test_every_flag_the_manual_gives_a_command_is_in_its_help(cli):
     from_catalog = catalog_flags()
     unknown = []
     for page in CHAPTERS:
@@ -209,29 +220,30 @@ def test_every_flag_the_manual_gives_a_command_is_in_its_help():
     assert unknown == []
 
 
-def test_flags_are_read_per_command_line():
-    assert command_flags("herald-os update --check") == [("update", "--check")]
-    assert command_flags("herald-os weather location --set Melbourne") == [("weather", "--set")]
-    assert command_flags("herald-os setup && makepkg --skipchecksums") == []
-    assert command_flags("herald-os-tarball install --force") == []
+@pytest.mark.parametrize("command", ["madx", "madx-agent-os", "herald-os"])
+def test_flags_are_read_per_command_line(command):
+    assert command_flags(f"{command} update --check") == [("update", "--check")]
+    assert command_flags(f"{command} weather location --set Melbourne") == [("weather", "--set")]
+    assert command_flags(f"{command} setup && makepkg --skipchecksums") == []
+    assert command_flags(f"{command}-tarball install --force") == []
     assert {"--purge", "--group", "--json"} <= catalog_flags()
     found = {pair for page in CHAPTERS for segment in code_segments(page.read_text()) for pair in command_flags(segment)}
     assert {("update", "--check"), ("windows", "--purge"), ("capture", "--edit"), ("setup", "--undo"), ("weather", "--set")} <= found
 
 
-def test_the_manual_names_commands_the_cli_has():
+def test_the_manual_names_commands_the_cli_has(cli):
     assert {"page", "panel", "toggle", "omarchy", "keymap"} <= set(cli.COMMANDS)
     found = {command for page in CHAPTERS for command, _ in COMMAND.findall(page.read_text())}
     assert {"update", "rollback", "channel", "reset", "install", "windows", "omarchy", "restart"} <= found
 
 
-def test_every_linux_hotkey_in_the_manual_is_bound():
-    bound = niri_binds() | omarchy_binds()
+def test_every_linux_hotkey_in_the_manual_is_bound(cli):
+    bound = niri_binds() | omarchy_binds(cli)
     missing = [f"{page.name}: {combo}" for page in CHAPTERS for combo in manual_hotkeys(page) if normalise(combo) not in bound]
     assert missing == []
 
 
-def test_hotkey_names_normalise():
+def test_hotkey_names_normalise(cli):
     assert normalise("Super+Ctrl+,") == normalise("Mod+Ctrl+Comma")
     assert normalise("Super+`") == normalise("Mod+Grave")
     assert normalise("Super+[") == normalise("Mod+BracketLeft")
@@ -239,5 +251,5 @@ def test_hotkey_names_normalise():
     assert normalise("SUPER + ALT + H") == normalise("Super+Alt+H")
     assert normalise("Super+Shift+Space") != normalise("Super+Space")
     assert "Ctrl+Super+X" in niri_binds()
-    assert normalise("Super+Alt+M") in omarchy_binds()
-    assert normalise("Super+Shift+V") in omarchy_binds()
+    assert normalise("Super+Alt+M") in omarchy_binds(cli)
+    assert normalise("Super+Shift+V") in omarchy_binds(cli)

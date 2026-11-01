@@ -12,7 +12,7 @@ This page is about how MadX Agent OS Linux is built and how to develop it. For u
 machine](manual/virtual-machine.md), [setup and reset](manual/setup-and-reset.md), [the menu bar and
 quick panels](manual/menu-bar.md), [installing software](manual/installing-software.md),
 [updates and rollback](manual/updates.md), [security](manual/security.md) and
-[the `herald-os` command line](manual/command-line.md).
+[the `madx` command line](manual/command-line.md).
 
 ```
 kernel + systemd  ->  greetd (autologin/login*)   ->  niri  ->  MadX Agent OS shell  ->  hermes serve
@@ -162,28 +162,28 @@ screensaver](manual/lock-and-idle.md), [dictation and emoji](manual/dictation-an
   "stay awake" stops the unit). Night light is `wlsunset` as the `herald-os-nightlight` unit.
 - **Notifications** from other apps arrive through the shell's own
   `org.freedesktop.Notifications` daemon.
-- **The lock.** The `hermes` VM user has no password by default, so `herald-os lock` refuses until
-  you run `herald-os password` in a terminal; a lock nobody can undo would leave the compositor's
+- **The lock.** The `hermes` VM user has no password by default, so `madx lock` refuses until
+  you run `madx password` in a terminal; a lock nobody can undo would leave the compositor's
   session lock engaged.
-- **The control menu** (`Mod+M` or `Mod+Alt+Space`): every item is a `herald-os` command, so the
+- **The control menu** (`Mod+M` or `Mod+Alt+Space`): every item is a `madx` command, so the
   agent (`system_os` tool) and scripts can do the same. `Mod` is `Super` on real hardware and `Alt`
   when niri runs nested (the QEMU VM), where `Mod+Alt+Space` is only `Alt+Space` and `Mod+M` is the
   way in.
-- **Web apps** (`herald-os install webapp <name> <url>`) open as their own frameless windows.
-- **Quick panels** (`herald-os panel wifi|bluetooth|audio|display|power|clock`) are backed by
+- **Web apps** (`madx install webapp <name> <url>`) open as their own frameless windows.
+- **Quick panels** (`madx panel wifi|bluetooth|audio|display|power|clock`) are backed by
   `nmcli`, `bluetoothctl`, `pactl`, `niri msg output`, `powerprofilesctl` and `upower`.
 - **The Dock menu.** Right-clicking a running app lists its windows in a small window of its own
   above the Dock ("MadX Agent OS · Dock Menu"), as the Dock's window is only 84 pixels tall: the shell
   moves it over the icon through niri before drawing it, and the keys stay with the Dock. Escape, a
   click elsewhere or the keys going to another window close it.
-- **Dictation and emoji** (`herald-os dictate`, `herald-os emoji`) type into the focused app with
+- **Dictation and emoji** (`madx dictate`, `madx emoji`) type into the focused app with
   `wtype`; dictation transcribes through Hermes's speech-to-text.
 - **The system voice.** When Hermes's own voice fails, the shell says replies with espeak-ng in the
   system's language where it is installed, else with flite in English, which the image lists for
   this ([the voice's fallback chain](VOICE.md#when-a-voice-fails)).
-- **Keymaps.** `herald-os keymap omarchy` renders `~/.config/niri/herald-os.kdl` from the installed
+- **Keymaps.** `madx keymap omarchy` renders `~/.config/niri/herald-os.kdl` from the installed
   template (`linux/niri/config.kdl`) with Omarchy's `Super+C/X/V` copy, cut and paste;
-  `herald-os keymap herald` restores MadX's keys. Every session start renders it again, so an
+  `madx keymap herald` restores MadX's keys. Every session start renders it again, so an
   update's new template takes effect at the next login.
 
 ## Themes, omakase, updates
@@ -192,43 +192,43 @@ The manual covers these for people using them: [Make it yours](manual/make-it-yo
 [Installing software](manual/installing-software.md) and
 [Updates, channels and rollback](manual/updates.md).
 
-- **Themes** live in `linux/themes/<name>/theme.json` (twelve ship, two of them light). `herald-os
+- **Themes** live in `linux/themes/<name>/theme.json` (twelve ship, two of them light). `madx
   theme set <name>` (or Style → Theme in the control menu, or the agent's `system_os theme_set`)
   recolours the shell, niri borders/backdrop (`~/.config/niri/theme.kdl`), swaylock, GTK 3/4
   (`gtk.css` + `gsettings`), and the `foot` rescue terminal in one step; a theme may also ship a
   wallpaper. Add a theme by dropping a folder into `~/.config/herald-os/themes/`.
 - **Widgets** (ADR-019) live in `~/.config/herald-os/plugins/<id>/`: a `manifest.json` and web
-  files, shown in the menu bar, on the Overview or in their own window. `herald-os plugin add
-  <git-url>` clones one turned off; `herald-os plugin list | enable | disable | update | remove`
+  files, shown in the menu bar, on the Overview or in their own window. `madx plugin add
+  <git-url>` clones one turned off; `madx plugin list | enable | disable | update | remove`
   manage them, and `enable` prints what the widget may do and asks at the terminal. Settings >
   Plugins does the same, and Hermes's `system_os plugin_*` actions can do everything except turn
   one on. Each runs in a sandboxed frame served from `herald-plugin://<id>/`, under a Content
   Security Policy that allows only its own files and the hosts it was granted. The manual's
   [Make it yours](manual/make-it-yours.md#widgets) explains how to write one.
-- **The menu bar, the menu and branding.** `herald-os bar` shows, hides and moves menu-bar items
+- **The menu bar, the menu and branding.** `madx bar` shows, hides and moves menu-bar items
   and sets the clock (the `bar.*` commands behind Settings > Appearance > Menu bar).
   `~/.config/herald-os/menu.json` adds entries to the control menu, read each time it opens;
-  `herald-os menu check` reports what it understood. `herald-os branding set --logo <image>
+  `madx menu check` reports what it understood. `madx branding set --logo <image>
   --lock <image> --name <text>` copies the images into `~/.config/herald-os/branding/`; About
-  shows the logo and name, and `herald-os lock` passes the picture to swaylock (`--image`,
+  shows the logo and name, and `madx lock` passes the picture to swaylock (`--image`,
   `--scaling fill`). Your own keys go in `~/.config/niri/local.kdl`, included last, where a bind
   replaces MadX's bind for the same key.
 - **The install catalog** (`linux/catalog/*.json`, run by `herald-os-catalog`) is everything else
   worth one click: coding agents (Claude Code, Codex, OpenCode, Gemini CLI, Copilot CLI through npm
   in `~/.local`), Ollama and LM Studio with "Use with Hermes", languages through mise, editors,
-  terminals, games, a Windows 11 VM (`herald-os install windows`, dockur/windows under Podman), media
+  terminals, games, a Windows 11 VM (`madx install windows`, dockur/windows under Podman), media
   apps, services and web apps. Each entry lists install methods in order (Flatpak, dnf, pacman, AUR,
   npm, mise, a recipe, a web app, a download page); the first one the machine can use wins, so the
   same catalog serves Fedora, Arch and Omarchy, and the image (Flatpak and `~/.local` only). It
-  backs Settings > Software, Install and Remove in the control menu, `herald-os install <id>`, and
+  backs Settings > Software, Install and Remove in the control menu, `madx install <id>`, and
   Hermes's `system_os catalog_*` actions. On macOS the shell installs the entries that have a Mac
   method (npm, Homebrew, a download page).
 - **Omakase** (`linux/omakase/{packages,flatpaks,webapps}.txt`) is the curated software set every
   install gets: Firefox, Nautilus, Text Editor, LibreOffice, Loupe, Papers, Calculator, Calendar,
   VLC, developer tools, fonts; Obsidian, Spotify, LocalSend, VS Code, Signal from Flathub; and web
   apps (HEY, Google Calendar/Messages, WhatsApp, X, YouTube, ChatGPT, GitHub) as their own windows.
-  Provisioning installs it (`HERALD_OS_OMAKASE=0` to skip); `herald-os omakase install` re-syncs.
-- **Updates**: `herald-os update` pulls the repo on the chosen channel (`herald-os channel
+  Provisioning installs it (`HERALD_OS_OMAKASE=0` to skip); `madx omakase install` re-syncs.
+- **Updates**: `madx update` pulls the repo on the chosen channel (`madx channel
   stable|edge`; both track `main` until releases exist), runs one-shot `linux/migrations/*.sh`
   (each says `# Runs as: user`, `root` or `user, with sudo`; user ones run as the person, even under
   sudo (then from the installed migrations, which the person can read, not root's `~/Herald-OS`), and
@@ -240,7 +240,7 @@ The manual covers these for people using them: [Make it yours](manual/make-it-yo
   and Flatpaks (the user's and the system installation's), updates Hermes Agent, rebuilds the shell
   and restarts it. The system and system Flatpak steps need root: as root, with sudo that needs no
   password, or in a terminal where sudo asks for one. Without root (from the menu) they are skipped
-  with a line saying to run `sudo herald-os update`, and they stay out of `problems=` and the exit status. A daily user timer runs `herald-os update
+  with a line saying to run `sudo madx update`, and they stay out of `problems=` and the exit status. A daily user timer runs `madx update
   --check`, which lights the menu-bar indicator when anything is pending. A repo pushed from a Mac
   (no `.git`) skips the shell step; use `linux/dev/push.sh` there. A release tarball in
   `/opt/herald-os` updates from GitHub releases instead
@@ -268,7 +268,7 @@ VM's provisioner also runs, so the VM and the image cannot drift apart:
   omakase Flatpaks (`herald-os-firstboot-apps.service`, while the session is up). Hermes Agent comes
   from GitHub, so a first boot without a network (Wi-Fi is joined later, in setup) leaves it to
   `herald-os-hermes.service`: it waits for the network, installs Hermes with its voice extras, runs
-  `herald-os setup` and tries again ten minutes after a failed install. Meanwhile the shell's boot
+  `madx setup` and tries again ten minutes after a failed install. Meanwhile the shell's boot
   screen says how it goes, shows the Wi-Fi panel and starts Hermes once it is set up
   (`journalctl -u herald-os-hermes` has the details).
 
@@ -305,7 +305,7 @@ switching to it, and changing its packages, Flatpaks and branding.
   and `/etc/herald-os/ssh-keys` in the installed system. `firstboot.sh` names the session user from
   the first (env `HERMES_USER` still wins; a name that is not an account name or belongs to a system
   account is ignored) and, when there are keys, runs
-  `herald-os setup ssh --user <name> --keys-file /etc/herald-os/ssh-keys --offline-firewall` before
+  `madx setup ssh --user <name> --keys-file /etc/herald-os/ssh-keys --offline-firewall` before
   installing Hermes. `herald-os-firstboot.service` wants firewalld and starts after it; should
   firewalld still not be up, `--offline-firewall` saves the rule with `firewall-offline-cmd`, and
   sshd starts only once the rate limit has loaded. Without nft, or with no firewalld at all, SSH
@@ -313,7 +313,7 @@ switching to it, and changing its packages, Flatpaks and branding.
   reserved and system names (Fedora's system accounts and groups, `systemd-*`, and anything `getent`
   resolves to an id below 1000), and it logs each skipped GitHub line by key type and reason, never
   the key. `reset-helper apply` deletes both files (only `firstboot.sh` reads them, and it runs
-  after) and runs `herald-os setup ssh --off --end-sessions`.
+  after) and runs `madx setup ssh --off --end-sessions`.
 - **an aarch64 VM disk** (`qcow2`, `linux/image/disk.toml`): `bash linux/vm/run-qemu.sh --image <disk>`
   or `bash linux/vm/run-vf.sh --image <disk>` boot it, and `bash linux/vm/try.sh` fetches the latest
   release's disk and boots it in one command. It also goes out as a UTM bundle
@@ -349,7 +349,7 @@ required `account` input (default `madx-test`) appends the
 account `%pre` of `unattended.ks` with that name and a throwaway key
 (`linux/vm/account-kickstart.sh` fills it in), forwards port 2222 to the machine's SSH, and fails
 unless the key signs in as the account while root and passwords are refused. It needs a release
-whose image has `herald-os setup ssh`. The workflow boots the ISO's actual UEFI loader, retains
+whose image has `madx setup ssh`. The workflow boots the ISO's actual UEFI loader, retains
 Anaconda failure diagnostics, and requires a deployed system, active core services, matching
 command/service aliases and a desktop window after reboot. It can also consume an unpublished
 validation ISO through `image_run`; supply exactly one of that run ID or `tag`. The protected
@@ -360,24 +360,24 @@ shared-ESP or Windows Boot Manager behavior. Execution remains pending; see
 On the image, apps install through Flatpak or into `~/.local` (the catalog picks those methods
 there); the system itself changes only by a whole new image.
 
-**Updates you can undo.** `herald-os update` runs `bootc upgrade` (the image tag of the channel:
+**Updates you can undo.** `madx update` runs `bootc upgrade` (the image tag of the channel:
 `stable` follows releases, `edge` follows main (rebuilt when image files change);
-`herald-os channel edge` switches with `bootc switch`; with packages layered on the image, booted
+`madx channel edge` switches with `bootc switch`; with packages layered on the image, booted
 or staged for the next restart, it runs `rpm-ostree upgrade`, which keeps them), then Flatpaks and
 `hermes update`. The new
-image starts on the next restart and the previous one stays in the boot menu; `herald-os rollback`
+image starts on the next restart and the previous one stays in the boot menu; `madx rollback`
 (or Update > Go back to the previous version) makes it the default again.
 
 **Setup and reset.** The first boot makes the account and installs Hermes; then the shell's setup
 asks who the computer is for. For yourself: a name, a password (set with `passwd` as you, so the
 account step never needs root), Wi-Fi and Hermes's sign-in. For someone else: just Wi-Fi, and setup
-waits for them at the next start. `herald-os reset` (type ERASE, then your password) erases the
+waits for them at the next start. `madx reset` (type ERASE, then your password) erases the
 account, its apps and saved networks on the next restart and runs setup again; the system stays. On
 an unencrypted disk, it says first that this is deletion, not a secure erase. A system switched from
 another bootc system is different: it gets a login screen and a locked account instead ([Switching a
 bootc system to MadX Agent OS](#switching-a-bootc-system-to-madx-agent-os)).
 
-**The disk password.** `herald-os password --disk` finds the LUKS devices under the root filesystem
+**The disk password.** `madx password --disk` finds the LUKS devices under the root filesystem
 (`/sysroot` on the image) from `lsblk`; when `lsblk` cannot list them it changes nothing and says so
 (exit 7), rather than guess from `/etc/crypttab`, which also names data and USB disks. It asks sudo
 for root first, then the current disk password, which it checks before it asks for the new one
@@ -397,7 +397,7 @@ start-up), refuses on a disk that is not encrypted, and `--status` prints `{"enc
 asks for a disk password nor calls the disk unencrypted. After setup "for someone else"
 (`~/.config/herald-os/new-owner`) or a reset (`/var/lib/herald-os/new-owner`, from `reset-helper
 apply`), setup on an encrypted disk asks the new owner for the disk password they typed at start-up
-and one of their own, and runs `herald-os password --disk --new-owner` in a terminal of its own with
+and one of their own, and runs `madx password --disk --new-owner` in a terminal of its own with
 their new account password for sudo: it also removes every other key slot and the tokens left with
 none, so only the new owner's password opens the disk. "Later" skips it.
 `linux/tests/test_disk_password.py` does all of it on LUKS2 images and a loop device and checks that
@@ -405,9 +405,9 @@ the old password no longer opens them.
 
 **Security.**
 
-- **Firewall:** firewalld with a `herald-os` zone that refuses incoming connections except LocalSend
+- **Firewall:** firewalld with the compatibility `herald-os` zone that refuses incoming connections except LocalSend
   (port 53317) and mDNS. SSH is off in release images; the development VM's zone allows it.
-- **SSH:** `herald-os setup ssh --key <public key>` (or `--github <user>`) refuses without a key in
+- **SSH:** `madx setup ssh --key <public key>` (or `--github <user>`) refuses without a key in
   `~/.ssh/authorized_keys` (unless `--passwords`) and without firewalld running (unless
   `--no-firewall`, which warns, or `--offline-firewall`, which saves the rule with
   `firewall-offline-cmd` for when firewalld starts and still requires the rate limit). Skipped
@@ -500,12 +500,12 @@ the old password no longer opens them.
   it, with a mutant of each safety check.
 - **Secure Boot:** works through Fedora's signed shim. The NVIDIA image's driver needs one more key
   ([The NVIDIA image](#the-nvidia-image)).
-- **Sign-in:** `herald-os setup fingerprint` (fprintd) and `herald-os setup fido2` (a security key,
+- **Sign-in:** `madx setup fingerprint` (fprintd) and `madx setup fido2` (a security key,
   pam-u2f) enrol it and turn it on for the lock screen and sudo: through authselect on Fedora and
   the image, by adding the rule to `/etc/pam.d/sudo` and `/etc/pam.d/swaylock` on Arch (each file
   keeps a `.herald-os.bak` copy), and through Omarchy's own `omarchy-setup-security-fingerprint` and
   `omarchy-setup-security-fido2` on Omarchy.
-- **Firmware:** `herald-os firmware check|update` (fwupd), also in the menu under Update.
+- **Firmware:** `madx firmware check|update` (fwupd), also in the menu under Update.
 - **Image signatures:** the image workflow signs each image with the project's cosign key, never
   keyless (which would publish to a transparency log) and without a log upload. Once
   `linux/image/cosign.pub` is in the repository, the image only accepts signed updates of itself
@@ -565,8 +565,8 @@ rpm-ostree changed the system, in the running deployment or the one pending for 
 initramfs of the machine's own), bootc refuses ("Deployment contains local rpm-ostree
 modifications"), so it runs
 `sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/madxleo/madx-agent-os-nvidia:<channel>`
-instead, which keeps them, and names them. It tells those apart the same way `herald-os update`
-does. `herald-os channel` and `herald-os update` keep to the image you are on, and the previous one
+instead, which keeps them, and names them. It tells those apart the same way `madx update`
+does. `madx channel` and `madx update` keep to the image you are on, and the previous one
 stays in the boot menu. To go back: `sudo bootc switch ghcr.io/madxleo/madx-agent-os:stable`.
 
 Once the image carries the project's signing key (`/etc/pki/containers/herald-os.pub`, from
@@ -737,8 +737,8 @@ not on the computer you work on. What happens on its first start:
   check at every start wait for `systemd-homed`, `systemd-userdbd` and `sssd`, so those accounts
   are there to be seen. Sign in with your own account and its password, and you get the
   MadX Agent OS desktop. MadX Agent OS's first-start setup then asks only for your name, Wi-Fi and Hermes's
-  sign-in. Your password stays as it is (`herald-os password` changes it). The first boot installs
-  Hermes Agent only for `hermes`, so run `herald-os setup` in a terminal once in your own account
+  sign-in. Your password stays as it is (`madx password` changes it). The first boot installs
+  Hermes Agent only for `hermes`, so run `madx setup` in a terminal once in your own account
   to install Hermes there too.
 - **A locked `hermes` account, not yet an administrator.** The first boot also creates `hermes`, the
   account MadX Agent OS sets Hermes Agent up for. On a switched system it is never an administrator
@@ -763,7 +763,7 @@ not on the computer you work on. What happens on its first start:
   (`/home/<name>.home`). Folders that root or another system account owns are not counted, nor are
   folders of accounts newer than `hermes`. When the account list cannot be read, the system counts as switched. The
   first boot decides this once and records the answer (`/var/lib/herald-os/switched` or
-  `/var/lib/herald-os/image-install`). Accounts added later, and `herald-os reset`, do not change it.
+  `/var/lib/herald-os/image-install`). Accounts added later, and `madx reset`, do not change it.
   The check at every start records nothing until first-boot setup has finished, so a run before the
   accounts are there cannot turn a switched system into an image install for good.
 - **When no account can sign in.** If none of those accounts has a shell and a password (and none is
@@ -830,7 +830,7 @@ systemctl default
 ```
 
 **Going back.** The system you switched from stays in the boot menu: `sudo bootc rollback` (on MadX
-OS, `herald-os rollback`) makes it the default again, and the next restart starts it as it was. Once
+OS, `madx rollback`) makes it the default again, and the next restart starts it as it was. Once
 MadX Agent OS has updated itself, that place holds the previous MadX Agent OS version instead; to keep your old
 system in the boot menu through updates, run `sudo ostree admin pin booted` before you switch
 (`ostree admin status` lists what is pinned). `sudo bootc switch <your old image>` works too, but it
@@ -838,7 +838,7 @@ keeps what changed in `/etc` under MadX Agent OS, the `hermes` account among it:
 `sudo userdel -r hermes`. After a rollback, MadX Agent OS's files in `/var` stay behind, the `hermes`
 home folder (`/var/home/hermes`) and `/var/lib/herald-os`; delete them when you no longer want them.
 
-On bootc and ostree systems MadX Agent OS did not make, `herald-os update` and `herald-os rollback` never
+On bootc and ostree systems MadX Agent OS did not make, `madx update` and `madx rollback` never
 run `bootc`: the system is left to its own updates. The install catalog uses Flatpak and `~/.local`
 there, as on the image.
 
@@ -855,7 +855,7 @@ Neither is on the AUR yet; build them from the repository:
 ```bash
 cd packaging/arch/herald-os-bin
 makepkg -si            # downloads the release tarball for this architecture
-herald-os setup        # once per user: Hermes Agent and the bridge plugin
+madx setup        # once per user: Hermes Agent and the bridge plugin
 ```
 
 `HERALD_OS_TARBALL_URL=file:///path/to/madx-agent-os-<version>-linux-x64.tar.gz makepkg -si --skipchecksums`
@@ -868,7 +868,7 @@ an Arch container, lints it with namcap, installs it and runs the CLIs.
 ## Another Linux (the release tarball)
 
 Every release has `madx-agent-os-<version>-linux-x64.tar.gz` and `-linux-arm64.tar.gz`, each with a
-`.sha256`: the app, and under `resources/` the `herald-os` commands, the session scripts, the niri
+`.sha256`: the app, and under `resources/` the compatible `herald-os` implementation, the session scripts, the niri
 template, themes, the install catalog and the bridge plugin. It goes in `/opt/herald-os`:
 
 ```bash
@@ -876,13 +876,13 @@ sha256sum -c madx-agent-os-<version>-linux-x64.tar.gz.sha256
 sudo mkdir -p /opt/herald-os
 sudo tar -xzf madx-agent-os-<version>-linux-x64.tar.gz -C /opt/herald-os --strip-components=1
 sudo /opt/herald-os/resources/herald-os-linux/bin/herald-os-tarball install
-herald-os setup        # once per user: Hermes Agent and the bridge plugin
+madx setup        # once per user: Hermes Agent and the bridge plugin
 ```
 
 `herald-os-tarball install` lays out what the Arch package does, under `/usr/local`, which package
 managers leave alone:
 
-- the `herald-os` commands and the session scripts in `/usr/local/bin`, as links into
+- the `madx` command, compatibility commands and session scripts in `/usr/local/bin`, as links into
   `/opt/herald-os` (the commands find the catalog, themes, niri template and migrations there);
 - MadX Agent OS on the login screen, `/usr/share/wayland-sessions/herald-os.desktop`, only when niri is
   installed (install niri, then run the command again). On Silverblue and other ostree systems,
@@ -896,7 +896,7 @@ managers leave alone:
   are off.
 
 It is safe to run again, never replaces a file that is not one of its own links, and leaves a
-`/opt/herald-os` that a package installed (`herald-os-bin`) to the package. `herald-os-tarball
+`/opt/herald-os` that a package installed (`herald-os-bin`) to the package. `madx-agent-os-tarball
 status` shows the version and what is in place; `sudo herald-os-tarball remove` takes it all out
 again, and `sudo rm -rf /opt/herald-os /opt/herald-os.previous` then deletes the app.
 
@@ -912,36 +912,36 @@ desktop reads as well. On a machine you already use, try the session from a seco
 (`sudo useradd -m herald && sudo passwd herald`). Picking a theme in `herald-os-app`'s Settings
 inside your own desktop changes none of those files.
 
-**Updates.** `herald-os update` asks GitHub for the newest release with a tarball for this
+**Updates.** `madx update` asks GitHub for the newest release with a tarball for this
 architecture (releases on the `stable` channel; `edge` also takes pre-releases), downloads it with
 its `.sha256` over HTTPS only (a redirect to plain http is refused) and checks it, unpacks it beside
 `/opt/herald-os`, and then swaps the two folders in one step (the kernel's `renameat2` exchange), so
 `/opt/herald-os` is never missing or half replaced. On a filesystem that cannot exchange (NFS, some
 FUSE mounts) it falls back to two renames, a moment apart, and puts the version in use back if the
-second fails. The version before stays in `/opt/herald-os.previous`, and `herald-os rollback` swaps
+second fails. The version before stays in `/opt/herald-os.previous`, and `madx rollback` swaps
 back the same way; both take effect at the next login, or the next start of `herald-os-app`. If a
 step fails anyway, the message says which version is in which folder. Replacing `/opt/herald-os`
 needs sudo: in a terminal it asks for your password,
 while Update in the menu bar can only use sudo without one. The checksum proves the download is the
 file the release published, not who published it, so a release is trusted as far as GitHub is.
-`herald-os update` also updates the system's packages as before (`dnf upgrade` on Fedora).
+`madx update` also updates the system's packages as before (`dnf upgrade` on Fedora).
 
 ## Inside Hyprland and Omarchy (app mode)
 
 MadX Agent OS also runs as an app inside another compositor: `herald-os-app` starts the single-window
 shell (fullscreen, as on macOS) and leaves the compositor's bar, keys and window rules alone. The
 shell finds the compositor from `NIRI_SOCKET` or `HYPRLAND_INSTANCE_SIGNATURE`; on Hyprland it mirrors
-windows through `hyprctl -j` and the event socket, so "ask about this window" works, and `herald-os
+windows through `hyprctl -j` and the event socket, so "ask about this window" works, and `madx
 wm` maps niri's action names to Hyprland dispatchers: Lua ones (`hl.dsp.…`) for a Lua config
-(Hyprland 0.55 and later, as on Omarchy 4), the classic ones for `hyprland.conf`. The `herald-os` CLI
-reaches the one window through the same control socket the niri session uses, so every `herald-os`
+(Hyprland 0.55 and later, as on Omarchy 4), the classic ones for `hyprland.conf`. The `madx` CLI
+reaches the one window through the same control socket the niri session uses, so every `madx`
 command works as a key.
 
-On Omarchy, `herald-os omarchy install` sets the rest up, and `herald-os omarchy remove` takes it out
+On Omarchy, `madx omarchy install` sets the rest up, and `madx omarchy remove` takes it out
 again ([Running inside Omarchy](manual/omarchy.md) in the manual). It handles Omarchy 4 (the package in `/usr/share/omarchy`, a Lua Hyprland config, state in
 `~/.local/state/omarchy`) and Omarchy 3 (the checkout in `~/.local/share/omarchy`, `hyprland.conf`):
 
-- **Theme:** a hook in `~/.config/omarchy/hooks/theme-set.d/` runs `herald-os theme omarchy` when the
+- **Theme:** a hook in `~/.config/omarchy/hooks/theme-set.d/` runs `madx theme omarchy` when the
   Omarchy theme changes (Omarchy 4 runs that folder itself; on Omarchy 3 a small `theme-set` hook
   does), and MadX takes the theme's colours from its `colors.toml` (or `alacritty.toml`) and its
   background as the wallpaper. MadX's `theme list`, `set` and `current` hand off to Omarchy there.
@@ -951,9 +951,9 @@ again ([Running inside Omarchy](manual/omarchy.md) in the manual). It handles Om
   C (command bar), V (voice), X (dictate), E (emoji) and M (Missions) do the rest, from
   `~/.config/hypr/herald-os.lua`, none of them taken by Omarchy. On Omarchy 3, the same keys come one
   after `Super+Alt+H` (Return opens MadX Agent OS), from `~/.config/hypr/herald-os.conf`.
-- **Sign-in:** `herald-os setup fingerprint` and `setup fido2` run Omarchy's own
+- **Sign-in:** `madx setup fingerprint` and `setup fido2` run Omarchy's own
   `omarchy-setup-security-fingerprint` and `omarchy-setup-security-fido2`.
-- **Updates and installs:** `herald-os update` leaves the system to `omarchy-update` and catalog
+- **Updates and installs:** `madx update` leaves the system to `omarchy-update` and catalog
   installs go through `omarchy-pkg-add` and the AUR helper Omarchy ships.
 
 Files that already exist (a `theme-set` hook, a menu file that isn't Omarchy 4's object of entries)

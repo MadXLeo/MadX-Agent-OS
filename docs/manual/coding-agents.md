@@ -12,7 +12,7 @@ tab with any agent you installed. **Open** in Settings > Software does the same.
 its own account the first time.
 
 On Linux they install through npm into your home folder (`~/.local`), so they need no administrator
-password and work on the MadX Agent OS image. `herald-os install claude-code` does it from a terminal.
+password and work on the MadX Agent OS image. `madx install claude-code` does it from a terminal.
 
 The languages they work with (Node, Python, Go, Rust, Ruby and Rails, PHP and Laravel and more) are
 in the Developer group, installed through [mise](https://mise.jdx.dev) where they can be.

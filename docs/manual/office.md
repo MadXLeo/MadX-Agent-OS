@@ -277,10 +277,10 @@ anything is saved. Hermes saves only when you ask (a document you have saved bef
 itself), and saving over a file asks first. Its comments are signed Hermes.
 
 Hermes works through its `docs`, `sheets` and `slides` tools, the same commands the command bar and
-voice reach. On MadX Agent OS Linux, `herald-os docs`, `herald-os sheets` and `herald-os slides` do the
-same from a terminal (`herald-os docs write "## Next steps" --at end`, `herald-os sheets read
-A1:D20`, `herald-os sheets write B7 "=SUM(B2:B6)"`, `herald-os slides from-doc
-~/Documents/Report.docx --notes`, `herald-os slides pdf`); `herald-os commands` lists every form.
+voice reach. On MadX Agent OS Linux, `madx docs`, `madx sheets` and `madx slides` do the
+same from a terminal (`madx docs write "## Next steps" --at end`, `madx sheets read
+A1:D20`, `madx sheets write B7 "=SUM(B2:B6)"`, `madx slides from-doc
+~/Documents/Report.docx --notes`, `madx slides pdf`); `madx commands` lists every form.
 
 ## Voice
 

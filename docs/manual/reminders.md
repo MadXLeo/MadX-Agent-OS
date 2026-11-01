@@ -8,9 +8,9 @@ Say or type "remind me in 20 minutes to stretch", or use Trigger > Reminder… i
 (`Super+M`). From a terminal:
 
 ```bash
-herald-os reminder 20m stretch          # also 90s, 1h, 1h30m
-herald-os reminder list                 # what is coming, and when
-herald-os reminder clear                # cancel them all
+madx reminder 20m stretch          # also 90s, 1h, 1h30m
+madx reminder list                 # what is coming, and when
+madx reminder clear                # cancel them all
 ```
 
 When it is time, a notification says what you asked to be reminded of. Reminders are kept until you
@@ -21,8 +21,8 @@ log out or restart; for something every day or at a set time, make an
 
 The Trigger section of the MadX Agent OS menu shows a notice of the time and date, the battery (charge
 and whether it is charging), or the weather, for when the menu bar is hidden or you would rather
-hear it: with Settings > Voice > Speak notifications on, Hermes reads it out. `herald-os notice time`,
-`herald-os notice battery` and `herald-os notice weather` do the same.
+hear it: with Settings > Voice > Speak notifications on, Hermes reads it out. `madx notice time`,
+`madx notice battery` and `madx notice weather` do the same.
 
 ## Weather
 
@@ -30,9 +30,9 @@ The weather comes from [wttr.in](https://wttr.in), for the place your network ap
 set the place yourself:
 
 ```bash
-herald-os weather location --set Melbourne     # a city, an airport code, or ~a landmark
-herald-os weather location --clear             # back to automatic
-herald-os weather                              # the weather now
+madx weather location --set Melbourne     # a city, an airport code, or ~a landmark
+madx weather location --clear             # back to automatic
+madx weather                              # the weather now
 ```
 
 Or ask Hermes: "what's the weather like?"

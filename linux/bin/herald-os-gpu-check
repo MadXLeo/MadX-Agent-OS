@@ -198,7 +198,7 @@ switch() {
     case "$1" in
       --force) force=1 ;;
       stable | edge) channel="$1" ;;
-      *) echo "usage: herald-os-gpu-check switch [--force] [stable|edge]" >&2; exit 2 ;;
+      *) echo "usage: madx-agent-os-gpu-check switch [--force] [stable|edge]" >&2; exit 2 ;;
     esac
     shift
   done
@@ -234,7 +234,7 @@ case "${1:-}" in
   --notify) NOTIFY=1 ;;
   switch) shift; switch "$@"; exit ;;
   "") ;;
-  *) echo "usage: herald-os-gpu-check [--notify | switch [--force] [stable|edge]]" >&2; exit 2 ;;
+  *) echo "usage: madx-agent-os-gpu-check [--notify | switch [--force] [stable|edge]]" >&2; exit 2 ;;
 esac
 
 if [[ "$ARCH" != x86_64 ]] || ! herald_image || ! nvidia_gpu; then

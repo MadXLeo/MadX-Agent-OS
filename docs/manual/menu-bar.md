@@ -16,7 +16,7 @@ plan usage, Wi-Fi, Bluetooth, Sound, Battery (on a laptop), Notifications and th
 - **An update dot** appears when updates are waiting; click it to update.
 
 Settings > Appearance > Menu bar shows, hides and reorders them and sets the clock, or use
-`herald-os bar` (see [Make it yours](make-it-yours.md#the-menu-bar)).
+`madx bar` (see [Make it yours](make-it-yours.md#the-menu-bar)).
 
 ## Quick panels
 
@@ -32,13 +32,13 @@ Settings > Appearance > Menu bar shows, hides and reorders them and sets the clo
 Each panel's footer opens the matching page of Settings. On MadX Agent OS Linux, the Wi-Fi, Bluetooth
 and Sound panels also have Restart, for when one stopped working (see
 [Troubleshooting](troubleshooting.md#wi-fi-bluetooth-sound-or-the-touchpad-stopped-working)).
-`herald-os panel wifi` (or `bluetooth`, `audio`, `display`, `power`, `clock`) opens one from a
+`madx panel wifi` (or `bluetooth`, `audio`, `display`, `power`, `clock`) opens one from a
 script or a key of your own.
 
 ## The MadX Agent OS menu
 
 `Super+M` (or `Super+Alt+Space`) opens the MadX Agent OS menu, which does the system's chores. Every item
-is a `herald-os` command, so Hermes and your scripts can do the same.
+is a `madx` command, so Hermes and your scripts can do the same.
 
 | Section | What is in it |
 | --- | --- |

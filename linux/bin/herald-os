@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """MadX Agent OS command center.
 
+Usage: madx <command> [arguments]
+  madx help                 Show this guide
+  madx setup                Set up Hermes Agent and its system tools
+  madx update [--check]      Update, or only check for updates
+  madx rollback             Return to the previous installed version
+  madx install <package>    Install an entry from the software catalog
+  madx hermes-command       Locate the installed Hermes Agent command
+  madx commands             List every supported command
+
 Everything hotkeys and menus do is available here, so people and agents drive the system the same
 way. Shell-facing commands are relayed to the running shell over its control socket; system chores
 call the tools directly.
@@ -108,14 +117,14 @@ COMMANDS: dict[str, str] = {
     "ask": "Ask Hermes about the focused window, or about the given text",
     "command": "Open the Hermes command bar",
     "applications": "Open the application launcher",
-    "menu": "Open the MadX Agent OS control menu; `menu check` reads your own entries in ~/.config/herald-os/menu.json",
-    "page": "Show a Hermes page: overview hermes missions memory files automations connections settings",
+    "menu": "Open the MadX Agent OS control menu; `menu check` validates your custom control-menu entries",
+    "page": "Show a MadX page: overview hermes missions memory files automations connections settings",
     "open": "Open a Hermes window: terminal system chat-popout",
     "launch": "Launch an installed application by name or desktop id",
     "install": "install <catalog-id> (see catalog list) | install app <name|flatpak-id> | install webapp <name> <url> [icon-url]",
     "remove": "remove <catalog-id> | remove app <name> | remove webapp <name>",
     "catalog": "catalog list [--json] [--group <id>] | catalog install|remove|status <id>: AI tools, languages, editors, terminals, games, Windows, media, services, web apps",
-    "windows": "windows start|stop|status|connect|remove [--purge]: the Windows VM (herald-os install windows)",
+    "windows": "windows start|stop|status|connect|remove [--purge]: the Windows VM (madx install windows)",
     "update": "Update MadX Agent OS, Hermes Agent and system packages (--check only reports)",
     "theme": "theme list | theme set <name> | theme current | theme new <image> [name] | theme install <git-url>",
     "font": "font list | font set <family> [--mono]: the interface font, or the code and terminal font",
@@ -148,13 +157,13 @@ COMMANDS: dict[str, str] = {
     "plugin": "plugin list [--json] | add <git-url> | enable|disable|update|remove <id> | dir: widgets for the menu bar, the Overview and their own windows",
     "bar": "bar [list] | show|hide <item> | move <item> first|last|<n>|before <item>|after <item> | clock [12h|24h|system] [seconds|no-seconds] [date short|long|none] | reset: the menu bar",
     "branding": "branding [show] | set [--logo <image>] [--lock <image>] [--name <text>] | reset [all|logo|lock|name]: About's logo and name, and the lock-screen picture",
-    "lock": "Lock the session (needs an account password; see `herald-os password`)",
+    "lock": "Lock the session (needs an account password; see `madx password`)",
     "password": "Set the login password the lock screen asks for | password --disk [--new-owner]: change the disk password typed at start-up (asks for the current one; --new-owner also removes every other key) | password --disk --status: whether the disk is encrypted, as JSON",
     "suspend": "Suspend the machine",
     "power": "Power menu (sleep, restart, shut down, log out)",
     "webapp-open": "Internal: open a web app window: webapp-open <url> <name>",
     "update-available": "Internal: tell the menu bar how many updates are pending",
-    "hermes-command": "Internal: how this account runs Hermes Agent, one argument per line, whichever way it was installed (--managed: only ~/.hermes/hermes-agent, which `herald-os update` updates); exits 1 without one",
+    "hermes-command": "How this account runs Hermes Agent, one argument per line, whichever way it was installed (--managed: only ~/.hermes/hermes-agent, which `madx update` updates); exits 1 without one",
     "channel": "Show or set the update channel: channel [stable|edge] (on the image, the image tag it follows)",
     "rollback": "Go back to the previous version: the MadX Agent OS image's at the next start (it stays in the boot menu), a release tarball's at the next login",
     "firmware": "firmware [check|update]: device firmware through fwupd (the BIOS, the dock, the SSD)",
@@ -174,7 +183,7 @@ OVERLAY = {"ask", "command", "applications", "menu", "power", "clipboard", "emoj
 
 # ---------------------------------------------------------------------------------------------
 def die(message: str, code: int = 1) -> "None":
-    print(f"herald-os: {message}", file=sys.stderr)
+    print(f"madx: {message}", file=sys.stderr)
     sys.exit(code)
 
 
@@ -445,7 +454,7 @@ def catalog(args: list[str]) -> int:
     """The install catalog lives in herald-os-catalog (linux/catalog/*.json)."""
     tool = shutil.which("herald-os-catalog") or str(Path(__file__).resolve().with_name("herald-os-catalog"))
     if not Path(tool).exists():
-        die("herald-os-catalog is not installed", 127)
+        die("The MadX software catalog is not installed", 127)
     return subprocess.call([sys.executable, tool, *args])
 
 
@@ -1622,7 +1631,7 @@ def touchpad_rebind(driver: Path | None = None, quicki2c: Path | None = None) ->
         print(f"Rebinding {device}")
         problem = sysfs_write(driver / "unbind", device)
         if problem:
-            print(f"herald-os: could not unbind {device} ({problem}); binding it anyway", file=sys.stderr)
+            print(f"madx: could not unbind {device} ({problem}); binding it anyway", file=sys.stderr)
         time.sleep(1)
         # The bind is tried whatever the unbind did: a device left unbound is a dead touchpad.
         problem = sysfs_write(driver / "bind", device)
@@ -1632,7 +1641,7 @@ def touchpad_rebind(driver: Path | None = None, quicki2c: Path | None = None) ->
         print("Reloading intel_quicki2c")
         problem = restart_step(["modprobe", "-r", "intel_quicki2c"])
         if problem:
-            print(f"herald-os: could not unload intel_quicki2c ({problem}); loading it anyway", file=sys.stderr)
+            print(f"madx: could not unload intel_quicki2c ({problem}); loading it anyway", file=sys.stderr)
         problem = restart_step(["modprobe", "intel_quicki2c"])
         if problem:
             failed.append(f"could not load intel_quicki2c again ({problem})")
@@ -1704,7 +1713,7 @@ def run_hooks_here(event_name: str, detail: dict[str, str]) -> None:
         try:
             subprocess.run([str(script), event_name], env=env, timeout=HOOK_TIMEOUT, check=False)
         except (OSError, subprocess.TimeoutExpired) as exc:
-            print(f"herald-os: hook {script.name}: {exc}", file=sys.stderr)
+            print(f"madx: hook {script.name}: {exc}", file=sys.stderr)
 
 
 def event_cmd(args: list[str]) -> int:
@@ -1827,7 +1836,7 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
         return "canvas.preview", payload
     if sub == "text":
         if not words:
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         payload = {"content": " ".join(words)}
         for key in ("x", "y", "width", "size"):
             if key in flags:
@@ -1846,7 +1855,7 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
         if "scale" in flags:
             payload["scale"] = float(str(flags["scale"]))
         if not payload:
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         if "anchor" in flags:
             payload["anchor"] = str(flags["anchor"])
         if flags.get("image"):
@@ -1858,7 +1867,7 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
         # A box, a ratio, an angle to straighten by, or a box with either.
         shaped = "ratio" in flags or "angle" in flags
         if (words or not shaped) and (len(words) != 4 or not all(re.fullmatch(r"-?\d+", word) for word in words)):
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         payload = dict(zip(("x", "y", "width", "height"), (int(word) for word in words)))
         if "ratio" in flags:
             payload["ratio"] = str(flags["ratio"])
@@ -1869,7 +1878,7 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
         return "canvas.crop", payload
     if sub == "filter":
         if not words:
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         payload = {"kind": " ".join(words)}
         settings = json.loads(str(flags["settings"])) if "settings" in flags else {}
         for key in ("amount", "radius", "threshold", "angle", "distance", "strength"):
@@ -1885,12 +1894,12 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
     if sub == "guides":
         action = words[0] if words else "list"
         if action not in ("add", "remove", "clear", "list") or (action in ("clear", "list") and len(words) > 1):
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         payload = {"action": action}
         if len(words) == 3:
             payload["axis"], payload["position"] = words[1], words[2]
         elif len(words) > 1:
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         for key in ("margins", "columns", "gutter"):
             if key in flags:
                 payload[key] = str(flags[key]) if key == "margins" else float(str(flags[key]))
@@ -1901,7 +1910,7 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
         return "canvas.guides", payload
     if sub == "auto":
         if len(words) > 1:
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         payload = {"kind": words[0]} if words else {}
         if "cutoff" in flags:
             payload["cutoff"] = float(str(flags["cutoff"]))
@@ -1910,7 +1919,7 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
         return "canvas.autoAdjust", payload
     if sub in ("align", "distribute"):
         if not words:
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         payload = {"edge" if sub == "align" else "distribute": ",".join(words)}
         for key in ("layers", "to"):
             if key in flags:
@@ -1922,7 +1931,7 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
         return "canvas.align", payload
     if sub == "export":
         if not words:
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         payload = {"to": _absolute(words[0])}
         if "project" in flags:
             payload["project"] = _absolute(str(flags["project"]))
@@ -1939,7 +1948,7 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
         wanted = re.sub(r"[^a-z]", "", words[-1].lower()) if len(words) == 2 else ""
         action = next((name for name in CANVAS_MASK_ACTIONS if name.lower() == wanted), None)
         if not action:
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         payload = {"layer": words[0], "action": action}
         if "project" in flags:
             payload["project"] = _absolute(str(flags["project"]))
@@ -1953,7 +1962,7 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
         return "canvas.removeBackground", payload
     if sub == "fill":
         if len(words) != 4 or not all(re.fullmatch(r"-?\d+", word) for word in words):
-            die(f"herald-os {CANVAS_USAGE}", 2)
+            die(f"madx {CANVAS_USAGE}", 2)
         payload = dict(zip(("x", "y", "width", "height"), (int(word) for word in words)))
         if "layer" in flags:
             payload["layer"] = str(flags["layer"])
@@ -1962,7 +1971,7 @@ def canvas_request(args: list[str]) -> tuple[str, dict]:
         if "project" in flags:
             payload["project"] = _absolute(str(flags["project"]))
         return "canvas.contentFill", payload
-    die(f"herald-os {CANVAS_USAGE}", 2)
+    die(f"madx {CANVAS_USAGE}", 2)
     return "", {}
 
 
@@ -2056,7 +2065,7 @@ def _office_words(rest: list[str], usage: str, switches: tuple[str, ...] = OFFIC
             flags[token[2:]] = True
         elif token.startswith("--"):
             if i + 1 == len(rest):
-                die(f"herald-os {usage}", 2)
+                die(f"madx {usage}", 2)
             flags[token[2:]] = rest[i + 1]
             i += 1
         else:
@@ -2090,13 +2099,13 @@ def _number(value: str | bool, usage: str) -> float:
     try:
         return float(str(value))
     except ValueError:
-        die(f"herald-os {usage}", 2)
+        die(f"madx {usage}", 2)
     return 0.0
 
 
 def _count(value: str | bool, usage: str) -> int:
     if not re.fullmatch(r"\d+", str(value)):
-        die(f"herald-os {usage}", 2)
+        die(f"madx {usage}", 2)
     return int(str(value))
 
 
@@ -2126,7 +2135,7 @@ def docs_request(args: list[str]) -> tuple[str, dict]:
         return "docs.read", {**payload, **{key: str(flags[key]) for key in ("part", "heading") if key in flags}}
     if sub == "find":
         if not words:
-            die(f"herald-os {DOCS_USAGE}", 2)
+            die(f"madx {DOCS_USAGE}", 2)
         return "docs.find", {**payload, "text": text}
     if sub == "write":
         content = _stdin_or(text)
@@ -2135,7 +2144,7 @@ def docs_request(args: list[str]) -> tuple[str, dict]:
         return "docs.write", {**payload, "content": content, **placed}
     if sub == "replace":
         if len(words) != 2:
-            die(f"herald-os {DOCS_USAGE}", 2)
+            die(f"madx {DOCS_USAGE}", 2)
         payload.update({"find": words[0], "replacement": words[1]})
         if flags.get("first"):
             payload["all"] = False
@@ -2152,18 +2161,18 @@ def docs_request(args: list[str]) -> tuple[str, dict]:
         if flags.get("clear"):
             changes["clear"] = True
         if words or not changes:
-            die(f"herald-os {DOCS_USAGE}", 2)
+            die(f"madx {DOCS_USAGE}", 2)
         return "docs.format", {**payload, **{key: str(flags[key]) for key in ("at", "heading", "text") if key in flags}, **changes}
     if sub == "table":
         if len(words) != 1:
-            die(f"herald-os {DOCS_USAGE}", 2)
+            die(f"madx {DOCS_USAGE}", 2)
         payload["cells"] = _json_text(_stdin_or(words[0]), list, '[["Item", "Cost"], ["Rent", "1200"]]')
         if flags.get("no-header"):
             payload["header"] = False
         return "docs.insertTable", {**payload, **placed}
     if sub == "image":
         if not words:
-            die(f"herald-os {DOCS_USAGE}", 2)
+            die(f"madx {DOCS_USAGE}", 2)
         payload["source"] = _absolute(text)
         if "width" in flags:
             payload["width"] = _number(flags["width"], DOCS_USAGE)
@@ -2190,7 +2199,7 @@ def docs_request(args: list[str]) -> tuple[str, dict]:
         if "steps" in flags:
             payload["steps"] = _count(flags["steps"], DOCS_USAGE)
         return f"docs.{sub}", payload
-    die(f"herald-os {DOCS_USAGE}", 2)
+    die(f"madx {DOCS_USAGE}", 2)
     return "", {}
 
 
@@ -2218,28 +2227,28 @@ def sheets_request(args: list[str]) -> tuple[str, dict]:
         return "sheets.read", {**payload, **({"range": text} if words else {}), **on_sheet}
     if sub == "find":
         if not words:
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         return "sheets.find", {**payload, "text": text, **on_sheet}
     if sub == "write":
         if len(words) < 2:
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         rows = len(words) == 2 and words[1].lstrip().startswith("[")
         values = _json_text(words[1], list, '[["Item", "Cost"], ["Rent", 1200]]') if rows else " ".join(words[1:])
         return "sheets.write", {**payload, "range": words[0], "values": values, **on_sheet}
     if sub == "fill":
         if not words:
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         payload["range"] = words[0]
         if len(words) > 1:
             payload["formula"] = " ".join(words[1:])
         return "sheets.fill", {**payload, **on_sheet}
     if sub == "format":
         if len(words) != 2:
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         return "sheets.format", {**payload, "range": words[0], "format": _json_text(words[1], dict, '{"bold": true, "numberFormat": "#,##0.00"}'), **on_sheet}
     if sub == "sort":
         if len(words) != 1 or "by" not in flags:
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         payload.update({"range": words[0], "by": str(flags["by"])})
         if flags.get("descending"):
             payload["ascending"] = False
@@ -2250,7 +2259,7 @@ def sheets_request(args: list[str]) -> tuple[str, dict]:
         if flags.get("clear"):
             return "sheets.filter", {**payload, "clear": True, **on_sheet}
         if len(words) != 1 or "by" not in flags or ("values" not in flags and "condition" not in flags):
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         payload.update({"range": words[0], "by": str(flags["by"])})
         if "values" in flags:
             payload["values"] = _json_text(str(flags["values"]), list, '["Paid", "Due"]')
@@ -2259,7 +2268,7 @@ def sheets_request(args: list[str]) -> tuple[str, dict]:
         return "sheets.filter", {**payload, **on_sheet}
     if sub == "freeze":
         if not 1 <= len(words) <= 2:
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         payload["rows"] = _count(words[0], SHEETS_USAGE)
         if len(words) == 2:
             payload["columns"] = _count(words[1], SHEETS_USAGE)
@@ -2272,15 +2281,15 @@ def sheets_request(args: list[str]) -> tuple[str, dict]:
         return "sheets.addSheet", payload
     if sub == "rename-sheet":
         if len(words) != 2:
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         return "sheets.renameSheet", {**payload, "sheet": words[0], "name": words[1]}
     if sub == "remove-sheet":
         if not words:
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         return "sheets.removeSheet", {**payload, "sheet": text}
     if sub == "replace":
         if len(words) != 2:
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         payload.update({"find": words[0], "replacement": words[1]})
         if "range" in flags:
             payload["range"] = str(flags["range"])
@@ -2289,7 +2298,7 @@ def sheets_request(args: list[str]) -> tuple[str, dict]:
         return "sheets.replace", {**payload, **on_sheet}
     if sub == "clean":
         if len(words) != 2 or words[1] not in SHEETS_CLEAN_ACTIONS:
-            die(f"herald-os {SHEETS_USAGE}", 2)
+            die(f"madx {SHEETS_USAGE}", 2)
         payload.update({"range": words[0], "action": words[1]})
         for flag, key in (("by", "by"), ("delimiter", "delimiter"), ("order", "order"), ("date-format", "dateFormat"), ("case", "case")):
             if flag in flags:
@@ -2308,7 +2317,7 @@ def sheets_request(args: list[str]) -> tuple[str, dict]:
         if "steps" in flags:
             payload["steps"] = _count(flags["steps"], SHEETS_USAGE)
         return f"sheets.{sub}", payload
-    die(f"herald-os {SHEETS_USAGE}", 2)
+    die(f"madx {SHEETS_USAGE}", 2)
     return "", {}
 
 
@@ -2419,23 +2428,23 @@ def slides_request(args: list[str]) -> tuple[str, dict]:
         if flags.get("hidden") or flags.get("shown"):
             changes["hidden"] = bool(flags.get("hidden"))
         if len(words) != 1 or not changes:
-            die(f"herald-os {SLIDES_USAGE}", 2)
+            die(f"madx {SLIDES_USAGE}", 2)
         return "slides.setSlide", {**payload, "slide": words[0], **changes}
     if sub == "notes":
         if len(words) < 2:
-            die(f"herald-os {SLIDES_USAGE}", 2)
+            die(f"madx {SLIDES_USAGE}", 2)
         return "slides.setSlide", {**payload, "slide": words[0], "notes": _stdin_or(" ".join(words[1:]))}
     if sub == "move":
         if len(words) != 2:
-            die(f"herald-os {SLIDES_USAGE}", 2)
+            die(f"madx {SLIDES_USAGE}", 2)
         return "slides.moveSlide", {**payload, "slide": words[0], "to": words[1]}
     if sub == "remove":
         if not words:
-            die(f"herald-os {SLIDES_USAGE}", 2)
+            die(f"madx {SLIDES_USAGE}", 2)
         return "slides.removeSlide", {**payload, "slide": text}
     if sub == "theme":
         if len(words) != 1:
-            die(f"herald-os {SLIDES_USAGE}", 2)
+            die(f"madx {SLIDES_USAGE}", 2)
         return "slides.setTheme", {**payload, "theme": words[0]}
     if sub == "from-doc":
         if words:
@@ -2455,7 +2464,7 @@ def slides_request(args: list[str]) -> tuple[str, dict]:
         return "slides.insertRange", {**payload, **on_slide}
     if sub == "replace":
         if len(words) != 2:
-            die(f"herald-os {SLIDES_USAGE}", 2)
+            die(f"madx {SLIDES_USAGE}", 2)
         payload.update({"find": words[0], "replacement": words[1]})
         if flags.get("first"):
             payload["all"] = False
@@ -2470,7 +2479,7 @@ def slides_request(args: list[str]) -> tuple[str, dict]:
         if "steps" in flags:
             payload["steps"] = _count(flags["steps"], SLIDES_USAGE)
         return f"slides.{sub}", payload
-    die(f"herald-os {SLIDES_USAGE}", 2)
+    die(f"madx {SLIDES_USAGE}", 2)
     return "", {}
 
 
@@ -2508,14 +2517,14 @@ def calc_request(args: list[str]) -> tuple[str, dict]:
     """(command id, arguments) for `herald-os calc ...` (pure; tested)."""
     words = [word for word in args if word not in ("--steps", "--json")]
     if not words:
-        die(f"herald-os {CALC_USAGE}", 2)
+        die(f"madx {CALC_USAGE}", 2)
     sub, rest = words[0], words[1:]
     if sub == "convert":
         # "convert 5 km to miles" is "convert 5 km miles"; a quantity's own units stay in the value.
         if len(rest) >= 4 and rest[-2] in ("to", "in", "into"):
             rest = rest[:-2] + rest[-1:]
         if len(rest) < 3:
-            die("herald-os calc convert <value> <from> <to>", 2)
+            die("madx calc convert <value> <from> <to>", 2)
         return "calc.convert", {"value": " ".join(rest[:-2]), "from": rest[-2], "to": rest[-1]}
     if sub == "history":
         return "calc.history", ({"query": " ".join(rest)} if rest else {})
@@ -2523,7 +2532,7 @@ def calc_request(args: list[str]) -> tuple[str, dict]:
         return "calc.open", ({"text": " ".join(rest)} if rest else {})
     text = sys.stdin.read() if words == ["-"] else " ".join(words)
     if not text.strip():
-        die("herald-os calc: nothing to work out (give the sum, or - to read it from stdin)", 2)
+        die("madx calc: nothing to work out (give the sum, or - to read it from stdin)", 2)
     return "calc.eval", {"text": text}
 
 
@@ -2692,7 +2701,7 @@ def branding_cmd(args: list[str]) -> int:
 def password() -> int:
     """Set (or change) the login password used by the lock screen; interactive by design."""
     if not sys.stdin.isatty():
-        die("run `herald-os password` in a terminal", 2)
+        die("run `madx password` in a terminal", 2)
     return subprocess.call(["passwd"])
 
 
@@ -2985,7 +2994,7 @@ def disk_root_op(args: list[str]) -> int:
         try:
             return disk_change(devices, current, new, new_owner, old_slots)
         except subprocess.TimeoutExpired as error:
-            disk_say(f"herald-os: cryptsetup did not finish in {CRYPTSETUP_TIMEOUT} s ({' '.join(map(str, error.cmd[1:2]))}) and was stopped. "
+            disk_say(f"madx: cryptsetup did not finish in {CRYPTSETUP_TIMEOUT} s ({' '.join(map(str, error.cmd[1:2]))}) and was stopped. "
                   "The new password was added before anything was removed, so at least one of the two opens the disk: "
                   "try the new one first at the next start, then run `herald-os password --disk` again.", file=sys.stderr)
             return DISK_PARTLY
@@ -2998,7 +3007,7 @@ def disk_change(devices: list[str], current: str, new: str, new_owner: bool, old
     def take_back(why: str) -> int:
         # Back to the old password alone: the new one goes again from the devices it went into, and
         # only a device it no longer opens counts as taken back.
-        disk_say(f"herald-os: {why}", file=sys.stderr)
+        disk_say(f"madx: {why}", file=sys.stderr)
         left: list[str] = []
         for device in added:
             try:
@@ -3008,12 +3017,12 @@ def disk_change(devices: list[str], current: str, new: str, new_owner: bool, old
                 result, gone = subprocess.CompletedProcess([], 1, b"", str(error).encode()), False
             if not gone:
                 left.append(device)
-                disk_say(f"herald-os: the new disk password could not be taken back out of {device} "
+                disk_say(f"madx: the new disk password could not be taken back out of {device} "
                       f"({cryptsetup_said(result) if result.returncode else 'it still opens it'}).", file=sys.stderr)
         if not left:
-            disk_say("herald-os: nothing was changed; the current disk password still works.", file=sys.stderr)
+            disk_say("madx: nothing was changed; the current disk password still works.", file=sys.stderr)
             return 1
-        disk_say(f"herald-os: the current disk password still opens every device, but the new one may open {' and '.join(left)} "
+        disk_say(f"madx: the current disk password still opens every device, but the new one may open {' and '.join(left)} "
               "too. To take it out: " + "; ".join(f"sudo cryptsetup luksRemoveKey {shlex.quote(device)}" for device in left)
               + " (it asks for the new password), or run `herald-os password --disk` again with the same new password.", file=sys.stderr)
         return DISK_NOT_TAKEN_BACK
@@ -3059,8 +3068,8 @@ def disk_change(devices: list[str], current: str, new: str, new_owner: bool, old
             problems.append(f"the new disk password does not open {device}")
     if problems:
         for problem in problems:
-            disk_say(f"herald-os: {problem}", file=sys.stderr)
-        disk_say("herald-os: the new disk password was added, but not everything above went as planned. Run "
+            disk_say(f"madx: {problem}", file=sys.stderr)
+        disk_say("madx: the new disk password was added, but not everything above went as planned. Run "
               "`herald-os password --disk` again with the new password as the current one.", file=sys.stderr)
         return DISK_PARTLY
     if new_owner:
@@ -3090,7 +3099,7 @@ def disk_helper_change(request: dict) -> int:
 
     def wait_on(signum: int, frame) -> None:
         if not stops:
-            disk_say("herald-os: the disk password is still changing; stopping it now could leave it half-done, "
+            disk_say("madx: the disk password is still changing; stopping it now could leave it half-done, "
                      "so this waits until it is finished or put back.", file=sys.stderr)
         stops.append(signum)
         # Ctrl+Z also stops sudo; it goes on, so the root side can end and be waited for.
@@ -3129,7 +3138,7 @@ def disk_end_lines(state: dict) -> list[str]:
 
 def disk_report_end(request: dict, code: int) -> int:
     """The root side ended without saying how (it was killed): look, and say what opens what."""
-    disk_say(f"herald-os: the disk password change ended before it could say how ({'signal ' + str(-code) if code < 0 else 'exit ' + str(code)}). "
+    disk_say(f"madx: the disk password change ended before it could say how ({'signal ' + str(-code) if code < 0 else 'exit ' + str(code)}). "
              "What opens the disk now:", file=sys.stderr)
     try:
         probe = subprocess.run(disk_root_argv("probe"), input=json.dumps(request), capture_output=True, text=True, timeout=CRYPTSETUP_TIMEOUT * 2)
@@ -3137,12 +3146,12 @@ def disk_report_end(request: dict, code: int) -> int:
     except (OSError, subprocess.TimeoutExpired, json.JSONDecodeError):
         state = None
     if not isinstance(state, dict):
-        disk_say("herald-os: that could not be checked. The new password was added before anything was removed, so at "
+        disk_say("madx: that could not be checked. The new password was added before anything was removed, so at "
                  "least one of the two opens each device: at the next start, try the new one first, then the current one.", file=sys.stderr)
         return DISK_PARTLY
     for line in disk_end_lines(state):
-        disk_say(f"herald-os:   {line}", file=sys.stderr)
-    disk_say("herald-os: run `herald-os password --disk` again to finish, with a password that opens every device as the current one.", file=sys.stderr)
+        disk_say(f"madx:   {line}", file=sys.stderr)
+    disk_say("madx: run `madx password --disk` again to finish, with a password that opens every device as the current one.", file=sys.stderr)
     return DISK_PARTLY
 
 
@@ -3175,7 +3184,7 @@ def disk_password(args: list[str]) -> int:
     if not devices:
         die(DISK_NOT_ENCRYPTED_TEXT, DISK_NOT_ENCRYPTED)
     if not sys.stdin.isatty():
-        die("run `herald-os password --disk` in a terminal", 2)
+        die("run `madx password --disk` in a terminal", 2)
     print(f"The disk password unlocks {' and '.join(devices)} when the computer starts.")
     # Until the change starts, Ctrl+C (or the end of input) only stops the asking: nothing has changed.
     try:
@@ -3207,7 +3216,7 @@ def update(check_only: bool) -> int:
     updater = shutil.which("herald-os-update")
     if updater:
         return subprocess.call([updater] + (["--check"] if check_only else []))
-    print("herald-os-update is not installed; run linux/dev/build.sh in your MadX-Agent-OS checkout to install it.")
+    print("The MadX updater is not installed; run linux/dev/build.sh in your MadX-Agent-OS checkout to install it.")
     return 1
 
 
@@ -3319,7 +3328,7 @@ def keymap_cmd(args: list[str]) -> int:
         die("keymap show | herald | omarchy | apply", 2)
     template = next((path for path in NIRI_TEMPLATES if path.is_file()), None)
     if not template:
-        die("the niri template is missing; reinstall MadX Agent OS or run herald-os-build")
+        die("the niri template is missing; reinstall MadX Agent OS or run linux/dev/build.sh in your checkout")
     rendered = render_keymap(template.read_text(), current_keymap())
     # niri reloads on every write: only a changed config is written, once and atomically, so it
     # never reads half a file.
@@ -3402,7 +3411,7 @@ def hermes_step(hermes: list[str], args: list[str], change: str, gone: str | Non
         print("    nothing to change")
         return
     if result.returncode != 0 or HERMES_ERROR.search(output):
-        die(f"`{command}` failed (exit {result.returncode}){': ' + output if output else ''}\nRun herald-os setup again once it is fixed, or herald-os setup --undo to take back what was already changed.", 1)
+        die(f"`{command}` failed (exit {result.returncode}){': ' + output if output else ''}\nRun madx setup again once it is fixed, or madx setup --undo to take back what was already changed.", 1)
 
 
 def hermes_value(hermes: list[str], key: str) -> str:
@@ -3449,7 +3458,7 @@ def setup_undo() -> int:
     marker = HERMES_HOME / "herald-os" / "bridge-enabled"
     marker.parent.mkdir(parents=True, exist_ok=True)
     marker.touch()
-    print("MadX Agent OS no longer changes your Hermes; `herald-os setup` makes the changes again.")
+    print("MadX Agent OS no longer changes your Hermes; `madx setup` makes the changes again.")
     return 0
 
 
@@ -3479,19 +3488,19 @@ def setup(args: list[str]) -> int:
     assume_yes = "--yes" in args or "-y" in args
     bridge = next((d for d in BRIDGE_DIRS if (d / "plugin.yaml").exists()), None)
     if not bridge:
-        die("the herald-os-bridge plugin is missing; reinstall MadX Agent OS", 1)
+        die("the MadX system bridge plugin is missing; reinstall MadX Agent OS", 1)
     hermes = hermes_command()
     if not hermes:
         if HERMES_PENDING.exists():
             # A second installer in the same checkout would race the one already at work.
             status = HERMES_PENDING.read_text().strip() or "pending"
-            die(f"Hermes Agent is not installed yet. herald-os-hermes.service installs it once this computer is online, then sets it up ({status} now): `journalctl -u herald-os-hermes -f` follows it, `sudo systemctl restart herald-os-hermes` tries again at once", 1)
+            die(f"Hermes Agent is not installed yet. The MadX Hermes service installs it once this computer is online, then sets it up ({status} now): `journalctl -u herald-os-hermes -f` follows its compatibility unit, `sudo systemctl restart madx-agent-os-hermes` tries again at once", 1)
         print(f"Hermes Agent is not installed. MadX Agent OS runs on it; the installer is {HERMES_INSTALLER}")
         if not assume_yes:
             if not sys.stdin.isatty():
-                die("`herald-os setup --yes` installs it and then sets it up (in a terminal, `herald-os setup` asks first)", 1)
+                die("`madx setup --yes` installs it and then sets it up (in a terminal, `madx setup` asks first)", 1)
             if input("Install Hermes Agent now? [Y/n] ").strip().lower() not in ("", "y", "yes"):
-                die("run `herald-os setup` again once Hermes is installed", 1)
+                die("run `madx setup` again once Hermes is installed", 1)
         code = subprocess.call(["bash", "-c", f"curl -fsSL {HERMES_INSTALLER} | bash"])
         hermes = hermes_command()
         if code != 0 or not hermes:
@@ -3507,9 +3516,9 @@ def setup(args: list[str]) -> int:
     print(f"==> bridge plugin: {link} -> {bridge}")
     enable_bridge(hermes)
     print("==> Hermes can now use the system (files, apps, settings), asking before anything that changes it")
-    print("    To take these changes back: herald-os setup --undo")
+    print("    To take these changes back: madx setup --undo")
     if is_omarchy():
-        print("Omarchy: `herald-os omarchy install` adds MadX Agent OS to its menu, theme and keys.")
+        print("Omarchy: `madx omarchy install` adds MadX Agent OS to its menu, theme and keys.")
     print(session_hint())
     return 0
 
@@ -3887,7 +3896,7 @@ def root_step(argv: list[str], what: str, timeout: float | None = None, grace: f
 
 
 def warn(message: str) -> None:
-    print(f"herald-os: WARNING: {message}", file=sys.stderr)
+    print(f"madx: WARNING: {message}", file=sys.stderr)
 
 
 def ssh_key_problem(text: str) -> str | None:
@@ -4872,7 +4881,7 @@ def ssh_stopped(signum: int, frame) -> None:
     ssh_signals({each: ssh_ignored for each in (signal.SIGINT, *SSH_STOPS)})
     if signum == signal.SIGINT:
         raise KeyboardInterrupt
-    print(f"herald-os: stopped by {signal.Signals(signum).name}; putting back what this run changed", file=sys.stderr)
+    print(f"madx: stopped by {signal.Signals(signum).name}; putting back what this run changed", file=sys.stderr)
     raise SystemExit(128 + signum)
 
 
@@ -4915,7 +4924,7 @@ def ssh_on(opts: dict) -> int:
     for path in (SSHD_DROP_IN, SSH_LIMIT_RULES, SSH_LIMIT_UNIT, *SSH_LIMIT_REQUIRED):
         if file_state(path) == "tampered":
             die(f"{path} is a link or not a regular file, which setup ssh never writes: something else put it there. "
-                "Look at it, remove it (herald-os setup ssh --off does), and run this again. Nothing was changed.", 1)
+                "Look at it, remove it (madx setup ssh --off does), and run this again. Nothing was changed.", 1)
     nft = nft_command()
     if (firewall or offline) and not nft:
         die("nft (nftables) is not installed, so SSH cannot be rate-limited per address (sudo dnf install nftables). Nothing was changed.", 127)
@@ -4988,11 +4997,11 @@ def ssh_on(opts: dict) -> int:
                 undone, troubles = ssh_rollback(before, keys_out if wrote_keys else None)
                 put = "; ".join(undone) or "nothing"
                 if troubles:
-                    print(f"herald-os: the rollback is incomplete, so SSH may not be as it was before this run. "
-                          f"Check: {'; '.join(troubles)}. Put back: {put}. `herald-os setup ssh --status` shows "
-                          "what is in place; `herald-os setup ssh --off` turns SSH off and removes its settings.", file=sys.stderr)
+                    print(f"madx: the rollback is incomplete, so SSH may not be as it was before this run. "
+                          f"Check: {'; '.join(troubles)}. Put back: {put}. `madx setup ssh --status` shows "
+                          "what is in place; `madx setup ssh --off` turns SSH off and removes its settings.", file=sys.stderr)
                 else:
-                    print(f"herald-os: SSH is as it was before this run; put back: {'; '.join(undone) or 'nothing had changed yet'}.", file=sys.stderr)
+                    print(f"madx: SSH is as it was before this run; put back: {'; '.join(undone) or 'nothing had changed yet'}.", file=sys.stderr)
             finally:
                 ssh_signals(ignored)
             raise
@@ -5012,7 +5021,7 @@ def ssh_on(opts: dict) -> int:
             print(f"      {line}")
     for address in addresses():
         print(f"    ssh {account.pw_name}@{address}")
-    print("    To turn it off again: herald-os setup ssh --off")
+    print("    To turn it off again: madx setup ssh --off")
     if offline:
         warn("firewalld is not running yet: SSH's rule is saved for when it starts, and until then the rate limit is all that stands between sshd and the network")
     elif not firewall:
@@ -5043,7 +5052,7 @@ def ssh_off(opts: dict) -> int:
         print(f"    {ssh_dir(account) / 'authorized_keys'} is left as it is; its keys let no one in while SSH is off.")
     if sessions and not end:
         print(f"    {len(sessions)} SSH session(s) are still open ({', '.join(sessions)}); "
-              "herald-os setup ssh --off --end-sessions ends them, or sudo loginctl terminate-session <id>.")
+              "madx setup ssh --off --end-sessions ends them, or sudo loginctl terminate-session <id>.")
     elif sessions:
         print(f"    ending {len(sessions)} SSH session(s)")
         sys.stdout.flush()
@@ -5083,7 +5092,7 @@ def ssh_state(account: pwd.struct_passwd | None) -> dict:
     warnings = []
     if required and limit_active != "active":
         warnings.append(f"sshd requires the rate limit ({SSH_LIMIT_UNIT.name}), which is {limit_active}, so sshd cannot start "
-                        "until it loads: herald-os setup ssh loads it again, herald-os setup ssh --off removes SSH's settings")
+                        "until it loads: madx setup ssh loads it again, madx setup ssh --off removes SSH's settings")
     if (active == "active" or socket_active == "active") and limit_active != "active":
         warnings.append("sshd is running without the per-address rate limit")
     if drop_in_state in ("tampered", "unknown"):
@@ -5126,16 +5135,16 @@ def ssh_status(opts: dict) -> int:
         print(f"    sign-in: {'keys or a password' if state['passwords'] else 'keys only'}, never root ({SSHD_DROP_IN})")
     elif state["dropIn"] in ("tampered", "unknown"):
         print(f"    sign-in: WARNING: {SSHD_DROP_IN} is {'a link or not a regular file' if state['dropIn'] == 'tampered' else 'unreadable'}, "
-              "which setup ssh never writes; it is not counted (herald-os setup ssh --off removes it)")
+              "which setup ssh never writes; it is not counted (madx setup ssh --off removes it)")
     else:
-        print("    sign-in: sshd's own settings (herald-os setup ssh has not set it up)")
+        print("    sign-in: sshd's own settings (madx setup ssh has not set it up)")
     if state["user"]:
         print(f"    keys: {'unknown' if state['keys'] is None else state['keys']} for {state['user']}")
     firewall = state["firewall"]
     if firewall is None:
         print("    firewall: not running")
     elif firewall["rule"] is None and firewall["service"] is None:
-        print(f"    firewall: zone {firewall['zone'] or 'unknown'}; whether SSH gets in needs root (sudo herald-os setup ssh --status)")
+        print(f"    firewall: zone {firewall['zone'] or 'unknown'}; whether SSH gets in needs root (sudo madx setup ssh --status)")
     else:
         door = "open (MadX Agent OS's rule)" if firewall["rule"] else "open (the zone's own ssh service)" if firewall["service"] else "closed"
         print(f"    firewall: SSH {door} in zone {firewall['zone']}")
@@ -5204,7 +5213,7 @@ def setup_ssh(args: list[str]) -> int:
     except SystemExit as stopped:
         if stopped.code in (0, None):
             raise
-        message = said.getvalue().strip().removeprefix("herald-os: ")
+        message = said.getvalue().strip().removeprefix("madx: ").removeprefix("herald-os: ")
         print(ssh_json(error=message or f"exit {stopped.code}"))
         raise
 
@@ -5228,12 +5237,12 @@ def setup_ssh_act(opts: dict) -> int:
     except subprocess.TimeoutExpired as exc:
         command = " ".join(exc.cmd) if isinstance(exc.cmd, (list, tuple)) else str(exc.cmd)
         die(f"setup ssh stopped: `{command}` did not finish within {exc.timeout:.0f} s and was stopped. "
-            "Find out why it hangs and run this again; herald-os setup ssh --status shows what is in place.", 124)
+            "Find out why it hangs and run this again; madx setup ssh --status shows what is in place.", 124)
     except OSError as exc:
         # Anything the checks above did not foresee (a file that cannot be read or written) ends here,
         # said plainly, rather than as a traceback.
         die(f"setup ssh stopped: {exc.strerror or exc}{' (' + str(exc.filename) + ')' if exc.filename else ''}. "
-            "Fix that and run it again; herald-os setup ssh --status shows what is in place.", 1)
+            "Fix that and run it again; madx setup ssh --status shows what is in place.", 1)
     return 1
 
 
@@ -5699,7 +5708,7 @@ def plugin_cmd(args: list[str]) -> int:
         listing = relay("plugin", ["list"])
         found = next((plugin for plugin in listing.get("plugins", []) if plugin.get("id") == target), None)
         if not found:
-            die(f"no plugin {target!r} (herald-os plugin list)", 1)
+            die(f"no plugin {target!r} (madx plugin list)", 1)
         if found.get("errors"):
             die(f"{target} cannot load: " + "; ".join(found["errors"]), 1)
         if not sys.stdin.isatty():
@@ -5719,7 +5728,7 @@ def plugin_cmd(args: list[str]) -> int:
             print(json.dumps(plugins, indent=2))
             return 0
         if not plugins:
-            print(f"no plugins (herald-os plugin add <git-url>, or make a folder in {CONFIG_DIR / 'plugins'})")
+            print(f"no plugins (madx plugin add <git-url>, or make a folder in {CONFIG_DIR / 'plugins'})")
         for plugin in plugins:
             state = "broken" if plugin.get("errors") else "on" if plugin.get("enabled") else "off"
             print(f"  {plugin.get('id', '?'):<24} {state:<7} {', '.join(plugin.get('placement', [])):<20} {plugin.get('name', '')}")
@@ -5727,7 +5736,7 @@ def plugin_cmd(args: list[str]) -> int:
     if action in ("add", "update"):
         plugin = reply.get("plugin", {})
         name = f"{plugin.get('name') or target} {plugin.get('version', '')}".strip()
-        print(f"{name} installed, turned off (herald-os plugin enable {plugin.get('id', '')})" if action == "add" else f"{name} updated")
+        print(f"{name} installed, turned off (madx plugin enable {plugin.get('id', '')})" if action == "add" else f"{name} updated")
         return 0
     print(f"{target}: {action}d")
     return 0
@@ -5747,7 +5756,7 @@ def main(argv: list[str]) -> int:
                 print(f"  {name.ljust(width)}  {text}")
         return 0
     if cmd not in COMMANDS:
-        die(f"unknown command {cmd!r} (see `herald-os commands`)", 2)
+        die(f"unknown command {cmd!r} (see `madx commands`)", 2)
 
     if cmd == "channel":
         marker = CONFIG_DIR / "channel"
@@ -5773,7 +5782,7 @@ def main(argv: list[str]) -> int:
     if cmd == "omakase":
         tool = shutil.which("herald-os-omakase")
         if not tool:
-            die("herald-os-omakase is not installed", 127)
+            die("The MadX default-app installer is not installed", 127)
         return subprocess.call([tool, *(args or ["install"])])
     if cmd == "menu" and args[:1] == ["check"]:
         return menu_check()

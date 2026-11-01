@@ -1287,9 +1287,9 @@ def system_os_handler(args: dict[str, Any], **_: Any) -> str:
     def execute() -> dict[str, Any]:
         result = run(argv, timeout=timeout)
         if result.code == 127:
-            raise HostNotSupported("The herald-os command is not installed (it ships with MadX Agent OS Linux as /usr/local/bin/herald-os).")
+            raise HostNotSupported("The MadX control command is not installed. Reinstall the MadX Agent OS Linux command tools.")
         if not result.ok:
-            raise RuntimeError(result.stderr.strip() or result.stdout.strip() or f"herald-os exited {result.code}")
+            raise RuntimeError(result.stderr.strip() or result.stdout.strip() or f"MadX control command exited {result.code}")
         if action == "catalog_list":
             return {"action": action, "catalog": compact_catalog(result.stdout)}
         return {"action": action, "output": truncate(result.stdout.strip(), _OS_OUTPUT_LIMIT)}

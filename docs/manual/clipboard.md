@@ -5,7 +5,7 @@ something you copied an hour ago.
 
 ## Using it
 
-1. Press `Super+Ctrl+V` (or run `herald-os clipboard`).
+1. Press `Super+Ctrl+V` (or run `madx clipboard`).
 2. The latest 50 copies are listed, newest first; type to narrow them down.
 3. Press Return, or click one, to put it back on the clipboard, then paste with `Ctrl+V` as usual.
 

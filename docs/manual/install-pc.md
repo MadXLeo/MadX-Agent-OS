@@ -69,7 +69,7 @@ power-on; the PC's manual says which). Pick the USB stick.
   OS loads, so use a wired keyboard for it (see [below](#the-disk-password-and-your-keyboard)).
   Untick the box to install without encryption: anyone who takes the computer or its disk out can
   then read your files, and a [reset](setup-and-reset.md#reset) deletes them without a secure erase.
-  Next to Windows, only MadX Agent OS's own part of the disk is encrypted. `herald-os password --disk`
+  Next to Windows, only MadX Agent OS's own part of the disk is encrypted. `madx password --disk`
   changes the disk password later.
 
 ## 4. The first start

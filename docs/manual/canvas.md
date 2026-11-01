@@ -257,10 +257,10 @@ open, layers, text, shapes, adjustments (Auto Tone, Contrast and Color too), eff
 them between layers), masks, aligning and distributing, guides, filters, resizing, cropping and
 straightening, previews, exports, the history, and the on-device tools. Each change lands in the
 open window as you watch, as one step: `Cmd+Z` undoes it, or ask Hermes to undo (several steps at
-once if you like). On MadX Agent OS Linux, `herald-os canvas` does the same from a terminal
-(`herald-os canvas new Poster 1080x1350`, `herald-os canvas text "Night market"`,
-`herald-os canvas align bottom --layers Logo,Badge`, `herald-os canvas filter unsharp mask --amount
-120`, `herald-os canvas export ~/Desktop/poster.png`, `herald-os canvas undo --steps 2`). Hermes
+once if you like). On MadX Agent OS Linux, `madx canvas` does the same from a terminal
+(`madx canvas new Poster 1080x1350`, `madx canvas text "Night market"`,
+`madx canvas align bottom --layers Logo,Badge`, `madx canvas filter unsharp mask --amount
+120`, `madx canvas export ~/Desktop/poster.png`, `madx canvas undo --steps 2`). Hermes
 never downloads a model: when one is missing it asks you to allow it in the window.
 
 ## Compositor compatibility

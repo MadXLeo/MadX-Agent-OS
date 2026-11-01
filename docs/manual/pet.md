@@ -187,7 +187,7 @@ Settings > Pet has it all in one place:
 ## Commands and voice
 
 The pet's actions are commands like any other in MadX Agent OS: in the command bar, by voice, for
-Hermes, and on MadX Agent OS Linux with `herald-os os <command>`.
+Hermes, and on MadX Agent OS Linux with `madx os <command>`.
 
 | Command | What it does | Say |
 | --- | --- | --- |
@@ -199,8 +199,8 @@ Hermes, and on MadX Agent OS Linux with `herald-os os <command>`.
 | `pet.list` | Lists the installed pets | "list the pets" |
 | `pet.chat` | Opens the chat bubble | "talk to the pet" |
 
-On MadX Agent OS Linux, `herald-os os pet.hide` puts the pet away from a terminal, and a command's
-arguments follow as JSON: `herald-os os pet.size '{"step": 1}'`.
+On MadX Agent OS Linux, `madx os pet.hide` puts the pet away from a terminal, and a command's
+arguments follow as JSON: `madx os pet.size '{"step": 1}'`.
 
 ## Linux notes
 

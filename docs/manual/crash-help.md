@@ -24,9 +24,9 @@ Settings > Notifications > Crash help:
 ## From the command line (Linux)
 
 ```bash
-herald-os crash list                 # crashes from the last 7 days
-herald-os crash diagnose firefox     # have Hermes explain the latest one (a name or a process id)
-herald-os crash mute steam           # stop the offers; `herald-os crash mute steam off` to undo
+madx crash list                 # crashes from the last 7 days
+madx crash diagnose firefox     # have Hermes explain the latest one (a name or a process id)
+madx crash mute steam           # stop the offers; `madx crash mute steam off` to undo
 ```
 
 Or ask Hermes: "why did Firefox crash?"

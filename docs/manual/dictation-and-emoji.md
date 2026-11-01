@@ -27,7 +27,7 @@ Accessibility permission. When typing is not possible, the words are left on the
 2. Search ("party", "thumbs up"), or pick from the list.
 3. Press Return, and the emoji is typed where you were.
 
-`herald-os dictate` and `herald-os emoji` do the same from a script or a key of your own.
+`madx dictate` and `madx emoji` do the same from a script or a key of your own.
 
 ## Talking to Hermes instead
 

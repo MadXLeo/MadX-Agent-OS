@@ -1968,7 +1968,7 @@ def an_incomplete_rollback_says_so(machine: System, tmp_path: Path, capsys) -> b
     capsys.readouterr()
     outcome(machine, "--key", public_key())
     last = capsys.readouterr().err.rstrip().splitlines()[-1]
-    return last.startswith("herald-os: the rollback is incomplete")
+    return last.startswith("madx: the rollback is incomplete")
 
 
 def expire_sudo_after_the_limit(machine: System) -> None:
@@ -3105,7 +3105,7 @@ def test_status_explains_a_requirement_on_a_limit_that_is_not_running(machine, c
     state = json.loads(capsys.readouterr().out)
     assert state["limitRequired"] is True and state["rateLimit"] is False
     assert state["warnings"] == ["sshd requires the rate limit (herald-os-ssh-limit.service), which is failed, so sshd cannot start "
-                                 "until it loads: herald-os setup ssh loads it again, herald-os setup ssh --off removes SSH's settings"]
+                                 "until it loads: madx setup ssh loads it again, madx setup ssh --off removes SSH's settings"]
     machine.setup("--status")
     assert "WARNING: sshd requires the rate limit" in capsys.readouterr().out
 
@@ -3128,7 +3128,7 @@ def test_without_nft_no_firewall_only_with_firewalld_stopped_and_it_says_there_i
     captured = capsys.readouterr()
     # Said once, at the end, with the result.
     assert captured.err.count("WARNING: THERE IS NO RATE LIMIT: nft is not installed") == 1
-    assert captured.err.rstrip().splitlines()[-1].startswith("herald-os: WARNING: THERE IS NO RATE LIMIT")
+    assert captured.err.rstrip().splitlines()[-1].startswith("madx: WARNING: THERE IS NO RATE LIMIT")
     assert "NO RATE LIMIT (nft is not installed)" in captured.out and machine.on() and not machine.limited()
     machine.setup("--status", "--json")
     assert "sshd is running without the per-address rate limit" in json.loads(capsys.readouterr().out)["warnings"]
@@ -3179,7 +3179,7 @@ def test_ctrl_c_partway_puts_everything_back_and_exits_130_without_a_traceback(m
     assert snapshot(machine) == before
     assert "SSH is as it was before this run; put back:" in err and "the firewall rule in herald-os removed" in err
     assert "Traceback" not in err and "KeyboardInterrupt" not in err
-    assert err.rstrip().splitlines()[-1].startswith("herald-os: SSH is as it was before this run")
+    assert err.rstrip().splitlines()[-1].startswith("madx: SSH is as it was before this run")
 
 
 def test_a_file_error_partway_puts_everything_back_and_is_said_plainly(machine, monkeypatch, capsys):
@@ -3368,8 +3368,8 @@ def test_a_step_that_hangs_during_the_rollback_is_reported_once(machine, monkeyp
     monkeypatch.setattr(machine, "firewall", refuse_then_hang)
     err = refused(machine, capsys, "--key", public_key())
     machine.hang = []
-    warnings = [line for line in err.splitlines() if line.startswith("herald-os: WARNING:") and " ".join(remove) in line]
-    assert warnings == [f"herald-os: WARNING: `{' '.join(remove)}` did not finish within 1 s while putting things back"]
+    warnings = [line for line in err.splitlines() if line.startswith("madx: WARNING:") and " ".join(remove) in line]
+    assert warnings == [f"madx: WARNING: `{' '.join(remove)}` did not finish within 1 s while putting things back"]
     assert "could not put back" not in err and "the rollback is incomplete" in err
 
 
@@ -3873,8 +3873,8 @@ def test_when_sudo_forgets_the_password_midway_it_fails_at_once_and_the_rollback
     assert time.monotonic() - started < 10
     assert "a password is required" in err
     last = err.rstrip().splitlines()[-1]
-    assert last.startswith("herald-os: the rollback is incomplete, so SSH may not be as it was before this run. Check: ")
-    assert "herald-os setup ssh --status" in last and "herald-os setup ssh --off" in last
+    assert last.startswith("madx: the rollback is incomplete, so SSH may not be as it was before this run. Check: ")
+    assert "madx setup ssh --status" in last and "madx setup ssh --off" in last
     assert "SSH is as it was before this run" not in err
 
 
@@ -3891,10 +3891,10 @@ def test_a_rollback_with_a_hung_step_is_incomplete_and_one_without_trouble_is_co
     err = refused(machine, capsys, "--key", public_key())
     machine.hang = []
     last = err.rstrip().splitlines()[-1]
-    assert last.startswith("herald-os: the rollback is incomplete") and "`systemctl daemon-reload` did not finish" in last
+    assert last.startswith("madx: the rollback is incomplete") and "`systemctl daemon-reload` did not finish" in last
     monkeypatch.setattr(machine, "firewall", lambda tool, args, root: ("", 11) if any(arg.startswith("--add-rich-rule") for arg in args) else real(tool, args, root))
     err = refused(machine, capsys, "--key", public_key())
-    assert err.rstrip().splitlines()[-1].startswith("herald-os: SSH is as it was before this run")
+    assert err.rstrip().splitlines()[-1].startswith("madx: SSH is as it was before this run")
 
 
 
@@ -4194,7 +4194,7 @@ def test_a_table_sudo_would_not_list_is_named_with_the_command_to_remove_it(mach
     assert machine.table is not None
     assert "the table inet herald_os_ssh may still be loaded (sudo: a password is required); remove it with: " \
            "sudo /usr/sbin/nft delete table inet herald_os_ssh" in err
-    assert err.rstrip().splitlines()[-1].startswith("herald-os: the rollback is incomplete")
+    assert err.rstrip().splitlines()[-1].startswith("madx: the rollback is incomplete")
 
 
 def test_a_table_that_is_plainly_not_there_is_left_alone(machine, monkeypatch, capsys):

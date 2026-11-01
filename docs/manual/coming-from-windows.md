@@ -25,7 +25,7 @@ just ask. In the virtual machine, `Super` is `Alt` instead (see [Hotkeys](hotkey
 | Snapping (`Win+Left`, `Win+Up`) | Windows line up by themselves; `Super+Shift+Left` and `Right` move one, `Super+F` makes it wide |
 | Night light, Focus | `Super+Ctrl+N`, and do not disturb with `Super+Ctrl+,` |
 | The Microsoft Store | Settings > Software, Install in the `Super+M` menu, or ask "install Spotify" |
-| Windows Update | Update in the `Super+M` menu, or `herald-os update`; `herald-os rollback` undoes it |
+| Windows Update | Update in the `Super+M` menu, or `madx update`; `madx rollback` undoes it |
 | Windows apps you cannot do without | A Windows 11 virtual machine: [The Windows VM](windows-vm.md) |
 
 `Super+K` shows every key on screen.

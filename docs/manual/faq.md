@@ -53,7 +53,7 @@ has the details.
 Fedora Silverblue, Kinoite, Bazzite, Bluefin and other bootc systems can also switch to the MadX
 OS image in place, which replaces the system you run, so try it on a spare machine or in a virtual
 machine. Afterwards a login screen asks who signs in, and your own account and its password keep
-working; run `herald-os setup` once in your own account to install Hermes Agent there. MadX Agent OS
+working; run `madx setup` once in your own account to install Hermes Agent there. MadX Agent OS
 also adds a `hermes` account, which stays locked until you give it a password
 (`sudo passwd hermes`), and becomes an administrator only at the next restart after that. The
 exception is a system where no existing account can sign in with a password: there `hermes` signs
@@ -87,5 +87,5 @@ right-click and some buttons only appear when a pointer hovers over them.
 **How do I update?**
 On a Mac, download the new DMG and replace the app, or `git pull` and `npm run bootstrap` in your
 checkout; Hermes updates itself with `hermes update`. On MadX Agent OS Linux, the menu's Update, or
-`herald-os update`. See
+`madx update`. See
 [Updates, channels and rollback](updates.md).

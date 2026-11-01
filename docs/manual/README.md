@@ -79,7 +79,7 @@ how MadX Agent OS Linux is put together.
 
 - [Updates, channels and rollback](updates.md).
 - [Security](security.md): the firewall, SSH, fingerprints and security keys, encryption.
-- [The `herald-os` command line](command-line.md): every hotkey and menu item as a command.
+- [The `madx` command line](command-line.md): every hotkey and menu item as a command.
 - [Running inside Omarchy](omarchy.md).
 - [Arch and other Linux](other-linux.md): the Arch package and the tarball.
 

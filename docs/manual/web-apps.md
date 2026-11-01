@@ -14,8 +14,8 @@ any other app, and closing the browser does not close them.
 - **From a terminal:**
 
   ```bash
-  herald-os install webapp Notion https://www.notion.so
-  herald-os install webapp "My bank" https://bank.example.com https://bank.example.com/icon.png
+  madx install webapp Notion https://www.notion.so
+  madx install webapp "My bank" https://bank.example.com https://bank.example.com/icon.png
   ```
 
   The third address is an icon, and is optional: without it, MadX Agent OS fetches the site's own icon.
@@ -25,7 +25,7 @@ WhatsApp, X, YouTube, ChatGPT and GitHub.
 
 ## Removing one
 
-Remove > Web App… in the MadX Agent OS menu, or `herald-os remove webapp Notion`.
+Remove > Web App… in the MadX Agent OS menu, or `madx remove webapp Notion`.
 
 ## Good to know
 

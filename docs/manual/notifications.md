@@ -19,7 +19,7 @@ always appear in the bell.
 Do not disturb collects notifications in the bell without showing them, playing a sound or reading
 them aloud. A light in the menu bar shows that it is on; click the light to turn it off.
 
-- `Super+Ctrl+,` on MadX Agent OS Linux, or `herald-os toggle dnd`.
+- `Super+Ctrl+,` on MadX Agent OS Linux, or `madx toggle dnd`.
 - Settings > General > Switches > Do not disturb, on either platform.
 - Toggle > Do not disturb in the MadX Agent OS menu (`Super+M`).
 - Or ask: "turn on do not disturb".
@@ -36,5 +36,5 @@ Crash help turns the offers off or mutes a program; see [Crash help](crash-help.
 
 ## Your own notifications
 
-`herald-os notify <title> [body]` shows one from a script, a hook or a key of your own, and
-`herald-os reminder 20m stretch` schedules one; see [Reminders, notices and weather](reminders.md).
+`madx notify <title> [body]` shows one from a script, a hook or a key of your own, and
+`madx reminder 20m stretch` schedules one; see [Reminders, notices and weather](reminders.md).

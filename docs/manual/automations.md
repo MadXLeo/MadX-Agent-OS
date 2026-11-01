@@ -45,7 +45,7 @@ disk check now".
 ## Hooks
 
 For something that should run a script rather than ask Hermes, MadX Agent OS Linux has hooks: executable
-files in `~/.config/herald-os/hooks/<event>.d/` run when the event happens. `herald-os hook list`
-shows them and `herald-os hook install battery-low ~/bin/dim` adds one.
+files in `~/.config/herald-os/hooks/<event>.d/` run when the event happens. `madx hook list`
+shows them and `madx hook install battery-low ~/bin/dim` adds one.
 [Make it yours](make-it-yours.md#hooks) has examples, and
 [Troubleshooting](troubleshooting.md#hooks-and-event-automations) helps when one does not run.

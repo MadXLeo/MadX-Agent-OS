@@ -39,6 +39,9 @@ def inspect(root: Path, product: dict, assets: dict, nvidia: bool = False) -> di
     for name in COMMANDS:
         alias = root / "usr/bin" / name.replace("herald-os", product["slug"], 1)
         require(alias.is_symlink() and os.readlink(alias) == name, f"wrong command alias: {alias.name}")
+    primary = root / "usr/bin" / product["command"]
+    require(primary.is_symlink() and os.readlink(primary) == "herald-os",
+            f"wrong primary command alias: {primary.name}")
     for location, names in (
         ("system", [f"herald-os-{name}.service" for name in SYSTEM_UNITS]),
         ("user", ["herald-os-update-check.service", "herald-os-update-check.timer"]),

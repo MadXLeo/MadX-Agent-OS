@@ -19,7 +19,7 @@ After the installer and the first start (which installs Hermes Agent), MadX Agen
 
 The password is the one for the lock screen and for administrator tasks. Until there is one, the
 lock screen refuses to lock (an unlockable lock would shut you out), so set one in setup or later
-with `herald-os password` in a terminal.
+with `madx password` in a terminal.
 
 ## Reset
 
@@ -27,7 +27,7 @@ Reset erases this computer's account, its files and apps, and its saved Wi-Fi ne
 the first-start setup again at the next restart. MadX Agent OS itself stays, at the version it has.
 
 1. Back up anything you want to keep: reset deletes your home folder.
-2. In a terminal, run `herald-os reset`.
+2. In a terminal, run `madx reset`.
 3. Type `ERASE` to confirm, then your password.
 
 The computer restarts, erases the account, every Flatpak app and every saved network, sets itself up
@@ -42,16 +42,16 @@ What stays on the disk depends on its encryption:
   it goes too, including other passwords, recovery keys, and unlocking with a security key (FIDO2)
   or the TPM.
 - **Not encrypted:** reset deletes the files, but it is not a secure erase. Someone with the disk and
-  recovery tools may get some of them back, and `herald-os reset` says so before it asks you to
+  recovery tools may get some of them back, and `madx reset` says so before it asks you to
   confirm.
 
 ## The disk password
 
-To change it yourself, run `herald-os password --disk` in a terminal. It asks for your account
+To change it yourself, run `madx password --disk` in a terminal. It asks for your account
 password (for `sudo`), the current disk password (the one typed at start-up, not a recovery
 key, which it refuses), then the new one twice. It adds the new one and
 checks it before it removes the old one, so the disk always has a password that opens it; keep the
-computer on until it says it is done. If the new owner chose "Later" in setup, `herald-os password
+computer on until it says it is done. If the new owner chose "Later" in setup, `madx password
 --disk --new-owner` does what setup would have done.
 
 ## Handing over a computer

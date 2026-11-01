@@ -7,12 +7,12 @@ can look at any of it with you.
 
 | Action | MadX Agent OS Linux | Command |
 | --- | --- | --- |
-| A selection | `Print` | `herald-os capture screenshot region` |
-| The window in front | `Super+Print` | `herald-os capture screenshot window` |
-| The whole screen | `Super+Shift+Print` | `herald-os capture screenshot screen` |
+| A selection | `Print` | `madx capture screenshot region` |
+| The window in front | `Super+Print` | `madx capture screenshot window` |
+| The whole screen | `Super+Shift+Print` | `madx capture screenshot screen` |
 
 Screenshots are saved in `~/Pictures/Screenshots` on Linux and on the Desktop on a Mac.
-`herald-os capture screenshot region --edit` (or `window`, `screen`) opens the screenshot in Markup
+`madx capture screenshot region --edit` (or `window`, `screen`) opens the screenshot in Markup
 straight away to draw on it. The Capture section of
 the MadX Agent OS menu (`Super+M`) has the same, or just say "take a screenshot".
 
@@ -33,17 +33,17 @@ the microphone, and with a camera bubble in the corner.
 
 Recordings are saved in `~/Videos/Recordings` on Linux (MP4) and in `~/Movies` on a Mac.
 
-On Linux, `herald-os capture transcode <file> gif` turns a recording into a GIF (or `mp4`, `webm`),
-and `herald-os capture share <file>` puts it on the clipboard as a file to paste into a chat or a
+On Linux, `madx capture transcode <file> gif` turns a recording into a GIF (or `mp4`, `webm`),
+and `madx capture share <file>` puts it on the clipboard as a file to paste into a chat or a
 folder, and opens LocalSend, when it is installed, to send it to another device nearby.
 
 ## Colours, text and QR codes
 
 - **Pick a colour:** `Super+Ctrl+Print` (Linux), or say "pick a colour". Click anywhere; the colour
   is copied as `#rrggbb`.
-- **Copy text from the screen:** say "copy the text on screen", or `herald-os capture text`. Select
+- **Copy text from the screen:** say "copy the text on screen", or `madx capture text`. Select
   the area; the text it reads is copied. On Linux it is read by tesseract on this computer.
-- **Read a QR code:** say "read this QR code", or `herald-os capture qr`. Select the code; what it
+- **Read a QR code:** say "read this QR code", or `madx capture qr`. Select the code; what it
   says is copied, and nowhere else when it looks secret: QR codes often carry secrets, such as the
   code behind a 2FA setup, a Wi-Fi password or a card number. The notification says what kind of
   thing it was ("2FA setup code copied"), clipboard history leaves it out, and Hermes only learns
@@ -57,6 +57,6 @@ folder, and opens LocalSend, when it is installed, to send it to another device 
   when the selection holds several, nothing is copied. If the clipboard cannot keep a secret out of
   its history (on Linux, wl-clipboard before 2.2), that code is not copied either and the
   notification says so; ordinary links and text are still copied. In scripts,
-  `herald-os capture qr --print` prints the contents.
+  `madx capture qr --print` prints the contents.
 
 On a Mac these use macOS's own eyedropper and text recognition.

@@ -57,7 +57,7 @@ usable:
   bits, DSA) are skipped, and the log names each skipped line with its key type and the reason,
   never the key itself.
 
-With any key, the first start turns SSH on for those keys only, with `herald-os setup ssh` (see
+With any key, the first start turns SSH on for those keys only, with `madx setup ssh` (see
 [Security](security.md#ssh)): no passwords, never root, and at most four new connections a minute
 from any one address. With none, SSH stays off. Keys in `SSH_KEYS` must be Ed25519, ECDSA, security
 keys, or RSA of 2048 bits or more. The log lists each key's fingerprint when the installer has
@@ -66,7 +66,7 @@ GitHub account that cannot be read or has no keys, stops the install before it e
 `/tmp/herald-os-account.log` says why.
 
 The account still has no password until someone sets one in the first-start setup, as without a
-kickstart: over SSH, set it with `passwd`. Resetting the PC (`herald-os reset`) turns SSH off again
+kickstart: over SSH, set it with `passwd`. Resetting the PC (`madx reset`) turns SSH off again
 and forgets the kickstart's account name and keys: the PC starts over as if installed without them,
 with an account named `hermes` and SSH off.
 

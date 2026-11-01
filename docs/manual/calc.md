@@ -147,9 +147,9 @@ miles is 10 km", "convert 100 dollars to euros", "what time is it in Tokyo". Any
 thinking or your context ("what's 15% of my rent") goes to Hermes as usual. See
 [docs/VOICE.md](../VOICE.md).
 
-On MadX Agent OS Linux, `herald-os calc "20% of 84.50"` prints the answer (`--steps` adds the working),
-`herald-os calc - < budget.txt` works out a whole note, `herald-os calc convert 5 km miles`
-converts, and `herald-os calc history mortgage` searches the history.
+On MadX Agent OS Linux, `madx calc "20% of 84.50"` prints the answer (`--steps` adds the working),
+`madx calc - < budget.txt` works out a whole note, `madx calc convert 5 km miles`
+converts, and `madx calc history mortgage` searches the history.
 
 ## Where it keeps things
 

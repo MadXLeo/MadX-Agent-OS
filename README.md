@@ -151,11 +151,11 @@ MadX.
 3. Start the PC from the stick and follow the installer. Its disk screen lets you erase the disk or
    install next to Windows, and encrypts it unless you untick "Encrypt my data". The disk password
    is typed at every start, before Bluetooth is up, so use a wired keyboard or one with a 2.4 GHz
-   receiver for it; `herald-os password --disk` changes it later. Secure Boot can stay on.
+   receiver for it; `madx password --disk` changes it later. Secure Boot can stay on.
 4. The first start sets up Hermes Agent, then MadX Agent OS asks for your name, a password and Wi-Fi.
 
-Updates come as a whole new version of the system: `herald-os update` installs one, and
-`herald-os rollback` goes back to the one before. Already on Fedora Silverblue or another bootc
+Updates come as a whole new version of the system: `madx update` installs one, and
+`madx rollback` goes back to the one before. Already on Fedora Silverblue or another bootc
 system? It can switch to the MadX Agent OS image in place, which replaces the system you run: try it on
 a spare machine or in a virtual machine. Afterwards a login screen asks who signs in, and your own
 account and its password keep working. MadX Agent OS also adds a `hermes` account, which stays locked,
@@ -169,7 +169,7 @@ how to go back.
 git clone https://github.com/MadXLeo/MadX-Agent-OS.git
 cd MadX-Agent-OS/packaging/arch/herald-os-bin
 makepkg -si
-herald-os setup        # once per user: Hermes Agent and MadX's system tools
+madx setup        # once per user: Hermes Agent and MadX's system tools
 ```
 
 The package downloads the release build for your architecture (x86_64 or aarch64). Then choose
@@ -184,12 +184,12 @@ The package is not on the AUR yet.
 Install [the Arch package](#arch-linux), then:
 
 ```bash
-herald-os omarchy install
+madx omarchy install
 ```
 
 MadX Agent OS becomes an app inside Omarchy. It follows Omarchy's theme and has a row on the Omarchy
 menu. `Super+Alt+H` opens it, and `Super+Alt+A`, `C`, `V`, `X`, `E` and `M` ask Hermes about the
-window, open the command bar, talk, dictate, pick an emoji and show Missions. `herald-os omarchy
+window, open the command bar, talk, dictate, pick an emoji and show Missions. `madx omarchy
 remove` takes it all out again. This has been tested against Omarchy 4's own configuration and
 scripts, but not yet on an Omarchy machine: [reports](https://github.com/MadXLeo/MadX-Agent-OS/issues)
 are welcome.
@@ -205,14 +205,14 @@ sha256sum -c madx-agent-os-<version>-linux-x64.tar.gz.sha256
 sudo mkdir -p /opt/herald-os
 sudo tar -xzf madx-agent-os-<version>-linux-x64.tar.gz -C /opt/herald-os --strip-components=1
 sudo /opt/herald-os/resources/herald-os-linux/bin/herald-os-tarball install
-herald-os setup        # once per user: Hermes Agent and MadX's system tools
+madx setup        # once per user: Hermes Agent and MadX's system tools
 herald-os-app          # MadX Agent OS as an app inside your desktop
 ```
 
-`herald-os-tarball install` puts the `herald-os` commands in `/usr/local/bin` and MadX Agent OS in your
+`herald-os-tarball install` puts the `madx` commands in `/usr/local/bin` and MadX Agent OS in your
 application menu, and, if niri is installed, on your login screen; `sudo herald-os-tarball remove`
-takes them out again. `herald-os update` installs a new release once its checksum matches, and
-`herald-os rollback` goes back to the version before.
+takes them out again. `madx update` installs a new release once its checksum matches, and
+`madx rollback` goes back to the version before.
 
 The full session needs niri and the tools its menu bar and panels use (Fedora's package names are
 in [linux/image/packages.txt](linux/image/packages.txt)). It also applies MadX's theme to the
@@ -427,7 +427,7 @@ of a validated MadX build. Current artwork is in [branding](branding/README.md).
   sound, display and battery panels; screenshots, screen recording, night light and do not disturb;
   web apps in their own windows; clipboard history, a lock screen and a power menu; fingerprint and
   security-key sign-in; a firewall that refuses incoming connections; and one command,
-  `herald-os update`, that updates MadX Agent OS, Hermes and Fedora, with `herald-os rollback` to undo
+  `madx update`, that updates MadX Agent OS, Hermes and Fedora, with `madx rollback` to undo
   it.
 
 The [manual](docs/manual/README.md) covers installing and using all of it, with every hotkey,
@@ -592,9 +592,9 @@ shortcut. In the virtual machine the system key is `Alt` (`Option` on a Mac keyb
 | Lock, power menu | `Super+Ctrl+L`, `Super+Escape` | |
 | Toggle fullscreen, quit | | `Cmd+Ctrl+F`, `Cmd+Q` |
 
-On Linux, every hotkey and menu item is a `herald-os` command, so Hermes and your scripts can do
-the same things: `herald-os install app obsidian`, `herald-os theme set ice`, `herald-os update`.
-`herald-os commands` lists them all.
+On Linux, every hotkey and menu item is a `madx` command, so Hermes and your scripts can do
+the same things: `madx install app obsidian`, `madx theme set ice`, `madx update`.
+`madx commands` lists them all.
 
 ### Permissions
 
@@ -631,7 +631,7 @@ all.
 
 MadX Agent OS runs on your own Hermes, so a few of its changes reach Hermes's other sessions too:
 
-- **The system bridge plugin.** Setup (the Mac app's first start, `herald-os setup`, or
+- **The system bridge plugin.** Setup (the Mac app's first start, `madx setup`, or
   `npm run bootstrap`) links it into `~/.hermes/plugins/herald-os-bridge`, adds it to
   `plugins.enabled`, and saves the `cli` platform's toolset list with `herald_os` in it. Its tools
   run only in sessions MadX Agent OS starts; Telegram, Discord, cron and the `hermes` CLI never get them.
@@ -643,7 +643,7 @@ MadX Agent OS runs on your own Hermes, so a few of its changes reach Hermes's ot
 - **Voice** switches speech-to-text to `local` or text-to-speech to `edge` (`stt.provider`,
   `tts.provider`) when the provider you had cannot run, and tells you when it does.
 
-To undo it on Linux, run `herald-os setup --undo`. On macOS, the steps are in
+To undo it on Linux, run `madx setup --undo`. On macOS, the steps are in
 [docs/SYSTEM-BRIDGE.md](docs/SYSTEM-BRIDGE.md#what-madx-agent-os-changes-in-your-hermes).
 
 ## Building a macOS release
@@ -680,7 +680,7 @@ npm run dist:linux --workspace apps/desktop -- --arm64  # or pick one
 ```
 
 This writes `madx-agent-os-<version>-linux-<arch>.tar.gz` to `apps/desktop/release/`: the app, with the
-`herald-os` CLIs, the niri session, themes, the install catalog and the bridge plugin under
+`madx` CLIs, the niri session, themes, the install catalog and the bridge plugin under
 `resources/`. Build on the target architecture (node-pty is compiled, not cross-built); the release
 workflow builds x64 and arm64 on matching runners. The tarball is what the Arch package and the
 MadX Agent OS image install; on its own, unpack it to `/opt/herald-os` and run
@@ -717,14 +717,14 @@ CI runs all of these on Ubuntu and macOS. [CONTRIBUTING.md](CONTRIBUTING.md) has
 
 ## Updating
 
-- **MadX Agent OS Linux:** `herald-os update` (or Update in the MadX Agent OS menu) installs the new system,
-  Hermes Agent and the Flatpak apps, and `herald-os rollback` goes back.
+- **MadX Agent OS Linux:** `madx update` (or Update in the MadX Agent OS menu) installs the new system,
+  Hermes Agent and the Flatpak apps, and `madx rollback` goes back.
 - **The Mac app:** download the new DMG and replace the app in Applications. `hermes update` updates
   Hermes itself, whenever you like.
 - **Arch and Omarchy:** run `git pull` and `makepkg -si` again in `packaging/arch/herald-os-bin`.
-- **The tarball on another Linux:** `herald-os update` downloads the newest release for your
+- **The tarball on another Linux:** `madx update` downloads the newest release for your
   architecture, checks it against its `.sha256` and swaps it into `/opt/herald-os`, keeping the
-  version before in `/opt/herald-os.previous` for `herald-os rollback`. Log out and back in to use it.
+  version before in `/opt/herald-os.previous` for `madx rollback`. Log out and back in to use it.
 - **From source on macOS:** `git pull`, then `npm run bootstrap`.
 - **The development VM:** `git pull` on the Mac, then `bash linux/dev/push.sh`.
 
@@ -747,7 +747,7 @@ does not change the shell's code. Moving the pin is described in [upstream/READM
   hoc with `codesign --force --deep --sign - "/Applications/MadX Agent OS.app"`.
 - **Hermes uses shell commands instead of its system tools.** `hermes plugins list` should show
   `herald-os-bridge` as enabled; `hermes plugins enable herald-os-bridge` turns it on. From a
-  checkout, re-run `npm run bootstrap`; on Linux, `herald-os setup`. Then restart MadX Agent OS.
+  checkout, re-run `npm run bootstrap`; on Linux, `madx setup`. Then restart MadX Agent OS.
 - **The VM's first boot fails or never finishes.** A failed step prints
   `==> Provisioning FAILED at line N`, and `bash linux/vm/run-qemu.sh console` shows where it
   stopped. `/var/log/herald-os-provision.log` in the VM has the whole run (`bash linux/dev/push.sh ssh`

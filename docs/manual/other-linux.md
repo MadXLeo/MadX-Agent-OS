@@ -7,7 +7,7 @@ app inside the desktop you already use.
 | You run | Install | The full session | As an app |
 | --- | --- | --- | --- |
 | Arch Linux | The Arch package | Yes, with niri | Yes |
-| Omarchy | The Arch package, then [`herald-os omarchy install`](omarchy.md) | Yes, with niri | Yes, the usual way there |
+| Omarchy | The Arch package, then [`madx omarchy install`](omarchy.md) | Yes, with niri | Yes, the usual way there |
 | Another Linux | The release tarball | Yes, with niri | Yes |
 
 The full session needs [niri](https://github.com/YaLTeR/niri) and the tools its menu bar and panels
@@ -20,7 +20,7 @@ about this window"); GNOME and KDE are not supported yet
 ```bash
 git clone https://github.com/MadXLeo/MadX-Agent-OS.git
 cd MadX-Agent-OS/packaging/arch/herald-os-bin && makepkg -si
-herald-os setup        # once per account: Hermes Agent and MadX's system tools
+madx setup        # once per account: Hermes Agent and MadX's system tools
 ```
 
 The package downloads the release build for x86_64 or aarch64. It is not on the AUR yet
@@ -38,10 +38,10 @@ sha256sum -c "madx-agent-os-$VERSION-linux-x64.tar.gz.sha256"
 sudo mkdir -p /opt/herald-os
 sudo tar -xzf "madx-agent-os-$VERSION-linux-x64.tar.gz" -C /opt/herald-os --strip-components=1
 sudo /opt/herald-os/resources/herald-os-linux/bin/herald-os-tarball install
-herald-os setup        # once per account
+madx setup        # once per account
 ```
 
-This puts the `herald-os` commands in `/usr/local/bin`, MadX Agent OS in your application menu and, if
+This puts the `madx` commands in `/usr/local/bin`, MadX Agent OS in your application menu and, if
 niri is installed, on your login screen. `sudo herald-os-tarball remove` takes them out again.
 
 ## Starting it
@@ -59,7 +59,7 @@ inside your own desktop changes none of those files.
 
 ## Updating
 
-`herald-os update` updates MadX Agent OS (a newer release for the tarball, checked against its
+`madx update` updates MadX Agent OS (a newer release for the tarball, checked against its
 checksum), the system's packages, Flatpaks and Hermes. For the Arch package, run `git pull` and
 `makepkg -si` again. See [Updates, channels and rollback](updates.md).
 

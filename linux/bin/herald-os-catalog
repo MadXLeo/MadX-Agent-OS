@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""MadX Agent OS install catalog: the software the control menu, Settings, Hermes and `herald-os install <id>` offer.
+"""MadX Agent OS install catalog: the software the control menu, Settings, Hermes and `madx install <id>` offer.
 
-  herald-os-catalog list [--json] [--group <id>]
-  herald-os-catalog install <id> [--ram <GB>] [--cpus <n>] [--disk <GB>]
-  herald-os-catalog remove <id> [--purge]
-  herald-os-catalog status <id>
-  herald-os-catalog pkg manager | pkg install|remove|has|available <name>...   (the package layer the other scripts share)
-  herald-os-catalog windows start|stop|status|connect|remove [--purge]
+  madx catalog list [--json] [--group <id>]
+  madx catalog install <id> [--ram <GB>] [--cpus <n>] [--disk <GB>]
+  madx catalog remove <id> [--purge]
+  madx catalog status <id>
+  madx catalog pkg manager | pkg install|remove|has|available <name>...   (the package layer the other scripts share)
+  madx catalog windows start|stop|status|connect|remove [--purge]
 
 The catalog is linux/catalog/*.json. Each entry lists install methods in order of preference
 (flatpak, dnf, pacman, aur, npm, mise, script, webapp, link); the first one this machine can use
@@ -152,7 +152,7 @@ def pkg_run(action: str, names: list[str], manager: str | None = None) -> int:
     argv = pkg_command(action, names, manager)
     code = call(argv)
     if code != 0 and argv[:2] == ["sudo", "-n"]:
-        print("herald-os: this needs administrator rights; run the same `herald-os install …` in a terminal to type your password", file=sys.stderr)
+        print("madx: this needs administrator rights; run the same `madx install …` in a terminal to type your password", file=sys.stderr)
     return code
 
 
@@ -197,7 +197,7 @@ def find_entry(entry_id: str, groups: list[dict] | None = None) -> tuple[dict, d
         for entry in group["entries"]:
             if entry["id"] == entry_id:
                 return group, entry
-    raise CatalogError(f"{entry_id!r} is not in the catalog (see `herald-os catalog list`)")
+    raise CatalogError(f"{entry_id!r} is not in the catalog (see `madx catalog list`)")
 
 
 def arch_label(arches: list[str]) -> str:
@@ -736,7 +736,7 @@ class Windows(Recipe):
 
     def connect(self) -> int:
         if not self.installed():
-            raise CatalogError("Windows is not installed (herald-os install windows)")
+            raise CatalogError("Windows is not installed (madx install windows)")
         if self.status() != "running":
             call(["podman", "start", self.NAME])
         try:
@@ -802,7 +802,7 @@ def main(argv: list[str]) -> int:
             return 0
         if cmd in ("install", "remove", "status"):
             if not args:
-                raise CatalogError(f"{cmd} needs a catalog id (see `herald-os catalog list`)")
+                raise CatalogError(f"{cmd} needs a catalog id (see `madx catalog list`)")
             if cmd == "install":
                 return install(args[0], opts)
             if cmd == "remove":

@@ -275,7 +275,7 @@ Settings > Pet Room:
 | `room.open` | Opens the Pet Room | "show the pet room", "open the pet room", "show what Hermes is doing" |
 | `room.status` | Says how many agents are at work, waiting for you or idle, which automations are running, and what each one is doing; with the lane on, it adds the work active outside MadX, with its steps when live steps are on | "what is in the pet room", "what is Hermes doing" |
 
-On MadX Agent OS Linux, `herald-os os room.open` opens it from a terminal.
+On MadX Agent OS Linux, `madx os room.open` opens it from a terminal.
 
 ## What it shows, and what it does not
 

@@ -10,11 +10,11 @@ Install the Arch package, then let MadX Agent OS fit itself into Omarchy:
 ```bash
 git clone https://github.com/MadXLeo/MadX-Agent-OS.git
 cd MadX-Agent-OS/packaging/arch/herald-os-bin && makepkg -si
-herald-os setup              # once: Hermes Agent and MadX's system tools
-herald-os omarchy install
+madx setup              # once: Hermes Agent and MadX's system tools
+madx omarchy install
 ```
 
-`herald-os omarchy status` shows what is in place, and `herald-os omarchy remove` takes it all out
+`madx omarchy status` shows what is in place, and `madx omarchy remove` takes it all out
 again. It works with Omarchy 4 and Omarchy 3, and never overwrites a file of yours: when one is in
 the way, it prints the line to add instead.
 
@@ -35,9 +35,9 @@ the way, it prints the line to add instead.
 | Emoji | `Super+Alt+E` | `Super+Alt+H`, then E |
 | Missions | `Super+Alt+M` | `Super+Alt+H`, then M |
 
-- **Updates:** `herald-os update` updates MadX Agent OS and Hermes, and leaves the system to
+- **Updates:** `madx update` updates MadX Agent OS and Hermes, and leaves the system to
   `omarchy-update`. Apps from Settings > Software install through Omarchy's own package tools.
-- **Fingerprint and security keys:** `herald-os setup fingerprint` and `herald-os setup fido2` run
+- **Fingerprint and security keys:** `madx setup fingerprint` and `madx setup fido2` run
   Omarchy's own setup for them.
 
 ## Sharing Hermes with Hermes Desktop
