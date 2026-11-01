@@ -1,9 +1,11 @@
 import { useStore } from '@nanostores/react'
-import { type ComponentType, Suspense, lazy } from 'react'
+import { type ComponentType, Suspense, lazy, useRef } from 'react'
+import { useElementNarrow } from '../lib/use-element-narrow.ts'
 import { SurfaceErrorBoundary } from '../components/error-boundary.tsx'
 import { $page } from '../store/windows.ts'
 import type { PageId } from './apps.ts'
 import { Sidebar } from './Sidebar.tsx'
+import { WorkspaceHeader } from './WorkspaceHeader.tsx'
 
 // Pages load on first visit and stay mounted afterwards (keep-alive: chat, files, terminals).
 const PAGE_VIEW: Record<PageId, ComponentType> = {
@@ -18,7 +20,7 @@ const PAGE_VIEW: Record<PageId, ComponentType> = {
 }
 
 const PAGE_LABEL: Record<PageId, string> = {
-  overview: 'Overview',
+  overview: 'MadX Home',
   hermes: 'Hermes',
   missions: 'Missions',
   memory: 'Memory',
@@ -33,13 +35,16 @@ const visited = new Set<PageId>(['overview'])
 /** Sidebar + the current page. Visited pages stay mounted; only the active one is visible. */
 export function MainWindow() {
   const page = useStore($page)
+  const shellRef = useRef<HTMLDivElement>(null)
+  const compact = useElementNarrow(shellRef, 700)
   visited.add(page)
 
   return (
-    <div className="flex h-full">
-      <Sidebar />
-      <div className="relative min-w-0 flex-1 py-3 pr-3">
-        <div className="glass-card relative h-full overflow-hidden rounded-xl" style={{ background: 'var(--color-page, rgba(5, 18, 66, 0.42))' }}>
+    <div ref={shellRef} className="madx-shell">
+      <Sidebar compact={compact} />
+      <div className="madx-shell-content">
+        <WorkspaceHeader />
+        <div className="madx-page-stage">
           {[...visited].map(id => {
             const View = PAGE_VIEW[id]
             const active = id === page

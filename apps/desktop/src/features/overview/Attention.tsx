@@ -7,6 +7,7 @@ import { t, useT } from '../../store/i18n.ts'
 import { $reviewMissions, markReviewed } from '../../store/missions.ts'
 import { $pendingRequests, type PendingRequest } from '../../store/requests.ts'
 import { showPage } from '../../store/windows.ts'
+import { $connection } from '../../store/gateway.ts'
 import { FileThumb, IconTile, Quiet } from './shared.tsx'
 
 /*
@@ -30,6 +31,7 @@ function describe(entry: PendingRequest): string {
 
 export function Attention() {
   useT()
+  const online = useStore($connection) === 'open'
   const pending = useStore($pendingRequests)
   const reviews = useStore($reviewMissions)
   const empty = pending.length === 0 && reviews.length === 0
@@ -37,7 +39,7 @@ export function Attention() {
   return (
     <Section title={t('overview.attention')}>
       {empty ? (
-        <Quiet>{t('overview.attention.nothing')}</Quiet>
+        <Quiet>{t(online ? 'overview.attention.nothing' : 'madx.engineOffline')}</Quiet>
       ) : (
         <div className="stagger flex flex-col gap-2.5">
           {pending.map(entry => {

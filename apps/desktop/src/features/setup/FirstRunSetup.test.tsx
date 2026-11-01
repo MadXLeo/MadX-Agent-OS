@@ -44,7 +44,7 @@ const SIGNED_OUT_AUTH = $hermesAuth.get()
 
 // What may read the same in every language: product names, and the keyboard shortcuts, commands
 // and units that stay as they are (en.ts says which). The longer command goes first.
-const KEPT = [PRODUCT.name, 'Hermes', 'OpenRouter', 'Super+Space', 'Super+M', 'herald-os password --disk --new-owner', 'herald-os password', 'API', 'GHz', 'TPM']
+const KEPT = [PRODUCT.name, 'Hermes', 'OpenRouter', 'Super+Space', 'Super+M', 'madx password --disk --new-owner', 'madx password', 'API', 'GHz', 'TPM']
 
 // Portuguese words spelled as English ones are ("o menu", "for ligado", "use pelo menos", "um terminal",
 // "teclado Bluetooth").
@@ -397,7 +397,7 @@ describe("first-run setup's account step for a new account", () => {
 
   it.each([
     ['tooShort', 'Use at least 8 characters.'],
-    ['noTerminal', 'The password cannot be set here; run herald-os password in a terminal.'],
+    ['noTerminal', 'The password cannot be set here; run madx password in a terminal.'],
     ['timeout', 'Setting the password took too long. Try again.'],
     ['failed', 'The password was not set.']
   ] as const)('says %s in its own words', async (reason, expected) => {

@@ -6,6 +6,7 @@ import { $agents } from '../../store/agents.ts'
 import { $activeChatId, $chats } from '../../store/chat.ts'
 import { t, useT } from '../../store/i18n.ts'
 import { showPage } from '../../store/windows.ts'
+import { $connection } from '../../store/gateway.ts'
 import { agentNameFor, Avatar, Quiet, titleCase } from './shared.tsx'
 
 /*
@@ -49,6 +50,7 @@ function oneLine(text: string | undefined, max = 60): string {
 
 export function WorkingWithYou() {
   useT()
+  const online = useStore($connection) === 'open'
   const agents = useStore($agents)
   const chats = useStore($chats)
   const workers: Worker[] = []
@@ -87,7 +89,7 @@ export function WorkingWithYou() {
 
   return (
     <Section title={t('overview.working')}>
-      {workers.length === 0 ? (
+      {!online ? <Quiet>{t('madx.engineOffline')}</Quiet> : workers.length === 0 ? (
         <Quiet>{t('overview.worker.idle')}</Quiet>
       ) : (
         <GlassCard className="stagger flex flex-col divide-y divide-line p-1">

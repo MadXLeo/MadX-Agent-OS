@@ -79,10 +79,10 @@ export function SettingsPage() {
   }, [focus])
 
   return (
-    <div className="page-enter flex h-full flex-col">
+    <div className="madx-settings page-enter flex h-full flex-col">
       <PageHeader icon="settings" title={t('app.settings')} actions={<SearchField value={query} onChange={setQuery} placeholder={t('settings.search')} className="w-[300px]" />} />
 
-      <div className="flex min-h-0 flex-1 gap-4 px-6 pb-4">
+      <div className="madx-settings-body flex min-h-0 flex-1 gap-4 px-6 pb-4">
         <nav className="flex w-[170px] shrink-0 flex-col gap-0.5" aria-label={t('settings.sections')}>
           {SECTIONS.map(item => {
             const active = !searching && item.id === section

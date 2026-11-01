@@ -11,7 +11,7 @@ import { AppTile } from '../app-icon.tsx'
 
 export function PageHeader({ icon, title, subtitle, actions, className }: { icon: AppIconId; title: string; subtitle?: string; actions?: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('flex items-center justify-between gap-4 px-6 pt-5 pb-4', className)}>
+    <div className={cn('madx-page-header flex items-center justify-between gap-4 px-6 pt-5 pb-4', className)}>
       <div className="flex items-center gap-3.5">
         <AppTile id={icon} size={44} />
         <div>
@@ -19,7 +19,7 @@ export function PageHeader({ icon, title, subtitle, actions, className }: { icon
           {subtitle && <div className="text-[12.5px] text-fg-3">{subtitle}</div>}
         </div>
       </div>
-      {actions && <div className="flex items-center gap-2">{actions}</div>}
+      {actions && <div data-page-actions className="flex items-center gap-2">{actions}</div>}
     </div>
   )
 }

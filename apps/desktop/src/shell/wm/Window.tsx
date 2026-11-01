@@ -103,13 +103,14 @@ export const Window = memo(function Window({ win, children, chrome = true }: { w
       role="dialog"
       aria-label={win.title}
       data-window-id={win.id}
+      data-focused={focused}
       onPointerDownCapture={() => {
         if (!focused) {
           focusWindow(win.id)
         }
       }}
       className={cn(
-        'glass absolute flex flex-col overflow-hidden rounded-2xl',
+        'madx-window glass absolute flex flex-col overflow-hidden rounded-2xl',
         win.phase === 'opening' && 'window-enter',
         win.phase === 'closing' && 'window-leave',
         win.phase === 'minimizing' && 'window-minimize',
@@ -121,7 +122,7 @@ export const Window = memo(function Window({ win, children, chrome = true }: { w
     >
       {chrome && (
         <div
-          className="flex h-10 shrink-0 items-center gap-3 px-3 select-none"
+          className="madx-window-chrome flex h-10 shrink-0 items-center gap-3 px-3 select-none"
           onPointerDown={event => {
             if ((event.target as HTMLElement).closest('button')) {
               return
@@ -133,13 +134,12 @@ export const Window = memo(function Window({ win, children, chrome = true }: { w
           }}
           onDoubleClick={() => toggleMaximize(win.id)}
         >
-          <div className="group flex items-center gap-2">
-            <TrafficLight color="#ff5f57" label={main ? 'Hide' : 'Close'} onClick={() => closeWindow(win.id)} glyph="×" />
-            <TrafficLight color="#febc2e" label="Minimize" onClick={() => minimizeWindow(win.id)} glyph="–" />
-            <TrafficLight color="#28c840" label="Zoom" onClick={() => toggleMaximize(win.id)} glyph="+" />
+          <div className={cn('min-w-0 flex-1 truncate text-[12.5px] font-medium', focused ? 'text-fg' : 'text-fg-3')}>{win.title}</div>
+          <div className="flex items-center gap-1">
+            <WindowControl label="Minimize" onClick={() => minimizeWindow(win.id)} glyph="−" />
+            <WindowControl label={win.maximized ? 'Restore' : 'Maximize'} onClick={() => toggleMaximize(win.id)} glyph={win.maximized ? '⧉' : '□'} />
+            <WindowControl label={main ? 'Hide' : 'Close'} onClick={() => closeWindow(win.id)} glyph="×" close />
           </div>
-          <div className={cn('min-w-0 flex-1 truncate text-center text-[12.5px] font-medium', focused ? 'text-fg' : 'text-fg-3')}>{win.title}</div>
-          <div className="w-[62px]" />
         </div>
       )}
       <div className="relative min-h-0 flex-1">
@@ -151,17 +151,18 @@ export const Window = memo(function Window({ win, children, chrome = true }: { w
   )
 })
 
-function TrafficLight({ color, label, onClick, glyph }: { color: string; label: string; onClick: () => void; glyph: string }) {
+function WindowControl({ label, onClick, glyph, close }: { label: string; onClick: () => void; glyph: string; close?: boolean }) {
   return (
     <button
       type="button"
       aria-label={label}
+      title={label}
+      data-close={close}
       onClick={event => {
         event.stopPropagation()
         onClick()
       }}
-      className="flex size-3 items-center justify-center rounded-full text-[9px] leading-none font-bold text-black/0 shadow-[inset_0_0_0_1px_rgba(0,0,0,.15)] transition-colors group-hover:text-black/60"
-      style={{ background: color }}
+      className="madx-window-control"
     >
       {glyph}
     </button>

@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '@xterm/xterm/css/xterm.css';
+@import './madx-design.css';
 
 /*
  * Herald OS design tokens: deep-blue glass on a living wallpaper.
@@ -121,7 +122,7 @@
   --dock-h: 78px;
 }
 
-/* The previous dark preset stays selectable. */
+/* Graphite is the MadX default; saved palettes and other presets remain selectable. */
 :root[data-theme='graphite'] {
   --color-bg: #07080a;
   --color-glass: rgba(17, 20, 26, 0.92);
@@ -165,7 +166,7 @@ body,
  * windows, so glass fills are near-opaque; the chrome surfaces (menu bar, dock, command overlay) sit
  * on transparent windows so the wallpaper and neighbours show around them.
  */
-:root[data-shell-mode='panels'] {
+:root[data-shell-mode='panels']:not([data-theme='graphite']) {
   --color-glass: rgba(7, 22, 76, 0.94);
   --color-glass-2: rgba(18, 46, 122, 0.72);
   --color-glass-3: rgba(34, 76, 170, 0.78);

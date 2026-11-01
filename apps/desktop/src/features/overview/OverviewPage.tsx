@@ -1,12 +1,15 @@
 import { useStore } from '@nanostores/react'
-import { IconPalette, IconSunHigh, IconTargetArrow } from '@tabler/icons-react'
-import { useEffect, useRef, useState } from 'react'
+import { IconActivity, IconBell, IconPalette, IconSunHigh, IconTargetArrow } from '@tabler/icons-react'
+import { useEffect, useState } from 'react'
 import { EmptyGlass, LinkAction, Section, StatusDot } from '../../components/ui/glass.tsx'
-import { cn } from '../../lib/cn.ts'
 import { greetingFor } from '../../lib/format.ts'
 import { startConversation } from '../../store/bots.ts'
-import { $activeChat, createChat, runSlash, sendPrompt } from '../../store/chat.ts'
-import { $threads } from '../../store/continuity.ts'
+import { $activeChat, $chats, createChat, runSlash, sendPrompt } from '../../store/chat.ts'
+import { $pendingRequests } from '../../store/requests.ts'
+import { $agents } from '../../store/agents.ts'
+import { runCommand } from '../../store/os-commands.ts'
+import { focusSettings } from '../settings/sections/shared.tsx'
+import { PRODUCT } from '../../../shared/product.ts'
 import { $connection } from '../../store/gateway.ts'
 import { useT } from '../../store/i18n.ts'
 import { $activeMissions, $reviewMissions } from '../../store/missions.ts'
@@ -19,6 +22,7 @@ import { PickUp } from './PickUp.tsx'
 import { RecentWork } from './RecentWork.tsx'
 import { titleCase } from './shared.tsx'
 import { TodayPanel } from './TodayPanel.tsx'
+import { SystemHealth } from './SystemHealth.tsx'
 
 const MISSIONS_SHOWN = 3
 
@@ -28,12 +32,14 @@ export function OverviewPage() {
   const connection = useStore($connection)
   const active = useStore($activeMissions)
   const review = useStore($reviewMissions)
-  const threads = useStore($threads)
+  const chats = useStore($chats)
+  const chat = useStore($activeChat)
+  const agents = useStore($agents)
+  const pending = useStore($pendingRequests)
+  const working = Object.values(chats).filter(item => item.streaming).length + Object.values(agents).filter(item => item.status === 'running' || item.status === 'queued').length
   const info = useSystemInfo()
   const [now, setNow] = useState(() => new Date())
   const [draft, setDraft] = useState<{ text: string; id: number }>()
-  const rootRef = useRef<HTMLDivElement>(null)
-  const narrow = useNarrow(rootRef, 900)
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 60_000)
@@ -74,75 +80,55 @@ export function OverviewPage() {
   }
 
   return (
-    <div ref={rootRef} className="h-full overflow-y-auto">
-      <div className={cn('flex min-h-full gap-6 px-6 pt-6 pb-8', narrow && 'flex-col gap-7')}>
-        <main className="flex min-w-0 flex-1 flex-col gap-7">
-          <div className="flex flex-col gap-5">
-            <div className="flex items-center gap-2 text-[10.5px] font-medium tracking-[0.14em] text-fg-3 uppercase">
-              <StatusDot tone={online ? 'ok' : 'warn'} pulse={!online} />
-              {online ? t('overview.ready') : t('overview.connecting')}
-            </div>
-            <div>
-              <h1 className="text-[28px] leading-tight font-semibold tracking-tight text-fg">{greeting}</h1>
-              <div className="mt-1 text-[16px] text-fg-2">{threads.length > 0 ? t('overview.welcomeBack') : t('overview.tagline')}</div>
-            </div>
-            <OverviewComposer disabled={!online} placeholder={online ? t('overview.composerPlaceholder') : t('overview.composerStarting')} onSubmit={ask} draft={draft} />
-            <div className="flex flex-wrap items-center gap-2">
-              <BotChip disabled={!online} />
-              <QuickAction icon={<IconSunHigh />} label={t('overview.planMyDay')} disabled={!online} onClick={() => void submit(t('overview.planMyDayPrompt'))} />
-              <QuickAction icon={<IconTargetArrow />} label={t('overview.startMission')} disabled={!online} onClick={() => void startMission()} />
-              <QuickAction icon={<IconPalette />} label={t('overview.makeTheme')} disabled={!online} onClick={() => setDraft({ text: t('overview.makeThemeDraft'), id: Date.now() })} />
-            </div>
-          </div>
-
-          <PickUp />
-
-          <Section title={t('overview.activeMissions')} action={<LinkAction onClick={() => showPage('missions')}>{t('overview.seeAll')}</LinkAction>}>
-            {missions.length === 0 ? (
-              <EmptyGlass title={t('overview.noMissions')} description={t('overview.noMissionsHint')} />
-            ) : (
-              <div className="stagger flex flex-col gap-3">
-                {missions.map(mission => (
-                  <MissionCard key={mission.id} mission={mission} />
-                ))}
-              </div>
-            )}
-          </Section>
-
-          <RecentWork />
-        </main>
-
-        {/* As a compositor tile the window can get narrow: stack the Today panel under the main column. */}
-        {!narrow && <span aria-hidden="true" className="w-px shrink-0 self-stretch bg-line" />}
-
-        <TodayPanel now={now} stacked={narrow} />
+    <main className="madx-home">
+      <header className="madx-home-heading">
+        <div><div className="madx-eyebrow">{t('app.overview')} / {PRODUCT.ecosystem}</div><h1>{greeting}</h1></div>
+        <time dateTime={now.toISOString()}>{now.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</time>
+      </header>
+      <div className="madx-activity-strip">
+        <Activity label={t('madx.working')} value={online ? working : null} icon={<IconActivity size={20} />} onClick={() => showPage('hermes')} />
+        <Activity label={t('madx.attention')} value={online ? pending.length + review.length : null} icon={<IconBell size={20} />} onClick={() => pending.length ? void runCommand('requests.focus', {}, { source: 'ui' }) : showPage('missions')} />
+        <Activity label={t('madx.missions')} value={online ? active.length : null} icon={<IconTargetArrow size={20} />} onClick={() => showPage('missions')} />
       </div>
-    </div>
+      <div className="madx-home-workspace">
+        <section className="madx-home-compose">
+          <h2>{t('madx.workspace')}</h2>
+          <p>{t(online ? 'madx.workspaceHint' : 'madx.offlineHint')}</p>
+          <OverviewComposer disabled={!online} placeholder={online ? t('overview.composerPlaceholder') : t('madx.engineOffline')} onSubmit={ask} draft={draft} />
+          <div className="madx-home-tools">
+            <BotChip disabled={!online} />
+            <QuickAction icon={<IconSunHigh />} label={t('overview.planMyDay')} disabled={!online} onClick={() => void ask(t('overview.planMyDayPrompt'))} />
+            <QuickAction icon={<IconTargetArrow />} label={t('overview.startMission')} disabled={!online} onClick={() => void startMission()} />
+            <QuickAction icon={<IconPalette />} label={t('overview.makeTheme')} disabled={!online} onClick={() => setDraft({ text: t('overview.makeThemeDraft'), id: Date.now() })} />
+          </div>
+        </section>
+        <section className="madx-home-status" aria-label={t('madx.status')}>
+          <h2>{t('madx.status')}</h2>
+          <dl>
+            <div><dt>{t('madx.engine')}</dt><dd className="flex items-center gap-2"><StatusDot tone={online ? 'ok' : 'muted'} />{online ? 'Hermes Agent' : t('madx.engineOffline')}</dd></div>
+            <div><dt>{t('madx.model')}</dt><dd>{chat?.info.model || t('madx.noModel')}</dd></div>
+            <div><dt>{t('madx.account')}</dt><dd>{info?.fullName || info?.userName || t('madx.localAccount')}</dd></div>
+            <SystemHealth />
+          </dl>
+          <button type="button" onClick={() => { focusSettings({ section: 'agents' }); showPage('settings') }}>{PRODUCT.apps.models} ↗</button>
+        </section>
+      </div>
+      <PickUp />
+      <div className="madx-home-work">
+        <Section title={t('overview.activeMissions')} action={<LinkAction onClick={() => showPage('missions')}>{t('overview.seeAll')}</LinkAction>}>
+          {!online && <p className="mb-3 text-xs text-fg-3">{t('madx.cachedMissions')}</p>}
+          {missions.length === 0 ? <EmptyGlass title={t(online ? 'overview.noMissions' : 'madx.unavailable')} description={t(online ? 'overview.noMissionsHint' : 'madx.engineOffline')} /> : <div className="stagger flex flex-col gap-3">{missions.map(mission => <MissionCard key={mission.id} mission={mission} />)}</div>}
+        </Section>
+        <RecentWork />
+      </div>
+      <div className="madx-home-context"><TodayPanel now={now} stacked /></div>
+    </main>
   )
 }
 
-/** True while the element is narrower than `threshold` px. */
-function useNarrow(ref: React.RefObject<HTMLElement | null>, threshold: number): boolean {
-  const [narrow, setNarrow] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-
-    if (!el) {
-      return
-    }
-
-    const observer = new ResizeObserver(entries => {
-      const width = entries[0]?.contentRect.width ?? el.clientWidth
-      setNarrow(width < threshold)
-    })
-    observer.observe(el)
-    setNarrow(el.clientWidth < threshold)
-
-    return () => observer.disconnect()
-  }, [ref, threshold])
-
-  return narrow
+function Activity({ label, value, icon, onClick }: { label: string; value: number | null; icon: React.ReactNode; onClick: () => void }) {
+  const t = useT()
+  return <button type="button" className="madx-activity-card" onClick={onClick}>{icon}<div><strong aria-label={value === null ? t('madx.unavailable') : undefined}>{value ?? '—'}</strong><span>{label}</span></div></button>
 }
 
 function QuickAction({ icon, label, onClick, disabled }: { icon: React.ReactNode; label: string; onClick: () => void; disabled?: boolean }) {

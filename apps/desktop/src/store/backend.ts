@@ -5,6 +5,7 @@ import { LEGACY_NOTIFY_KEYS, NOTIFY_DEFAULTS, readLegacyNotifyFlags } from '../.
 import { PALETTE_PROPERTIES, paletteVars, schemeOf } from '../../shared/theme.ts'
 import { VOICE_DEFAULTS } from '../../shared/voice-prefs.ts'
 import { logFailure } from '../lib/report.ts'
+import { effectiveVisualQuality } from '../../shared/visual-quality.ts'
 
 /** Cache of Electron's backend truth; Electron is authoritative. */
 export const $backend = atom<BackendState>({ phase: 'idle', attempt: 0, logTail: [] })
@@ -35,6 +36,8 @@ export function applyPrefsToDocument(prefs: HeraldOSPrefs): void {
   root.dataset.accent = prefs.accent
   root.dataset.theme = prefs.theme
   root.dataset.reduceMotion = String(prefs.reduceMotion)
+  root.dataset.visualQuality = effectiveVisualQuality(prefs.visualQuality, $env.get()?.rendering)
+  root.dataset.dockMagnification = String(prefs.dockMagnification !== false)
 
   // Presets live in styles.css; any other theme's palette is derived from its colours.
   for (const property of PALETTE_PROPERTIES) {
@@ -92,7 +95,10 @@ export function bindBackendStores(): () => void {
   const offWindow = window.heraldOS.window.onState(state => $windowState.set(state))
   void window.heraldOS.backend.getState().then(state => $backend.set(state)).catch(logFailure('backend.getState'))
   void window.heraldOS.window.getState().then(state => $windowState.set(state)).catch(logFailure('window.getState'))
-  void window.heraldOS.env().then(info => $env.set(info)).catch(logFailure('env'))
+  void window.heraldOS.env().then(info => {
+    $env.set(info)
+    applyPrefsToDocument($prefs.get())
+  }).catch(logFailure('env'))
   void window.heraldOS.prefs
     .get()
     .then(async prefs => {

@@ -19,8 +19,8 @@ import { $switches, setSwitch, switchLabel } from '../store/switches.ts'
 import { $recording } from '../store/capture.ts'
 import { $dictation, toggleDictation } from '../store/dictation.ts'
 import { MenuBarWidgets } from '../features/plugins/PluginSlots.tsx'
-import { isMainSurface, relayToMain } from '../store/shell.ts'
-import { toggleCommandBar } from '../store/surface.ts'
+import { isMainSurface, relayToMain, openSurface } from '../store/shell.ts'
+import { $applicationsOpen, toggleCommandBar } from '../store/surface.ts'
 import { $systemStats, useNetworkStatus, useSystemStats } from '../store/system.ts'
 import { $focusedTitle } from '../store/windows.ts'
 import { VoiceIndicator } from '../features/voice/VoiceIndicator.tsx'
@@ -200,7 +200,8 @@ export function BackendBadge() {
     return null
   }
 
-  return <span className="ml-2 rounded-full bg-warn/20 px-2 py-0.5 text-[11px] text-warn">{backend.phase === 'failed' ? t('menuBar.hermesOffline') : backend.phase === 'waiting' ? t('menuBar.waitingForHermes') : t('menuBar.startingHermes')}</span>
+  const offline = backend.phase === 'failed' || backend.phase === 'stopped' || backend.phase === 'ready'
+  return <span className="ml-2 rounded-full bg-warn/20 px-2 py-0.5 text-[11px] text-warn">{offline ? t('menuBar.hermesOffline') : backend.phase === 'waiting' ? t('menuBar.waitingForHermes') : t('menuBar.startingHermes')}</span>
 }
 
 export function MenuBar() {
@@ -228,10 +229,9 @@ export function MenuBar() {
   }, [spaceMenu])
 
   return (
-    <header className="drag-region absolute inset-x-0 top-0 z-(--z-menubar) flex h-(--menubar-h) items-center justify-between px-3 text-[12.5px] text-fg select-none" style={{ background: 'linear-gradient(180deg, var(--menubar-from, rgba(3,10,40,.55)), var(--menubar-to, rgba(3,10,40,.15)))' }}>
+    <header className="madx-topbar drag-region absolute inset-x-0 top-0 z-(--z-menubar) flex h-(--menubar-h) items-center justify-between px-3 text-[12.5px] text-fg select-none" style={{ background: 'linear-gradient(180deg, var(--menubar-from, rgba(3,10,40,.55)), var(--menubar-to, rgba(3,10,40,.15)))' }}>
       <div className="flex items-center gap-2.5 pl-[74px]">
-        <HeraldLogo height={12} />
-        <span className="font-semibold">{PRODUCT.name}</span>
+        <MadxLauncherButton />
         {title !== PRODUCT.name && (
           <>
             <span className="text-fg-4">·</span>
@@ -275,4 +275,11 @@ export function MenuBar() {
       <MenuBarStatus onSearch={() => toggleCommandBar(true)} onBell={() => $notificationsOpen.set(!notificationsOpen)} bellActive={notificationsOpen} />
     </header>
   )
+}
+
+export function MadxLauncherButton({ standalone = false }: { standalone?: boolean }) {
+  const t = useT()
+  return <button type="button" className="madx-topbar-launch no-drag" aria-label={t('app.applications')} onClick={() => standalone ? openSurface('command', { type: 'applications' }) : $applicationsOpen.set(true)}>
+    <HeraldLogo height={16} /><strong>{PRODUCT.shortName}</strong>
+  </button>
 }

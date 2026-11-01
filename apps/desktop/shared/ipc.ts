@@ -606,6 +606,9 @@ export interface HeraldOSPrefs {
   language?: LanguageSetting
   fullscreenOnLaunch: boolean
   reduceMotion: boolean
+  /** Automatic uses Chromium's actual rendering capability; older profiles keep all other settings. */
+  visualQuality?: import('./visual-quality.ts').VisualQuality
+  dockMagnification?: boolean
   accent: 'blue' | 'ice' | 'violet'
   theme: 'ocean' | 'graphite'
   /** The installed theme in use (a folder name under the theme directories). */
@@ -865,6 +868,7 @@ export interface EnvInfo {
   shellMode: ShellMode
   /** The system's preferred languages, most preferred first (`app.getPreferredSystemLanguages()`). */
   languages?: string[]
+  rendering?: import('./visual-quality.ts').RenderCapability
 }
 
 /** Channel names, table-driven so preload and main cannot drift. */

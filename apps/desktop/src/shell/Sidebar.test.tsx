@@ -22,12 +22,12 @@ const CATALOGS: Record<Language, Translation> = { en, 'pt-BR': ptBR, 'zh-CN': zh
 let root: Root | null = null
 let container: HTMLElement | null = null
 
-async function show(): Promise<HTMLElement> {
+async function show(compact = false): Promise<HTMLElement> {
   const host = document.createElement('div')
   document.body.append(host)
   container = host
   root = createRoot(host)
-  await act(async () => root?.render(<Sidebar />))
+  await act(async () => root?.render(<Sidebar compact={compact} />))
 
   return host
 }
@@ -174,17 +174,33 @@ describe('the sidebar', () => {
     expect(button?.getAttribute('title')).toBe(t('sidebar.collapseHint', { shortcut: shortcutLabel('\\') }))
   })
 
-  it('cuts a long label off with an ellipsis and keeps it whole in a tooltip', async () => {
+  it('wraps page names without truncation and keeps the full accessible name', async () => {
     setLanguage('pt-BR')
     const host = await show()
 
     for (const button of pageButtons(host)) {
       const label = button.querySelector('span')
 
-      expect(label?.className).toContain('truncate')
+      expect(label?.className).toContain('madx-nav-label')
+      expect(label?.className).not.toContain('truncate')
       expect(label?.className).toContain('min-w-0')
       expect(label?.getAttribute('title')).toBe(button.textContent)
+      expect(button.getAttribute('aria-label')).toBe(button.textContent)
     }
+  })
+
+  it('temporarily compacts without changing the saved layout and restores it when space returns', async () => {
+    const saved = { width: 240, collapsed: false }
+    $sidebar.set(saved)
+    const host = await show(true)
+    expect(host.querySelector('aside')?.dataset.collapsed).toBe('true')
+    expect(pageButtons(host).map(button => button.getAttribute('aria-label'))).toEqual(PAGES.map(page => appName(page)))
+    expect(host.querySelector<HTMLButtonElement>(`button[aria-label="${t('sidebar.expand')}"]`)?.hidden).toBe(true)
+    expect($sidebar.get()).toEqual(saved)
+    await act(async () => root?.render(<Sidebar compact={false} />))
+    expect(host.querySelector('aside')?.dataset.collapsed).toBeUndefined()
+    expect(host.querySelector('aside')?.style.width).toBe('240px')
+    expect($sidebar.get()).toEqual(saved)
   })
 
   it('names the pages and Spaces in the language chosen when collapsed to icons', async () => {

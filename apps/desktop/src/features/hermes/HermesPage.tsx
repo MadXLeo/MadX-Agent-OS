@@ -1,11 +1,12 @@
 import { useStore } from '@nanostores/react'
-import { IconArrowUpRight, IconHistory, IconPencil, IconTrash, IconX } from '@tabler/icons-react'
+import { IconArrowUpRight, IconHistory, IconLayoutSidebarRight, IconPencil, IconTrash, IconX } from '@tabler/icons-react'
 import { useEffect, useRef, useState } from 'react'
 import { GlassCard, MoreButton } from '../../components/ui/glass.tsx'
 import { botByProfile } from '../../lib/bots.ts'
 import { $bots } from '../../store/bots.ts'
 import { $activeChat, $activeChatId, $chats, forgetChat } from '../../store/chat.ts'
 import { $connection } from '../../store/gateway.ts'
+import { useT } from '../../store/i18n.ts'
 import { notify } from '../../store/notifications.ts'
 import { deleteSession } from '../../store/sessions.ts'
 import { openApp } from '../../store/windows.ts'
@@ -20,6 +21,7 @@ import { MenuDivider, MenuItem, PopMenu } from './Menu.tsx'
  * the shared store/chat.ts pipeline; this page only lays it out and adds the artifact pane.
  */
 export function HermesPage() {
+  const t = useT()
   const chat = useStore($activeChat)
   const activeId = useStore($activeChatId)
   const connection = useStore($connection)
@@ -28,6 +30,7 @@ export function HermesPage() {
   const [renaming, setRenaming] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [sessionsOpen, setSessionsOpen] = useState(false)
+  const [outputOpen, setOutputOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [busy, setBusy] = useState(false)
   const renameInput = useRef<HTMLInputElement>(null)
@@ -90,8 +93,12 @@ export function HermesPage() {
   }
 
   return (
-    <div className="page-enter relative flex h-full flex-col">
-      <div className="flex items-center justify-end gap-2 px-6 pt-5 pb-4">
+    <div className="madx-hermes page-enter relative flex h-full flex-col">
+      <div className="madx-hermes-toolbar">
+        <div className="madx-hermes-heading"><h1>Hermes Agent</h1><p role="status">{!online ? t('madx.engineOffline') : chat?.streaming ? chat.status?.text || t('madx.running') : t('madx.ready')}</p></div>
+        <div className="madx-hermes-controls">
+        <button type="button" className="madx-hermes-action" onClick={() => setSessionsOpen(true)}><IconHistory size={16} />{t('madx.history')}</button>
+        <button type="button" className="madx-hermes-action" aria-expanded={outputOpen} aria-controls="madx-hermes-output" onClick={() => setOutputOpen(value => !value)}><IconLayoutSidebarRight size={16} />{t(outputOpen ? 'madx.hideOutput' : 'madx.showOutput')}</button>
         {renaming && (
           <input
             ref={renameInput}
@@ -149,13 +156,14 @@ export function HermesPage() {
             </MenuItem>
           )}
         </PopMenu>
+        </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 gap-4 px-6 pb-6">
-        <GlassCard className="flex min-w-[380px] basis-[45%] flex-col overflow-hidden">
+      <div className="madx-hermes-body" data-output={outputOpen}>
+        <GlassCard className="madx-conversation">
           <Conversation chat={chat} online={online} />
         </GlassCard>
-        <GlassCard className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <GlassCard id="madx-hermes-output" hidden={!outputOpen} className="madx-output" aria-label={t('madx.output')}>
           <ArtifactPane chat={chat} />
         </GlassCard>
       </div>

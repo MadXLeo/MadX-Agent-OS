@@ -134,7 +134,10 @@ export function ApplicationsPanel({ onClose, standalone = false, className }: Ap
       return
     }
 
-    const step = ARROWS[event.key]
+    const grid = event.currentTarget.querySelector<HTMLElement>('[data-launcher-grid]')
+    const tracks = grid ? getComputedStyle(grid).gridTemplateColumns : ''
+    const columns = tracks && tracks !== 'none' ? tracks.split(' ').length : COLUMNS
+    const step = event.key === 'ArrowDown' ? columns : event.key === 'ArrowUp' ? -columns : ARROWS[event.key]
 
     if (step !== undefined) {
       if (tiles.length > 0) {
@@ -155,7 +158,7 @@ export function ApplicationsPanel({ onClose, standalone = false, className }: Ap
   }
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Applications" className={cn('float flex flex-col overflow-hidden rounded-2xl', className)} onMouseDown={event => event.stopPropagation()} onKeyDown={onKeyDown}>
+    <div role="dialog" aria-modal="true" aria-label="Applications" className={cn('madx-launcher float flex flex-col overflow-hidden rounded-2xl', className)} onMouseDown={event => event.stopPropagation()} onKeyDown={onKeyDown}>
       <div className="flex items-center justify-between gap-4 px-7 pt-6 pb-4">
         <h1 className="text-[26px] leading-tight font-semibold tracking-tight text-fg">Applications</h1>
         <button type="button" aria-label="Close applications" onClick={close} className="flex size-8 items-center justify-center rounded-lg text-fg-3 transition-colors duration-150 hover:bg-white/8 hover:text-fg">
@@ -174,7 +177,7 @@ export function ApplicationsPanel({ onClose, standalone = false, className }: Ap
 
       <div className="min-h-0 flex-1 overflow-y-auto px-6 py-4">
         {tiles.length > 0 ? (
-          <div className="stagger grid grid-cols-6 gap-3" aria-label="Applications">
+          <div data-launcher-grid className="stagger grid grid-cols-6 gap-3" aria-label="Applications">
             {tiles.map((tile, index) => (
               <AppTileButton key={tile.key} tile={tile} index={index} active={index === active} iconFor={iconFor} onActivate={activate} />
             ))}

@@ -7,6 +7,7 @@ import { logFailure } from '../lib/report.ts'
 import { Button } from '../components/ui/button.tsx'
 import { Spinner } from '../components/ui/primitives.tsx'
 import { StatusPanel } from '../features/status/StatusPanel.tsx'
+import { useT } from '../store/i18n.ts'
 
 const PHASE_COPY: Record<BackendState['phase'], string> = {
   idle: 'Preparing',
@@ -20,9 +21,12 @@ const PHASE_COPY: Record<BackendState['phase'], string> = {
 }
 
 export function BootScreen({ state, leaving = false }: { state: BackendState; leaving?: boolean }) {
+  const t = useT()
   const [showLog, setShowLog] = useState(false)
+  const [desktop, setDesktop] = useState(false)
   const failed = state.phase === 'failed'
   const waiting = state.phase === 'waiting'
+  if (desktop) return null
 
   return (
     <div
@@ -30,7 +34,7 @@ export function BootScreen({ state, leaving = false }: { state: BackendState; le
       style={{ background: 'radial-gradient(ellipse at 50% 42%, #18242a 0%, #0d1117 48%, #06080b 100%)' }}
       aria-hidden={leaving}
     >
-      <div className={cn('no-drag glass flex w-[440px] flex-col items-center gap-6 rounded-2xl px-8 py-10 text-center', leaving && 'boot-card-leave')}>
+      <div className={cn('no-drag glass flex w-[440px] max-w-[calc(100%-32px)] max-h-[calc(100%-32px)] overflow-y-auto flex-col items-center gap-6 rounded-2xl px-8 py-10 text-center', leaving && 'boot-card-leave')}>
         <HeraldLogo height={92} wordmark />
         <div className="flex flex-col gap-1.5">
           <div className="text-[22px] font-medium tracking-tight">{PRODUCT.name}</div>
@@ -79,6 +83,10 @@ export function BootScreen({ state, leaving = false }: { state: BackendState; le
           </div>
         )}
 
+        <div className="flex flex-col gap-2">
+          <Button variant="ghost" onClick={() => setDesktop(true)}>{t('madx.continueDesktop')}</Button>
+          <p className="text-[12px] text-fg-3">{t('madx.offlineDesktopHint')}</p>
+        </div>
         {showLog && (
           <pre className="selectable max-h-56 w-full overflow-auto rounded-md bg-surface p-3 text-left font-mono text-[11px] leading-relaxed text-fg-2 hairline">
             {state.logTail.slice(-80).join('\n') || 'No output yet.'}

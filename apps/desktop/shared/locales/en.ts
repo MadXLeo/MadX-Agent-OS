@@ -4,6 +4,55 @@ import { PRODUCT } from '../product.ts'
  * language has no translation yet. New strings go here first (docs/TRANSLATING.md).
  */
 export const en = {
+  'madx.unavailable': 'Unavailable',
+  'madx.defaultWallpaper': 'MadX theme wallpaper. Motion follows your visual quality and accessibility settings.',
+  'madx.resetWallpaper': 'Use MadX wallpaper',
+  'madx.systemHealth': 'System health',
+  'madx.systemReadings': 'CPU {cpu} · Memory {memory}',
+  'madx.cachedMissions': 'Hermes is offline. Any listed missions are the last known state.',
+  'madx.quality.title': "Visual quality",
+  'madx.quality.auto': "Automatic",
+  'madx.quality.autoHint': "Choose a safe mode from actual rendering capability.",
+  'madx.quality.full': "Full Glass",
+  'madx.quality.fullHint': "Layered glass and richer motion.",
+  'madx.quality.balanced': "Balanced",
+  'madx.quality.balancedHint': "Lighter blur and simpler shadows.",
+  'madx.quality.performance': "Performance",
+  'madx.quality.performanceHint': "Opaque surfaces and minimal motion.",
+  'madx.quality.active': "Active: {mode}",
+  'madx.quality.accelerated': "Hardware acceleration reported",
+  'madx.quality.software': "Software rendering reported",
+  'madx.quality.unknown': "Rendering capability unavailable",
+  'madx.quality.panels': "Glass inside a window is supported; backgrounds behind separate Wayland windows use a frosted fallback.",
+  'madx.quality.saveFailed': "Could not save visual quality",
+  'madx.dockMagnification': "Dock magnification",
+  'madx.dockMagnificationHint': "Gently enlarge icons on hover. Reduced motion and Performance mode turn this effect off.",
+  'madx.search': "Search or run a command",
+  'madx.engineReady': "Hermes Agent is connected",
+  'madx.engineOffline': "Hermes Agent is unavailable",
+  'madx.working': "Working now",
+  'madx.attention': "Awaiting you",
+  'madx.missions': "Active missions",
+  'madx.workspace': "Your agent workspace",
+  'madx.workspaceHint': "Start with an idea. Hermes keeps the tools, context and work together.",
+  'madx.offlineHint': "Hermes is offline. Your files, settings and saved work remain available.",
+  'madx.status': "Workspace status",
+  'madx.engine': "Agent engine",
+  'madx.model': "Active model",
+  'madx.noModel': "No active model",
+  'madx.account': "Account",
+  'madx.localAccount': "Local account",
+  'madx.models': "Manage models",
+  'madx.conversation': "Conversation",
+  'madx.output': "Output",
+  'madx.showOutput': "Show output",
+  'madx.hideOutput': "Hide output",
+  'madx.history': "History",
+  'madx.running': "Working",
+  'madx.ready': "Ready for your next task",
+  'madx.continueDesktop': "Continue to desktop",
+  'madx.offlineDesktopHint': "You can use local applications while Hermes reconnects.",
+
   'language.system': 'Follow the system',
   'language.systemNow': 'Follow the system ({language})',
 
@@ -33,14 +82,14 @@ export const en = {
   'permission.typing.automationTitle': `${PRODUCT.name} needs Automation permission`,
   'permission.typing.automationDetail': `Typing an emoji or dictation into another app needs it. In System Settings > Privacy & Security > Automation, turn on System Events under ${PRODUCT.name}. Until then, what you pick or dictate stays on the clipboard.`,
 
-  'app.overview': 'Overview',
+  'app.overview': "MadX Home",
   'app.hermes': 'Hermes',
   'app.missions': 'Missions',
   'app.memory': 'Memory',
   'app.files': 'Files',
   'app.automations': 'Automations',
   'app.connections': 'Connections',
-  'app.settings': 'Settings',
+  'app.settings': "MadX Settings",
   'app.terminal': 'Terminal',
   'app.system': 'System',
   'app.chatPopout': 'Hermes',
@@ -62,7 +111,7 @@ export const en = {
   'space.ideas': 'Ideas',
   'space.numbered': 'Space {index}',
 
-  'sidebar.tagline': 'A more capable you. Always.',
+  'sidebar.tagline': "Your workspace. Your agents.",
   'sidebar.pages': 'Pages',
   'sidebar.spaces': 'Spaces',
   // {name} is the Space's name, such as “Work”.
@@ -627,8 +676,8 @@ export const en = {
   'firstRun.account.title': 'Your name and password',
   'firstRun.account.titleSignedIn': 'Your name',
   'firstRun.account.text': `${PRODUCT.name} greets you by name. The password unlocks the screen and approves changes to the system.`,
-  // herald-os password is the command that changes it, and stays as it is.
-  'firstRun.account.textSignedIn': `${PRODUCT.name} greets you by name. You signed in with your password, which also unlocks the screen and approves changes to the system; herald-os password changes it.`,
+  // madx password is the command that changes it, and stays as it is.
+  'firstRun.account.textSignedIn': `${PRODUCT.name} greets you by name. You signed in with your password, which also unlocks the screen and approves changes to the system; madx password changes it.`,
   'firstRun.account.name': 'Name',
   'firstRun.account.password': 'Password (at least 8 characters)',
   'firstRun.account.passwordAgain': 'The same password again',
@@ -640,8 +689,8 @@ export const en = {
   'firstRun.account.refused': 'That password was refused: {reason}.',
   'firstRun.account.refusedNoReason': 'That password was refused; try a longer one, or one less like a word.',
   'firstRun.account.timeout': 'Setting the password took too long. Try again.',
-  // herald-os password is the command that changes it, and stays as it is.
-  'firstRun.account.noTerminal': 'The password cannot be set here; run herald-os password in a terminal.',
+  // madx password is the command that changes it, and stays as it is.
+  'firstRun.account.noTerminal': 'The password cannot be set here; run madx password in a terminal.',
   'firstRun.wifi.title': 'Get online',
   'firstRun.wifi.text': 'Pick a network; you can also plug in a cable. Skip it to stay offline for now.',
   'firstRun.hermes.title': 'Sign in to Hermes',
@@ -670,22 +719,22 @@ export const en = {
   'firstRun.disk.account': 'Your account password',
   'firstRun.disk.mismatch': 'The disk passwords do not match.',
   'firstRun.disk.busy': 'Adding your disk password, then removing the old one. Keep the computer on.',
-  // herald-os password --disk --new-owner is a command, and stays as it is.
-  'firstRun.disk.laterHint': 'Until you change it, the old disk password still opens the disk; herald-os password --disk --new-owner changes it later.',
+  // madx password --disk --new-owner is a command, and stays as it is.
+  'firstRun.disk.laterHint': 'Until you change it, the old disk password still opens the disk; madx password --disk --new-owner changes it later.',
   'firstRun.disk.notAscii': 'Use only letters, digits, spaces and the symbols on the keyboard, without accents or other scripts: there is no input method when the computer starts.',
   'firstRun.disk.wrongCurrent': 'That is not the disk password the computer asked for when it started. Nothing was changed.',
   'firstRun.disk.recoveryKey': 'That is a recovery key, not the disk password. Type the password the computer asked for when it started; the recovery key stays as it is. Nothing was changed.',
   'firstRun.disk.notAdmin': 'Your account password was not accepted for the change. Nothing was changed.',
   'firstRun.disk.notEncrypted': 'This computer’s disk is not encrypted, so there is no disk password to change.',
-  // herald-os password --disk --new-owner is a command, and stays as it is.
-  'firstRun.disk.partly': 'Your disk password was added, but an old one could not be removed. Run herald-os password --disk --new-owner in a terminal.',
-  // herald-os password --disk --new-owner is a command, and stays as it is.
-  'firstRun.disk.notTakenBack': 'Your disk password could not be added to every encrypted part of the disk, and taking it back out did not finish: the old one still opens the disk, and the new one may too. Run herald-os password --disk --new-owner in a terminal with the same new password.',
+  // madx password --disk --new-owner is a command, and stays as it is.
+  'firstRun.disk.partly': 'Your disk password was added, but an old one could not be removed. Run madx password --disk --new-owner in a terminal.',
+  // madx password --disk --new-owner is a command, and stays as it is.
+  'firstRun.disk.notTakenBack': 'Your disk password could not be added to every encrypted part of the disk, and taking it back out did not finish: the old one still opens the disk, and the new one may too. Run madx password --disk --new-owner in a terminal with the same new password.',
   'firstRun.disk.timeout': 'Changing the disk password took too long. At the next start, try your new disk password first, then the old one.',
-  // herald-os password --disk --new-owner is a command, and stays as it is.
-  'firstRun.disk.noTerminal': 'The disk password cannot be changed here; run herald-os password --disk --new-owner in a terminal.',
-  // herald-os password --disk --new-owner is a command, and stays as it is.
-  'firstRun.disk.failed': 'The disk password was not changed, and the old one still works. Run herald-os password --disk --new-owner in a terminal to see why.',
+  // madx password --disk --new-owner is a command, and stays as it is.
+  'firstRun.disk.noTerminal': 'The disk password cannot be changed here; run madx password --disk --new-owner in a terminal.',
+  // madx password --disk --new-owner is a command, and stays as it is.
+  'firstRun.disk.failed': 'The disk password was not changed, and the old one still works. Run madx password --disk --new-owner in a terminal to see why.',
 
   // When the voice Hermes speaks with fails and the computer's own voice stands in, or nothing can.
   // {voice} is a voice.name message that begins the sentence; {system} is voice.name.mac or

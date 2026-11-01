@@ -52,19 +52,19 @@ export type AppIconId =
   | 'trash'
 
 export const PAGES: readonly HermesAppDef<PageId>[] = [
-  { id: 'overview', name: 'Overview', tagline: 'Your day, already in motion.', category: 'productivity', kind: 'page', icon: 'overview', shortcut: '1' },
+  { id: 'overview', name: PRODUCT.apps.home, tagline: 'Your day, already in motion.', category: 'productivity', kind: 'page', icon: 'overview', shortcut: '1' },
   { id: 'hermes', name: 'Hermes', tagline: 'Talk to your computer.', category: 'productivity', kind: 'page', icon: 'hermes', shortcut: '2' },
   { id: 'missions', name: 'Missions', tagline: 'From intent to finished work.', category: 'productivity', kind: 'page', icon: 'missions', shortcut: '3' },
   { id: 'memory', name: 'Memory', tagline: 'What Hermes knows, and why.', category: 'productivity', kind: 'page', icon: 'memory', shortcut: '4' },
-  { id: 'files', name: 'Files', tagline: 'Everything on this Mac.', category: 'productivity', kind: 'page', icon: 'files', shortcut: '5' },
+  { id: 'files', name: 'Files', tagline: 'Your files and work, together.', category: 'productivity', kind: 'page', icon: 'files', shortcut: '5' },
   { id: 'automations', name: 'Automations', tagline: 'Good routines, handled.', category: 'productivity', kind: 'page', icon: 'automations', shortcut: '6' },
   { id: 'connections', name: 'Connections', tagline: 'Bring your tools into one workspace.', category: 'system', kind: 'page', icon: 'connections', shortcut: '7' },
-  { id: 'settings', name: 'Settings', tagline: 'Choose how Hermes works with you.', category: 'system', kind: 'page', icon: 'settings', shortcut: ',' }
+  { id: 'settings', name: PRODUCT.apps.settings, tagline: 'Choose how Hermes works with you.', category: 'system', kind: 'page', icon: 'settings', shortcut: ',' }
 ]
 
 export const FLOATING_APPS: readonly HermesAppDef<FloatingAppId>[] = [
   { id: 'terminal', name: 'Terminal', tagline: 'A real shell.', category: 'development', kind: 'window', icon: 'terminal', defaultSize: { width: 900, height: 560 }, shortcut: '8' },
-  { id: 'system', name: 'System', tagline: 'Monitor and control your Mac.', category: 'system', kind: 'window', icon: 'system', defaultSize: { width: 980, height: 640 }, shortcut: '9' },
+  { id: 'system', name: 'System', tagline: 'Monitor and control your computer.', category: 'system', kind: 'window', icon: 'system', defaultSize: { width: 980, height: 640 }, shortcut: '9' },
   { id: 'chat-popout', name: 'Hermes', tagline: 'A conversation in its own window.', category: 'productivity', kind: 'window', icon: 'hermes', defaultSize: { width: 820, height: 620 } },
   // Opened by the shell for a specific page (e.g. the provider sign-in); not launchable on its own.
   { id: 'web', name: 'Web', tagline: `A page inside ${PRODUCT.name}.`, category: 'productivity', kind: 'window', icon: 'grid', defaultSize: { width: 960, height: 680 } },

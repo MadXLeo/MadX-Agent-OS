@@ -3,6 +3,7 @@ import os from 'node:os'
 import path from 'node:path'
 import fs from 'node:fs'
 import { PRODUCT } from '../shared/product.ts'
+import { renderingCapability } from '../shared/visual-quality.ts'
 import { productProfilePath } from './product-profile.ts'
 import { type EnvInfo, type HeraldOSPrefs, IPC, type PrefsPatch, type RestRequest, type ShellCommand, type WindowState } from '../shared/ipc.ts'
 import { BackendManager } from './backend/manager.ts'
@@ -272,7 +273,7 @@ function registerCoreIpc(): void {
 
   ipcMain.handle(
     IPC.envInfo,
-    (): EnvInfo => ({ platform: process.platform, hermesHome: hermesHome(), homeDir: os.homedir(), version: app.getVersion(), isDev: isDev(), shellMode: mode, languages: systemLanguages() })
+    (): EnvInfo => ({ platform: process.platform, hermesHome: hermesHome(), homeDir: os.homedir(), version: app.getVersion(), isDev: isDev(), shellMode: mode, languages: systemLanguages(), rendering: renderingCapability(app.getGPUFeatureStatus()) })
   )
 
   registerFsIpc(() => mainWindow)

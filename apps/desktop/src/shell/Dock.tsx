@@ -3,7 +3,8 @@ import { useStore } from '@nanostores/react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { InstalledApp } from '../../shared/ipc.ts'
 import { OFFICE_APPS, type OfficeApp } from '../../shared/office/files.ts'
-import { AppGlyph, HermesAvatar } from '../components/app-icon.tsx'
+import { AppGlyph } from '../components/app-icon.tsx'
+import { MadxLogo } from '../components/madx-logo.tsx'
 import { openInCanvas } from '../features/canvas/open.ts'
 import { OfficeChooser } from '../features/office/OfficeChooser.tsx'
 import { openInOffice } from '../features/office/open.ts'
@@ -62,7 +63,8 @@ export function useDockMagnification(barRef: React.RefObject<HTMLDivElement | nu
   const onMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const bar = barRef.current
 
-    if (!bar || reducedMotion()) {
+    if (!bar || reducedMotion() || document.documentElement.dataset.dockMagnification === 'false') {
+      onLeave()
       return
     }
 
@@ -130,8 +132,8 @@ export function Dock() {
     const list: DockItem[] = [
       {
         id: 'hermes',
-        label: 'Hermes',
-        render: () => <HermesAvatar size={44} rounded={11} />,
+        label: PRODUCT.apps.home,
+        render: () => <span className="madx-dock-home"><MadxLogo height={30} /></span>,
         onClick: openHermes,
         running: Boolean(main) && main.phase !== 'minimized'
       }
@@ -188,7 +190,7 @@ export function Dock() {
       <div
         ref={barRef}
         data-dock-bar
-        className={cn('glass dock-bar pointer-events-auto flex items-end gap-2 rounded-2xl px-3 py-2', hidden && 'dock-bar-hidden')}
+        className={cn('madx-dock glass dock-bar pointer-events-auto flex items-end gap-2 rounded-2xl px-3 py-2', hidden && 'dock-bar-hidden')}
         onMouseMove={onMove}
         onMouseLeave={onLeave}
         aria-hidden={hidden}

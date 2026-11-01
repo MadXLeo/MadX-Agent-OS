@@ -2,7 +2,8 @@ import { useStore } from '@nanostores/react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { HeraldOSPrefs } from '../../shared/ipc.ts'
 import { wallpaperTint, type WallpaperTint } from '../../shared/theme.ts'
-import { $prefs, $windowState } from '../store/backend.ts'
+import { $env, $prefs, $windowState } from '../store/backend.ts'
+import { effectiveVisualQuality } from '../../shared/visual-quality.ts'
 
 /**
  * Procedural "flowing silk" wallpaper: layered, slowly drifting ribbons on a deep-blue field.
@@ -148,12 +149,23 @@ function useWallpaperSource(custom: string | undefined): string | undefined {
 
 export function Wallpaper() {
   const prefs = useStore($prefs)
+  const env = useStore($env)
   const win = useStore($windowState)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const pausedRef = useRef(false)
   const custom = prefs.wallpaper
+  const graphite = !prefs.themeColors && prefs.theme === 'graphite'
+  const quality = effectiveVisualQuality(prefs.visualQuality, env?.rendering)
+  const [systemReduced, setSystemReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   const source = useWallpaperSource(custom)
   const tint = useMemo(() => tintFor(prefs), [prefs.themeColors, prefs.themeScheme])
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const change = () => setSystemReduced(media.matches)
+    media.addEventListener('change', change)
+    return () => media.removeEventListener('change', change)
+  }, [])
 
   // Pausing must not restart the draw loop, otherwise a stale loop can survive cleanup and
   // alternate frames with the new one (visible as flicker).
@@ -162,7 +174,7 @@ export function Wallpaper() {
   }, [win.focused])
 
   useEffect(() => {
-    if (custom) {
+    if (custom || graphite) {
       return
     }
 
@@ -178,7 +190,7 @@ export function Wallpaper() {
       return
     }
 
-    const reduce = prefs.reduceMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduce = prefs.reduceMotion || systemReduced || quality !== 'full'
     let raf = 0
     let last = 0
     let lastDraw = 0
@@ -232,11 +244,13 @@ export function Wallpaper() {
       window.removeEventListener('resize', onResize)
       cancelAnimationFrame(raf)
     }
-  }, [custom, prefs.reduceMotion, tint])
+  }, [custom, graphite, prefs.reduceMotion, systemReduced, quality, tint])
 
   if (custom) {
     return <div className="absolute inset-0 z-(--z-wallpaper) bg-cover bg-center" style={{ backgroundImage: source ? `url(${JSON.stringify(source)})` : undefined }} />
   }
+
+  if (graphite) return <div className="madx-wallpaper absolute inset-0 z-(--z-wallpaper)" aria-hidden="true" />
 
   return <canvas ref={canvasRef} className="absolute inset-0 z-(--z-wallpaper) h-full w-full" style={{ filter: 'blur(1.5px)' }} aria-hidden="true" />
 }

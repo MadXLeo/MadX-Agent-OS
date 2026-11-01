@@ -11,7 +11,7 @@ const TRANSLATIONS: Record<Exclude<Language, 'en'>, Translation> = { 'pt-BR': pt
 const OPTIONAL_SLOTS = new Set(['device'])
 
 // Names that read the same in every language (docs/TRANSLATING.md).
-const PRODUCTS = ['MadX Canvas', 'MadX Office', 'MadX Sheets', 'MadX Slides', 'MadX Calc', 'MadX Docs', 'MadX Agent OS', 'Hermes']
+const PRODUCTS = ['MadX Home', 'MadX Canvas', 'MadX Office', 'MadX Sheets', 'MadX Slides', 'MadX Calc', 'MadX Docs', 'MadX Agent OS', 'Hermes']
 
 // Words a language writes as English does: loanwords, and Studio, the name of an app. Anything
 // else left in a message equal to English means it was copied rather than translated.
@@ -141,7 +141,7 @@ describe.each(Object.entries(TRANSLATIONS))('the %s catalog', (language, catalog
   })
 
   it('keeps the command and shortcuts first-run setup names as they are', () => {
-    expect(catalog['firstRun.account.textSignedIn']).toContain('herald-os password')
+    expect(catalog['firstRun.account.textSignedIn']).toContain('madx password')
     expect(catalog['firstRun.done.text']).toContain('Super+Space')
     expect(catalog['firstRun.done.text']).toContain('Super+M')
   })

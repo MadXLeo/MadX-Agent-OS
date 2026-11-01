@@ -103,7 +103,7 @@ describe('the Dock in panels mode', () => {
     $env.set({ ...ENV, platform: 'linux', shellMode: 'panels' })
     await show(<DockSurface />)
 
-    expect(buttons().map(item => item.getAttribute('aria-label'))).toEqual(['Hermes', 'Files', 'Pet Room', 'MadX Canvas', 'MadX Office', 'MadX Calc', 'Applications', 'Trash'])
+    expect(buttons().map(item => item.getAttribute('aria-label'))).toEqual(['MadX Home', 'Files', 'Pet Room', 'MadX Canvas', 'MadX Office', 'MadX Calc', 'Applications', 'Trash'])
 
     await act(async () => button('MadX Calc').click())
 

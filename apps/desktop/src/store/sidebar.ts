@@ -7,8 +7,8 @@ export interface SidebarState {
   collapsed: boolean
 }
 
-export const SIDEBAR_DEFAULT = 132
-export const SIDEBAR_MIN = 112
+export const SIDEBAR_DEFAULT = 208
+export const SIDEBAR_MIN = 184
 export const SIDEBAR_MAX = 260
 /** Width of the icon-only rail. */
 export const SIDEBAR_COLLAPSED = 60

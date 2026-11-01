@@ -90,6 +90,23 @@ describe('the language in the prefs', () => {
   })
 })
 
+describe('MadX rendering preferences', () => {
+  it('adds automatic mode to an old profile without replacing its data or theme', () => {
+    store({ theme: 'ocean', favorites: ['saved.txt'], sidebar: { width: 200, collapsed: true } })
+    expect(readPrefs().visualQuality).toBe('auto')
+    writePrefs({ visualQuality: 'performance', dockMagnification: false })
+    expect(readPrefs()).toMatchObject({ theme: 'ocean', favorites: ['saved.txt'], sidebar: { width: 200, collapsed: true }, visualQuality: 'performance', dockMagnification: false })
+    writePrefs({ reduceMotion: true })
+    expect(readPrefs().visualQuality).toBe('performance')
+  })
+  it('normalizes malformed mode values without changing valid manual choices', () => {
+    store({ visualQuality: 'unknown-value' })
+    expect(readPrefs().visualQuality).toBe('auto')
+    expect(writePrefs({ visualQuality: 'full' }).visualQuality).toBe('full')
+    expect(onDisk().visualQuality).toBe('full')
+  })
+})
+
 describe('the pet in the prefs', () => {
   it('reads the defaults when there is nothing stored, or no prefs file at all', () => {
     expect(readPrefs().pet).toEqual(PET_PREFS_DEFAULTS)

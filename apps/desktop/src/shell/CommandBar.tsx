@@ -161,7 +161,7 @@ export function CommandPalette({ onClose, standalone = false, onApplications, cl
     <Command
       label={t('commandBar.label')}
       shouldFilter={false}
-      className={cn('float overflow-hidden rounded-2xl', className)}
+      className={cn('madx-command-palette float overflow-hidden rounded-2xl', className)}
       onMouseDown={event => event.stopPropagation()}
       onKeyDown={event => {
         if (event.key === 'Escape') {

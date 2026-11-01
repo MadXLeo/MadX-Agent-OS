@@ -7,16 +7,23 @@ Hermes's own command-line skin and, on MadX Agent OS Linux, the window borders, 
 screen and the rescue terminal. Settings > Appearance shows every theme as a card; click one. Or say
 "switch to the Paper theme".
 
-MadX Agent OS ships twelve: Ocean (the default), Graphite, Ice, Violet, Ember, Forest, Dusk, Onyx (true
+MadX Agent OS ships twelve: Graphite (the default for new profiles), Ocean, Ice, Violet, Ember, Forest, Dusk, Onyx (true
 black), Rose, Lagoon, and two light ones, Paper and Cloud.
+
+Existing theme choices and custom wallpapers are preserved. In MadX Settings > Appearance,
+Visual quality offers Automatic, Full Glass, Balanced and Performance. Automatic uses actual
+renderer capability: software rendering selects Performance; other results select Balanced.
+Full Glass is a manual choice, not a guarantee of frame rate. Performance removes backdrop blur
+and most motion. Reduced motion and the dock magnification switch remain independent controls.
+Separate Wayland windows use a frosted fallback where compositor background blur is unavailable.
 
 - **From an image.** "Make a theme from an image" in Settings, or "make a theme from my
   wallpaper", takes the colours of a photo or artwork, builds a complete theme from them and uses
-  the image as the wallpaper. On MadX Agent OS Linux, `herald-os theme new <image> [name]` does the same.
+  the image as the wallpaper. On MadX Agent OS Linux, `madx theme new <image> [name]` does the same.
 - **From a description.** Ask Hermes: "make me a theme that feels like a foggy forest morning". It
   writes the theme file and switches to it.
 - **From someone else.** Paste the https address of a theme repository into "Install themes from
-  git" (or `herald-os theme install <url>`). Only colours and images are kept, so a theme can never
+  git" (or `madx theme install <url>`). Only colours and images are kept, so a theme can never
   run code on your machine.
 - **Follow Hermes.** With "Follow Hermes skins" on, changing Hermes's skin with `/skin` in a chat
   restyles MadX Agent OS too.
@@ -55,7 +62,7 @@ To share a theme, put its folder (or several, one per theme) in a git repository
 
 Settings > Appearance > Fonts sets the interface font and the code font (the terminal and code
 views); leave a field empty for the default. "Use the font Inter" works too. On MadX Agent OS Linux,
-`herald-os font list` shows what is installed and `herald-os font set <family> [--mono]` sets it.
+`madx font list` shows what is installed and `madx font set <family> [--mono]` sets it.
 
 ## Language
 
@@ -83,7 +90,7 @@ system and can do only what you allowed when you turned it on.
   Plugins > Make a widget starts the sentence for you. Hermes writes it into your plugins folder,
   and you turn it on.
 - **Install one.** Paste a git address into Settings > Plugins > From git (on MadX Agent OS Linux,
-  `herald-os plugin add <url>`). It arrives turned off.
+  `madx plugin add <url>`). It arrives turned off.
 - **Turn it on.** Flip its switch in Settings > Plugins. MadX Agent OS lists what it will be able to do
   (see system stats, show notifications, keep its own settings, run a named MadX Agent OS command,
   connect to a named website) and turns it on only when you agree. If an update asks for more, it
@@ -133,7 +140,7 @@ The page loads `<script src="herald-plugin://sdk/widget.js"></script>`, then its
 
 While a widget is on, saving any of its files reloads it. It keeps up to 256 KB in its store and
 cannot see your files, other apps or the rest of MadX Agent OS. To share it, put the folder in a git
-repository. On MadX Agent OS Linux, `herald-os plugin list`, `enable`, `disable`, `update` and `remove`
+repository. On MadX Agent OS Linux, `madx plugin list`, `enable`, `disable`, `update` and `remove`
 manage widgets from the terminal; `enable` shows the same list and asks you first.
 
 ## The menu bar
@@ -145,20 +152,20 @@ the microphone is typing for you. The same page sets the clock: 12 or 24 hours (
 choice), seconds, and a short, long or no date.
 
 Or ask: "hide the Bluetooth icon", "use a 24-hour clock", "put the clock first". On MadX Agent OS
-Linux, `herald-os bar` does the same:
+Linux, `madx bar` does the same:
 
 ```sh
-herald-os bar                          # the items, in order, and which are shown
-herald-os bar hide bluetooth
-herald-os bar move clock first         # or last, a position (1 is leftmost), before/after an item
-herald-os bar clock 24h seconds date none
-herald-os bar reset
+madx bar                          # the items, in order, and which are shown
+madx bar hide bluetooth
+madx bar move clock first         # or last, a position (1 is leftmost), before/after an item
+madx bar clock 24h seconds date none
+madx bar reset
 ```
 
 ## Your own menu entries
 
 The control menu (`Super+M` on MadX Agent OS Linux) takes entries of your own from
-`~/.config/herald-os/menu.json`. Each entry has a label and one thing to do: a `herald-os`
+`~/.config/herald-os/menu.json`. Each entry has a label and one thing to do: a `madx`
 command, a program to start, a web address, or a MadX Agent OS command.
 
 ```json
@@ -179,7 +186,7 @@ command, a program to start, a web address, or a MadX Agent OS command.
 - `icon` is one of star, app, terminal, world, bolt, folder, notes, music, camera, code, calendar,
   mail, chat, heart, home or rocket.
 
-The menu reads the file every time it opens, so there is nothing to restart. `herald-os menu check`
+The menu reads the file every time it opens, so there is nothing to restart. `madx menu check`
 shows what it understood, and a "menu.json has problems" entry appears under Yours when something
 is wrong. Hermes can write the file for you: "add my backup script to the menu".
 
@@ -188,12 +195,12 @@ is wrong. Hermes can write the file for you: "add my backup script to the menu".
 Settings > About > Branding puts your own logo (PNG, JPEG, WebP or SVG) at the top of About, with
 a name under it such as your company. On MadX Agent OS Linux it also sets the picture behind the
 password on the lock screen (PNG or JPEG). The images are copied, so the originals can move.
-On MadX Agent OS Linux, `herald-os branding` does the same:
+On MadX Agent OS Linux, `madx branding` does the same:
 
 ```sh
-herald-os branding set --logo ~/Pictures/acme.svg --name "Acme Corp"
-herald-os branding set --lock ~/Pictures/beach.jpg
-herald-os branding reset lock              # or logo, name, all
+madx branding set --logo ~/Pictures/acme.svg --name "Acme Corp"
+madx branding set --lock ~/Pictures/beach.jpg
+madx branding reset lock              # or logo, name, all
 ```
 
 ## Keyboard shortcuts
@@ -217,7 +224,7 @@ later bind replaces an earlier one. To switch a key off, bind it to nothing, for
 `niri validate -c ~/.config/niri/herald-os.kdl` checks it.
 
 Running MadX Agent OS as an app inside Omarchy, its keys live in `~/.config/hypr/herald-os.lua` on
-Omarchy 4 (`herald-os.conf` on Omarchy 3), which `herald-os omarchy install` rewrites. Change them in
+Omarchy 4 (`herald-os.conf` on Omarchy 3), which `madx omarchy install` rewrites. Change them in
 your own Hyprland config instead. On Omarchy 4, below the `require("hypr.herald-os")` line at the end
 of `~/.config/hypr/hyprland.lua`, so it runs after MadX's: `hl.unbind("SUPER + ALT + H")`, then an
 `o.bind("SUPER + H", "MadX Agent OS", "herald-os-app")` of your own. On Omarchy 3,
@@ -252,5 +259,5 @@ skipped, and a hook gets two minutes.
 brightnessctl set 30%
 ```
 
-On MadX Agent OS Linux, `herald-os hook list` shows your hooks, `herald-os hook install <event>
-<script>` copies one in, and `herald-os event <name>` sets one off to test it.
+On MadX Agent OS Linux, `madx hook list` shows your hooks, `madx hook install <event>
+<script>` copies one in, and `madx event <name>` sets one off to test it.

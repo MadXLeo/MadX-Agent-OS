@@ -7,7 +7,7 @@ export const motion = {
 } as const
 
 export function reducedMotion(): boolean {
-  return document.documentElement.dataset.reduceMotion === 'true' || window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  return document.documentElement.dataset.reduceMotion === 'true' || document.documentElement.dataset.visualQuality === 'performance' || window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
 /** Run `fn` after an exit animation, or immediately when motion is reduced. */

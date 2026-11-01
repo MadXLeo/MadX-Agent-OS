@@ -1,7 +1,10 @@
 import { useStore } from '@nanostores/react'
 import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarLeftExpand, IconPlus } from '@tabler/icons-react'
-import { useRef, useState } from 'react'
-import { AppGlyph, HermesAvatar } from '../components/app-icon.tsx'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { AppGlyph } from '../components/app-icon.tsx'
+import { MadxLogo } from '../components/madx-logo.tsx'
+import { PRODUCT } from '../../shared/product.ts'
 import { cn } from '../lib/cn.ts'
 import { shortcutLabel } from '../lib/platform-labels.ts'
 import { useT } from '../store/i18n.ts'
@@ -11,12 +14,13 @@ import { $page, showPage } from '../store/windows.ts'
 import { appName, PAGES } from './apps.ts'
 
 /** The persistent left rail of the main Hermes window: identity, pages, spaces. Resizable; collapses to icons. */
-export function Sidebar() {
+export function Sidebar({ compact = false }: { compact?: boolean }) {
   const t = useT()
   const page = useStore($page)
   const spaces = useStore($spaces)
   const active = useStore($activeSpace)
-  const { width, collapsed } = useStore($sidebar)
+  const { width, collapsed: savedCollapsed } = useStore($sidebar)
+  const collapsed = compact || savedCollapsed
   const [adding, setAdding] = useState(false)
   const [draft, setDraft] = useState('')
   const [dragging, setDragging] = useState(false)
@@ -70,17 +74,19 @@ export function Sidebar() {
 
   return (
     <aside
-      className={cn('relative flex shrink-0 flex-col pt-4 pb-3 select-none', collapsed ? 'items-center px-2' : 'px-3', !dragging && 'transition-[width] duration-200 ease-(--ease-out)')}
+      className={cn('madx-sidebar relative flex shrink-0 flex-col pt-4 pb-3 select-none', collapsed ? 'items-center px-2' : 'px-3', !dragging && 'transition-[width] duration-200 ease-(--ease-out)')}
       style={{ width: collapsed ? SIDEBAR_COLLAPSED : width }}
       data-collapsed={collapsed || undefined}
+      data-compact={compact || undefined}
     >
-      <div className={cn(collapsed ? 'flex justify-center' : 'px-1')}>
-        <HermesAvatar size={collapsed ? 36 : 44} rounded={collapsed ? 9 : 11} />
+      <div className="madx-brand">
+        <MadxLogo height={32} />
         {!collapsed && (
-          <>
-            <div className="mt-2.5 text-[15px] font-semibold leading-tight text-fg">Hermes</div>
-            <div className="mt-0.5 text-[11px] leading-snug text-fg-3 italic">{t('sidebar.tagline')}</div>
-          </>
+          <div>
+            <div className="madx-brand-name">{PRODUCT.shortName}</div>
+            <div className="madx-brand-ecosystem">{PRODUCT.ecosystem}</div>
+            <div className="sr-only">{t('sidebar.tagline')}</div>
+          </div>
         )}
       </div>
 
@@ -95,7 +101,7 @@ export function Sidebar() {
               type="button"
               onClick={() => showPage(def.id)}
               aria-current={activePage ? 'page' : undefined}
-              aria-label={collapsed ? name : undefined}
+              aria-label={name}
               className={cn(
                 'side-item group relative flex h-8 items-center rounded-lg text-[12.5px] transition-colors duration-150',
                 collapsed ? 'w-9 justify-center' : 'gap-2.5 px-2.5',
@@ -106,7 +112,7 @@ export function Sidebar() {
               {collapsed ? (
                 <span className="side-tip">{name}</span>
               ) : (
-                <span className="min-w-0 truncate" title={name}>
+                <span className="madx-nav-label min-w-0" title={name}>
                   {name}
                 </span>
               )}
@@ -141,7 +147,7 @@ export function Sidebar() {
             type="button"
             aria-label={t('sidebar.addSpace')}
             onClick={() => {
-              setSidebarCollapsed(false)
+              if (!compact) setSidebarCollapsed(false)
               setAdding(true)
             }}
             className="side-item group relative flex size-7 items-center justify-center rounded-lg text-fg-3 hover:bg-white/10 hover:text-fg"
@@ -149,6 +155,7 @@ export function Sidebar() {
             <IconPlus size={13} />
             <span className="side-tip">{t('sidebar.addSpace')}</span>
           </button>
+          {adding && <CompactSpaceDialog onClose={() => setAdding(false)} />}
         </div>
       ) : (
         <>
@@ -212,6 +219,7 @@ export function Sidebar() {
       <button
         type="button"
         onClick={toggleSidebar}
+        hidden={compact}
         aria-label={collapsed ? t('sidebar.expand') : t('sidebar.collapse')}
         title={collapsed ? t('sidebar.expandHint', { shortcut: shortcutLabel('\\') }) : t('sidebar.collapseHint', { shortcut: shortcutLabel('\\') })}
         className={cn('side-item group relative mt-auto flex h-8 items-center rounded-lg text-fg-3 transition-colors duration-150 hover:bg-white/8 hover:text-fg', collapsed ? 'w-9 justify-center' : 'gap-2.5 px-2.5 text-[12px]')}
@@ -223,6 +231,7 @@ export function Sidebar() {
       {/* Resize handle: drag to resize, drag past the snap point to collapse, double-click to toggle. */}
       <div
         role="separator"
+        hidden={compact}
         aria-orientation="vertical"
         aria-label={t('sidebar.resize')}
         aria-valuemin={SIDEBAR_MIN}
@@ -236,5 +245,27 @@ export function Sidebar() {
         className={cn('side-handle absolute top-3 -right-1 bottom-3 w-2 cursor-col-resize', dragging && 'is-dragging')}
       />
     </aside>
+  )
+}
+
+/** Native modal focus handling; the portal keeps this outside the scrolling icon rail. */
+function CompactSpaceDialog({ onClose }: { onClose: () => void }) {
+  const t = useT()
+  const dialog = useRef<HTMLDialogElement>(null)
+  const [name, setName] = useState('')
+  useEffect(() => { dialog.current?.showModal() }, [])
+  return createPortal(
+    <dialog ref={dialog} className="madx-space-dialog" aria-label={t('sidebar.newSpace')} onCancel={onClose} onClose={onClose}>
+      <form onSubmit={event => {
+        event.preventDefault()
+        if (!name.trim()) return
+        addSpace(name.trim())
+        onClose()
+      }}>
+        <label htmlFor="madx-new-space">{t('sidebar.newSpace')}</label>
+        <input id="madx-new-space" autoFocus className="glass-input" value={name} onChange={event => setName(event.target.value)} />
+        <footer><button type="button" onClick={onClose}>{t('settings.cancel')}</button><button type="submit" disabled={!name.trim()}>{t('sidebar.addSpace')}</button></footer>
+      </form>
+    </dialog>, document.body
   )
 }

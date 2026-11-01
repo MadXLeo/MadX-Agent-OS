@@ -33,10 +33,10 @@ describe('the language Herald shows', () => {
 
     expect($language.get()).toBe('en')
     expect($systemLanguage.get()).toBe('zh-CN')
-    expect(t('app.settings')).toBe('Settings')
+    expect(t('app.settings')).toBe('MadX Settings')
 
     $prefs.set({ ...$prefs.get(), language: 'zh-CN' })
-    expect(t('app.settings')).toBe('设置')
+    expect(t('app.settings')).toBe('MadX 设置')
     expect(t('overview.mission.files', { count: 2 })).toBe('2 个文件')
   })
 

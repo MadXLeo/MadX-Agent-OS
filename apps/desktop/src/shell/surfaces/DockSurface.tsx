@@ -2,7 +2,8 @@ import { PRODUCT } from '../../../shared/product.ts'
 import { useStore } from '@nanostores/react'
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { InstalledApp, ShellCommand, WmWindow } from '../../../shared/ipc.ts'
-import { AppGlyph, AppTile, HermesAvatar } from '../../components/app-icon.tsx'
+import { AppGlyph, AppTile } from '../../components/app-icon.tsx'
+import { MadxLogo } from '../../components/madx-logo.tsx'
 import { openInCanvas } from '../../features/canvas/open.ts'
 import { cn } from '../../lib/cn.ts'
 import { $env } from '../../store/backend.ts'
@@ -235,8 +236,8 @@ export function DockSurface() {
     const list: DockEntry[] = [
       {
         id: 'hermes',
-        label: 'Hermes',
-        render: () => <HermesAvatar size={44} rounded={11} />,
+        label: PRODUCT.apps.home,
+        render: () => <span className="madx-dock-home"><MadxLogo height={30} /></span>,
         onClick: () => showPage('overview'),
         running: mainRunning
       }
@@ -387,7 +388,7 @@ export function DockSurface() {
 
   return (
     <nav className="flex h-full w-full items-end justify-center pb-1" aria-label="Dock">
-      <div ref={barRef} data-dock-bar className="glass dock-bar flex items-end gap-2 rounded-2xl px-3 py-2" onMouseMove={onMove} onMouseLeave={onLeave}>
+      <div ref={barRef} data-dock-bar className="madx-dock glass dock-bar flex items-end gap-2 rounded-2xl px-3 py-2" onMouseMove={onMove} onMouseLeave={onLeave}>
         {entries.map(entry => (
           <button
             key={entry.id}

@@ -9,6 +9,7 @@ import { $prefs, updatePrefs } from '../../../store/backend.ts'
 import { notify } from '../../../store/notifications.ts'
 import { $themes, applyTheme, generateTheme, installThemes, loadThemes } from '../../../store/themes.ts'
 import { MenuBarSettings } from './MenuBarSettings.tsx'
+import { VisualQualitySettings } from './VisualQualitySettings.tsx'
 import { useT } from '../../../store/i18n.ts'
 import { errorText, Filterable, InlineNote, markSaved, SectionTitle, SettingsGroup, SettingsRow } from './shared.tsx'
 
@@ -49,6 +50,8 @@ export function AppearanceSection() {
     <>
       <SectionTitle title={t('settings.section.appearance')} subtitle={t('settings.appearance.subtitle')} />
 
+      <VisualQualitySettings />
+
       <ThemeGallery />
       <ThemeTools />
 
@@ -73,10 +76,10 @@ export function AppearanceSection() {
             })}
           </div>
         </SettingsRow>
-        <SettingsRow icon={<IconPhoto />} label="Wallpaper" description={wallpaperName ? <span className="selectable">{wallpaperName}</span> : 'The living Hermes wallpaper.'} keywords="background image desktop">
+        <SettingsRow icon={<IconPhoto />} label="Wallpaper" description={wallpaperName ? <span className="selectable">{wallpaperName}</span> : t('madx.defaultWallpaper')} keywords="background image desktop">
           {prefs.wallpaper && (
-            <GlassButton size="sm" variant="ghost" onClick={() => void save({ wallpaper: '' })} aria-label="Use Hermes wallpaper">
-              Use Hermes wallpaper
+            <GlassButton size="sm" variant="ghost" onClick={() => void save({ wallpaper: '' })} aria-label={t('madx.resetWallpaper')}>
+              {t('madx.resetWallpaper')}
             </GlassButton>
           )}
           <GlassButton size="sm" onClick={() => void chooseWallpaper()} aria-label="Choose wallpaper image">
@@ -90,6 +93,9 @@ export function AppearanceSection() {
       <MenuBarSettings />
 
       <SettingsGroup title="Dock">
+        <SettingsRow icon={<IconSparkles />} label={t('madx.dockMagnification')} description={t('madx.dockMagnificationHint')} keywords="dock magnify zoom animation">
+          <Toggle checked={prefs.dockMagnification !== false} onChange={next => void save({ dockMagnification: next })} label={t('madx.dockMagnification')} />
+        </SettingsRow>
         <SettingsRow icon={<IconLayoutBottombar />} label="Automatically hide the Dock" description="The Dock slides away and returns when the cursor reaches the bottom edge." keywords="dock autohide hide show">
           <Toggle checked={prefs.dockAutoHide !== false} onChange={next => void save({ dockAutoHide: next })} label="Automatically hide the Dock" />
         </SettingsRow>

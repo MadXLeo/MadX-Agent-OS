@@ -12,6 +12,7 @@ import { normalizePetPrefs, PET_PREFS_DEFAULTS } from '../shared/pet.ts'
 import { mergeRoomPrefs, normalizeRoomPrefs, ROOM_PREFS_DEFAULTS } from '../shared/room.ts'
 import { normalizeVoicePrefs, VOICE_DEFAULTS } from '../shared/voice-prefs.ts'
 import { heraldOsDataDir } from './paths.ts'
+import { normalizeVisualQuality } from '../shared/visual-quality.ts'
 
 const CONTINUITY_DEFAULTS: ContinuityPrefs = { enabled: null, exclude: [] }
 const CRASH_HELP_DEFAULTS: CrashHelpPrefs = { enabled: true, muted: [] }
@@ -52,6 +53,7 @@ export function readPrefs(): HeraldOSPrefs {
       ...DEFAULTS,
       ...parsed,
       language: languageSetting(parsed.language),
+      visualQuality: normalizeVisualQuality(parsed.visualQuality),
       accent: (accent as HeraldOSPrefs['accent']) ?? DEFAULTS.accent,
       spaces: parsed.spaces?.length ? parsed.spaces : DEFAULTS.spaces,
       voice: normalizeVoicePrefs(parsed.voice),
@@ -104,6 +106,7 @@ export function writePrefs(patch: PrefsPatch): HeraldOSPrefs {
   const next = {
     ...current,
     ...patch,
+    visualQuality: normalizeVisualQuality(patch.visualQuality ?? current.visualQuality),
     voice: normalizeVoicePrefs({ ...current.voice, ...(patch.voice ?? {}) }),
     continuity: normalizeContinuity({ ...current.continuity, ...(patch.continuity ?? {}) }),
     crashHelp: normalizeCrashHelp({ ...current.crashHelp, ...(patch.crashHelp ?? {}) }),
