@@ -4,7 +4,7 @@ on:
   push:
     # The default branch does not yet expose workflow_dispatch. An authorized push of this
     # validation branch must run its own CI without merging or publishing an image.
-    branches: [main, codex/linux-release-validation]
+    branches: [main, codex/linux-release-validation, codex/madx-desktop-redesign]
   pull_request:
   workflow_dispatch:
 

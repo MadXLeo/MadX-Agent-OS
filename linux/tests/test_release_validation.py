@@ -248,6 +248,10 @@ def test_manual_image_validation_cannot_publish_without_explicit_selection():
 def test_validation_branch_runs_ci_without_a_default_branch_merge_and_checks_linux_skips():
     workflow = yaml.safe_load((ROOT / ".github/workflows/ci.yml").read_text())
     assert "codex/linux-release-validation" in workflow[True]["push"]["branches"]
+    assert "codex/madx-desktop-redesign" in workflow[True]["push"]["branches"]
+    for name in ("image.yml", "installer-test.yml"):
+        flow = yaml.safe_load((ROOT / ".github/workflows" / name).read_text())
+        assert "codex/madx-desktop-redesign" not in flow[True]["push"]["branches"]
     steps = {step.get("name"): step for step in workflow["jobs"]["bridge"]["steps"]}
     gate = steps["Reject unexpected Linux skips"]
     assert "always()" in gate["if"] and "runner.os == 'Linux'" in gate["if"]
@@ -258,6 +262,8 @@ def test_validation_branch_runs_ci_without_a_default_branch_merge_and_checks_lin
     ("push", "heads/codex/linux-release-validation", False, False, False),
     ("workflow_dispatch", "heads/codex/linux-release-validation", False, True, False),
     ("workflow_dispatch", "heads/codex/linux-release-validation", True, True, False),
+    ("workflow_dispatch", "heads/codex/madx-desktop-redesign", False, True, False),
+    ("workflow_dispatch", "heads/codex/madx-desktop-redesign", True, True, False),
     ("push", "heads/main", False, True, True),
     ("push", "tags/v0.1.0", False, True, True),
     ("workflow_dispatch", "heads/main", False, True, False),

@@ -41,8 +41,8 @@ concurrency:
 
 env:
   IMAGE: ghcr.io/madxleo/madx-agent-os
-  # This validation branch can never publish, including during workflow registration pushes.
-  PUBLISH: ${{ github.ref != 'refs/heads/codex/linux-release-validation' && (github.event_name != 'workflow_dispatch' || inputs.publish) }}
+  # Validation and redesign branches can never publish, even with a manual publish=true input.
+  PUBLISH: ${{ github.ref != 'refs/heads/codex/linux-release-validation' && github.ref != 'refs/heads/codex/madx-desktop-redesign' && (github.event_name != 'workflow_dispatch' || inputs.publish) }}
   # Signing waits for the key (cosign generate-key-pair; the public half goes in linux/image/cosign.pub).
   SIGNING: ${{ secrets.COSIGN_PRIVATE_KEY != '' && 'true' || 'false' }}
 
@@ -266,7 +266,7 @@ jobs:
   manifest:
     name: Multi-arch tag
     needs: [channel, image]
-    if: github.ref != 'refs/heads/codex/linux-release-validation' && (github.event_name != 'workflow_dispatch' || inputs.publish)
+    if: github.ref != 'refs/heads/codex/linux-release-validation' && github.ref != 'refs/heads/codex/madx-desktop-redesign' && (github.event_name != 'workflow_dispatch' || inputs.publish)
     permissions:
       packages: write
     env:

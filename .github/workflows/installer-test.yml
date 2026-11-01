@@ -31,7 +31,7 @@ on:
         description: Alternatively, an image workflow run ID containing a validation ISO (no published release needed)
         default: ""
       account:
-        description: "Required disposable account for SSH and installed-desktop acceptance (image must support herald-os setup ssh)"
+        description: "Required disposable account for SSH and installed-desktop acceptance (image must support madx setup ssh)"
         required: true
         default: "madx-test"
 
