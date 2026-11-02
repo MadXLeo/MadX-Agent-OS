@@ -901,7 +901,7 @@ def test_plugin_add_waits_for_the_clone_and_says_it_is_off(monkeypatch, capsys):
     monkeypatch.setattr(cli, "relay", lambda cmd, args, *rest, **kwargs: calls.append((cmd, args, kwargs.get("timeout"))) or reply)
     assert cli.plugin_cmd(["add", "https://example.com/weather-strip.git"]) == 0
     assert calls == [("plugin", ["add", "https://example.com/weather-strip.git"], 180)]
-    assert "turned off (herald-os plugin enable weather-strip)" in capsys.readouterr().out
+    assert "turned off (madx plugin enable weather-strip)" in capsys.readouterr().out
     with pytest.raises(SystemExit) as stopped:
         cli.plugin_cmd(["remove"])
     assert stopped.value.code == 2
