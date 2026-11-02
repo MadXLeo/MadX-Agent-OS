@@ -1,5 +1,24 @@
 # Feature parity register
 
+## Redesign increment — 2026-11-01
+
+Implementation: `93fdc9c` (public identity/CLI), `517d72f` (desktop).
+These statuses supplement, rather than replace, the OS evidence and baseline inventory below.
+
+| Milestone | Implemented and checked locally | Remaining native acceptance |
+| --- | --- | --- |
+| A — design system | Shared graphite surfaces, spacing, focus, motion; four graphics choices, capability-based Automatic; optional saved preferences and reduced motion | GPU/software rendering, frame pacing, manual override persistence across a real restart |
+| B — shell | Launcher/top bar/dock/chrome, responsive sidebar and command strip; compact Add space and five-column launcher keyboard navigation exercised | niri panel placement, focus/drag/resize, shortcuts, dock behavior and compositor fallbacks |
+| C — Home/Hermes | Distinct activity/workspace layout using real stores, unavailable/stale statistics; history/output toggles preserve mounted editor state; startup recovery | Real engine streaming, tools, approvals/deny/cancel, provider switching and reconnect |
+| D — applications/settings | Shared headers/surfaces/navigation across existing apps; responsive settings; working existing model-settings entry | Interactive Files/Office/Missions/Automations/Memory/Connections/onboarding/system panels; not every application has a bespoke redesign |
+| E — identity/CLI | Primary madx alias in all four install layouts, public help/docs, legacy aliases/storage preserved; generated identity and source/built-JS audit | Native alias mutation/rollback, packaged boot/login/installer appearance, retained old-profile behavior |
+| F — validation | 4,963 desktop passes/5 skips; 149 portable passes/3 skips; typecheck/build/lint/branding; paired renderer images | New branch CI, exact-source image/ISO, isolated UEFI install/reboot, native performance and actual VirtualBox resolution |
+
+No existing application/command is removed. Runtime protocol, permissions, storage and updater
+origins are preserved; native parity is an open acceptance gate, not inferred from visual previews.
+One broader Windows bridge test fails identically on the original checkout (unsupported process
+inspection). See REDESIGN.md for commands, skips, screenshots and limits.
+
 Baseline: commit `7ff5f81`, upstream version `0.1.0-alpha.5`, clean checkout on 2026-10-27.
 The repository has 1,767 tracked files, 423 desktop test files and 38 bridge/Linux test files.
 Inventory derived from the app/command registries, source layout, architecture/build/security

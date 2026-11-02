@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "scope": "Tracked and non-ignored working-tree files; every UTF-8 text match plus matching filenames",
+  "classification": "Rule-based triage; categories are not automatic approval to retain user-visible branding",
+  "textOccurrences": 6788,
+  "filesWithTextOccurrences": 992,
+  "filenameOccurrences": 116,
+  "categories": {
+    "1": {
+      "name": "Public-facing product branding",
+      "textOccurrences": 0
+    },
+    "2": {
+      "name": "Terminal commands and help output",
+      "textOccurrences": 1
+    },
+    "3": {
+      "name": "Internal implementation names",
+      "textOccurrences": 2034
+    },
+    "4": {
+      "name": "Compatibility-sensitive APIs and persisted data",
+      "textOccurrences": 2080
+    },
+    "5": {
+      "name": "Tests, fixtures and documentation",
+      "textOccurrences": 2310
+    },
+    "6": {
+      "name": "Historical records and legally required attribution",
+      "textOccurrences": 363
+    }
+  },
+  "excludedGeneratedReports": [
+    "docs/madx/HERALD_INVENTORY.csv",
+    "docs/madx/HERALD_INVENTORY.json"
+  ],
+  "binaryContentNotAudited": [
+    "apps/desktop/build/icon.icns",
+    "apps/desktop/build/icon.ico",
+    "apps/desktop/build/icon.png",
+    "apps/desktop/public/brand/herald-icon.png",
+    "apps/desktop/public/brand/madx-icon.png",
+    "apps/desktop/public/brand/madx-wordmark.png",
+    "apps/desktop/src/assets/brand/herald-mark.png",
+    "apps/desktop/src/assets/brand/hermes-avatar.jpg",
+    "apps/desktop/src/assets/brand/madx-wordmark.png",
+    "docs/images/applications.png",
+    "docs/images/boot.png",
+    "docs/images/control-menu.png",
+    "docs/images/desktop.png",
+    "docs/images/hermes.png",
+    "docs/madx/evidence/redesign-2026-11-01/home-after-1024.jpg",
+    "docs/madx/evidence/redesign-2026-11-01/home-after-1366.jpg",
+    "docs/madx/evidence/redesign-2026-11-01/home-after-1920.jpg",
+    "docs/madx/evidence/redesign-2026-11-01/home-before-1024.jpg",
+    "docs/madx/evidence/redesign-2026-11-01/home-before-1366.jpg",
+    "docs/madx/evidence/redesign-2026-11-01/home-before-1920.jpg",
+    "docs/madx/evidence/redesign-2026-11-01/launcher-640.jpg",
+    "docs/madx/evidence/redesign-2026-11-01/settings-performance-1024.jpg",
+    "linux/plymouth/herald-os/bar.png",
+    "linux/plymouth/herald-os/logo.png"
+  ],
+  "undecodableContentNotAudited": [],
+  "remainingGates": [
+    "Review lowercase identifiers in actual public diagnostic output",
+    "Inspect newly built Linux package and image",
+    "Visual review of installed boot/login/desktop"
+  ]
+}

@@ -1,5 +1,43 @@
 # Phase 1 release gates
 
+## Redesign gates — 2026-11-01
+
+The desktop redesign is committed locally on `codex/madx-desktop-redesign`; its implementation
+and local results are recorded in ASTRA_PROGRESS.md and REDESIGN.md. It does not inherit the
+older image/installer results below. Remaining acceptance work, in order:
+
+1. Obtain authorization for this separate branch, push without force, and verify native CI uses
+   the exact approved SHA. Review all skips, full SSH tests, command aliases and migration tests.
+   Three symlink tests cannot run on this Windows host; five desktop skips are documented.
+   The existing Windows bridge process-test failure is reproduced on the baseline and retained.
+2. Build the same source with `publish=false`, `disks=true`; inspect image/package contents,
+   source labels, Hermes revision and checksums. Inspect boot/login/installer branding in the
+   rebuilt image. Neither a new Linux package nor an ISO exists for the redesign yet.
+3. Run all disposable UEFI installer cases against that exact image run, retaining logs,
+   screenshots, first reboot and service evidence. Do not touch host disks, EFI or firmware.
+4. Exercise the installed desktop: real chat, streaming, permissions/deny/cancel, history,
+   output edits, Files/Office, missions, automations, memory, connections, notifications,
+   onboarding, global shortcut, networking/audio and niri focus/tiling. Shared styling and
+   local tests do not establish every native application's functional parity.
+5. Measure actual VirtualBox output mode/scale and capture before/after at that resolution,
+   1920x1080 and 1366x768. Measure frame pacing and interaction latency across graphics modes
+   with accelerated and software rendering; no fixed FPS or smoothness claim is yet justified.
+6. Test existing-profile upgrade and rollback, alias collision refusal and old command/service
+   discovery. Verify retained custom theme, wallpaper, history, credentials and storage paths.
+7. Resolve the previously observed installed-Hermes/CI-pin discrepancy through an explicit,
+   reviewed version policy. This redesign does not silently change either revision.
+
+Legacy names remain intentionally in state/IPC/plugin/service/package identifiers, old command
+parsers and required legal attribution. Source and built-JS audits found no new unintended product
+copy, but a rebuilt native package and installed-session audit remain required. See the exhaustive
+HERALD_INVENTORY reports; classifications are triage, not blanket exemptions. Full gitleaks remains
+a CI gate; local targeted credential/artifact review found no findings in outgoing changes.
+
+No new branch was pushed, image published, release/tag created, host software installed or LoRA
+work modified. Stop after starting any authorized remote job and return its link for user review.
+
+## Preserved OS validation milestone
+
 Updated 2026-10-31. Native CI and unpublished image builds have run. Phase 1 is
 **not declared complete**. No LoRA or self-development work has started.
 

@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "capturedOn": "2026-11-01",
+  "baselineSource": "2e844ca74b87b04395bb6232b368edc5b8bea451",
+  "applicationSource": "517d72fce3f4c066187030038084e6a3db72e841",
+  "workflowSource": "c5d03cf499701547127580133cd23952908775c2",
+  "scope": "Local Windows renderer using real components and empty offline adapters; no native Linux or live Hermes execution",
+  "images": [
+    {
+      "file": "home-after-1024.jpg",
+      "bytes": 77567,
+      "width": 2005,
+      "height": 1532,
+      "sha256": "1b025bac49aef0c69977befbf2f8e43f9790cf95c3e9279b1795f6b85f3bd4d3"
+    },
+    {
+      "file": "home-after-1366.jpg",
+      "bytes": 76887,
+      "width": 1729,
+      "height": 972,
+      "sha256": "e06ed62fad3782d40b9ed77424d6b8eff50107b545e9ce20b2ed95e23e1abee5"
+    },
+    {
+      "file": "home-after-1920.jpg",
+      "bytes": 112038,
+      "width": 2430,
+      "height": 1367,
+      "sha256": "1b4a2d84ac9fc66a03779d3385fb3717d5a59b5aef5d1ac956dd0b6a9ca60ed7"
+    },
+    {
+      "file": "home-before-1024.jpg",
+      "bytes": 71030,
+      "width": 2051,
+      "height": 1153,
+      "sha256": "26d780f615b54c534452e71c408362c3527310f3dd3d1dc58b1d6ab106b05bd4"
+    },
+    {
+      "file": "home-before-1366.jpg",
+      "bytes": 79314,
+      "width": 1729,
+      "height": 972,
+      "sha256": "38939c8b53971e292f9cd03cba9aacfba88eba7d3006eebdccea2886f99f1592"
+    },
+    {
+      "file": "home-before-1920.jpg",
+      "bytes": 102121,
+      "width": 2430,
+      "height": 1367,
+      "sha256": "80ce83490576d66dea29fba3b6beac839abf678b6a148666f8c6018ea7898f50"
+    },
+    {
+      "file": "launcher-640.jpg",
+      "bytes": 65377,
+      "width": 2005,
+      "height": 1532,
+      "sha256": "157b1098205c08e4d80d80a0e06c54b4607ad825f6ad101fa7823e22ec9604db"
+    },
+    {
+      "file": "settings-performance-1024.jpg",
+      "bytes": 88938,
+      "width": 2051,
+      "height": 1153,
+      "sha256": "9358cce4e5e3d90c3fc39d5d9edbf01032b7259c8c087954b3d106198e42bbe7"
+    }
+  ],
+  "testReports": [
+    {
+      "localIgnoredReport": "redesign-desktop-tests.xml",
+      "sha256": "f6e4f98b99dcafc8620f55651f7c2c898665137f984b48defdd2791c7e94656a",
+      "total": 4968,
+      "passed": 4963,
+      "failed": 0,
+      "skipped": 5
+    },
+    {
+      "localIgnoredReport": "redesign-portable-tests.xml",
+      "sha256": "8c3979e40d4d7f8aa6a09ec351e495f4cacfc4e7420e20e7d0a7b7b6fb1ba7ac",
+      "total": 152,
+      "passed": 149,
+      "failed": 0,
+      "skipped": 3
+    }
+  ],
+  "localLogs": [
+    {
+      "localIgnoredLog": "redesign-final-targeted.log",
+      "sha256": "8281c1bd27365d61bc5b74266a66ea2858e91b21c6bdb0f3c2dd7bbc1eff1d2d"
+    },
+    {
+      "localIgnoredLog": "redesign-build.log",
+      "sha256": "93e00e2e284f5f02e4bb92d06e13294e9469b0b8da0c5648da74c052b4a4d9fd"
+    },
+    {
+      "localIgnoredLog": "redesign-workspace-typecheck.log",
+      "sha256": "c6c13b6c9e5117f7ee92e58a5b84d1b3239c35e15edcef71b5eddf3a17ab91b1"
+    },
+    {
+      "localIgnoredLog": "redesign-system-tests.log",
+      "sha256": "714304788f22d4bd06c6aad39a2ef057f521cae15b5b6aa0890e32956d3d6587"
+    },
+    {
+      "localIgnoredLog": "redesign-publish-regression-before.log",
+      "sha256": "dbb2a06e1772db97403de4abf3ba06b483001c55908fd53e995de3c6cf3704c2"
+    }
+  ],
+  "productionBundleEntryPoints": [
+    {
+      "file": "apps/desktop/dist/renderer/index.html",
+      "sha256": "9993ce6873ad2e40aa12ab0bf98b3144aa4e7dfd554f3ca7e3ff43b031cfb0ae"
+    },
+    {
+      "file": "apps/desktop/dist/electron/main.mjs",
+      "sha256": "d160d4d5ee6060ae504ec351fed9ad903f74af4b4060e8db12c82d8b11341849"
+    },
+    {
+      "file": "apps/desktop/dist/electron/preload.cjs",
+      "sha256": "5dfa2d12c47656013c9bf901459250f385cd39cff39a5aca1071c0d7c6f2cb9b"
+    }
+  ],
+  "outstanding": [
+    "Full Linux CI and secret scan",
+    "Native package/ISO build",
+    "Disposable UEFI installation and first reboot",
+    "Real Hermes integration acceptance",
+    "Actual VirtualBox resolution and screenshots",
+    "Native frame pacing/latency",
+    "Existing profile upgrade/rollback"
+  ]
+}

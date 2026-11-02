@@ -1,4 +1,58 @@
-# Astra progress — updated 2026-10-31 (Asia/Calcutta)
+# Astra progress — updated 2026-11-02 (Asia/Calcutta)
+
+## Desktop redesign: locally validated, Linux acceptance pending
+
+Work continues in `codex/madx-desktop-redesign`, isolated from the clean validated OS worktree.
+The implementation and workflow commits are:
+
+- `93fdc9c539b07f34fd3905787a019ff4d449a82d`: primary `madx` command, compatible aliases,
+  MADXCORE identity, current CLI guides and package checks. SSH JSON errors retain their format.
+- `517d72fce3f4c066187030038084e6a3db72e841`: Liquid Graphite design system, adaptive graphics,
+  desktop shell, responsive Home/Hermes/settings and regression coverage.
+- `c5d03cf499701547127580133cd23952908775c2`: feature-branch CI and explicit image/manifest
+  publication guards, with both publish input values covered by regression tests.
+
+Final evidence/documentation review completed on 2026-11-02. Captures and local test executions
+below are dated 2026-11-01; no remote run was launched during finalization.
+
+Home uses existing activity/model stores and live system statistics, with explicit unavailable
+states and stale-sample expiry. Hermes keeps its existing conversation, permission, tool and
+artifact pipelines; hiding output preserves editor state. Saved profiles and legacy identifiers
+are retained. Full Glass, Balanced, Performance and Automatic use Chromium capability reporting
+and manual choice, with reduced-motion support. This is not a measured FPS claim.
+
+Local Windows validation: **4,963 desktop/shared/preferences tests passed, five skipped**;
+**149 portable Linux/manual/branding tests passed, three skipped**. Final focused UI/locale
+checks: **40 passed** (overlap with the desktop suite, not extra unique coverage). TypeScript,
+renderer/Electron production builds, branding generation/audit, Bash syntax and workflow lint
+passed. Build emitted existing nonfatal dynamic-import warnings. Full native desktop/SSH/bridge
+suites have not run for this revision. A broader bridge attempt had **101 passed, three skipped,
+one failure**: Windows `HostNotSupported` in `test_kill_refuses_critical_pids`; the same failure
+was reproduced at unchanged baseline `2e844ca`. It was preserved, not suppressed.
+
+Final workflow review reproduced and fixed a missing redesign-branch guard on the multi-arch
+manifest publishing job. Both image and manifest publication are now blocked even when a manual
+caller sets publish=true. Regression cases exercise both values and verify feature-branch pushes
+trigger CI without triggering image/installer workflows. Workspace-wide TypeScript also passed.
+
+Before/after renderer screenshots and checksums are in `evidence/redesign-2026-11-01/`.
+They use actual source components with empty/offline adapters. They establish layout, not a
+native VM or model-backed chat. Requested 1920x1080 and 1366x768 layouts were checked; browser
+scale rounding and capture padding are documented. 1024x768 is a representative small layout,
+**not the measured VirtualBox resolution**. Performance mode disabled top-bar blur in the
+renderer. Native frame pacing, guest resolution, compositor interactions and model-backed
+functional parity remain unverified.
+
+Source branding audit has no remaining unreviewed product-copy candidates. Built JS product-name
+matches were reviewed: profile/title/command compatibility, implementation comments and required
+About attribution. Exhaustive inventory and native-package limitations are in `REDESIGN.md`.
+No new dependency, Hermes pin, release origin, bootloader or disk-layout change was made.
+
+The feature branch is **local only**. Its CI trigger is prepared; image publication is forcibly
+disabled on this branch. The prior authorization named only `codex/linux-release-validation`.
+See `REDESIGN_EXECUTION.md` for the next branch-specific authorization and exact CI/image/isolated
+installer procedure. No redesign ISO, VM installation or native performance result is claimed.
+The successful older OS evidence below is preserved and must not be attributed to the redesign.
 
 ## Boot and installation milestone passed at `5b704d6`
 

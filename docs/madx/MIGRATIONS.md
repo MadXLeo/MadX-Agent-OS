@@ -6,6 +6,24 @@ layouts and user state. The table records original contracts and the cutover req
 
 ## Phase 1 implementation update
 
+### Primary CLI and appearance increment — 2026-11-01
+
+`93fdc9c` adds `madx -> herald-os` to image/dev/Arch/tarball alias plans. The existing preflight
+checks every destination, rejects foreign files and symlinked parents, is idempotent, and removes
+only newly created links if a write fails. `madx-agent-os`, `herald-os`, existing helper names and
+canonical service units remain usable. The packaged-image validator now requires the exact primary
+symlink. Help/docs teach `madx`; older images retain their existing command until updated.
+CLI dispatch, options and exit status are unchanged. SSH's JSON error path strips either public
+or legacy diagnostic prefix, preserving the existing JSON contract (both cases tested).
+
+`517d72f` adds optional `visualQuality` and `dockMagnification` preferences. Missing/unknown
+quality means Automatic; missing magnification retains enabled behavior. Existing profile and
+theme/wallpaper selections stay in place. Automatic chooses Performance for software rendering,
+Balanced otherwise; Full Glass is an explicit selection, not a GPU-brand guess or FPS promise.
+The added environment capability field is optional for older adapters. No storage directory,
+browser partition, IPC/tool ID, plugin ID, service name, update origin or Hermes revision is moved.
+Native install/update/rollback and old-profile acceptance remain required for this increment.
+
 `linux/branding/install.py` creates relative MadX command, install/share/icon and service aliases
 under an explicit root. It checks all destinations before writing, refuses existing foreign files
 or symlinked parents, is idempotent, and rolls back only links it created when a write fails. It
