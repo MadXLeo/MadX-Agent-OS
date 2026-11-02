@@ -1,0 +1,128 @@
+{
+  "source": "88d970167a9eb743a224a839491ec2631247f401",
+  "branch": "codex/madx-desktop-redesign",
+  "ciRun": 41400903428,
+  "imageRun": 41413455726,
+  "installerRun": 41438712212,
+  "imagePublished": false,
+  "iso": {
+    "name": "madx-agent-os-validation-88d9701-x86_64.iso",
+    "bytes": 3883409408,
+    "sha256": "785488e0be1895046d7820df748806e8d221c75d65b177ac596dcd77544f1d58",
+    "volumeLabel": "MADX_AGENT_OS",
+    "parts": [
+      {
+        "name": "madx-agent-os-validation-88d9701-x86_64.iso.part0",
+        "bytes": 1992294400,
+        "sha256": "94e489381f4ebbac799f2e5f0135e2cd7255bfc3f5aff04197219f17b9da36dc"
+      },
+      {
+        "name": "madx-agent-os-validation-88d9701-x86_64.iso.part1",
+        "bytes": 1891115008,
+        "sha256": "b59d8539e4ebd91a135c814e835c0a83c76a27a88ce925b3f53a7639a39b34e5"
+      }
+    ],
+    "bootVerified": true
+  },
+  "cases": [
+    {
+      "case": "unencrypted-preserve-false",
+      "artifactId": 13141111673,
+      "artifactSha256": "8919ede8d5cd683686569cde33bcf31fd55ad73def1379ff637e8ddcde4e56f9",
+      "uefiBoot": true,
+      "installation": true,
+      "firstReboot": true,
+      "guestCore": true,
+      "desktopWindow": true,
+      "failedUnits": "",
+      "hermesInstalledRevision": "0aab6dcf8b7869acbab06507c34881b53036c09a",
+      "hermesCiPin": "f97608f178d1ffeca59860195ab7da295f7c8e5f",
+      "hermesDrift": true,
+      "hermesCommandAvailable": true,
+      "hermesInstallRetryService": {
+        "activeState": "inactive",
+        "conditionResult": false,
+        "result": "success",
+        "execMainStatus": 0
+      },
+      "bootedImageDigest": "sha256:4c7ac1c9b0571dbdd89b298e39c3d31bffa3bc6f0f693c77d627f1fb1b34fc70",
+      "bootedImage": "ghcr.io/madxleo/madx-agent-os:dev-88d9701-amd64",
+      "screenshot": {
+        "file": "unencrypted-preserve-false-18min.png",
+        "sha256": "063e44afa1fc419026a215ccd7b2944dac2806a1d09f14c42a91e312ecc4f82b",
+        "width": 1280,
+        "height": 800,
+        "observation": "MadX welcome card, top bar and dock rendered; onboarding not completed."
+      }
+    },
+    {
+      "case": "encrypted-preserve-false",
+      "artifactId": 13141091952,
+      "artifactSha256": "47b00af9f48d1f251c0adc6ef3d710f791dd07a3e6eb0502211b4a4c57a18270",
+      "uefiBoot": true,
+      "installation": true,
+      "firstReboot": true,
+      "guestCore": true,
+      "desktopWindow": true,
+      "failedUnits": "",
+      "hermesInstalledRevision": "0aab6dcf8b7869acbab06507c34881b53036c09a",
+      "hermesCiPin": "f97608f178d1ffeca59860195ab7da295f7c8e5f",
+      "hermesDrift": true,
+      "hermesCommandAvailable": true,
+      "hermesInstallRetryService": {
+        "activeState": "inactive",
+        "conditionResult": false,
+        "result": "success",
+        "execMainStatus": 0
+      },
+      "bootedImageDigest": "sha256:4c7ac1c9b0571dbdd89b298e39c3d31bffa3bc6f0f693c77d627f1fb1b34fc70",
+      "bootedImage": "ghcr.io/madxleo/madx-agent-os:dev-88d9701-amd64",
+      "screenshot": {
+        "file": "encrypted-preserve-false-18min.png",
+        "sha256": "7f97d0135c0417fe5093ccff55b05eefa41f542aaf864f6d7bd29f9464d76027",
+        "width": 1280,
+        "height": 800,
+        "observation": "MadX welcome card, top bar and dock rendered; onboarding not completed."
+      }
+    },
+    {
+      "case": "unencrypted-preserve-true",
+      "artifactId": 13140666823,
+      "artifactSha256": "22e17e9492a3845735e8790773348563041d6ca756267b695132e4d21b518cbd",
+      "uefiBoot": true,
+      "installation": true,
+      "firstReboot": true,
+      "guestCore": true,
+      "desktopWindow": true,
+      "failedUnits": "",
+      "hermesInstalledRevision": "0aab6dcf8b7869acbab06507c34881b53036c09a",
+      "hermesCiPin": "f97608f178d1ffeca59860195ab7da295f7c8e5f",
+      "hermesDrift": true,
+      "hermesCommandAvailable": true,
+      "hermesInstallRetryService": {
+        "activeState": "inactive",
+        "conditionResult": false,
+        "result": "success",
+        "execMainStatus": 0
+      },
+      "bootedImageDigest": "sha256:4c7ac1c9b0571dbdd89b298e39c3d31bffa3bc6f0f693c77d627f1fb1b34fc70",
+      "bootedImage": "ghcr.io/madxleo/madx-agent-os:dev-88d9701-amd64",
+      "screenshot": {
+        "file": "unencrypted-preserve-true-18min.png",
+        "sha256": "fdd9613bf2fa6e00e81e8951ddd6e3b23d25225fd96742fedbb931a5daa336af",
+        "width": 1280,
+        "height": 800,
+        "observation": "MadX welcome card, top bar and dock rendered; onboarding not completed."
+      },
+      "protectedSyntheticDiskSha256": "a951bff4bb1d6384fa5ab0015f9caa82f234454ce38c9aa88792561497de635b"
+    }
+  ],
+  "limitations": [
+    "Automated ISO boot uses original EFI/GRUB path with an injected unattended kickstart; interactive installer is unverified.",
+    "Screenshots prove rendered welcome desktop only, not full Home/Hermes interaction or performance.",
+    "Installed Hermes revision differs from CI pin; no model-backed chat proof.",
+    "Installed update origin is the intentionally unpublished dev tag; update delivery and rollback unverified.",
+    "Physical hardware, Secure Boot and Windows dual boot unverified.",
+    "Primary madx alias is image/CI checked; installed guest smoke executes madx-agent-os."
+  ]
+}

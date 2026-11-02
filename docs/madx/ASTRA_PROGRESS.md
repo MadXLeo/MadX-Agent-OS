@@ -1,6 +1,56 @@
 # Astra progress — updated 2026-11-02 (Asia/Calcutta)
 
-## Desktop redesign: locally validated, Linux acceptance pending
+## Redesign boots and installs in disposable UEFI VMs — 2026-11-02
+
+Validated source: `88d970167a9eb743a224a839491ec2631247f401` on
+`codex/madx-desktop-redesign`. The user authorized this branch and the focused stale CLI test
+correction. That correction changes only the expected plugin-enable guidance; production behavior
+and security assertions are unchanged. Its two focused local tests passed with Windows import
+adapters before the native run. Earlier CI `41398011392` failed that assertion and was not reused.
+
+[CI 41400903428](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/41400903428) passed all
+eight jobs at this exact source. Linux desktop: **5,855 passed / two skipped**; bridge/system:
+**2,385 passed / two skipped**; dedicated aliases: **20 passed / zero skipped** (overlapping the
+full suite). macOS desktop: **5,853 passed / four skipped**; bridge/system: **2,281 passed / 106
+skipped**. TypeScript, builds, branding, scripts, signing policy, secrets and pinned real Hermes
+runtime passed. All skips were reviewed: Linux system excludes macOS PDFKit and root-only nft;
+desktop excludes optional spreadsheet validators; macOS also excludes Linux-specific tools/tests.
+The retained Windows process-test failure and three memory-race skips pass on both native systems.
+
+[Image 41413455726](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/41413455726) passed
+amd64, arm64 and NVIDIA image/filesystem/systemd/Electron checks. It ran with publish=false and
+disks=true; publication, manifest publishing and release creation were skipped. The x86_64 ISO is
+`madx-agent-os-validation-88d9701-x86_64.iso`, **3,883,409,408 bytes**, SHA-256
+`785488e0be1895046d7820df748806e8d221c75d65b177ac596dcd77544f1d58`.
+All three evidence archives, ZIP CRCs, both ISO parts and the complete ISO checksum were verified
+locally. Source labels and the compiled Hermes pin match the approved revision. Build logs retain
+dracut copy errors for `/root` and `./buildstamp`, plus an overlay-unmount warning; no check was
+suppressed and the subsequent UEFI cases passed. No physical hardware claim follows from this.
+
+[Installer 41438712212](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/41438712212)
+passed encrypted, unencrypted and protected-synthetic-disk cases against that exact image run.
+Evidence proves the ISO's EFI/GRUB path, unattended installation, first reboot, encrypted unlock,
+SSH restrictions, legacy command/service aliases, booted deployment and core services. All three
+guests have no failed units in retained diagnostics. The synthetic second disk retained its hash.
+The previously reported GRUB installer failure was not reproduced. The test injects unattended
+answers; manual installer interaction and Windows dual boot are not validated.
+
+Actual 1280x800 guest screenshots show the MadX welcome card, top bar and dock in every case.
+They are not full Home/Hermes interaction or performance evidence. Screenshots, hashes, provenance,
+ISO details and guest findings are in [native evidence](evidence/redesign-linux-2026-11-02/validation.json).
+No FPS, latency, graphics-mode fallback or physical-PC compatibility result is claimed.
+
+All guests installed Hermes **`0aab6dcf8b7869acbab06507c34881b53036c09a`**, while CI tests pin
+**`f97608f178d1ffeca59860195ab7da295f7c8e5f`**. The first-boot installer follows upstream main;
+the drift is recorded, not silently corrected. Hermes command discovery succeeds. Its installation/
+retry unit is inactive with an unmet condition and successful exit, not proof of running chat.
+Model-backed integration and permissions remain open. The guest update origin is the intentionally
+unpublished `dev-88d9701-amd64` tag; update delivery and existing-profile rollback are unverified.
+Remaining updater messages still emit `herald-os update`; matching tests were preserved during
+the single-line correction. Phase 1/MVP completion is not claimed. Host partitions/EFI/firmware
+and the Claude worktree were not changed.
+
+## Earlier local redesign validation — superseded by native results above
 
 Work continues in `codex/madx-desktop-redesign`, isolated from the clean validated OS worktree.
 The implementation and workflow commits are:
@@ -48,11 +98,10 @@ matches were reviewed: profile/title/command compatibility, implementation comme
 About attribution. Exhaustive inventory and native-package limitations are in `REDESIGN.md`.
 No new dependency, Hermes pin, release origin, bootloader or disk-layout change was made.
 
-The feature branch is **local only**. Its CI trigger is prepared; image publication is forcibly
-disabled on this branch. The prior authorization named only `codex/linux-release-validation`.
-See `REDESIGN_EXECUTION.md` for the next branch-specific authorization and exact CI/image/isolated
-installer procedure. No redesign ISO, VM installation or native performance result is claimed.
-The successful older OS evidence below is preserved and must not be attributed to the redesign.
+At local finalization the feature branch had not been pushed; the later authorization and native
+execution are recorded above. Image publication remains forcibly disabled on this branch.
+`REDESIGN_EXECUTION.md` retains the exact-source procedure. Native performance remains unverified.
+The older OS evidence below is preserved separately from the redesigned image's results.
 
 ## Boot and installation milestone passed at `5b704d6`
 

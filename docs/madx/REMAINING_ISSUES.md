@@ -1,20 +1,22 @@
 # Phase 1 release gates
 
-## Redesign gates — 2026-11-01
+## Redesign gates — updated 2026-11-02
 
-The desktop redesign is committed locally on `codex/madx-desktop-redesign`; its implementation
-and local results are recorded in ASTRA_PROGRESS.md and REDESIGN.md. It does not inherit the
-older image/installer results below. Remaining acceptance work, in order:
+Source `88d970167a9eb743a224a839491ec2631247f401` was authorized and pushed to
+`codex/madx-desktop-redesign`. CI 41400903428, unpublished image 41413455726 and all three
+UEFI cases in installer 41438712212 passed at that source. ISO and artifact hashes, real guest
+screenshots and service evidence are recorded in ASTRA_PROGRESS.md and
+`evidence/redesign-linux-2026-11-02/validation.json`. Remaining acceptance work:
 
-1. Obtain authorization for this separate branch, push without force, and verify native CI uses
-   the exact approved SHA. Review all skips, full SSH tests, command aliases and migration tests.
-   Three symlink tests cannot run on this Windows host; five desktop skips are documented.
-   The existing Windows bridge process-test failure is reproduced on the baseline and retained.
-2. Build the same source with `publish=false`, `disks=true`; inspect image/package contents,
-   source labels, Hermes revision and checksums. Inspect boot/login/installer branding in the
-   rebuilt image. Neither a new Linux package nor an ISO exists for the redesign yet.
-3. Run all disposable UEFI installer cases against that exact image run, retaining logs,
-   screenshots, first reboot and service evidence. Do not touch host disks, EFI or firmware.
+1. Keep the reviewed CI skips explicit: Linux PDFKit/root-only nft and optional spreadsheet
+   validators; macOS platform/tool exclusions. The Windows process-test failure remains recorded
+   but passes on Linux/macOS, as do memory-race tests and real Linux alias filesystem checks.
+2. Finish manual installed-session branding review. Updater production messages still use
+   `herald-os update`; their matching tests were intentionally outside the one-line correction.
+   Retained storage/service identifiers and legal attribution require compatibility exceptions.
+3. Exercise the manual installer and actual hardware separately. Automated UEFI tests inject
+   unattended answers and use synthetic disks; they do not certify Windows dual boot, firmware,
+   Secure Boot or physical installation. No host disk or EFI change is authorized by this report.
 4. Exercise the installed desktop: real chat, streaming, permissions/deny/cancel, history,
    output edits, Files/Office, missions, automations, memory, connections, notifications,
    onboarding, global shortcut, networking/audio and niri focus/tiling. Shared styling and
@@ -24,17 +26,20 @@ older image/installer results below. Remaining acceptance work, in order:
    with accelerated and software rendering; no fixed FPS or smoothness claim is yet justified.
 6. Test existing-profile upgrade and rollback, alias collision refusal and old command/service
    discovery. Verify retained custom theme, wallpaper, history, credentials and storage paths.
-7. Resolve the previously observed installed-Hermes/CI-pin discrepancy through an explicit,
-   reviewed version policy. This redesign does not silently change either revision.
+7. Resolve installed Hermes `0aab6dcf8b7869acbab06507c34881b53036c09a` versus tested pin
+   `f97608f178d1ffeca59860195ab7da295f7c8e5f` through an explicit reviewed policy. Its install/retry
+   service is inactive after setup; command discovery does not prove model-backed chat. The guest
+   update origin is intentionally unpublished `dev-88d9701-amd64`, so delivery/rollback cannot be
+   presented as validated. Do not publish or silently switch origin to address this.
 
 Legacy names remain intentionally in state/IPC/plugin/service/package identifiers, old command
-parsers and required legal attribution. Source and built-JS audits found no new unintended product
-copy, but a rebuilt native package and installed-session audit remain required. See the exhaustive
+parsers and required legal attribution. Automated branding checks passed but did not reject the
+updater wording identified above. Installed-session review remains required. See the exhaustive
 HERALD_INVENTORY reports; classifications are triage, not blanket exemptions. Full gitleaks remains
 a CI gate; local targeted credential/artifact review found no findings in outgoing changes.
 
-No new branch was pushed, image published, release/tag created, host software installed or LoRA
-work modified. Stop after starting any authorized remote job and return its link for user review.
+The authorized redesign branch was pushed. No image was published, release/tag created, host
+software installed or LoRA work modified. Stop after starting remote work and return its link.
 
 ## Preserved OS validation milestone
 

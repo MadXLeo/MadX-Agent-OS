@@ -1,6 +1,21 @@
 # Feature parity register
 
-## Redesign increment — 2026-11-01
+## Native redesign evidence — 2026-11-02
+
+At `88d970167a9eb743a224a839491ec2631247f401`, CI 41400903428 passed both desktop/system
+matrices, TypeScript/builds, branding and pinned Hermes smoke. Image 41413455726 built inspected
+amd64/arm64/NVIDIA images and a checksum-verified unpublished ISO. Installer 41438712212 passed
+all three disposable UEFI cases: installation, first reboot, encryption/unlock, SSH restrictions,
+core services, compatibility aliases and preservation of a synthetic second disk.
+
+Real 1280x800 screenshots show the welcome desktop/top bar/dock. Full Home/Hermes operation,
+graphics fallback/latency/FPS, manual installer and hardware compatibility remain unverified.
+The primary `madx` alias passes image and CI checks; the installed smoke invokes `madx-agent-os`.
+Installed Hermes `0aab6dc` differs from tested `f97608f`; no running model-backed chat is certified.
+The booted update origin names an intentionally unpublished tag; updates/rollback remain open.
+See [retained evidence](evidence/redesign-linux-2026-11-02/validation.json) and REMAINING_ISSUES.md.
+
+## Redesign increment — original local assessment, 2026-11-01
 
 Implementation: `93fdc9c` (public identity/CLI), `517d72f` (desktop).
 These statuses supplement, rather than replace, the OS evidence and baseline inventory below.

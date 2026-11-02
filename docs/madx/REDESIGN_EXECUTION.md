@@ -1,9 +1,11 @@
 # Redesign native validation procedure
 
-Status: prepared, **not executed**. Repository `MadXLeo/MadX-Agent-OS`; feature branch
-`codex/madx-desktop-redesign`. Prior authorization covered only `codex/linux-release-validation`.
-The user must authorize this new branch and its exact final commit before the following remote
-actions. Keep the branch at that SHA until its CI/image/installer evidence is collected.
+Status: **executed at `88d970167a9eb743a224a839491ec2631247f401`** after explicit user
+authorization for `codex/madx-desktop-redesign` and the single stale CLI test correction.
+Repository `MadXLeo/MadX-Agent-OS`: CI 41400903428, unpublished image 41413455726 and installer
+41438712212 passed. Evidence and remaining interactive/performance gates are in ASTRA_PROGRESS.md.
+The commands below are the retained procedure, not a request to rerun or publish this build.
+Keep validated source revisions separate from later documentation-only commits.
 
 ## Preflight and single-branch push
 
