@@ -1,5 +1,10 @@
 # Documentation
 
+For current MadX development, start with [AI handoff](madx/AI_HANDOFF.md),
+[project progress](madx/PROJECT_STATUS.md), [source map](madx/PROJECT_MAP.md) and
+[remaining tasks](madx/WORK_ITEMS.json). [Graphify](madx/GRAPHIFY.md) provides local
+symbol/dependency navigation; release results remain in the evidence documents.
+
 | Document | Read it to learn |
 | --- | --- |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How Electron main, the renderer, the Hermes runtime and the bridge plugin fit together |

@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-03",
+  "timezone": "Asia/Calcutta",
+  "validated_source": "88d970167a9eb743a224a839491ec2631247f401",
+  "summary": "Bootable Linux alpha; MVP acceptance incomplete. No Windows dual-boot certification.",
+  "status_legend": {
+    "open": "Required work with no accepted completion evidence",
+    "awaiting_user_result": "User attempted installation; exact screen and outcome unknown",
+    "cancelled_by_user": "Do not resume this verification without a new user request",
+    "blocked_unpublished_origin": "Cannot validate delivery against an intentionally unpublished tag"
+  },
+  "items": [
+    {
+      "id": "INSTALL-01", "priority": "P0", "status": "awaiting_user_result",
+      "title": "Manual installer partition selection and physical attempt outcome",
+      "paths": ["linux/image/iso.toml", "linux/image/finalize-root-mount.py", "linux/tests/test_root_mount.py"],
+      "observation": "User sees one disk and cannot partition; no current installer screenshot, completed install or Windows reboot result received.",
+      "next_action": "Review the user's exact installer screen/result. Reproduce storage behavior in an isolated VM when requested; do not change the host disk.",
+      "acceptance": ["Record actual partition proposal and installer logs", "No deletion/formatting of existing Windows or EFI partitions", "Installed MadX reboot and existing Windows boot are separately evidenced"]
+    },
+    {
+      "id": "INSTALL-02", "priority": "P0", "status": "cancelled_by_user",
+      "title": "Actual Windows/shared-ESP and Secure Boot validation",
+      "paths": ["linux/vm/windows-fixture.py", ".github/workflows/installer-test.yml"],
+      "observation": "Existing CI preserves a synthetic adjacent disk only. A separate local UEFI/Secure Boot VM was prepared but never booted; no Windows ISO was available; user cancelled verification.",
+      "next_action": "Only after a renewed request: install real Windows in a disposable virtual disk, install MadX into free space, and test both boot paths.",
+      "acceptance": ["Windows boots before and after MadX installation", "Windows data/MSR and Microsoft EFI files preserved", "Both firmware boot entries work across reboots", "Secure Boot state and enforcement recorded inside guests", "Recovery and encrypted/unencrypted scenarios documented"]
+    },
+    {
+      "id": "GRAPHICS-01", "priority": "P0", "status": "open",
+      "title": "Automatic fallback for VirtualBox with no usable accelerated renderer",
+      "paths": ["linux/session/herald-os-compositor", "linux/session/herald-os-niri-nested", "linux/session/herald-os-session", "linux/tests/test_session.py"],
+      "observation": "niri failed with software EGL renderers skipped/no allocator despite a render node. Guest-only nested/pixman/software-GPU settings restored welcome desktop.",
+      "next_action": "Reproduce and implement a bounded fallback without weakening Electron isolation or overriding valid accelerated configurations.",
+      "acceptance": ["Fresh VM reaches desktop without manual session.env edit", "Accelerated path still works", "Fallback handles restart/failure without loops", "Actual screenshot and renderer logs retained"]
+    },
+    {
+      "id": "BOOT-01", "priority": "P0", "status": "open",
+      "title": "Visible encrypted-disk unlock prompt",
+      "paths": ["linux/plymouth/herald-os/herald-os.script", "linux/image/iso.toml", ".github/workflows/installer-test.yml"],
+      "observation": "User's encrypted VM appeared stuck at splash; text-console unlock succeeded. Automated tests disable splash and do not prove the graphical prompt.",
+      "next_action": "Collect real Plymouth/journal evidence and reproduce prompt rendering before changing theme or boot arguments.",
+      "acceptance": ["Prompt visible after cold boot", "Wrong passphrase rejected", "Correct passphrase reaches desktop", "No passphrase in logs/screenshots"]
+    },
+    {
+      "id": "HERMES-01", "priority": "P0", "status": "open",
+      "title": "Align installed Hermes with explicitly reviewed revision policy",
+      "paths": ["upstream/UPSTREAM.lock", "linux/image/firstboot.sh", "linux/image/herald-os-hermes.service", "scripts/madx/hermes-smoke.py"],
+      "observation": "Installed 0aab6dcf8b7869acbab06507c34881b53036c09a differs from CI pin f97608f178d1ffeca59860195ab7da295f7c8e5f; first boot follows upstream main.",
+      "next_action": "Propose and review revision policy; do not silently change it. Validate the exact installed runtime.",
+      "acceptance": ["Compiled/tested/installed revisions recorded", "Drift is intentional and tested or eliminated through reviewed policy", "First-boot retry and offline recovery work"]
+    },
+    {
+      "id": "HERMES-02", "priority": "P0", "status": "open",
+      "title": "Installed Linux end-to-end Hermes operation",
+      "paths": ["apps/desktop/electron/backend/manager.ts", "apps/desktop/src/features/hermes/HermesPage.tsx", "plugins/herald-os-bridge/bridge/", "packages/hermes-client/src/"],
+      "next_action": "Complete onboarding in installed Linux using user-configured provider access; record redacted results.",
+      "acceptance": ["Real chat and streaming", "Filesystem tools with approve/deny/cancel", "History and memory survive restart", "Provider errors/reconnect and engine restart recover", "No credentials in artifacts"]
+    },
+    {
+      "id": "DESKTOP-01", "priority": "P1", "status": "open",
+      "title": "Native application parity and measured desktop performance",
+      "paths": ["apps/desktop/src/features/", "apps/desktop/src/shell/", "apps/desktop/shared/visual-quality.ts", "docs/madx/FEATURE_PARITY.md"],
+      "next_action": "Exercise retained apps and graphics choices in installed Linux, then measure input latency, frame pacing and resource use.",
+      "acceptance": ["Home/Hermes/Files/Office/Missions/Automations/Memory/Connections/settings smoke recorded", "Actual 1280x800, 1366x768 and 1920x1080 screenshots where supported", "Accelerated/software modes and preference persistence measured", "Shortcuts, focus, resize, notifications, network/audio verified"]
+    },
+    {
+      "id": "UPDATE-01", "priority": "P0", "status": "blocked_unpublished_origin",
+      "title": "Existing-profile upgrade, update delivery and rollback",
+      "paths": ["linux/bin/herald-os-update", "linux/tests/test_update.py", "branding/product.json"],
+      "observation": "Booted origin refers to intentionally unpublished dev-88d9701-amd64; no successful delivery or rollback cycle recorded.",
+      "next_action": "Prepare an isolated authorized update source and two-deployment test plan. Do not publish or switch origin without approval.",
+      "acceptance": ["Upgrade/reboot/rollback/reboot tested", "Preferences, credentials, memory, history and documents preserved", "Legacy/new CLI and service aliases still target one implementation", "Exact deployment identities recorded"]
+    },
+    {
+      "id": "BRAND-01", "priority": "P1", "status": "open",
+      "title": "Final public branding and packaged appearance review",
+      "paths": ["linux/bin/herald-os-update", "linux/tests/test_update.py", "branding/legacy-allowlist.json", "docs/madx/REMAINING_ISSUES.md"],
+      "next_action": "Replace remaining user-visible updater wording with matching regression checks; visually review boot/login/installer and native packaging.",
+      "acceptance": ["Normal UI/help/update messages use MadX", "Stored paths, protocol identifiers and legacy aliases preserved", "LICENSE/NOTICE/About attribution retained"]
+    },
+    {
+      "id": "HARDWARE-01", "priority": "P1", "status": "open",
+      "title": "Hardware and non-amd64 runtime validation",
+      "paths": ["linux/image/Containerfile.nvidia", "linux/image/nvidia.sh", "linux/tests/test_gpu_firstboot.py"],
+      "next_action": "Record supported hardware scope and test drivers, suspend/resume, networking/audio and arm64 boot in authorized environments.",
+      "acceptance": ["NVIDIA hardware behavior tested beyond image build", "arm64 boot tested beyond build", "Laptop networking/audio/power and graphics evidence retained"]
+    },
+    {
+      "id": "RELEASE-01", "priority": "P1", "status": "open",
+      "title": "Release trust, security limits and final MVP acceptance",
+      "paths": [".github/workflows/image.yml", "linux/image/Containerfile", "docs/madx/REMAINING_ISSUES.md", "docs/DECISIONS.md"],
+      "next_action": "Resolve signing/ownership and document the inherited SELinux-permissive posture; obtain separate publication authorization only after acceptance.",
+      "acceptance": ["No unreviewed failures/skips", "Release signing/trust policy demonstrated", "MVP gates have linked evidence", "Explicit approval before tags/releases/registry publication"]
+    }
+  ]
+}

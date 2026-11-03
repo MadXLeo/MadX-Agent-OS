@@ -1,5 +1,25 @@
 # Phase 1 release gates
 
+## Current triage — 2026-11-03
+
+Use [WORK_ITEMS.json](WORK_ITEMS.json) for prioritized tasks, exact source paths and
+acceptance conditions; [PROJECT_STATUS.md](PROJECT_STATUS.md) is the current overview.
+New local blockers supplement, rather than invalidate, the recorded hosted results:
+
+- VirtualBox without 3D: a render node exists but niri rejects software EGL/no allocator.
+  A guest-only nested/pixman/software-GPU override restores the welcome screen. Automatic
+  production fallback remains open (GRAPHICS-01).
+- Encrypted VM splash hid the passphrase prompt. Text-console unlock worked; graphical
+  password-prompt visibility and recovery remain open (BOOT-01).
+- Actual Windows dual-boot verification was cancelled before any test VM boot. The user
+  then reported difficulty partitioning in the physical installer. We have no completed
+  installation, preserved-partition or subsequent Windows-boot evidence (INSTALL-01/02).
+- Hermes was still in setup at the last local welcome screen; no new chat or performance
+  result supersedes the native acceptance limitations below.
+
+Do not resume cancelled dual-boot testing without a new request. No physical disk,
+host EFI or firmware change was made by the assistant.
+
 ## Redesign gates — updated 2026-11-02
 
 Source `88d970167a9eb743a224a839491ec2631247f401` was authorized and pushed to

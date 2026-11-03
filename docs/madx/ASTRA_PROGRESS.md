@@ -1,4 +1,38 @@
-# Astra progress — updated 2026-11-02 (Asia/Calcutta)
+# Astra progress — updated 2026-11-03 (Asia/Calcutta)
+
+## Current handoff and local observations — 2026-11-03
+
+The current overview is [PROJECT_STATUS.md](PROJECT_STATUS.md), with source locations
+in [PROJECT_MAP.md](PROJECT_MAP.md), prioritized acceptance work in
+[WORK_ITEMS.json](WORK_ITEMS.json), and [AI_HANDOFF.md](AI_HANDOFF.md) for a new agent.
+AGENTS.md, CLAUDE.md and GEMINI.md all direct assistants to that same evidence.
+Project-local Graphify tooling is documented in [GRAPHIFY.md](GRAPHIFY.md); it maps
+code only with model backends disabled and is not a shipped OS dependency.
+Graphify 0.9.101 installed with a clean dependency check. The first local build processed
+1,663 code files (20,998 nodes / 72,211 relationship records); Hermes UI and installer
+queries resolve correct file locations. Coverage warnings are retained in GRAPHIFY.md.
+Six focused tooling/handoff tests, source-map/link checks, workspace TypeScript,
+branding synchronization, dependency and whitespace checks passed. No OS runtime
+behavior was changed or new release workflow dispatched by this tooling update.
+
+The user's VirtualBox guest exposed two gaps beyond hosted UEFI acceptance. The
+encrypted unlock prompt was hidden by the splash; text-console unlock succeeded.
+With 3D disabled, niri then rejected the software EGL renderer despite a render node.
+A guest-only session.env override (MADX_OS_NIRI_NESTED=1, WLR_RENDERER=pixman,
+MADX_OS_SOFTWARE_GPU=1) restored the graphical welcome desktop. This is a workaround,
+not a production fix or performance result. Hermes setup was still pending at the
+last observed screen. Local logs/screenshots are retained in ignored
+`.venv/vbox-stuck-2026-11-03/`; no credentials are part of the tracked handoff.
+
+Actual Windows/shared-ESP/Secure Boot verification was requested, then explicitly
+cancelled by the user. A separate disposable VM was prepared but never booted; no
+Windows ISO was available. No dual-boot test ran. The user's subsequent physical
+installer report (one disk visible, unable to partition) has no confirmed outcome.
+Do not resume the cancelled VM test or mark physical installation/Windows boot as
+successful. Host partitions, EFI and firmware were not modified by the assistant.
+
+The validated ISO and all native results below still refer to 88d9701. This handoff
+does not rebuild the image, close Phase 1 or authorize publication.
 
 ## Redesign boots and installs in disposable UEFI VMs — 2026-11-02
 

@@ -52,3 +52,6 @@ linux/vm/build/
 
 # bootc-image-builder's output folder (docs/BUILDING-THE-IMAGE.md).
 /output/
+
+# Local developer code graph and derived query/cache files.
+/graphify-out/

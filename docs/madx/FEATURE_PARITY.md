@@ -1,5 +1,15 @@
 # Feature parity register
 
+## Local follow-up — 2026-11-03
+
+Hosted results below remain valid for their exact source and scenarios. The user's
+VirtualBox guest required a manual nested/pixman/software-GPU override to reach the
+welcome desktop with 3D disabled; automatic compositor fallback is not accepted.
+Encrypted splash prompt visibility is also unresolved. No new installed Hermes chat
+or performance acceptance is claimed. Actual Windows dual-boot testing was cancelled,
+and the later physical installer attempt has no confirmed outcome. Current tasks and
+acceptance conditions are in [WORK_ITEMS.json](WORK_ITEMS.json).
+
 ## Native redesign evidence — 2026-11-02
 
 At `88d970167a9eb743a224a839491ec2631247f401`, CI 41400903428 passed both desktop/system
