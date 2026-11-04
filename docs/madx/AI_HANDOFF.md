@@ -1,6 +1,6 @@
 # AI handoff — MadX Agent OS
 
-Updated 2026-11-03, Asia/Calcutta. Start with this file; do not restart the migration.
+Updated 2026-11-04, Asia/Calcutta. Start with this file; do not restart the migration.
 
 ## Read order
 
@@ -27,6 +27,16 @@ This handoff/Graphify change comes afterward. Check HEAD and remote state instea
 of assuming documentation/tooling commits are included in the tested ISO or pushed.
 
 ## Immediate context
+
+- New priority: Alienware m16 R2 / Intel Xe + RTX 4070 Laptop graphics recovery. The user's
+  hardware report says installation and subsequent Windows boot succeeded with Secure Boot
+  enabled, but graphical freezes/HDMI errors and missing Hermes remain. This supersedes the
+  unknown installation outcome below; it is user-reported, not independently accepted.
+  Read [ALIENWARE_RECOVERY.md](ALIENWARE_RECOVERY.md) for confirmed source defects, candidate
+  fixes, exact console diagnostics and remaining hardware gates. Candidate source commit:
+  `186681dd265a113d8f405877abacad4b7945329a`. No new ISO has been built.
+- The LinkedIn screenshot-video work is paused while the hardware failure takes priority.
+  Do not turn its earlier VM screenshots into claims of working physical RTX graphics.
 
 - Native CI, image and all three isolated UEFI installer cases passed. Do not rerun
   the old failures at an obsolete SHA or claim that every feature is certified.

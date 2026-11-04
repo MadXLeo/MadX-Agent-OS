@@ -1,4 +1,58 @@
-# Astra progress — updated 2026-11-03 (Asia/Calcutta)
+# Astra progress — updated 2026-11-04 (Asia/Calcutta)
+
+## Alienware hardware recovery candidate — 2026-11-04
+
+The supplied hardware report says MadX installed on an Alienware m16 R2 (Core Ultra 7
+155H / Intel Xe + RTX 4070 Laptop), Windows remained bootable and Secure Boot was enabled.
+Nouveau/HDMI page-flip errors, intermittent/frozen desktop and missing Hermes remained.
+This supersedes the earlier unknown physical installation outcome; it is user-reported
+evidence, not a repeated hardware acceptance test. Current console diagnostics are pending
+the user's reboot into MadX. No assistant host disk/EFI/firmware operations were performed.
+
+Confirmed source gaps and candidate changes:
+
+- Previous unpublished ISO used only the standard image, despite a separately built NVIDIA
+  container. New `validation_variant=nvidia` selects NVIDIA ISO contents and a distinct name,
+  makes that image job mandatory, and binds installer selection to source/variant/checksums.
+- NVIDIA initramfs now includes xe before NVIDIA; DRM modesetting is explicit. Existing
+  digest/kernel/RPM/certificate checks remain, with module signer/version checks added.
+  Package inventory and diagnostic tool presence are checked.
+- The custom compositor wrapper gains a per-user lock, protects an existing graphical
+  session, and owns cleanup. A dedicated user unit maintains graphical-session.target for
+  portals. Intel renderer selection follows a connected internal panel through sysfs;
+  NVIDIA outputs and personal debug overrides remain available. Invalid KDL is not replaced.
+- New files are included in image/dev/Arch/tarball paths. Keymap updates create the GPU include
+  before switching templates; older tarballs remain installable. Old identifiers/aliases stay.
+- Image firstboot queues Hermes downloads in the existing background unit, so dependency
+  installation cannot hold up greetd. The dev VM retains its existing installer. Hermes
+  account and revision policy remain unchanged; actual missing runtime cause is still open.
+
+Local evidence: **91 tests passed, 3 skipped** in hardware/release/installer/branding checks.
+The three skips are Windows symlink privilege, not passes. **Four keymap tests passed** using
+the existing style of Windows-only adapters for unused POSIX imports; this is not native
+session execution. Workspace TypeScript and production desktop build passed. Branding
+synchronization/audit passed with no product-copy candidates. Actionlint passed; native-source
+parsing checked **87 Python, 44 Bash, six TOML** files and Arch helper hashes. The new session
+concurrency/lifecycle tests and full firstboot/tarball tests still require native CI. WSL is
+not installed, and no new host software was installed to bypass that limitation.
+
+No candidate ISO, Secure Boot driver loading, HDMI success, freeze resolution, Hermes chat
+or performance result is claimed. The original `scripts/madx/graphify.py` working-tree edit
+was preserved and excluded from this repair. The last validated image remains source
+`88d970167a9eb743a224a839491ec2631247f401` until the new native milestones actually execute.
+Recovery instructions, confirmed-versus-hypothesized causes and the acceptance checklist:
+[ALIENWARE_RECOVERY.md](ALIENWARE_RECOVERY.md).
+
+Source correction commit: `186681dd265a113d8f405877abacad4b7945329a`. A review of 49
+staged/new-branch file payloads found no credential-pattern matches or accidental build artifacts;
+workflow publishing guards and origins remain unchanged. This is a scoped review, not a claim
+that automated scanning proves the absence of every secret.
+
+Next: run fresh CI on the redesign branch, then only after
+CI passes build with `publish=false`, `disks=true`, `validation_variant=nvidia`. Installer
+tests must use the same source and `validation_variant=nvidia`, account `madx-test`. Return
+the pending Actions link and stop. Firmware trust enrollment and physical deployment are
+separate user actions; no blanket hardware compatibility or safe reinstall is asserted.
 
 ## Current handoff and local observations — 2026-11-03
 

@@ -1,5 +1,20 @@
 # Phase 1 release gates
 
+## Alienware hardware priority — 2026-11-04
+
+The user now reports installation, Windows reboot and Secure Boot enabled on the m16 R2
+(Core Ultra 7 / Intel Xe + RTX 4070 Laptop). This supersedes the unknown physical outcome in
+the historical triage below. Frozen graphics, Nouveau HDMI failures and missing Hermes remain;
+no independent stable dual-boot/RTX acceptance is recorded. See
+[ALIENWARE_RECOVERY.md](ALIENWARE_RECOVERY.md) for candidate source fixes and recovery checks.
+
+Next gates: full native CI at the new source; NVIDIA-specific unpublished ISO; disposable UEFI
+install/reboot; trusted signed-module loading with Secure Boot; responsive internal and HDMI
+displays, hotplug and VT return; actual account-specific Hermes installation/chat; measured
+performance. Exact installed config and logs are pending the user's reboot into MadX.
+The tmpfiles warning and generic VM fallback remain undiagnosed. No Windows/EFI/firmware
+changes, driver installation on the host, new ISO or hardware success occurred in this session.
+
 ## Current triage — 2026-11-03
 
 Use [WORK_ITEMS.json](WORK_ITEMS.json) for prioritized tasks, exact source paths and

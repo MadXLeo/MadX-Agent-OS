@@ -1,8 +1,23 @@
-# MadX Agent OS progress — 2026-11-03
+# MadX Agent OS progress — 2026-11-04
 
 **Current result: a bootable, installable Linux alpha with a redesigned desktop.
 It is not yet a release-ready, Windows-dual-boot-verified MVP.** There is no honest
 single completion percentage: implementation and runtime acceptance are different.
+
+## New hardware report and recovery work
+
+The user reports a completed Alienware m16 R2 install, successful return to Windows and
+Secure Boot enabled. Intel Xe rendering intermittently reaches the desktop; Nouveau/HDMI
+errors, frozen interaction and a missing Hermes runtime remain. This supersedes the earlier
+unknown physical-install outcome, but does not establish stable hardware/dual-boot acceptance.
+
+Candidate source fixes now select an actual NVIDIA validation ISO, bind artifact variant/source
+and checksums, require the selected NVIDIA job, preload Xe, request NVIDIA DRM modesetting,
+check modules/certificate/tools, prevent duplicate managed sessions, own graphical-session
+target lifetime, prefer an Intel-driven internal panel without disabling NVIDIA outputs,
+and defer Hermes downloads to the background service. See
+[ALIENWARE_RECOVERY.md](ALIENWARE_RECOVERY.md). No candidate ISO, hardware repair, HDMI success
+or new native CI result is claimed. Existing installed user overrides need inspection first.
 
 ## What is implemented
 
@@ -54,12 +69,12 @@ at the last observed welcome screen. No FPS/latency measurements were taken.
 The encrypted guest also hid the unlock prompt behind the splash; text-console
 unlock succeeded. The graphical prompt's root cause is still unknown.
 
-**Windows dual boot, shared EFI preservation, Secure Boot bootability and physical
-installation remain unverified.** The separate dual-boot test VM was prepared but
-never booted; the user cancelled that test. The user then reported difficulty
-partitioning in the physical installer. Neither installation completion nor a
-subsequent Windows boot has been confirmed. Seeing one disk is not test evidence.
-The assistant made no host partition, host EFI or firmware changes.
+**Independent Windows/shared-ESP, Secure Boot and hardware acceptance remain open.**
+The cancelled dual-boot VM was never booted. The later 2026-11-04 user report says
+manual installation completed and both systems boot, with Secure Boot enabled;
+graphics are unstable and Hermes is missing. This user report supersedes the
+earlier unknown installation outcome, without certifying stable dual boot or RTX
+driver trust. The assistant made no host partition, EFI or firmware changes.
 
 ## Work remaining before v0.1 can be called a working MVP
 

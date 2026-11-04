@@ -12,9 +12,10 @@ Read `docs/madx/AI_HANDOFF.md`, then `docs/madx/PROJECT_STATUS.md` and
 - Distinguish implemented, locally tested, native CI tested, VM tested and unverified.
   The validated image source is `88d970167a9eb743a224a839491ec2631247f401`.
   Later documentation/tooling commits do not rebuild that image.
-- Windows dual-boot verification was cancelled by the user. The subsequent physical
-  installation attempt has no confirmed outcome. Do not mark either as passed or
-  resume VM installation without a new request.
+- The user cancelled the earlier dual-boot VM test, then supplied a physical Alienware
+  installation report on 2026-11-04: MadX and Windows booted, Secure Boot was on, but graphics
+  froze and Hermes was missing. Treat this as user-reported evidence, not independent
+  hardware acceptance. Read docs/madx/ALIENWARE_RECOVERY.md before recovery work.
 - Do not touch physical disks, Windows partitions, host EFI/firmware, or Claude's
   LoRA/ECC work. No merging, releases, tags, registry publishing or broad pushes.
   Check the current user's authorization before remote changes.

@@ -1,5 +1,16 @@
 # Feature parity register
 
+## Alienware follow-up — 2026-11-04
+
+The user reports physical installation, Windows boot and Secure Boot enabled; graphical
+stability failed on Intel Xe + RTX 4070 Laptop with Nouveau/HDMI errors. Hermes was missing
+for the logged-in account. These results supersede the unknown installation outcome below
+and do not certify stable dual boot or hardware parity. Candidate session, NVIDIA ISO and
+background-install changes are tracked in [ALIENWARE_RECOVERY.md](ALIENWARE_RECOVERY.md).
+Native CI, rebuilt ISO, RTX module loading, responsive applications/input, HDMI/VT switching
+and measured performance remain required; no preserved feature is declared accepted merely
+because its old unit tests pass.
+
 ## Local follow-up — 2026-11-03
 
 Hosted results below remain valid for their exact source and scenarios. The user's
