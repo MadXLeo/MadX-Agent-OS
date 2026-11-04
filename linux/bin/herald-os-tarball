@@ -37,8 +37,8 @@ import tempfile
 from pathlib import Path
 
 RELEASES_API = "https://api.github.com/repos/MadXLeo/MadX-Agent-OS/releases?per_page=30"
-SESSION_SCRIPTS = ("herald-os-session", "herald-os-compositor", "herald-os-niri-nested")
-UNITS = ("herald-os-update-check.service", "herald-os-update-check.timer")
+SESSION_SCRIPTS = ("herald-os-session", "herald-os-compositor", "herald-os-niri-nested", "madx-render-device")
+UNITS = ("herald-os-update-check.service", "herald-os-update-check.timer", "madx-graphical-session.service")
 APP_ENTRY = """[Desktop Entry]
 Name=MadX Agent OS
 Comment=The AI-native desktop built around Hermes Agent
@@ -139,6 +139,8 @@ def wanted_links(layout: Layout) -> dict[str, Path]:
     """Name in /usr/local/bin -> what it links to: every command, and the session scripts."""
     targets = {path.name: path for path in sorted((layout.linux / "bin").iterdir()) if path.is_file()}
     for name in SESSION_SCRIPTS:
+        if name == "madx-render-device" and not (layout.linux / "session" / name).is_file():
+            continue  # Older releases remain installable/rollback targets.
         targets[name] = layout.linux / "session" / name
     return targets
 
@@ -183,7 +185,7 @@ def install(layout: Layout) -> int:
     for name, target in targets.items():
         link(layout.bin / name, target)
     # Commands this version no longer has.
-    for path in layout.bin.glob("herald-os*"):
+    for path in [*layout.bin.glob("herald-os*"), layout.bin / "madx-render-device"]:
         if points_into(path, layout.app) and not path.exists():
             path.unlink()
 
@@ -198,6 +200,8 @@ def install(layout: Layout) -> int:
     if icon.is_file():
         put(layout.icon, icon.read_bytes())
     for unit in UNITS:
+        if unit == "madx-graphical-session.service" and not (layout.linux / "session" / unit).is_file():
+            continue  # Older releases predate the lifetime owner.
         put(layout.units / unit, (layout.linux / "session" / unit).read_bytes())
     setuid_sandbox(layout.app)
     brand_aliases(layout)
@@ -217,6 +221,9 @@ def install(layout: Layout) -> int:
 def remove(layout: Layout) -> int:
     brand_aliases(layout, removing=True)
     gone = [path for path in sorted(layout.bin.glob("herald-os*")) if points_into(path, layout.app)] if layout.bin.is_dir() else []
+    helper = layout.bin / "madx-render-device"
+    if points_into(helper, layout.app):
+        gone.append(helper)
     gone += [path for path in (*layout.session_entries, layout.app_entry, layout.icon, *(layout.units / unit for unit in UNITS)) if path.exists()]
     for path in gone:
         path.unlink()

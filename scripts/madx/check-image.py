@@ -20,6 +20,7 @@ REQUIRED = (
     "usr/share/plymouth/themes/herald-os/logo.png",
     "usr/lib/systemd/system/greetd.service.d/herald-os-login.conf",
     "usr/lib/bootc/kargs.d/10-herald-os.toml",
+    "usr/lib/systemd/user/madx-graphical-session.service",
 )
 
 
@@ -31,11 +32,15 @@ def inspect(root: Path, product: dict, assets: dict, nvidia: bool = False) -> di
     for name in REQUIRED:
         require((root / name).is_file(), f"missing file: {name}")
     executable = [f"usr/bin/{name}" for name in COMMANDS] + [
+        "usr/bin/madx-render-device", "usr/bin/pgrep",
         "usr/share/herald-os/app/herald-os", "usr/libexec/herald-os/firstboot.sh",
         "usr/libexec/herald-os/reset-helper",
     ]
     for name in executable:
         require((root / name).is_file() and os.access(root / name, os.X_OK), f"missing executable: {name}")
+    for tool in ("lspci", "mokutil"):
+        require(any((root / directory / tool).is_file() and os.access(root / directory / tool, os.X_OK)
+                    for directory in ("usr/bin", "usr/sbin")), f"missing diagnostic tool: {tool}")
     for name in COMMANDS:
         alias = root / "usr/bin" / name.replace("herald-os", product["slug"], 1)
         require(alias.is_symlink() and os.readlink(alias) == name, f"wrong command alias: {alias.name}")
@@ -73,7 +78,17 @@ def inspect(root: Path, product: dict, assets: dict, nvidia: bool = False) -> di
         require(path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() == assets["files"][source],
                 f"artwork hash differs: {installed}")
     if nvidia:
+        for kernel in kernels.glob("*/vmlinuz"):
+            for module in ("nvidia", "nvidia-drm", "nvidia-modeset", "nvidia-uvm"):
+                require(any(kernel.parent.glob(f"**/{module}.ko*")), f"{kernel.parent.name}: {module} module missing")
         require(any(kernels.glob("**/nvidia.ko*")), "NVIDIA kernel module missing")
+        cert = root / "etc/pki/akmods/certs/akmods-ublue.der"
+        require(cert.is_file() and hashlib.sha256(cert.read_bytes()).hexdigest() ==
+                "4e5c68474cb133fd8984d9599762cece9100c3e6cd8a9709aeaabd85dd9e70d1",
+                "NVIDIA Secure Boot enrollment certificate missing or changed")
+        kargs = root / "usr/lib/bootc/kargs.d/20-herald-os-nvidia.toml"
+        require(kargs.is_file() and '"nvidia-drm.modeset=1"' in kargs.read_text(),
+                "NVIDIA DRM modesetting argument missing")
     return {"scope": "built image filesystem; no boot or hardware proof", "passed": not failures,
             "nvidia": nvidia, "failures": failures}
 

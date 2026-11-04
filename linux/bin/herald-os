@@ -3330,6 +3330,15 @@ def keymap_cmd(args: list[str]) -> int:
     if not template:
         die("the niri template is missing; reinstall MadX Agent OS or run linux/dev/build.sh in your checkout")
     rendered = render_keymap(template.read_text(), current_keymap())
+    # A live session may reload immediately after a package/keymap update. Create the new
+    # managed include before switching templates, leaving existing renderer choices intact.
+    if 'include "gpu.kdl"' in rendered:
+        NIRI_CONFIG.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with (NIRI_CONFIG.parent / "gpu.kdl").open("x") as gpu:
+                gpu.write("// Renderer selected on next login.\n")
+        except FileExistsError:
+            pass
     # niri reloads on every write: only a changed config is written, once and atomically, so it
     # never reads half a file.
     if not NIRI_CONFIG.is_file() or NIRI_CONFIG.read_text(errors="replace") != rendered:

@@ -32,6 +32,11 @@ on:
         description: Push registry tags (leave off for isolated validation builds)
         type: boolean
         default: false
+      validation_variant:
+        description: Image to put INSIDE the unpublished x86_64 ISO
+        type: choice
+        options: [standard, nvidia]
+        default: standard
 
 permissions: {}
 
@@ -85,7 +90,7 @@ jobs:
       packages: write
     # The NVIDIA image waits on Universal Blue's modules for each new kernel; until they are out it
     # fails, and that must not hold back the default image's multi-arch tag or its disks.
-    continue-on-error: ${{ matrix.image == 'madx-agent-os-nvidia' }}
+    continue-on-error: ${{ matrix.image == 'madx-agent-os-nvidia' && inputs.validation_variant != 'nvidia' }}
     env:
       CHANNEL: ${{ needs.channel.outputs.channel }}
       # The default image goes out as one tag per architecture, joined by the manifest job; the
@@ -98,18 +103,21 @@ jobs:
         include:
           - arch: amd64
             label: amd64
+            variant: standard
             image: madx-agent-os
             suffix: -amd64
             shell: x64
             runner: ubuntu-24.04
           - arch: arm64
             label: arm64
+            variant: standard
             image: madx-agent-os
             suffix: -arm64
             shell: arm64
             runner: ubuntu-24.04-arm
           - arch: amd64
             label: amd64, NVIDIA
+            variant: nvidia
             image: madx-agent-os-nvidia
             suffix: ''
             shell: x64
@@ -211,6 +219,8 @@ jobs:
           extra=()
           [[ "${{ matrix.image }}" != madx-agent-os-nvidia ]] || extra+=(--nvidia)
           sudo podman image inspect "$REPO:$TAG" >image-inspect.json
+          sudo podman run --rm --network=none --entrypoint rpm "$REPO:$TAG" \
+            -qa --qf '%{NAME} %{VERSION}-%{RELEASE}.%{ARCH}\n' | sort >image-packages.txt
           [[ "$(sudo podman image inspect --format '{{.Architecture}}' "$REPO:$TAG")" == "${{ matrix.arch }}" ]]
           [[ "$(sudo podman image inspect --format '{{index .Labels "org.opencontainers.image.revision"}}' "$REPO:$TAG")" == "$GITHUB_SHA" ]]
           sudo podman run --rm --network=none --entrypoint python3 -v "$PWD:/validation:ro" "$REPO:$TAG" \
@@ -221,17 +231,24 @@ jobs:
             --entrypoint /usr/share/herald-os/app/herald-os "$REPO:$TAG" -e \
             'if (!process.versions.electron) process.exit(1); console.log(JSON.stringify(process.versions))' >electron-runtime.json
       - name: Build a validation ISO without publishing
-        if: github.event_name == 'workflow_dispatch' && !inputs.publish && inputs.disks && matrix.image == 'madx-agent-os' && matrix.arch == 'amd64'
+        if: github.event_name == 'workflow_dispatch' && !inputs.publish && inputs.disks && matrix.variant == inputs.validation_variant && matrix.arch == 'amd64'
+        env:
+          VALIDATION_VARIANT: ${{ matrix.variant }}
         run: |
           bash linux/image/build-disk.sh "$REPO:$TAG" anaconda-iso linux/image/iso.toml validation-output
           sudo chown -R "$(id -u)" validation-output
-          bash linux/vm/package-disk.sh validation-output amd64 "validation-$(git rev-parse --short HEAD)" validation-dist
+          version="validation-$(git rev-parse --short HEAD)"
+          [[ "$VALIDATION_VARIANT" != nvidia ]] || version="$version-nvidia"
+          bash linux/vm/package-disk.sh validation-output amd64 "$version" validation-dist
+          python3 scripts/madx/validation-artifact.py write validation-dist/validation-source.json \
+            --revision "$GITHUB_SHA" --variant "$VALIDATION_VARIANT" --image "$REPO:$TAG"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: image-evidence-${{ matrix.image }}-${{ matrix.arch }}
           path: |
             image-inspect.json
+            image-packages.txt
             image-validation.json
             systemd-verify.log
             electron-runtime.json

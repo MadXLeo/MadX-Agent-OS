@@ -5,6 +5,7 @@ import importlib.util
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -51,6 +52,17 @@ def test_an_unchanged_config_is_not_written_again(tmp_path, monkeypatch):
     assert (before.st_ino, before.st_mtime_ns) == (after.st_ino, after.st_mtime_ns)
 
 
+def test_keymap_update_creates_the_gpu_include_without_replacing_existing_settings(tmp_path, monkeypatch):
+    niri = keymap_home(tmp_path, monkeypatch)
+    cli.keymap_cmd(["apply"])
+    gpu = niri / "gpu.kdl"
+    assert gpu.is_file()
+    custom = 'debug { render-drm-device "/dev/dri/renderD130"; }\n'
+    gpu.write_text(custom)
+    cli.keymap_cmd(["apply"])
+    assert gpu.read_text() == custom
+
+
 def stub(bin_dir: Path, name: str, body: str) -> None:
     (bin_dir / name).write_text(f"#!/bin/sh\n{body}\n")
     (bin_dir / name).chmod(0o755)
@@ -61,11 +73,13 @@ def session_env(tmp_path):
     home, bin_dir = tmp_path / "home", tmp_path / "bin"
     home.mkdir()
     bin_dir.mkdir()
+    (tmp_path / "run").mkdir()
     (bin_dir / "herald-os").symlink_to(ROOT / "linux" / "bin" / "herald-os")
     for name in ("niri", "cage"):
         stub(bin_dir, name, f'printf "%s\\n" "$@" >"$HOME/{name}.args"')
     # The theme engine is not under test (and must not reach a real session's socket).
     stub(bin_dir, "herald-os-theme", "exit 0")
+    stub(bin_dir, "systemctl", 'case "$*" in *is-active*) exit 1 ;; esac; exit 0')
     env = {
         "HOME": str(home),
         "XDG_RUNTIME_DIR": str(tmp_path / "run"),
@@ -85,7 +99,7 @@ def test_the_session_starts_niri_with_herald_s_config_on_a_fresh_account(tmp_pat
     assert (niri / "herald-os.kdl").read_text() == TEMPLATE
     assert (niri / "config.kdl").read_text() == PERSONAL
     # Everything the config includes exists before niri reads it.
-    assert all((niri / name).is_file() for name in ("theme.kdl", "outputs.kdl", "local.kdl"))
+    assert all((niri / name).is_file() for name in ("theme.kdl", "outputs.kdl", "gpu.kdl", "local.kdl"))
     # Nested niri (no hardware GL) reads the same file.
     subprocess.run(["bash", str(ROOT / "linux" / "session" / "herald-os-niri-nested")], env=env, check=True, timeout=60)
     assert (home / "niri.args").read_text().split("\n")[:2] == ["--config", str(niri / "herald-os.kdl")]
@@ -121,3 +135,58 @@ def test_the_migration_leaves_a_personal_config_alone(tmp_path):
     subprocess.run(["bash", str(MIGRATION)], env=env, check=True, timeout=60)
     assert (niri / "config.kdl").read_text() == PERSONAL
     assert (niri / "herald-os.kdl").read_text() == TEMPLATE
+
+
+def test_a_second_managed_session_is_refused_and_the_first_cleans_up_its_targets(tmp_path):
+    home, env = session_env(tmp_path)
+    stub(tmp_path / "bin", "niri", '''
+[ "$1" = validate ] && exit 0
+: >"$HOME/compositor-ready"
+while [ ! -f "$HOME/finish" ]; do sleep 0.05; done
+''')
+    stub(tmp_path / "bin", "systemctl", 'case "$*" in *is-active*) exit 1 ;; esac; echo "$*" >>"$HOME/systemctl.calls"')
+    command = ["bash", str(ROOT / "linux/session/herald-os-compositor")]
+    first = subprocess.Popen(command, env=env)
+    try:
+        deadline = time.monotonic() + 10
+        while not (home / "compositor-ready").exists() and time.monotonic() < deadline:
+            assert first.poll() is None
+            time.sleep(0.05)
+        assert (home / "compositor-ready").exists()
+        second = subprocess.run(command, env=env, capture_output=True, text=True, timeout=5)
+        assert second.returncode == 73 and "already running" in second.stderr
+        assert first.poll() is None
+        (home / "finish").touch()
+        assert first.wait(timeout=5) == 0
+        assert "stop madx-graphical-session.service graphical-session.target" in (home / "systemctl.calls").read_text()
+        # A finished session releases its lock: the next login can start normally.
+        assert subprocess.run(command, env=env, timeout=5).returncode == 0
+    finally:
+        (home / "finish").touch()
+        if first.poll() is None:
+            first.terminate()
+        first.wait(timeout=5)
+
+
+def test_invalid_personal_config_is_preserved_and_never_started(tmp_path):
+    home, env = session_env(tmp_path)
+    local = home / ".config/niri/local.kdl"
+    local.parent.mkdir(parents=True)
+    local.write_text("debug { broken syntax\n")
+    stub(tmp_path / "bin", "niri", '[ "$1" = validate ] && exit 1; touch "$HOME/started"')
+    result = subprocess.run(["bash", str(ROOT / "linux/session/herald-os-compositor")], env=env, timeout=5)
+    assert result.returncode == 1
+    assert not (home / "started").exists()
+    assert local.read_text() == "debug { broken syntax\n"
+    assert "Invalid niri configuration" in (home / ".local/state/herald-os/compositor.log").read_text()
+
+
+def test_an_existing_graphical_session_is_not_replaced_or_stopped(tmp_path):
+    home, env = session_env(tmp_path)
+    stub(tmp_path / "bin", "systemctl", 'case "$*" in *is-active*) exit 0 ;; esac; touch "$HOME/unexpected-systemctl"')
+    result = subprocess.run(["bash", str(ROOT / "linux/session/herald-os-compositor")], env=env,
+                            capture_output=True, text=True, timeout=5)
+    assert result.returncode == 73
+    assert "already active" in result.stderr
+    assert not (home / "unexpected-systemctl").exists()
+    assert not (home / "niri.args").exists()

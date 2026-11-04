@@ -88,6 +88,8 @@ librsvg2-tools
 libnotify
 iproute
 procps-ng
+pciutils
+mokutil
 util-linux
 # cmp, for firstboot.sh's login screen on a switched system.
 diffutils

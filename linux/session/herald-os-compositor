@@ -33,6 +33,56 @@ done
 
 COMPOSITOR="${HERALD_OS_COMPOSITOR:-niri}"
 
+# One managed display session per user. Hold the lock in this supervisor, not in Electron,
+# terminals or background services which may outlive the compositor. Do not kill other sessions.
+if [[ -z "${XDG_RUNTIME_DIR:-}" || ! -d "$XDG_RUNTIME_DIR" ]]; then
+  echo "MadX needs a PAM/logind login session (XDG_RUNTIME_DIR is missing)." >&2
+  exit 1
+fi
+umask 077
+exec 9>"$XDG_RUNTIME_DIR/madx-compositor.lock"
+python3 -c 'import fcntl, sys
+try:
+    fcntl.flock(9, fcntl.LOCK_EX | fcntl.LOCK_NB)
+except BlockingIOError:
+    sys.exit(73)
+'
+lock_status=$?
+if [[ "$lock_status" == 73 ]]; then
+  echo "A MadX display session is already running. Return to its VT instead of starting another." >&2
+  exit 73
+elif [[ "$lock_status" != 0 ]]; then
+  echo "MadX could not lock its display session; refusing a competing compositor." >&2
+  exit 1
+fi
+if systemctl --user --quiet is-active graphical-session.target; then
+  echo "A graphical session is already active for this account; return to it first." >&2
+  exit 73
+fi
+session_pid=""
+session_started=0
+cleanup_session() {
+  trap - EXIT HUP INT TERM
+  if [[ -n "$session_pid" ]]; then
+    kill "$session_pid" 2>/dev/null || true
+    wait "$session_pid" 2>/dev/null || true
+  fi
+  if [[ "$session_started" == 1 ]]; then
+    systemctl --user stop madx-graphical-session.service graphical-session.target graphical-session-pre.target 2>/dev/null || true
+  fi
+}
+trap cleanup_session EXIT
+trap 'exit 143' HUP INT TERM
+run_session() {
+  session_started=1
+  "$@" <&0 9>&- &
+  session_pid=$!
+  wait "$session_pid"
+  local code=$?
+  session_pid=""
+  return "$code"
+}
+
 # The compositor's own output is the only record of DRM/GPU/seat problems; keep the last run.
 LOG_DIR="$HOME/.local/state/herald-os"
 mkdir -p "$LOG_DIR"
@@ -50,7 +100,8 @@ fi
 
 if [[ "$COMPOSITOR" == "cage" ]] || ! command -v niri >/dev/null 2>&1 || [[ ! -f "$NIRI_KDL" ]]; then
   export HERALD_OS_SHELL_MODE=desktop
-  exec cage -s -- "$(command -v herald-os-session)"
+  run_session cage -s -- "$(command -v herald-os-session)"
+  exit $?
 fi
 
 export HERALD_OS_SHELL_MODE=panels
@@ -82,6 +133,22 @@ fi
 # The Display panel writes outputs.kdl; the managed config includes it, so it must exist.
 [[ -f "$HOME/.config/niri/outputs.kdl" ]] || echo "// Written by the MadX Agent OS Display panel." >"$HOME/.config/niri/outputs.kdl"
 
+# Never rewrite local.kdl. A personal debug block takes precedence over automatic hybrid policy.
+gpu_config="$HOME/.config/niri/gpu.kdl"
+if command -v madx-render-device >/dev/null; then
+  if ! madx-render-device "$HOME/.config/niri/local.kdl" >"$gpu_config.tmp"; then
+    echo "could not select a renderer; keeping niri's default"
+    echo "// Renderer auto-selection unavailable." >"$gpu_config.tmp"
+  fi
+  mv "$gpu_config.tmp" "$gpu_config"
+else
+  echo "// Renderer auto-selection unavailable." >"$gpu_config"
+fi
+if ! niri validate --config "$NIRI_KDL"; then
+  echo "Invalid niri configuration. Inspect $HOME/.config/niri/local.kdl; it was preserved."
+  exit 1
+fi
+
 # The shell scales through the compositor under niri; do not also zoom the page.
 unset HERALD_OS_ZOOM
 
@@ -102,7 +169,9 @@ fi
 
 if [[ "$nested" == "1" ]]; then
   echo "no hardware GL: nesting niri (windowed) inside cage"
-  exec cage -s -- "$(command -v herald-os-niri-nested)"
+  run_session cage -s -- "$(command -v herald-os-niri-nested)"
+  exit $?
 fi
 
-exec niri --session --config "$NIRI_KDL"
+run_session niri --session --config "$NIRI_KDL"
+exit $?

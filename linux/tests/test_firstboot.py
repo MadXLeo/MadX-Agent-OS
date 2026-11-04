@@ -103,7 +103,7 @@ class Machine:
             f"HERMES_USER=me STATE={quote(str(self.state))} HOME_DIR={quote(str(self.home))}\n"
             f"PENDING={quote(str(self.state / 'hermes-pending'))} HERMES_UNIT={quote(str(self.unit))} BRIDGE={quote(str(self.root / 'bridge'))}\n"
             "OFFLINE_WAIT=0 RETRY_WAIT=0\n"
-            + functions("step", "online", "note", "hermes_step", "hermes_later", "hermes_phase")
+            + functions("step", "online", "note", "hermes_step", "hermes_later", "hermes_phase", "hermes_for_firstboot")
             # firstboot.sh runs as root and becomes the session user through sudo.
             + 'as_user() { HOME="$HOME_DIR" "$@"; }\n'
             + call
@@ -182,6 +182,24 @@ def test_the_development_vm_has_no_service_so_it_says_how_to_finish(tmp_path):
     result = machine.run("hermes_step || hermes_later")
     assert result.returncode == 0, result.stderr
     assert machine.note() is None and "hermes as root once this computer is online" in result.stdout
+
+
+def test_the_image_queues_hermes_without_touching_the_network_or_waiting(tmp_path):
+    machine = Machine(tmp_path, offline=999, failed_clones=999)
+    machine.unit.touch()
+    executable(tmp_path / "bin/systemctl", 'echo "systemctl $*" >>"$CALLS"')
+    result = machine.run("hermes_for_firstboot")
+    assert result.returncode == 0, result.stderr
+    assert machine.note() == "pending\n"
+    assert machine.log() == "systemctl --no-block start herald-os-hermes.service\n"
+    assert (tmp_path / "offline").read_text().strip() == "999"
+
+
+def test_the_dev_vm_still_installs_hermes_without_a_system_service(tmp_path):
+    machine = Machine(tmp_path)
+    assert machine.run("hermes_for_firstboot").returncode == 0
+    assert "setup-hermes.sh" in machine.log()
+    assert machine.note() is None
 
 
 def test_the_service_waits_for_the_network_tries_again_and_clears_the_note(tmp_path):
@@ -1092,7 +1110,7 @@ def test_when_setup_ssh_refuses_the_first_boot_goes_on_with_ssh_off(tmp_path):
 
 def test_ssh_is_set_up_after_the_home_folder_and_before_hermes_which_can_wait_long():
     phase = function_in(FIRSTBOOT.read_text(), "system_phase")
-    assert phase.index("session_account") < phase.index("ssh_keys") < phase.index("hermes_step")
+    assert phase.index("session_account") < phase.index("ssh_keys") < phase.index("hermes_for_firstboot")
     script = FIRSTBOOT.read_text()
     assert "INSTALL_CONF=/etc/herald-os/install.conf" in script and "SSH_KEYS=/etc/herald-os/ssh-keys" in script
 

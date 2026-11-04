@@ -1,0 +1,11 @@
+[Unit]
+Description=MadX graphical session lifetime (owned by the compositor wrapper)
+BindsTo=graphical-session.target
+Before=graphical-session.target
+Wants=graphical-session-pre.target
+After=graphical-session-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/true
+RemainAfterExit=yes

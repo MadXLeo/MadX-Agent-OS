@@ -42,7 +42,7 @@ conflicts=('madx-agent-os' 'madx-agent-os-bin' 'herald-os' 'herald-os-bin' 'hera
 options=('!strip' '!debug')
 install=herald-os.install
 source=("herald-os::git+${HERALD_OS_GIT_URL:-$url.git}" 'herald-os-package.sh')
-sha256sums=('SKIP' 'f6bbc913ceabd729d735caa8d624e4353c6ea25016b8649fc04a69227cb3bfa2')
+sha256sums=('SKIP' '6bd065209c65bc7cd420753971c2117642456e001ede2fff0a18ec9e4588dfb1')
 
 pkgver() {
   cd herald-os

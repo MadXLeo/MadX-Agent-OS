@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+"""Choose an Intel panel renderer on hybrid laptops without disabling NVIDIA outputs."""
+from pathlib import Path
+import re
+import sys
+
+
+def read(path):
+    try:
+        return path.read_text().strip()
+    except OSError:
+        return ""
+
+
+def configuration(sysfs, devices, local):
+    # Any personal debug block/include may own GPU selection. Never merge debug blocks or
+    # override a manual render/ignore choice. Generated files are separate from local.kdl.
+    personal = read(local)
+    if re.search(r"\b(debug|include)\b", personal):
+        return "// Personal GPU/debug configuration retained; automatic selection disabled.\n"
+    cards = [p for p in sysfs.glob("card*") if re.fullmatch(r"card\d+", p.name)]
+    if not any(read(p / "device/vendor") == "0x10de" for p in cards):
+        return "// No Intel/NVIDIA hybrid selection needed.\n"
+    for card in sorted(cards):
+        if read(card / "device/vendor") != "0x8086":
+            continue
+        if not re.search(r"^DRIVER=(i915|xe)$", read(card / "device/uevent"), re.M):
+            continue
+        # Only prefer Intel when it actually drives a connected internal laptop panel.
+        # Discrete-only/MUX configurations and external-only setups retain niri's default.
+        panels = [p for p in sysfs.glob(f"{card.name}-*")
+                  if re.search(r"-(eDP|LVDS|DSI)-\d+$", p.name)]
+        if not any(read(p / "status") == "connected" for p in panels):
+            continue
+        for render in sorted((card / "device/drm").glob("renderD*")):
+            if not re.fullmatch(r"renderD\d+", render.name):
+                continue
+            node = devices / render.name
+            if node.exists():
+                return ('// Intel drives the internal panel; NVIDIA outputs remain available.\n'
+                        f'debug {{\n    render-drm-device "{node.as_posix()}"\n}}\n')
+    return "// No connected Intel internal panel; compositor selects its renderer.\n"
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        sys.exit("usage: madx-render-device <local.kdl>")
+    print(configuration(Path("/sys/class/drm"), Path("/dev/dri"), Path(sys.argv[1])), end="")

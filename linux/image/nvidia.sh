@@ -131,6 +131,16 @@ done
 kmod="$(rpm -q --qf '%{VERSION}' kmod-nvidia)"
 driver="$(rpm -q --qf '%{VERSION}' nvidia-driver)"
 [[ "$kmod" == "$driver" ]] || { echo "kmod-nvidia $kmod does not match nvidia-driver $driver" >&2; exit 1; }
+# Inspect the installed modules for this kernel, not the builder host's running kernel.
+# This complements the pinned image/RPM/certificate checks; it is not proof of firmware trust.
+for module in nvidia nvidia_drm nvidia_modeset nvidia_uvm; do
+  [[ -n "$(modinfo -k "$KERNEL_VERSION" -F signer "$module")" ]] || {
+    echo "$module for $KERNEL_VERSION has no module signature" >&2; exit 1;
+  }
+done
+[[ "$(modinfo -k "$KERNEL_VERSION" -F version nvidia)" == "$driver" ]] || {
+  echo "installed NVIDIA module version differs from the userspace driver" >&2; exit 1;
+}
 repos_disabled
 
 # ---------------------------------------------------------------------------------------------
@@ -146,7 +156,7 @@ step "The initramfs, with the driver in it, and the kernel arguments"
 # hardware acceleration on hybrid laptops. Universal Blue's images do the same.
 conf=/usr/lib/dracut/dracut.conf.d/99-nvidia.conf
 grep -q '^omit_drivers+=" nvidia ' "$conf" || { echo "$conf is not the one this script expects" >&2; exit 1; }
-sed -i -e 's@omit_drivers@force_drivers@' -e 's@ nvidia @ i915 amdgpu nvidia @' "$conf"
+sed -i -e 's@omit_drivers@force_drivers@' -e 's@ nvidia @ i915 xe amdgpu nvidia @' "$conf"
 dracut -f --no-hostonly "/usr/lib/modules/$KERNEL_VERSION/initramfs.img" "$KERNEL_VERSION"
 install -Dm0644 "$HERE/kargs-nvidia.toml" /usr/lib/bootc/kargs.d/20-herald-os-nvidia.toml
 echo "initramfs: $(du -h "/usr/lib/modules/$KERNEL_VERSION/initramfs.img" | cut -f1)"

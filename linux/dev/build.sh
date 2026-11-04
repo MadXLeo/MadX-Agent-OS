@@ -45,15 +45,18 @@ if [[ -d "$REPO/linux/session" ]] && command -v sudo >/dev/null; then
   sudo install -m 0755 "$REPO/linux/session/herald-os-compositor" /usr/local/bin/herald-os-compositor
   sudo install -m 0755 "$REPO/linux/session/herald-os-session" /usr/local/bin/herald-os-session
   sudo install -m 0755 "$REPO/linux/session/herald-os-niri-nested" /usr/local/bin/herald-os-niri-nested
+  sudo install -m 0755 "$REPO/linux/session/madx-render-device" /usr/local/bin/madx-render-device
   sudo install -m 0644 "$REPO/linux/session/herald-os.desktop" /usr/share/wayland-sessions/herald-os.desktop
   sudo install -m 0755 "$REPO"/linux/bin/herald-os* /usr/local/bin/
   mkdir -p "$HOME/.config/systemd/user"
   install -m 0644 "$REPO/linux/session/herald-os-update-check.service" "$REPO/linux/session/herald-os-update-check.timer" "$HOME/.config/systemd/user/"
+  install -m 0644 "$REPO/linux/session/madx-graphical-session.service" "$HOME/.config/systemd/user/"
   systemctl --user daemon-reload 2>/dev/null || true
   systemctl --user enable herald-os-update-check.timer 2>/dev/null || true
   mkdir -p "$HOME/.config/niri" "$HOME/.config/swaylock"
   # niri reloads its config as soon as it changes, so every file it includes must already exist.
   [[ -f "$HOME/.config/niri/outputs.kdl" ]] || echo "// Written by the MadX Agent OS Display panel." >"$HOME/.config/niri/outputs.kdl"
+  [[ -f "$HOME/.config/niri/gpu.kdl" ]] || echo "// Renderer selected on next login." >"$HOME/.config/niri/gpu.kdl"
   sudo install -D -m 0644 "$REPO/linux/niri/config.kdl" /usr/local/share/herald-os-linux/niri/config.kdl
   # herald-os.kdl is rendered from the template with the chosen keymap (herald-os keymap herald|omarchy).
   herald-os keymap apply || install -m 0644 "$REPO/linux/niri/config.kdl" "$HOME/.config/niri/herald-os.kdl"

@@ -29,6 +29,9 @@ _herald_os_package() {
   for script in herald-os-session herald-os-compositor herald-os-niri-nested; do
     ln -s "$res/herald-os-linux/session/$script" "$pkgdir/usr/bin/$script"
   done
+  if [[ -f "$pkgdir$res/herald-os-linux/session/madx-render-device" ]]; then
+    ln -s "$res/herald-os-linux/session/madx-render-device" "$pkgdir/usr/bin/madx-render-device"
+  fi
 
   install -d "$pkgdir/usr/share/herald-os"
   ln -s "$res/themes" "$pkgdir/usr/share/herald-os/themes"
@@ -40,6 +43,9 @@ _herald_os_package() {
 
   install -Dm644 "$pkgdir$res/herald-os-linux/session/herald-os.desktop" "$pkgdir/usr/share/wayland-sessions/herald-os.desktop"
   install -Dm644 -t "$pkgdir/usr/lib/systemd/user" "$pkgdir$res/herald-os-linux/session/herald-os-update-check.service" "$pkgdir$res/herald-os-linux/session/herald-os-update-check.timer"
+  if [[ -f "$pkgdir$res/herald-os-linux/session/madx-graphical-session.service" ]]; then
+    install -Dm644 -t "$pkgdir/usr/lib/systemd/user" "$pkgdir$res/herald-os-linux/session/madx-graphical-session.service"
+  fi
   install -Dm644 "$pkgdir$res/icons/herald-os.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/herald-os.png"
   install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/herald-os.desktop" <<'DESKTOP'
 [Desktop Entry]

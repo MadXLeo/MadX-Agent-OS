@@ -144,6 +144,15 @@ def outside_opt(layout) -> list[Path]:
     return sorted(path for path in layout.root.rglob("*") if path.relative_to(layout.root).parts[0] != "opt")
 
 
+def test_older_tarball_without_new_graphics_helpers_remains_installable(layout):
+    for name in ("madx-render-device", "madx-graphical-session.service"):
+        (layout.linux / "session" / name).unlink()
+    assert tb.install(layout) == 0
+    assert (layout.bin / "herald-os-compositor").exists()
+    assert not (layout.bin / "madx-render-device").is_symlink()
+    assert tb.remove(layout) == 0
+
+
 def test_without_niri_the_login_screen_gets_no_session_it_cannot_start(layout, monkeypatch, capsys):
     tb.install(layout)
     monkeypatch.setattr(tb.shutil, "which", lambda name: None)

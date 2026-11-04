@@ -25,6 +25,10 @@ export GTK_CSD=0
 SESSION_VARS=(WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP ELECTRON_OZONE_PLATFORM_HINT MOZ_ENABLE_WAYLAND MOZ_GTK_TITLEBAR_DECORATION GTK_CSD QT_QPA_PLATFORM GDK_BACKEND)
 systemctl --user import-environment "${SESSION_VARS[@]}" 2>/dev/null || true
 dbus-update-activation-environment --systemd "${SESSION_VARS[@]}" 2>/dev/null || true
+# Unlike niri-session, our greetd wrapper runs niri directly (including the nested/cage paths).
+# The display now exists, so activate the targets portals require. The wrapper stops them at exit.
+systemctl --user start madx-graphical-session.service 2>/dev/null || \
+  echo "MadX: graphical-session.target did not start; check the user journal" >>"$LOG_DIR/shell.log"
 systemctl --user start pipewire.socket pipewire-pulse.socket wireplumber.service 2>/dev/null || true
 systemctl --user start xdg-desktop-portal.service 2>/dev/null || true
 
@@ -35,7 +39,7 @@ if [[ "$HERALD_OS_SHELL_MODE" == "panels" ]]; then
     local unit="$1"
     shift
     systemctl --user stop "$unit" 2>/dev/null || true
-    systemd-run --user --quiet --collect --unit="$unit" --setenv=WAYLAND_DISPLAY="$WAYLAND_DISPLAY" --setenv=NIRI_SOCKET="${NIRI_SOCKET:-}" "$@" 2>/dev/null || true
+    systemd-run --user --quiet --collect --unit="$unit" --property=PartOf=graphical-session.target --setenv=WAYLAND_DISPLAY="$WAYLAND_DISPLAY" --setenv=NIRI_SOCKET="${NIRI_SOCKET:-}" "$@" 2>/dev/null || true
   }
   if command -v cliphist >/dev/null && command -v wl-paste >/dev/null; then
     start_service herald-os-clipboard-text wl-paste --type text --watch cliphist store

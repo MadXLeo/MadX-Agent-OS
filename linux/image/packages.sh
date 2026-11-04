@@ -51,6 +51,7 @@ fi
 step "The MadX Agent OS session and CLIs ($BIN)"
 install -d "$BIN"
 install -m 0755 "$LINUX"/session/herald-os-compositor "$LINUX"/session/herald-os-session "$LINUX"/session/herald-os-niri-nested "$BIN/"
+install -m 0755 "$LINUX/session/madx-render-device" "$BIN/"
 install -m 0755 "$LINUX"/bin/herald-os* "$BIN/"
 # Themes, the catalog, the niri template, omakase lists and migrations, for machines without a checkout.
 # The dev VM's cloud-init payload is unpacked at $SHARE itself, and cp refuses to copy onto itself.
@@ -65,6 +66,7 @@ install -d /usr/share/wayland-sessions
 install -m 0644 "$LINUX/session/herald-os.desktop" /usr/share/wayland-sessions/herald-os.desktop
 install -d /usr/lib/systemd/user
 install -m 0644 "$LINUX/session/herald-os-update-check.service" "$LINUX/session/herald-os-update-check.timer" /usr/lib/systemd/user/
+install -m 0644 "$LINUX/session/madx-graphical-session.service" /usr/lib/systemd/user/
 install -d /etc/greetd
 # firstboot.sh fills in the session user.
 install -m 0644 "$LINUX/session/greetd-config.toml" /etc/greetd/config.toml

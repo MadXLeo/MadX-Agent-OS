@@ -369,11 +369,7 @@ system_phase() {
   step "SSH"
   ssh_keys
 
-  if hermes_step; then
-    rm -f "$PENDING"
-  else
-    hermes_later
-  fi
+  hermes_for_firstboot
   if switched; then
     hermes_admin
     hermes_linger
@@ -399,6 +395,21 @@ ssh_keys() {
 # Hermes Agent for the session user: installed unless it is there already, in whichever layout
 # (`herald-os hermes-command` looks for it the way the shell does), given the voice extras, and set
 # up for MadX Agent OS. Fails while there is still no Hermes.
+hermes_for_firstboot() {
+  if [[ -f "$HERMES_UNIT" ]]; then
+    # The image's async unit owns downloads. Never hold the login screen behind GitHub,
+    # dependency resolution or voice extras. --no-block avoids waiting on this very unit's
+    # After=herald-os-firstboot.service ordering. Keep the existing account/revision policy.
+    echo pending >"$PENDING"
+    systemctl --no-block start herald-os-hermes.service ||
+      echo "WARNING: Hermes install was queued for the next boot; inspect herald-os-hermes.service"
+  elif hermes_step; then
+    rm -f "$PENDING"
+  else
+    hermes_later
+  fi
+}
+
 hermes_step() {
   step "Hermes Agent for $HERMES_USER"
   if [[ -f /etc/herald-os/ref ]]; then

@@ -30,6 +30,11 @@ on:
       image_run:
         description: Alternatively, an image workflow run ID containing a validation ISO (no published release needed)
         default: ""
+      validation_variant:
+        description: Must match the image workflow's unpublished ISO selection
+        type: choice
+        options: [standard, nvidia]
+        default: standard
       account:
         description: "Required disposable account for SSH and installed-desktop acceptance (image must support madx setup ssh)"
         required: true
@@ -81,13 +86,21 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
           IMAGE_RUN: ${{ inputs.image_run }}
+          VALIDATION_VARIANT: ${{ inputs.validation_variant }}
         run: |
           if [[ -n "$TAG" && -z "$IMAGE_RUN" ]]; then
             gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern '*-x86_64.iso*'
           elif [[ -z "$TAG" && "$IMAGE_RUN" =~ ^[0-9]+$ ]]; then
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$IMAGE_RUN" >image-source.json
             python3 scripts/madx/verify-image-run.py image-source.json --revision "$(git rev-parse HEAD)" --repository "$GITHUB_REPOSITORY"
-            gh run download "$IMAGE_RUN" --repo "$GITHUB_REPOSITORY" --name image-evidence-madx-agent-os-amd64 --dir installer-input
+            case "$VALIDATION_VARIANT" in
+              standard) artifact=image-evidence-madx-agent-os-amd64 ;;
+              nvidia) artifact=image-evidence-madx-agent-os-nvidia-amd64 ;;
+              *) echo '::error::unknown image variant'; exit 1 ;;
+            esac
+            gh run download "$IMAGE_RUN" --repo "$GITHUB_REPOSITORY" --name "$artifact" --dir installer-input
+            python3 scripts/madx/validation-artifact.py verify installer-input/validation-dist/validation-source.json \
+              --revision "$(git rev-parse HEAD)" --variant "$VALIDATION_VARIANT"
             find installer-input -type f -name 'madx-agent-os-*-x86_64.iso*' -exec cp -- {} . \;
           else
             echo '::error::Choose exactly one release tag or validation image run ID'; exit 1

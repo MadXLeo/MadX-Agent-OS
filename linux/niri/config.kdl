@@ -430,4 +430,6 @@ binds {
 include "theme.kdl"
 // Display settings chosen in the shell's Display panel (resolution, scale, on or off).
 include "outputs.kdl"
+// Regenerated at login; defers to personal debug settings in local.kdl.
+include "gpu.kdl"
 include "local.kdl"

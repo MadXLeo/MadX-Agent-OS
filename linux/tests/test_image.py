@@ -146,7 +146,7 @@ def test_the_workflow_builds_the_nvidia_image_next_to_the_default_one():
     assert '--build-arg "AKMODS_REF=$AKMODS_REF" --build-arg "AKMODS_NVIDIA_REF=$AKMODS_NVIDIA_REF"' in build
     assert '--build-arg "FEDORA_BOOTC=$FEDORA_BOOTC"' in build
     # A missing NVIDIA module build never holds back the default image, and does not go unseen.
-    assert job["continue-on-error"] == "${{ matrix.image == 'madx-agent-os-nvidia' }}"
+    assert job["continue-on-error"] == "${{ matrix.image == 'madx-agent-os-nvidia' && inputs.validation_variant != 'nvidia' }}"
     assert job["env"]["REPO"].endswith("/${{ matrix.image }}")
     said = step("Say that the NVIDIA image did not go out")
     assert said["if"] == "failure() && matrix.image == 'madx-agent-os-nvidia'"
