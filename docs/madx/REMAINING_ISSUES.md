@@ -2,6 +2,8 @@
 
 ## Current Fedora NVIDIA offline gate
 
+The old Qwen configuration fails the pinned Hermes context minimum. The replacement Granite configuration passed a real local Windows chat. Require a reply in the network-isolated Fedora image before generating an ISO, then validate a disconnected install and first boot. [Latest failed Fedora job](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/43047533257/job/130692591127).
+
 Image run 42985632532 passed NVIDIA image construction and inspection. The next run must independently demonstrate model-backed Hermes chat without external networking before generating the ISO. The installed desktop and RTX 4070 remain unverified for this build.
 
 Validate the new Linux source, build the unpublished NVIDIA-only ISO, verify its hashes and obtain a disconnected installed-guest chat. Physical RTX 4070 rendering, HDMI and Secure Boot trust still require hardware evidence. ARM and macOS are deferred. Earlier CI failures remain historical evidence. See [OFFLINE_NVIDIA.md](OFFLINE_NVIDIA.md).

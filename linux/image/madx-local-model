@@ -13,7 +13,8 @@ import yaml
 
 MODEL_DIR = Path("/usr/share/madx-model")
 SERVER = "/usr/libexec/madx-model/llama-server"
-CONTEXT = 32768
+# The pinned Hermes runtime enforces a 64,000-token minimum even in one-shot chat.
+CONTEXT = 65536
 
 
 def create_private(path, text):
@@ -77,6 +78,8 @@ def main():
     os.execv(SERVER, [SERVER, "--model", str(MODEL_DIR / info["file"]), "--alias", "madx-local",
                       "--host", "127.0.0.1", "--port", str(port), "--api-key-file", str(keyfile),
                       "--ctx-size", str(CONTEXT), "--parallel", "1", "--threads", "4",
+                      "--flash-attn", "--cache-type-k", "q8_0", "--cache-type-v", "q8_0",
+                      "--batch-size", "256", "--ubatch-size", "128",
                       "--n-gpu-layers", gpu_layers, "--jinja", "--no-webui"])
 
 

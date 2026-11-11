@@ -1,9 +1,11 @@
 {
-  "repository": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
-  "revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
-  "file": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
-  "bytes": 1117320736,
-  "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+  "repository": "ibm-granite/granite-3.3-2b-instruct-GGUF",
+  "revision": "7cdf86ccd1f1bb3491c9b7017b033f2e51367397",
+  "file": "granite-3.3-2b-instruct-Q4_K_M.gguf",
+  "bytes": 1545303328,
+  "sha256": "ac71e9e32c0bea919b409c5918f69ca74339854b0319c5065e4e9fb6d95c4852",
+  "modelCard": "https://huggingface.co/ibm-granite/granite-3.3-2b-instruct/resolve/707f574c62054322f6b5b04b6d075f0a8f05e0f0/README.md",
+  "nativeContextLength": 131072,
   "license": "Apache-2.0",
   "engineRepository": "ggml-org/llama.cpp",
   "engineRevision": "3ea913f1ce9567289aedd866a569dbab8fb8e419"

@@ -1,11 +1,13 @@
 """Offline first-boot behavior and the NVIDIA-only validation boundary."""
 import importlib.util
 import importlib.machinery
+import json
 import os
 from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 
 import pytest
 import yaml
@@ -18,6 +20,10 @@ spec.loader.exec_module(matrix)
 loader = importlib.machinery.SourceFileLoader("local_model", str(ROOT / "linux/image/madx-local-model"))
 local_model = importlib.util.module_from_spec(importlib.util.spec_from_loader(loader.name, loader))
 loader.exec_module(local_model)
+
+spec = importlib.util.spec_from_file_location("offline_chat", ROOT / "scripts/madx/offline-chat-smoke.py")
+offline_chat = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(offline_chat)
 
 
 def test_fresh_account_has_private_offline_provider_that_survives_repeat_setup(tmp_path):
@@ -33,6 +39,8 @@ def test_fresh_account_has_private_offline_provider_that_survives_repeat_setup(t
         assert keyfile.stat().st_mode & 0o077 == 0
         assert cfg.stat().st_mode & 0o077 == 0
     model = yaml.safe_load(original)["model"]
+    info = json.loads((ROOT / "linux/image/offline-model.json").read_text())
+    assert 64000 <= model["context_length"] == local_model.CONTEXT <= info["nativeContextLength"]
     assert model["provider"] == "custom" and model["default"] == "madx-local"
     assert model["base_url"] == "http://127.0.0.1:19000/v1" and model["api_key"] == key
     assert local_model.configure(home, profile, 19000)
@@ -40,6 +48,35 @@ def test_fresh_account_has_private_offline_provider_that_survives_repeat_setup(t
     other = tmp_path / "second-account"
     assert local_model.configure(other, other / ".hermes", 19001)
     assert (other / ".local/state/madx/local-model.key").read_text().strip() != key
+
+
+def test_server_advertises_the_context_configured_for_hermes(tmp_path, monkeypatch):
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    monkeypatch.setattr(os, "getuid", lambda: 1000, raising=False)
+    monkeypatch.setattr(local_model, "MODEL_DIR", tmp_path)
+    monkeypatch.setattr(sys, "argv", ["madx-local-model", "serve"])
+    (tmp_path / "model.json").write_text(json.dumps({"file": "test.gguf"}))
+    profile = tmp_path / ".hermes"
+    assert local_model.configure(tmp_path, profile, 19000)
+    launched = []
+    monkeypatch.setattr(os, "execv", lambda exe, args: launched.append(args))
+    local_model.main()
+    args, = launched
+    model = yaml.safe_load((profile / "config.yaml").read_text())["model"]
+    assert int(args[args.index("--ctx-size") + 1]) == model["context_length"]
+    assert args[args.index("--parallel") + 1] == "1"
+
+
+def test_failed_chat_writes_safe_and_actionable_evidence(capsys):
+    secret = "test-credential-in-error-output"
+    result = subprocess.CompletedProcess([], 1, "",
+        f"{secret}: context window of 32,768 tokens, which is below the \x1b[1mminimum\x1b[0m\n64,000")
+    with pytest.raises(SystemExit) as exc:
+        offline_chat.fail("Hermes chat", offline_chat.cli_failure(result), exitCode=result.returncode)
+    report = json.loads(capsys.readouterr().out)
+    assert report == {"passed": False, "stage": "Hermes chat",
+                      "reason": "configured context is below the Hermes minimum", "exitCode": 1}
+    assert secret not in str(exc.value)
 
 
 @pytest.mark.parametrize("existing", ["config.yaml", ".env", "auth.json", "hermes-agent", "profiles"])

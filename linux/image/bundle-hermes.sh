@@ -48,13 +48,14 @@ install -m0755 /tmp/herald-os/linux/image/hermes-bundled /usr/bin/hermes
 install -Dm0644 "$runtime/madx-bundle.json" /usr/share/herald-os/hermes-bundled.json
 model=/usr/share/madx-model
 install -Dm0644 /tmp/herald-os/linux/image/offline-model.json "$model/model.json"
+install -m0644 /tmp/herald-os/linux/image/licenses/Apache-2.0.txt "$model/LICENSE"
 python3 - "$model" <<'PY'
 import hashlib, json, pathlib, shutil, sys, urllib.request
 p = pathlib.Path(sys.argv[1])
 m = json.loads((p / 'model.json').read_text())
 base = f"https://huggingface.co/{m['repository']}/resolve/{m['revision']}/"
-for name in (m['file'], 'LICENSE', 'README.md'):
-    with urllib.request.urlopen(base + name, timeout=120) as src, (p / name).open('wb') as dest:
+for name, url in ((m['file'], base + m['file']), ('README.md', m['modelCard'])):
+    with urllib.request.urlopen(url, timeout=120) as src, (p / name).open('wb') as dest:
         shutil.copyfileobj(src, dest, 1024 * 1024)
 weights = p / m['file']
 with weights.open('rb') as f:

@@ -6,6 +6,8 @@ single completion percentage: implementation and runtime acceptance are differen
 
 ## New hardware report and recovery work
 
+The latest NVIDIA build passed image inspection and reached the offline chat check. Hermes exited 1. A local reproduction identified its 64,000-token context minimum. With the replacement Granite model, the pinned CLI answered on the Windows RTX 4070 in 23.8 seconds. Fedora disconnected chat and ISO creation remain open. [Image attempt 2](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/43047533257/job/130692591127).
+
 The d380665 NVIDIA image built and passed package and model verification. The offline Hermes step failed before producing a reply or ISO. A locally reproduced launcher alias issue has been corrected in first boot and validation. [Image run](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/42985632532)
 
 The Fedora NVIDIA source at e36aa25 passed Linux CI. Packaging stopped in uv cache initialization before the offline chat test or ISO creation. The cache location has been corrected and tested locally. Native packaging and installation remain open. [Image build](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/42969459252)
