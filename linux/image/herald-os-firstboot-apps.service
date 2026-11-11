@@ -1,6 +1,7 @@
 [Unit]
 Description=MadX Agent OS: first-boot apps (the omakase Flatpaks), while the session is already up
 ConditionPathExists=!/var/lib/herald-os/firstboot-apps-done
+ConditionPathExists=!/usr/share/herald-os/hermes-bundled.json
 Wants=network-online.target
 After=network-online.target herald-os-firstboot.service greetd.service
 

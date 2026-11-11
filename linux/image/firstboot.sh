@@ -396,7 +396,21 @@ ssh_keys() {
 # (`herald-os hermes-command` looks for it the way the shell does), given the voice extras, and set
 # up for MadX Agent OS. Fails while there is still no Hermes.
 hermes_for_firstboot() {
-  if [[ -f "$HERMES_UNIT" ]]; then
+  if [[ -f "${HERMES_BUNDLE:-/usr/share/herald-os/hermes-bundled.json}" ]]; then
+    # Bundled images never need the network installer. Still run per-user bridge
+    # setup, preserving an existing managed runtime and its settings.
+    echo installing >"$PENDING"
+    if hermes_step; then
+      rm -f "$PENDING"
+    else
+      echo setup-failed >"$PENDING"
+      # Keep the desktop and recovery console available. The compatibility unit
+      # retries only the local setup path and exposes a failed result on error.
+      echo 'WARNING: bundled Hermes setup failed; retrying local setup in the background' >&2
+      systemctl --no-block start herald-os-hermes.service ||
+        echo 'WARNING: inspect the Hermes service journal for the local setup error' >&2
+    fi
+  elif [[ -f "$HERMES_UNIT" ]]; then
     # The image's async unit owns downloads. Never hold the login screen behind GitHub,
     # dependency resolution or voice extras. --no-block avoids waiting on this very unit's
     # After=herald-os-firstboot.service ordering. Keep the existing account/revision policy.
@@ -417,6 +431,16 @@ hermes_step() {
     source /etc/herald-os/ref
   fi
   local ref="${HERMES_REF:-main}" agent="$HOME_DIR/.hermes/hermes-agent" hermes
+  if [[ -f "${HERMES_BUNDLE:-/usr/share/herald-os/hermes-bundled.json}" ]]; then
+    hermes="$(as_user herald-os hermes-command)" || return 1
+    echo "using installed Hermes: ${hermes%%$'\n'*} (no downloads)"
+    [[ -d "$BRIDGE" ]] || return 1
+    if [[ "$hermes" == /usr/bin/hermes ]]; then
+      as_user madx-local-model activate || return 1
+    fi
+    as_user herald-os setup --yes || return 1
+    return 0
+  fi
   if hermes="$(as_user herald-os hermes-command)"; then
     echo "already installed: ${hermes%%$'\n'*}"
   else
@@ -468,6 +492,11 @@ hermes_later() {
 # repeated ten minutes later. The note goes once Hermes is set up, which is what the shell waits for.
 hermes_phase() {
   HOME_DIR="$(getent passwd "$HERMES_USER" | cut -d: -f6)"
+  if [[ -f "${HERMES_BUNDLE:-/usr/share/herald-os/hermes-bundled.json}" ]]; then
+    hermes_step || return 1
+    rm -f "$PENDING"
+    return 0
+  fi
   while :; do
     if ! online; then
       note offline
@@ -487,7 +516,7 @@ hermes_phase() {
 
 apps_phase() {
   step "Omakase apps (HERALD_OS_OMAKASE=0 to skip)"
-  if [[ "${HERALD_OS_OMAKASE:-1}" == "1" ]]; then
+  if [[ "${HERALD_OS_OMAKASE:-1}" == "1" && ! -f "${HERMES_BUNDLE:-/usr/share/herald-os/hermes-bundled.json}" ]]; then
     as_user herald-os-omakase install --flatpaks || echo "WARNING: omakase flatpaks incomplete"
     # Web apps need the shell's icon fetch; herald-os-session installs them on the first login.
   fi

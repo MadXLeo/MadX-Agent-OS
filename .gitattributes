@@ -4,3 +4,5 @@
 /linux/**/*.sh text eol=lf
 /linux/bin/* text eol=lf
 /linux/image/*.ks text eol=lf
+/linux/image/hermes-bundled text eol=lf
+/linux/image/madx-local-model text eol=lf

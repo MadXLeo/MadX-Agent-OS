@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Existing per-user installations still win in MadX's discovery ladder. This
+# fallback uses only image-owned code; it never relocates a Linux virtualenv.
+set -euo pipefail
+case "${1:-}:${2:-}" in
+  update:*|self-update:*|pm:install|pm:uninstall|pm:upgrade|pm:sync)
+    echo 'This Hermes runtime is bundled with MadX Agent OS. Update it through the OS image; its files are read-only.' >&2
+    exit 2 ;;
+esac
+export HERMES_DISABLE_LAZY_INSTALLS=1 PYTHONDONTWRITEBYTECODE=1
+export HF_HUB_OFFLINE=1 UV_OFFLINE=1 PIP_NO_INDEX=1
+unset HERMES_LAZY_INSTALL_TARGET
+exec /usr/lib/hermes-agent/venv/bin/python -m hermes_cli.main "$@"

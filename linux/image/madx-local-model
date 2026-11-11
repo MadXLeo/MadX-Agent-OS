@@ -1,0 +1,84 @@
+#!/usr/bin/python3
+"""Configure the offline Hermes provider for a fresh account and run its loopback server."""
+import argparse
+import json
+import os
+from pathlib import Path
+import secrets
+import subprocess
+import tempfile
+
+import yaml
+
+
+MODEL_DIR = Path("/usr/share/madx-model")
+SERVER = "/usr/libexec/madx-model/llama-server"
+CONTEXT = 32768
+
+
+def create_private(path, text):
+    """Publish a complete, mode-0600 file once. Concurrent setup preserves the winner."""
+    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as f:
+        temp = Path(f.name)
+        try:
+            f.write(text)
+            f.flush()
+            os.fsync(f.fileno())
+        except BaseException:
+            f.close()
+            temp.unlink(missing_ok=True)
+            raise
+    try:
+        os.link(temp, path)
+    except FileExistsError:
+        pass
+    finally:
+        temp.unlink()
+
+
+def configure(home, profile, port):
+    keyfile = home / ".local/state/madx/local-model.key"
+    config = profile / "config.yaml"
+    url = f"http://127.0.0.1:{port}/v1"
+    if not config.exists():
+        if any((profile / name).exists() for name in (".env", "auth.json", "hermes-agent", "profiles")):
+            return False
+        create_private(keyfile, secrets.token_urlsafe(32) + "\n")
+        model = {"provider": "custom", "default": "madx-local", "base_url": url,
+                 "api_key": keyfile.read_text().strip(), "context_length": CONTEXT}
+        create_private(config, yaml.safe_dump({"model": model, "security": {"allow_lazy_installs": False}}))
+    if not keyfile.is_file():
+        return False
+    # Upgrades and repeat boots leave provider choices and credentials in place.
+    data = yaml.safe_load(config.read_text()) or {}
+    model = data.get("model") if isinstance(data, dict) else None
+    return isinstance(model, dict) and model.get("provider") == "custom" and model.get("base_url") == url
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("action", choices=("configure", "activate", "serve"))
+    action = parser.parse_args().action
+    home = Path.home()
+    profile = Path(os.environ.get("HERMES_HOME") or home / ".hermes")
+    port = 18000 + os.getuid() % 30000
+    if action in ("configure", "activate"):
+        if configure(home, profile, port) and action == "activate":
+            env = dict(os.environ, XDG_RUNTIME_DIR=f"/run/user/{os.getuid()}")
+            subprocess.run(["systemctl", "--user", "--no-block", "enable", "--now",
+                            "madx-local-model.service"], env=env, check=True)
+        return
+    info = json.loads((MODEL_DIR / "model.json").read_text())
+    keyfile = home / ".local/state/madx/local-model.key"
+    if not keyfile.is_file() or not keyfile.read_text().strip():
+        raise SystemExit("Local model access key missing")
+    gpu_layers = "99" if any(Path("/dev/dri").glob("renderD*")) else "0"
+    os.execv(SERVER, [SERVER, "--model", str(MODEL_DIR / info["file"]), "--alias", "madx-local",
+                      "--host", "127.0.0.1", "--port", str(port), "--api-key-file", str(keyfile),
+                      "--ctx-size", str(CONTEXT), "--parallel", "1", "--threads", "4",
+                      "--n-gpu-layers", gpu_layers, "--jinja", "--no-webui"])
+
+
+if __name__ == "__main__":
+    main()

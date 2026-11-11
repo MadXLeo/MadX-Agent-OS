@@ -1,0 +1,16 @@
+[Unit]
+Description=MadX offline language model for Hermes
+ConditionPathExists=%h/.local/state/madx/local-model.key
+StartLimitIntervalSec=120
+StartLimitBurst=2
+
+[Service]
+ExecStart=/usr/bin/madx-local-model serve
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=yes
+UMask=0077
+Nice=5
+
+[Install]
+WantedBy=default.target

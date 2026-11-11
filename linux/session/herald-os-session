@@ -47,7 +47,7 @@ if [[ "$HERALD_OS_SHELL_MODE" == "panels" ]]; then
   fi
   # Omakase web apps are per-user and need the network; install any missing ones once per login.
   # Offline, every icon would fall back to a generic one for good, so that waits for a later login.
-  if command -v herald-os-omakase >/dev/null && [[ ! -f "$LOG_DIR/omakase-webapps-done" ]]; then
+  if command -v herald-os-omakase >/dev/null && [[ ! -f "$LOG_DIR/omakase-webapps-done" && ! -f /usr/share/herald-os/hermes-bundled.json ]]; then
     (
       sleep 20
       case "$(nmcli -t networking connectivity 2>/dev/null)" in none | limited | portal) exit 0 ;; esac

@@ -8,13 +8,20 @@
 # The NVIDIA image is this one with NVIDIA's driver on top: linux/image/Containerfile.nvidia, which
 # also says how its build pins FEDORA_BOOTC.
 ARG FEDORA_BOOTC=quay.io/fedora/fedora-bootc:44
+FROM ${FEDORA_BOOTC} AS model-build
+COPY linux/image/offline-model.json linux/image/build-local-model.sh /tmp/
+RUN bash /tmp/build-local-model.sh
+
 FROM ${FEDORA_BOOTC}
 
 ARG SHELL_TARBALL=herald-os-linux.tar.gz
 COPY linux /tmp/herald-os/linux
+COPY --from=model-build /out/ /usr/libexec/madx-model/
+COPY upstream/UPSTREAM.lock /tmp/herald-os/UPSTREAM.lock
 COPY ${SHELL_TARBALL} /tmp/herald-os/shell.tar.gz
 
 RUN bash /tmp/herald-os/linux/image/packages.sh --image /tmp/herald-os/shell.tar.gz \
+ && bash /tmp/herald-os/linux/image/bundle-hermes.sh /tmp/herald-os/UPSTREAM.lock \
  && dnf clean all \
  && rm -rf /tmp/herald-os /var/cache/* /var/log/* /var/lib/dnf
 
