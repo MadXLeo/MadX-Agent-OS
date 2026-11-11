@@ -44,13 +44,18 @@ def test_fresh_account_has_private_offline_provider_that_survives_repeat_setup(t
 
 @pytest.mark.parametrize("existing", ["config.yaml", ".env", "auth.json", "hermes-agent", "profiles"])
 def test_existing_hermes_profile_is_preserved(tmp_path, existing):
-    profile = tmp_path / ".hermes"
-    profile.mkdir()
+    home = tmp_path / "existing-account"
+    profile = home / ".hermes"
+    profile.mkdir(parents=True)
     original = profile / existing
+    if existing in ("hermes-agent", "profiles"):
+        original.mkdir()
+        original = original / "sentinel"
     original.write_text("existing user settings")
-    assert not local_model.configure(tmp_path, profile, 19000)
+    assert not local_model.configure(home, profile, 19000)
     assert original.read_text() == "existing user settings"
-    assert not (tmp_path / ".local/state/madx/local-model.key").exists()
+    assert set(profile.iterdir()) == {profile / existing}
+    assert not (home / ".local/state/madx/local-model.key").exists()
 
 
 def test_selected_scope_is_only_nvidia_amd64_and_full_scope_is_preserved():

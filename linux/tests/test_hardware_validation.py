@@ -8,6 +8,7 @@ import re
 import shlex
 import shutil
 import subprocess
+import sys
 from types import SimpleNamespace
 
 import pytest
@@ -112,8 +113,8 @@ def test_no_iso_means_no_manifest(tmp_path):
         artifact.create(tmp_path, "a" * 40, "nvidia", "ghcr.io/madxleo/madx-agent-os-nvidia:dev")
 
 
-@pytest.mark.parametrize("selected", ["standard", "nvidia"])
-def test_only_selected_amd64_image_builds_the_iso_and_selected_nvidia_cannot_soft_fail(selected):
+@pytest.mark.parametrize("selected,nvidia_only", [("standard", False), ("nvidia", False), ("nvidia", True)])
+def test_only_selected_amd64_image_builds_the_iso_and_selected_nvidia_cannot_soft_fail(selected, nvidia_only):
     workflow = yaml.safe_load((ROOT / ".github/workflows/image.yml").read_text())
     inputs = workflow[True]["workflow_dispatch"]["inputs"]
     assert inputs["validation_variant"]["options"] == ["standard", "nvidia"]
@@ -122,8 +123,13 @@ def test_only_selected_amd64_image_builds_the_iso_and_selected_nvidia_cannot_sof
     iso = next(s for s in job["steps"] if s.get("name") == "Build a validation ISO without publishing")
     context = {"github": SimpleNamespace(event_name="workflow_dispatch"),
                "inputs": SimpleNamespace(publish=False, disks=True, validation_variant=selected)}
+    assert job["strategy"]["matrix"] == "${{ fromJSON(needs.channel.outputs.matrix) }}"
+    command = [sys.executable, str(ROOT / "scripts/madx/image-matrix.py"), "--variant", selected]
+    if nvidia_only:
+        command.append("--nvidia-only")
+    legs = json.loads(subprocess.check_output(command))["include"]
     chosen = []
-    for leg in job["strategy"]["matrix"]["include"]:
+    for leg in legs:
         context["matrix"] = SimpleNamespace(**leg)
         def enabled(expr):
             expr = expr.removeprefix("${{").removesuffix("}}").strip()

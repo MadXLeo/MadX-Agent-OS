@@ -4,6 +4,8 @@
 
 The user prioritized one NVIDIA x86_64 image with everything required for a first local chat. The build includes pinned Hermes, its runtime dependencies, llama.cpp and checksum-verified Qwen weights. Image acceptance requires a real reply without networking. The disposable installer receives its test instructions from the ISO. ARM and macOS validation are deferred. See [OFFLINE_NVIDIA.md](OFFLINE_NVIDIA.md). No new ISO or hardware result is claimed here.
 
+Linux CI at `7744694` passed five of six jobs. The desktop report recorded 5,863 passes and two skips. The bridge and Linux report recorded 2,432 passes, two skips and seven failures. Two cases still read the old static workflow matrix and five collided with the shared test profile. Both errors reproduced locally. After correcting the tests, all 94 focused cases passed with the bridge fixture loaded. A fresh Linux CI run must pass before building the offline ISO. [Failed run and reports](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/42963911743)
+
 ## Alienware hardware recovery candidate — 2026-11-04
 
 The supplied hardware report says MadX installed on an Alienware m16 R2 (Core Ultra 7
