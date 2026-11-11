@@ -22,6 +22,8 @@ cd "$runtime"
 # Use the upstream lock, including its integrity hashes. Never resolve a fresh
 # main branch or silently fall back to an unlocked pip install.
 export UV_PROJECT_ENVIRONMENT="$runtime/venv" UV_PYTHON_DOWNLOADS=never
+# Keep the cache in the build staging tree that the Containerfile removes.
+export UV_CACHE_DIR=/tmp/herald-os/uv-cache
 sync_args=(--locked --no-dev --python /usr/bin/python3.11
   --extra all --extra anthropic --extra exa --extra firecrawl --extra parallel-web
   --extra edge-tts --extra voice --extra wake --extra messaging)
@@ -63,4 +65,3 @@ install -m0755 /tmp/herald-os/linux/image/madx-local-model /usr/bin/madx-local-m
 install -Dm0644 /tmp/herald-os/linux/image/madx-local-model.service /usr/lib/systemd/user/madx-local-model.service
 /usr/libexec/madx-model/llama-server --version
 chmod -R go-w "$runtime"
-rm -rf /root/.cache/uv

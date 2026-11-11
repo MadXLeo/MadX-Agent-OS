@@ -17,7 +17,7 @@
       "status": "open",
       "title": "Fedora NVIDIA x86_64 installer with built-in offline Hermes chat",
       "paths": ["docs/madx/OFFLINE_NVIDIA.md", "linux/image/bundle-hermes.sh", "linux/image/offline-model.json", ".github/workflows/image.yml"],
-      "next_action": "Review Linux CI, then build only the unpublished NVIDIA ISO and test a disconnected UEFI installer and first reboot.",
+      "next_action": "After fresh Linux CI passes for the uv staging-cache fix, rebuild the unpublished NVIDIA ISO, verify offline Hermes chat, then run the disconnected UEFI installer and first reboot.",
       "acceptance": ["Pinned runtime and model hash match", "Real Hermes reply without external network", "Installed desktop, bridge and account permissions work", "Record actual Alienware graphics behavior separately"]
     },
     {
