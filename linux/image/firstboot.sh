@@ -435,7 +435,8 @@ hermes_step() {
     hermes="$(as_user herald-os hermes-command)" || return 1
     echo "using installed Hermes: ${hermes%%$'\n'*} (no downloads)"
     [[ -d "$BRIDGE" ]] || return 1
-    if [[ "$hermes" == /usr/bin/hermes ]]; then
+    # Fedora can find the bundled launcher through /usr/sbin before /usr/bin.
+    if [[ "$hermes" -ef /usr/bin/hermes ]]; then
       as_user madx-local-model activate || return 1
     fi
     as_user herald-os setup --yes || return 1

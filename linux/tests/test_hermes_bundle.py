@@ -77,6 +77,19 @@ def run_boot(tmp_path, phase, found=True, setup_ok=True, command="/usr/bin/herme
     source = (ROOT / "linux/image/firstboot.sh").read_text()
     functions = "\n".join(re.search(rf"^{name}\(\) \{{\n.*?^\}}$", source, re.M | re.S)[0]
                           for name in ("hermes_for_firstboot", "hermes_step", "hermes_phase", "apps_phase"))
+    # Mirror the installed paths inside the fixture. Fedora's bin and sbin
+    # spellings refer to the same executable, while a managed install is distinct.
+    bundled = tmp_path / "usr/bin/hermes"
+    bundled.parent.mkdir(parents=True)
+    bundled.touch()
+    discovered = tmp_path / command.lstrip("/")
+    if discovered != bundled:
+        discovered.parent.mkdir(parents=True)
+        if command == "/usr/sbin/hermes":
+            os.link(bundled, discovered)
+        else:
+            discovered.touch()
+    functions = functions.replace("/usr/bin/hermes", '"$FIXTURE_BUNDLED"')
     bundle = tmp_path / "bundle.json"
     bundle.write_text("{}")
     pending = tmp_path / "pending"
@@ -109,7 +122,8 @@ as_user() {
 '''
     env = dict(os.environ, HERMES_BUNDLE=bundle.as_posix(), PENDING=pending.as_posix(),
                STATE=tmp_path.as_posix(), BRIDGE=tmp_path.as_posix(), HERMES_USER="test", HOME_DIR="/home/test",
-               FOUND=str(int(found)), SETUP_OK=str(int(setup_ok)), FOUND_COMMAND=command)
+               FOUND=str(int(found)), SETUP_OK=str(int(setup_ok)), FOUND_COMMAND=discovered.as_posix(),
+               FIXTURE_BUNDLED=bundled.as_posix())
     result = subprocess.run([shutil.which("bash") or "bash", "-euc", script + "\n" + phase],
                             env=env, capture_output=True, text=True, timeout=10)
     assert "UNEXPECTED" not in result.stdout + result.stderr
@@ -117,13 +131,13 @@ as_user() {
 
 
 @pytest.mark.parametrize("phase", ["hermes_for_firstboot", "hermes_phase"])
-@pytest.mark.parametrize("command", ["/usr/bin/hermes", "/home/test/.hermes/hermes-agent/venv/bin/hermes"])
+@pytest.mark.parametrize("command", ["/usr/bin/hermes", "/usr/sbin/hermes", "/home/test/.hermes/hermes-agent/venv/bin/hermes"])
 def test_bundle_sets_up_without_network_and_preserves_runtime_priority(tmp_path, phase, command):
     result, pending = run_boot(tmp_path, phase, command=command)
     assert result.returncode == 0, result.stderr
     assert "SETUP_CALLED" in result.stdout
     assert command in result.stdout
-    assert ("LOCAL_MODEL_ACTIVATED" in result.stdout) == (command == "/usr/bin/hermes")
+    assert ("LOCAL_MODEL_ACTIVATED" in result.stdout) == command.startswith("/usr/")
     assert not pending.exists()
     assert "LOCAL_REPAIR_QUEUED" not in result.stdout
 

@@ -2,6 +2,8 @@
 
 ## Current Fedora NVIDIA offline gate
 
+Image run 42985632532 passed NVIDIA image construction and inspection. The next run must independently demonstrate model-backed Hermes chat without external networking before generating the ISO. The installed desktop and RTX 4070 remain unverified for this build.
+
 Validate the new Linux source, build the unpublished NVIDIA-only ISO, verify its hashes and obtain a disconnected installed-guest chat. Physical RTX 4070 rendering, HDMI and Secure Boot trust still require hardware evidence. ARM and macOS are deferred. Earlier CI failures remain historical evidence. See [OFFLINE_NVIDIA.md](OFFLINE_NVIDIA.md).
 
 ## Alienware hardware priority — 2026-11-04

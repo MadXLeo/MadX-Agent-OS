@@ -241,13 +241,19 @@ jobs:
             -v "$PWD:/validation:ro" -v "$PWD/hermes-bundle-evidence:/evidence:rw" \
             --entrypoint /bin/bash "$REPO:$TAG" -euc '
               mkdir -p "$HOME"
-              test "$(madx hermes-command)" = /usr/bin/hermes
+              echo "Checking bundled Hermes discovery"
+              hermes="$(madx hermes-command)"
+              echo "Discovered launcher: $hermes"
+              [[ "$hermes" -ef /usr/bin/hermes ]] || { echo "Expected the bundled Hermes executable" >&2; exit 1; }
+              echo "Configuring the offline model"
               madx-local-model configure
               madx-local-model serve >/tmp/model.log 2>&1 &
               server=$!
               trap "kill $server 2>/dev/null || true" EXIT
+              echo "Setting up the Hermes bridge"
               madx setup --yes >/tmp/bridge-setup.log
-              test -L "$HOME/.hermes/plugins/herald-os-bridge"
+              test -L "$HOME/.hermes/plugins/herald-os-bridge" || { echo "Missing Hermes bridge link" >&2; exit 1; }
+              echo "Testing an offline chat with the bundled model"
               python3 /validation/scripts/madx/offline-chat-smoke.py > /evidence/offline-chat.json
               cp /usr/share/madx-model/model.json /evidence/
               cp /usr/lib/hermes-agent/madx-bundle.json /usr/lib/hermes-agent/dependencies.txt /evidence/

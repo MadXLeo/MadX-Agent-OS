@@ -6,6 +6,8 @@ single completion percentage: implementation and runtime acceptance are differen
 
 ## New hardware report and recovery work
 
+The d380665 NVIDIA image built and passed package and model verification. The offline Hermes step failed before producing a reply or ISO. A locally reproduced launcher alias issue has been corrected in first boot and validation. [Image run](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/42985632532)
+
 The Fedora NVIDIA source at e36aa25 passed Linux CI. Packaging stopped in uv cache initialization before the offline chat test or ISO creation. The cache location has been corrected and tested locally. Native packaging and installation remain open. [Image build](https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/42969459252)
 
 November 11, updated scope: Fedora NVIDIA with built-in offline Hermes and a local model is implemented in the image recipe. The new ISO and disconnected VM acceptance are pending. See [OFFLINE_NVIDIA.md](OFFLINE_NVIDIA.md). macOS and ARM validation are deferred at the user's request.

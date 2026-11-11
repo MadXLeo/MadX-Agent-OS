@@ -9,7 +9,8 @@ systemctl show herald-os-firstboot.service herald-os-hermes.service \
 expected_hermes="${1:-}"
 [[ -z "$expected_hermes" || "$expected_hermes" =~ ^[0-9a-f]{40}$ ]] || exit 2
 echo "MADX_HERMES_TESTED_PIN=$expected_hermes"
-[[ "$(madx-agent-os hermes-command)" == /usr/bin/hermes ]]
+hermes="$(madx-agent-os hermes-command)"
+[[ "$hermes" -ef /usr/bin/hermes ]] || { echo 'Guest did not select the bundled Hermes launcher' >&2; exit 1; }
 echo MADX_HERMES_COMMAND_AVAILABLE=1
 installed_hermes="$(cat /usr/lib/hermes-agent/.herald-os-upstream-sha)"
 [[ -n "$expected_hermes" && "$installed_hermes" == "$expected_hermes" ]]
