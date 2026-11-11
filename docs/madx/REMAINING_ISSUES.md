@@ -1,5 +1,9 @@
 # Phase 1 release gates
 
+## Current Fedora NVIDIA offline gate
+
+Validate the new Linux source, build the unpublished NVIDIA-only ISO, verify its hashes and obtain a disconnected installed-guest chat. Physical RTX 4070 rendering, HDMI and Secure Boot trust still require hardware evidence. ARM and macOS are deferred. Earlier CI failures remain historical evidence. See [OFFLINE_NVIDIA.md](OFFLINE_NVIDIA.md).
+
 ## Alienware hardware priority — 2026-11-04
 
 The user now reports installation, Windows reboot and Secure Boot enabled on the m16 R2

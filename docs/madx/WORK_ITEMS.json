@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-04",
+  "updated": "2026-11-11",
   "timezone": "Asia/Calcutta",
   "validated_source": "88d970167a9eb743a224a839491ec2631247f401",
   "summary": "Bootable alpha; user reports Alienware install and Windows boot. Hybrid graphics/RTX, Hermes and stable hardware acceptance remain open.",
@@ -11,6 +11,15 @@
     "blocked_unpublished_origin": "Cannot validate delivery against an intentionally unpublished tag"
   },
   "items": [
+    {
+      "id": "NVIDIA-OFFLINE-01",
+      "priority": "P0",
+      "status": "open",
+      "title": "Fedora NVIDIA x86_64 installer with built-in offline Hermes chat",
+      "paths": ["docs/madx/OFFLINE_NVIDIA.md", "linux/image/bundle-hermes.sh", "linux/image/offline-model.json", ".github/workflows/image.yml"],
+      "next_action": "Review Linux CI, then build only the unpublished NVIDIA ISO and test a disconnected UEFI installer and first reboot.",
+      "acceptance": ["Pinned runtime and model hash match", "Real Hermes reply without external network", "Installed desktop, bridge and account permissions work", "Record actual Alienware graphics behavior separately"]
+    },
     {
       "id": "INSTALL-01",
       "priority": "P0",

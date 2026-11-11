@@ -13,7 +13,7 @@ def grub_for_test(source: str) -> str:
         if re.match(r"\s*(linux|linuxefi)\s+", line):
             line = re.sub(r"\s+inst\.ks=\S+", "", line)
             line = re.sub(r"\s+(quiet|rhgb)(?=\s|$)", "", line)
-            line += " inst.ks=http://10.0.2.2:8000/ks.cfg inst.text console=ttyS0,115200"
+            line += " inst.ks=cdrom:/madx-validation.ks inst.text console=ttyS0,115200"
             changed += 1
         elif re.match(r"\s*set\s+(timeout|default)=", line):
             continue

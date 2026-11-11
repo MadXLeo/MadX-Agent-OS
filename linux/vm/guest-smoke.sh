@@ -9,20 +9,24 @@ systemctl show herald-os-firstboot.service herald-os-hermes.service \
 expected_hermes="${1:-}"
 [[ -z "$expected_hermes" || "$expected_hermes" =~ ^[0-9a-f]{40}$ ]] || exit 2
 echo "MADX_HERMES_TESTED_PIN=$expected_hermes"
-if madx-agent-os hermes-command >/dev/null 2>&1; then
-  echo MADX_HERMES_COMMAND_AVAILABLE=1
-else
-  echo MADX_HERMES_COMMAND_AVAILABLE=0
-fi
-if [[ -d "$HOME/.hermes/hermes-agent/.git" ]]; then
-  installed_hermes="$(git -C "$HOME/.hermes/hermes-agent" rev-parse HEAD)"
-  echo "MADX_HERMES_INSTALLED_REVISION=$installed_hermes"
-  if [[ -n "$expected_hermes" && "$installed_hermes" != "$expected_hermes" ]]; then
-    echo MADX_HERMES_REVISION_DRIFT=1
-  fi
-else
-  echo MADX_HERMES_INSTALLED_REVISION=unknown
-fi
+[[ "$(madx-agent-os hermes-command)" == /usr/bin/hermes ]]
+echo MADX_HERMES_COMMAND_AVAILABLE=1
+installed_hermes="$(cat /usr/lib/hermes-agent/.herald-os-upstream-sha)"
+[[ -n "$expected_hermes" && "$installed_hermes" == "$expected_hermes" ]]
+echo "MADX_HERMES_INSTALLED_REVISION=$installed_hermes"
+test ! -e /var/lib/herald-os/hermes-pending
+test -L "$HOME/.hermes/plugins/herald-os-bridge"
+hermes --version
+hermes plugins list
+# A missing bundled engine or bridge must fail acceptance, not be logged as optional.
+/usr/lib/hermes-agent/venv/bin/python - <<'PY'
+import os, pathlib, yaml
+profile = pathlib.Path(os.environ.get('HERMES_HOME', pathlib.Path.home() / '.hermes'))
+config = yaml.safe_load((profile / 'config.yaml').read_text())
+assert 'herald-os-bridge' in config['plugins']['enabled']
+assert 'herald_os' in config['platform_toolsets']['cli']
+print('MADX_HERMES_BUNDLED_SETUP_PASSED=1')
+PY
 test -e /run/ostree-booted
 test -s /var/lib/herald-os/firstboot-done
 # bootc status requires root on this image. The test-only boot unit records it without

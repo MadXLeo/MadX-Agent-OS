@@ -1,6 +1,6 @@
 # AI handoff — MadX Agent OS
 
-Updated 2026-11-04, Asia/Calcutta. Start with this file; do not restart the migration.
+Updated 2026-11-11, Asia/Calcutta. Start with this file; do not restart the migration.
 
 ## Read order
 
@@ -27,6 +27,8 @@ This handoff/Graphify change comes afterward. Check HEAD and remote state instea
 of assuming documentation/tooling commits are included in the tested ISO or pushed.
 
 ## Immediate context
+
+- **Current priority, November 11.** Build the Fedora NVIDIA x86_64 ISO with the pinned Hermes runtime, dependencies, inference server and local model already on the media. The user deferred macOS and ARM. Use [OFFLINE_NVIDIA.md](OFFLINE_NVIDIA.md) for the new scope, offline acceptance and exact dispatch inputs. Earlier all-platform gates below describe the prior milestone.
 
 - New priority: Alienware m16 R2 / Intel Xe + RTX 4070 Laptop graphics recovery. The user's
   hardware report says installation and subsequent Windows boot succeeded with Secure Boot

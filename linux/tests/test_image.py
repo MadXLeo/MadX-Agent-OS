@@ -105,8 +105,8 @@ def froms(path: Path) -> list[tuple[str, str]]:
 
 
 def test_the_default_image_never_refers_to_the_akmods_images():
-    # One stage, so no builder's handling of unused stages can make the default build pull them.
-    assert froms(CONTAINERFILE) == [("${FEDORA_BOOTC}", "")]
+    # Both the inference compiler and final OS use only the reviewed Fedora base.
+    assert froms(CONTAINERFILE) == [("${FEDORA_BOOTC}", "model-build"), ("${FEDORA_BOOTC}", "")]
     assert "ARG FEDORA_BOOTC=quay.io/fedora/fedora-bootc:44" in CONTAINERFILE.read_text()
     assert "akmods" not in CONTAINERFILE.read_text().split("ARG FEDORA_BOOTC", 1)[1]
 
@@ -135,7 +135,11 @@ def step(name: str) -> dict:
 
 def test_the_workflow_builds_the_nvidia_image_next_to_the_default_one():
     job = image_job()
-    legs = {(leg["image"], leg["arch"]): leg for leg in job["strategy"]["matrix"]["include"]}
+    spec = importlib.util.spec_from_file_location("image_matrix", ROOT / "scripts/madx/image-matrix.py")
+    matrix = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(matrix)
+    assert job["strategy"]["matrix"] == "${{ fromJSON(needs.channel.outputs.matrix) }}"
+    legs = {(leg["image"], leg["arch"]): leg for leg in matrix.select()["include"]}
     assert set(legs) == {("madx-agent-os", "amd64"), ("madx-agent-os", "arm64"), ("madx-agent-os-nvidia", "amd64")}
     # The default image keeps its per-architecture tags (the manifest job joins them) and its check names.
     assert legs[("madx-agent-os", "amd64")]["suffix"] == "-amd64" and legs[("madx-agent-os", "arm64")]["suffix"] == "-arm64"

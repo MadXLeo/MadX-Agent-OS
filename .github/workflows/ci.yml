@@ -22,7 +22,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        # Fedora/NVIDIA milestone requested by the user; macOS is explicitly deferred on this branch.
+        os: ${{ fromJSON(github.ref == 'refs/heads/codex/madx-desktop-redesign' && '["ubuntu-latest"]' || '["ubuntu-latest","macos-latest"]') }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -56,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: ${{ fromJSON(github.ref == 'refs/heads/codex/madx-desktop-redesign' && '["ubuntu-latest"]' || '["ubuntu-latest","macos-latest"]') }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7

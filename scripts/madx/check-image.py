@@ -21,6 +21,12 @@ REQUIRED = (
     "usr/lib/systemd/system/greetd.service.d/herald-os-login.conf",
     "usr/lib/bootc/kargs.d/10-herald-os.toml",
     "usr/lib/systemd/user/madx-graphical-session.service",
+    "usr/share/herald-os/hermes-bundled.json",
+    "usr/lib/hermes-agent/uv.lock",
+    "usr/lib/hermes-agent/dependencies.txt",
+    "usr/lib/hermes-agent/hermes_cli/subcommands/dashboard.py",
+    "usr/share/madx-model/LICENSE", "usr/libexec/madx-model/llama.cpp-LICENSE",
+    "usr/lib/systemd/user/madx-local-model.service",
 )
 
 
@@ -35,12 +41,35 @@ def inspect(root: Path, product: dict, assets: dict, nvidia: bool = False) -> di
         "usr/bin/madx-render-device", "usr/bin/pgrep",
         "usr/share/herald-os/app/herald-os", "usr/libexec/herald-os/firstboot.sh",
         "usr/libexec/herald-os/reset-helper",
+        "usr/bin/hermes", "usr/lib/hermes-agent/venv/bin/python",
+        "usr/bin/madx-local-model", "usr/libexec/madx-model/llama-server",
     ]
     for name in executable:
         require((root / name).is_file() and os.access(root / name, os.X_OK), f"missing executable: {name}")
     for tool in ("lspci", "mokutil"):
         require(any((root / directory / tool).is_file() and os.access(root / directory / tool, os.X_OK)
                     for directory in ("usr/bin", "usr/sbin")), f"missing diagnostic tool: {tool}")
+    try:
+        runtime = root / "usr/lib/hermes-agent"
+        bundle = json.loads((root / "usr/share/herald-os/hermes-bundled.json").read_text())
+        pin = next(line[4:] for line in (Path(__file__).resolve().parents[2] / "upstream/UPSTREAM.lock").read_text().splitlines() if line.startswith("sha="))
+        require(bundle["revision"] == pin == (runtime / ".herald-os-upstream-sha").read_text().strip(),
+                "bundled Hermes revision differs from source pin")
+        require(bundle["lockSha256"] == hashlib.sha256((runtime / "uv.lock").read_bytes()).hexdigest(),
+                "bundled Hermes dependency lock hash differs")
+        require(bundle["automaticDependencyDownloads"] is False, "bundled Hermes permits automatic dependency downloads")
+        require(bundle["modelWeightsBundled"] is True, "offline model missing from bundle manifest")
+        model_dir = root / "usr/share/madx-model"
+        model = json.loads((model_dir / "model.json").read_text())
+        pinned_model = json.loads((Path(__file__).resolve().parents[2] / "linux/image/offline-model.json").read_text())
+        require(model == pinned_model, "offline model manifest differs from source")
+        weights = model_dir / pinned_model["file"]
+        with weights.open("rb") as stream:
+            require(weights.stat().st_size == pinned_model["bytes"] and
+                    hashlib.file_digest(stream, "sha256").hexdigest() == pinned_model["sha256"],
+                    "offline model file does not match its pinned size and SHA-256")
+    except (OSError, ValueError, KeyError, StopIteration):
+        require(False, "bundled Hermes provenance missing or invalid")
     for name in COMMANDS:
         alias = root / "usr/bin" / name.replace("herald-os", product["slug"], 1)
         require(alias.is_symlink() and os.readlink(alias) == name, f"wrong command alias: {alias.name}")

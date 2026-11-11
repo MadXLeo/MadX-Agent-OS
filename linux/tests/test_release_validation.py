@@ -227,7 +227,9 @@ def test_installer_uses_uefi_media_and_checks_a_real_guest_not_only_screenshots(
     assert "--drives=vda" in steps["The ISO's kickstart, unattended"]
     assert any(case["preserve_disk"] for case in job["strategy"]["matrix"]["include"])
     assert "sha256sum -c mock-windows.sha256" in install
-    assert "--bind 127.0.0.1 --directory installer-http" in install
+    assert "-nic none" in install and "http.server" not in install
+    assert "-map ks.cfg /madx-validation.ks" in steps["Prepare the ISO's actual UEFI boot path"]
+    assert "inst.ks=cdrom:/madx-validation.ks" in probe.grub_for_test(" linux /images/pxeboot/vmlinuz inst.stage2=hd:LABEL=MADX_AGENT_OS\n")
     assert "file=mock-windows.raw" in steps["Boot what was installed"]
     download = steps["The installer, from the release"]
     assert download.index("verify-image-run.py") < download.index("gh run download")

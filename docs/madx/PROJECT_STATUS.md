@@ -1,10 +1,12 @@
-# MadX Agent OS progress — 2026-11-04
+# MadX Agent OS progress — 2026-11-11
 
 **Current result: a bootable, installable Linux alpha with a redesigned desktop.
 It is not yet a release-ready, Windows-dual-boot-verified MVP.** There is no honest
 single completion percentage: implementation and runtime acceptance are different.
 
 ## New hardware report and recovery work
+
+November 11, updated scope: Fedora NVIDIA with built-in offline Hermes and a local model is implemented in the image recipe. The new ISO and disconnected VM acceptance are pending. See [OFFLINE_NVIDIA.md](OFFLINE_NVIDIA.md). macOS and ARM validation are deferred at the user's request.
 
 The user reports a completed Alienware m16 R2 install, successful return to Windows and
 Secure Boot enabled. Intel Xe rendering intermittently reaches the desktop; Nouveau/HDMI

@@ -27,6 +27,7 @@ def clean_environment(home: Path, token: str, ready: Path) -> dict:
                HERMES_DESKTOP="1", HERALD_OS="1", HERMES_PARENT_PID=str(os.getpid()),
                HERMES_DASHBOARD_SESSION_TOKEN=token, HERMES_DESKTOP_READY_FILE=str(ready),
                PYTHONUNBUFFERED="1", PYTHONUTF8="1", NO_COLOR="1", TERMINAL_CWD=str(home),
+               HERMES_DISABLE_LAZY_INSTALLS="1", PYTHONDONTWRITEBYTECODE="1",
                HTTP_PROXY="http://127.0.0.1:9", HTTPS_PROXY="http://127.0.0.1:9",
                NO_PROXY="127.0.0.1,localhost")
     return env
@@ -73,7 +74,7 @@ def stop(child):
     psutil.wait_procs(alive, timeout=10)
 
 
-def run(runtime: Path, scratch: Path) -> dict:
+def run(runtime: Path, scratch: Path, profiles: Path | None = None, launcher: Path | None = None) -> dict:
     pinned = next(line.split("=", 1)[1] for line in (ROOT / "upstream/UPSTREAM.lock").read_text().splitlines() if line.startswith("sha="))
     # sync-upstream.sh uses an archive in CI; do not accidentally read the parent MadX Git HEAD.
     actual = (subprocess.check_output(["git", "-C", str(runtime), "rev-parse", "HEAD"], text=True).strip()
@@ -86,7 +87,7 @@ def run(runtime: Path, scratch: Path) -> dict:
     scratch.mkdir(parents=True, exist_ok=True)
     # Hermes deliberately excludes any skill path containing '.venv'. Keep the throwaway profile
     # in the repository's ignored VM-build directory, while logs/reports can stay under .venv.
-    profiles = ROOT / "linux/vm/build"
+    profiles = profiles or ROOT / "linux/vm/build"
     profiles.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="hermes-smoke-", dir=profiles, ignore_cleanup_errors=True) as temporary:
         home = Path(temporary)
@@ -105,7 +106,8 @@ def run(runtime: Path, scratch: Path) -> dict:
             ready.unlink(missing_ok=True)
             log_path = scratch / f"hermes-smoke-{attempt}.log"
             with log_path.open("w", encoding="utf-8") as log:
-                child = subprocess.Popen([sys.executable, "-m", "hermes_cli.main", "serve", "--host", "127.0.0.1", "--port", "0"],
+                command = [str(launcher)] if launcher else [sys.executable, "-m", "hermes_cli.main"]
+                child = subprocess.Popen([*command, "serve", "--host", "127.0.0.1", "--port", "0"],
                                          cwd=runtime, env=env, stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT)
                 try:
                     deadline = time.monotonic() + 180
@@ -150,9 +152,11 @@ if __name__ == "__main__":
     parser.add_argument("--runtime", type=Path, default=ROOT / "upstream/hermes-agent")
     parser.add_argument("--scratch", type=Path, default=ROOT / ".venv/astra-runtime")
     parser.add_argument("--report", type=Path, default=ROOT / ".venv/astra-hermes-runtime.json")
+    parser.add_argument("--profiles", type=Path, help="writable scratch profiles for a read-only image")
+    parser.add_argument("--launcher", type=Path, help="test the installed command, not only a Python module")
     args = parser.parse_args()
     try:
-        result = run(args.runtime.resolve(), args.scratch.resolve())
+        result = run(args.runtime.resolve(), args.scratch.resolve(), args.profiles, args.launcher)
     except Exception as exc:
         result = {"passed": False, "platform": sys.platform, "error": f"{type(exc).__name__}: {exc}", "scope": "real provider-free runtime smoke"}
     args.report.parent.mkdir(parents=True, exist_ok=True)

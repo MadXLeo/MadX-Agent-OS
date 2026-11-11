@@ -1,4 +1,8 @@
-# Astra progress — updated 2026-11-04 (Asia/Calcutta)
+# Astra progress — updated 2026-11-11 (Asia/Calcutta)
+
+## Fedora NVIDIA with offline Hermes — November 11
+
+The user prioritized one NVIDIA x86_64 image with everything required for a first local chat. The build includes pinned Hermes, its runtime dependencies, llama.cpp and checksum-verified Qwen weights. Image acceptance requires a real reply without networking. The disposable installer receives its test instructions from the ISO. ARM and macOS validation are deferred. See [OFFLINE_NVIDIA.md](OFFLINE_NVIDIA.md). No new ISO or hardware result is claimed here.
 
 ## Alienware hardware recovery candidate — 2026-11-04
 
