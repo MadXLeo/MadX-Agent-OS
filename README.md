@@ -1,36 +1,60 @@
-<p align="center">
-  <img src="apps/desktop/build/icon.png" alt="Herald OS" width="112">
-</p>
+# MadX Agent OS
 
-<h1 align="center">Herald OS</h1>
+MadX Agent OS is a Fedora-based Linux desktop that brings Hermes Agent into the workspace. You can open a file in the Files app, work with a document, or ask Hermes to take an action. The desktop bridge gives Hermes access to system tools and lets you review actions that require approval.
 
-<p align="center">
-  An agent-native operating system, with <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a> as the interface.
-</p>
+**0.1.0 alpha.** The standard x86_64 image has booted, installed and reached the welcome desktop in a UEFI virtual machine. The Fedora NVIDIA build with offline Hermes is still under test. There is no public MadX ISO release. [Installation results][installer] · [Release page][releases]
 
-<p align="center">
-  <a href="https://github.com/iamlukethedev/Herald-OS/releases"><img src="https://img.shields.io/github/v/release/iamlukethedev/Herald-OS?include_prereleases&label=release" alt="Latest release"></a>
-  <a href="https://github.com/iamlukethedev/Herald-OS/actions/workflows/ci.yml"><img src="https://github.com/iamlukethedev/Herald-OS/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
-  <a href="https://discord.gg/RHyFZ7FX6E"><img src="https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
-</p>
+![MadX welcome screen, top bar and dock after first boot in an installed Linux VM][desktop-image]
 
-![The Herald OS desktop](docs/images/desktop.png)
+*Captured after the first reboot of the unencrypted test VM, before onboarding. The [test record][evidence] identifies the screenshots from all three guests and gives the ISO checksum.*
 
-Herald OS is an operating system built around an AI agent. Instead of working through menus and
-folders yourself, you talk or type to Hermes, and it works across the whole machine: it opens apps,
-finds and organises files, watches what is running, remembers what matters to you, runs routines on
-a schedule, and builds software while you watch. Every action that changes something goes through a
-permission system you control.
+## What works today
 
-> [!NOTE]
-> **Herald OS is an independent project by [Luke The Dev](https://github.com/iamlukethedev).** It is
-> not an official Hermes or Nous Research product, and it is not affiliated with, sponsored by or
-> endorsed by Nous Research. Herald OS runs on [Hermes Agent](https://github.com/NousResearch/hermes-agent),
-> the open-source agent Nous Research publishes, which is installed alongside it.
+| Area | What has been verified |
+| --- | --- |
+| Linux installer | The standard ISO at `88d9701` passed three UEFI installs. The encrypted guest unlocked after reboot, the unencrypted guest started normally, and a third install preserved a separate simulated disk. All three reached the desktop. [Installer run][installer] |
+| Desktop and command line | The redesign includes the graphite desktop, Home, Hermes chat, Files and the `madx` command. Desktop, bridge and command-line tests passed on Linux at `88d9701`. Interactive performance on physical hardware still needs measurement. [CI results][ci] · [Desktop design][design] |
+| NVIDIA and offline Hermes | The Fedora x86_64 candidate at `397e295` passed Linux CI. Its image job failed while testing bundled Hermes with networking disabled, so the ISO step was skipped. Installed offline chat and stable RTX 4070 graphics remain open. [Linux CI][nvidia-ci] · [Image build][nvidia-image] |
 
-> **Status: alpha (0.1).** Expect rough edges, and keep backups of anything you let an agent
-> touch.
+Windows dual boot with a shared EFI partition and upgrades that preserve an existing user profile still need independent validation. Use a disposable VM with its own virtual disk when evaluating the installer. [Open validation work][work-items]
+
+## Get the MadX source
+
+MadX development is on `codex/madx-desktop-redesign`. To get the desktop and Fedora image recipes, clone that branch explicitly.
+
+```sh
+git clone --branch codex/madx-desktop-redesign https://github.com/MadXLeo/MadX-Agent-OS.git
+cd MadX-Agent-OS
+```
+
+- **Work on the desktop or Hermes integration.** The source map points to the Home screen, chat interface, Hermes runtime and permission checks. [Source map][map] · [Development setup][build]
+- **Work on the Fedora NVIDIA image.** The build guide identifies the pinned Hermes runtime, bundled model and tests for a first chat without internet access. [Offline NVIDIA guide][offline]
+- **Pick up a task.** The project status records completed milestones. The work register lists remaining tests and the evidence needed to close each one. [Project status][status] · [Work register][work-items]
+
+## Maintainer and credits
+
+Divanshu ([@MadXLeo](https://github.com/MadXLeo)) is the primary maintainer of the MadX fork. MadX builds on **Herald OS** by Luke The Dev and integrates **Hermes Agent** by Nous Research. MadX is an independent project distributed under the MIT license. [Herald OS][herald] · [Hermes Agent][hermes] · [License](LICENSE) · [Third-party notices](NOTICE)
+
+[desktop-image]: https://raw.githubusercontent.com/MadXLeo/MadX-Agent-OS/397e2956824a254004f451fe743ee19e740bf8cf/docs/madx/evidence/redesign-linux-2026-11-02/unencrypted-preserve-false-18min.png
+[evidence]: https://github.com/MadXLeo/MadX-Agent-OS/blob/397e2956824a254004f451fe743ee19e740bf8cf/docs/madx/evidence/redesign-linux-2026-11-02/validation.json
+[ci]: https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/41400903428
+[installer]: https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/41438712212
+[nvidia-ci]: https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/43077360291
+[nvidia-image]: https://github.com/MadXLeo/MadX-Agent-OS/actions/runs/43080471661
+[releases]: https://github.com/MadXLeo/MadX-Agent-OS/releases
+[build]: https://github.com/MadXLeo/MadX-Agent-OS/blob/codex/madx-desktop-redesign/README.md#building-from-source
+[map]: https://github.com/MadXLeo/MadX-Agent-OS/blob/codex/madx-desktop-redesign/docs/madx/PROJECT_MAP.md
+[design]: https://github.com/MadXLeo/MadX-Agent-OS/blob/codex/madx-desktop-redesign/docs/madx/REDESIGN.md
+[offline]: https://github.com/MadXLeo/MadX-Agent-OS/blob/codex/madx-desktop-redesign/docs/madx/OFFLINE_NVIDIA.md
+[status]: https://github.com/MadXLeo/MadX-Agent-OS/blob/codex/madx-desktop-redesign/docs/madx/PROJECT_STATUS.md
+[work-items]: https://github.com/MadXLeo/MadX-Agent-OS/blob/codex/madx-desktop-redesign/docs/madx/WORK_ITEMS.json
+[herald]: https://github.com/iamlukethedev/Herald-OS
+[hermes]: https://github.com/NousResearch/hermes-agent
+
+<details>
+<summary>Herald OS reference manual for the upstream code on main</summary>
+
+The guide below documents Herald OS. Its downloads, package names and support links belong to the upstream project. For the MadX alpha, use the development branch and validation records above.
 
 ## Install
 
@@ -768,3 +792,5 @@ vulnerabilities privately, as described in [SECURITY.md](SECURITY.md).
 Nous Research, also MIT; see [NOTICE](NOTICE). Herald OS is an independent project and is not
 affiliated with Nous Research; the Hermes names refer to Nous Research's project and are used only
 to say what Herald OS runs on.
+
+</details>
